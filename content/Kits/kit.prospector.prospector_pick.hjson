@@ -1,0 +1,26 @@
+{
+	name: "Prospector Pick"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+	character_flags: human
+	origin: "prospector"
+	cost: 1.500
+	
+	shipment:
+	{
+		name: "Prospector Pick"
+		items:
+		[
+			{
+				type: prefab
+				prefab: "prospector_pick"
+				quantity: 1.000
+			}
+		]
+		flags: unpack
+	}
+}

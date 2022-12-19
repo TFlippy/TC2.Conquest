@@ -1,0 +1,30 @@
+{
+	name: "Camping Kit"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+	character_flags: human
+	cost: 2.500
+	
+	shipment:
+	{
+		name: "Camping Kit"
+		items:
+		[
+			{
+				type: resource
+				material: "wood"
+				quantity: 250.000
+			}
+			{
+				type: resource
+				material: "cloth"
+				quantity: 25.000
+			}
+		]
+		flags: unpack
+	}
+}

@@ -1,0 +1,30 @@
+{
+	name: "Derringer"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+	character_flags: human, military, armed
+	cost: 3.000
+	
+	shipment:
+	{
+		name: "Derringer"
+		items:
+		[
+			{
+				type: prefab
+				prefab: "derringer"
+				quantity: 1.000
+			}
+			{
+				type: resource
+				material: "ammo_musket"
+				quantity: 4.000
+			}
+		]
+		flags: unpack
+	}
+}

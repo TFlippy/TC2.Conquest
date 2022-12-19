@@ -1,0 +1,30 @@
+{
+	name: "Spare Parts"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+	character_flags: human, construction, professional, engineering
+	cost: 2.000
+	
+	shipment:
+	{
+		name: "Spare Parts"
+		items:
+		[
+			{
+				type: resource
+				material: "scrap"
+				quantity: 50.000
+			}
+			{
+				type: resource
+				material: "machine_parts"
+				quantity: 5.000
+			}
+		]
+		flags: unpack
+	}
+}

@@ -1,0 +1,31 @@
+{
+	name: "Blunderbuss"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+	character_flags: human
+	origin: "hunter"
+	cost: 4.000
+	
+	shipment:
+	{
+		name: "Blunderbuss"
+		items:
+		[
+			{
+				type: prefab
+				prefab: "blunderbuss"
+				quantity: 1.000
+			}
+			{
+				type: resource
+				material: "ammo_musket.shot"
+				quantity: 8.000
+			}
+		]
+		flags: unpack
+	}
+}

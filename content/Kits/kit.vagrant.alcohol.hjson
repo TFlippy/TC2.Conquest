@@ -1,0 +1,26 @@
+{
+	name: "Questionable Booze"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+	character_flags: human
+	origin: "vagrant"
+	cost: 1.000
+	
+	shipment:
+	{
+		name: "Questionable Booze"
+		items:
+		[
+			{
+				type: resource
+				material: "alcohol"
+				quantity: 5.000
+			}
+		]
+		flags: unpack
+	}
+}
