@@ -17,7 +17,7 @@
 			{
 				type: resource
 				material: "wood"
-				quantity: 250.000
+				quantity: 40.000
 			}
 			{
 				type: resource

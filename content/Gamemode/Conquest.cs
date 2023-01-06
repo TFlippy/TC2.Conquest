@@ -1,101 +1,100 @@
 ﻿namespace TC2.Conquest
 {
-    public static partial class Conquest
-    {
-        [IGamemode.Data("Conquest", "")]
-        public partial struct Gamemode : IGamemode
-        {
-            [Flags]
-            public enum Flags : uint
-            {
-                None = 0,
+	public static partial class Conquest
+	{
+		[IGamemode.Data("Conquest", "")]
+		public partial struct Gamemode: IGamemode
+		{
+			[Flags]
+			public enum Flags: uint
+			{
+				None = 0,
 
-                Active = 1 << 0,
-                Paused = 1 << 1
-            }
+				Active = 1 << 0,
+				Paused = 1 << 1
+			}
 
-            public float elapsed;
+			public float elapsed;
+			public Conquest.Gamemode.Flags flags;
 
-            public Conquest.Gamemode.Flags flags;
+			public Gamemode()
+			{
 
-            public Gamemode()
-            {
+			}
 
-            }
-
-            public static void Configure()
-            {
+			public static void Configure()
+			{
 				Constants.World.multi_region = true;
-            }
+			}
 
-            public static void Init()
-            {
-                App.WriteLine("Conquest Init!", App.Color.Magenta);
+			public static void Init()
+			{
+				App.WriteLine("Conquest Init!", App.Color.Magenta);
 
-                App.WriteLine(System.IO.File.Exists("derp"), App.Color.Green);
-            }
-        }
+				App.WriteLine(System.IO.File.Exists("derp"), App.Color.Green);
+			}
+		}
 
 #if SERVER
-        [ChatCommand.Region("pause", "", admin: true)]
-        public static void PauseCommand(ref ChatCommand.Context context, bool? value = null)
-        {
-            ref var region = ref context.GetRegion();
-            if (!region.IsNull())
-            {
-                ref var g_conquest = ref region.GetSingletonComponent<Conquest.Gamemode>();
-                if (!g_conquest.IsNull())
-                {
-                    var sync = false;
-                    sync |= g_conquest.flags.TrySetFlag(Conquest.Gamemode.Flags.Paused, value ?? !g_conquest.flags.HasAll(Conquest.Gamemode.Flags.Paused));
-                    Server.SendChatMessage(g_conquest.flags.HasAll(Conquest.Gamemode.Flags.Paused) ? "Paused Conquest." : "Unpaused Conquest.", channel: Chat.Channel.System);
+		[ChatCommand.Region("pause", "", admin: true)]
+		public static void PauseCommand(ref ChatCommand.Context context, bool? value = null)
+		{
+			ref var region = ref context.GetRegion();
+			if (!region.IsNull())
+			{
+				ref var g_conquest = ref region.GetSingletonComponent<Conquest.Gamemode>();
+				if (!g_conquest.IsNull())
+				{
+					var sync = false;
+					sync |= g_conquest.flags.TrySetFlag(Conquest.Gamemode.Flags.Paused, value ?? !g_conquest.flags.HasAll(Conquest.Gamemode.Flags.Paused));
+					Server.SendChatMessage(g_conquest.flags.HasAll(Conquest.Gamemode.Flags.Paused) ? "Paused Conquest." : "Unpaused Conquest.", channel: Chat.Channel.System);
 
-                    if (sync)
-                    {
-                        region.SyncGlobal(ref g_conquest);
-                    }
-                }
-            }
-        }
+					if (sync)
+					{
+						region.SyncGlobal(ref g_conquest);
+					}
+				}
+			}
+		}
 
-        [ChatCommand.Region("setmap", "", creative: true)]
-        public static void SetMapCommand(ref ChatCommand.Context context, byte region_id, string map)
-        {
-            ref var world = ref Server.GetWorld();
+		[ChatCommand.Region("setmap", "", creative: true)]
+		public static void SetMapCommand(ref ChatCommand.Context context, byte region_id, string map)
+		{
+			ref var world = ref Server.GetWorld();
 
-            ref var region_new = ref world.ImportRegion(region_id, map);
-            if (!region_new.IsNull())
-            {
-                //world.SetContinueRegionID(region_id);
+			ref var region_new = ref world.ImportRegion(region_id, map);
+			if (!region_new.IsNull())
+			{
+				//world.SetContinueRegionID(region_id);
 
-                //region_new.Wait().ContinueWith(() =>
-                //{
-                //    Net.SetActiveRegionForAllPlayers(region_id_new);
-                //});
-            }
-        }
+				//region_new.Wait().ContinueWith(() =>
+				//{
+				//    Net.SetActiveRegionForAllPlayers(region_id_new);
+				//});
+			}
+		}
 #endif
 
 #if SERVER
-        [ISystem.AddFirst(ISystem.Mode.Single)]
-        public static void OnAdd(ISystem.Info info, [Source.Owned] ref MapCycle.Global mapcycle)
-        {
-            ref var region = ref info.GetRegion();
-            mapcycle.AddMaps(ref region, "conquest");
-        }
+		[ISystem.AddFirst(ISystem.Mode.Single)]
+		public static void OnAdd(ISystem.Info info, [Source.Owned] ref MapCycle.Global mapcycle)
+		{
+			ref var region = ref info.GetRegion();
+			mapcycle.AddMaps(ref region, "conquest");
+		}
 #endif
 
-        [ISystem.VeryLateUpdate(ISystem.Mode.Single)]
-        public static void OnUpdate(ISystem.Info info, [Source.Global] ref Conquest.Gamemode conquest, [Source.Global] in MapCycle.Global mapcycle, [Source.Global] ref MapCycle.Voting voting)
-        {
-            if (true)
-            {
-                if (!conquest.flags.HasAny(Conquest.Gamemode.Flags.Paused))
-                {
-                    conquest.elapsed += info.DeltaTime;
-                }
-            }
-        }
+		[ISystem.VeryLateUpdate(ISystem.Mode.Single)]
+		public static void OnUpdate(ISystem.Info info, [Source.Global] ref Conquest.Gamemode conquest, [Source.Global] in MapCycle.Global mapcycle, [Source.Global] ref MapCycle.Voting voting)
+		{
+			if (true)
+			{
+				if (!conquest.flags.HasAny(Conquest.Gamemode.Flags.Paused))
+				{
+					conquest.elapsed += info.DeltaTime;
+				}
+			}
+		}
 
 #if CLIENT
 		public struct ScoreboardGUI: IGUICommand
@@ -255,6 +254,6 @@
 			}
 		}
 #endif
-    }
+	}
 }
 

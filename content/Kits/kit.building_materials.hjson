@@ -17,12 +17,12 @@
 			{
 				type: resource
 				material: "wood"
-				quantity: 500.000
+				quantity: 100.000
 			}
 			{
 				type: resource
 				material: "stone"
-				quantity: 150.000
+				quantity: 80.000
 			}
 		]
 		flags: unpack
