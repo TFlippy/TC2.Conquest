@@ -1,7 +1,26 @@
 {
-	$name: "Houbus"
-	$desc: "A mushroom-infested forest."
 	$tag: "frontier"
+	$name: "Houbus"
+	$desc:
+		'''
+		A mushroom-infested forest.
+		'''
+	
+	$infrastructure: railway, military
+	$industry: logging, hunting, agricultural, low_tech
+	$crime: piracy, theft, murder, drugs, smuggling, raiding, pillaging
+	$geography: mountains, hills, meadows, lakes, forested, rough, warm
+	$urbanization: 0.050
+	$industrialization: 0.010
+	$education: 0.130
+	$wealth: 0.120
+	$wilderness: 0.800
+	$devastation: 0.010
+	$savagery: 0.400
+	$anarchy: 0.100
+	$elevation: 40.000
+	$population: 3500
+	
 	$features:
 	[
 		"Pure mineral deposits"
@@ -18,36 +37,48 @@
 			position: [169.000, 51.750]
 			rotation: 0.000
 			scale: [3.500, 3.500]
+			z: 4.000
+			color: "0xffffffff"
 		}
 		{
 			prefab: "background.forest"
 			position: [307.750, 50.000]
 			rotation: 0.000
 			scale: [8.000, 8.000]
+			z: 16.000
+			color: "0xffffffff"
 		}
 		{
 			prefab: "background.mountains"
 			position: [418.500, 32.750]
 			rotation: 0.000
 			scale: [12.000, 12.000]
+			z: 24.000
+			color: "0xffffffff"
 		}
 		{
 			prefab: "background.ridge"
 			position: [320.500, 21.250]
 			rotation: 0.000
 			scale: [16.000, 16.000]
+			z: 32.000
+			color: "0xffffffff"
 		}
 		{
 			prefab: "background.nostalgia"
 			position: [225.875, 30.875]
 			rotation: 0.000
 			scale: [24.000, 24.000]
+			z: 64.000
+			color: "0xffffffff"
 		}
 		{
 			prefab: "background.sea"
 			position: [210.250, 55.875]
 			rotation: 0.000
 			scale: [48.000, 48.000]
+			z: 96.000
+			color: "0xffffffff"
 		}
 		{
 			prefab: "ruins"
@@ -664,18 +695,21 @@
 		}
 		{
 			prefab: "mine"
+			faction: "null"
 			position: [194.000, 51.375]
 			rotation: 0.000
 			scale: [-1.000, 1.000]
 		}
 		{
 			prefab: "mine"
+			faction: "null"
 			position: [358.375, 58.125]
 			rotation: -0.034907
 			scale: [-1.000, 1.000]
 		}
 		{
 			prefab: "mine"
+			faction: "null"
 			position: [482.8889, 72.4762]
 			rotation: -0.034907
 			scale: [1.000, 1.000]
@@ -1060,18 +1094,21 @@
 		}
 		{
 			prefab: "market"
+			faction: "null"
 			position: [50.500, 65.375]
 			rotation: -0.087266
 			scale: [1.000, 1.000]
 		}
 		{
 			prefab: "market"
+			faction: "null"
 			position: [266.125, 48.375]
 			rotation: 0.034907
 			scale: [-1.000, 1.000]
 		}
 		{
 			prefab: "market"
+			faction: "null"
 			position: [164.625, 49.875]
 			rotation: 0.017453
 			scale: [1.000, 1.000]
@@ -1390,6 +1427,7 @@
 		}
 		{
 			prefab: "hornet_hive"
+			faction: "hornet"
 			position: [449.000, 56.625]
 			rotation: 0.000
 			scale: [1.000, 1.000]
@@ -1427,7 +1465,7 @@
 		{
 			prefab: "log.00"
 			position: [91.492, 59.75508]
-			rotation: -0.2209
+			rotation: -0.220901
 			scale: [-0.966667, 1.000]
 		}
 		{
@@ -1534,6 +1572,7 @@
 		}
 		{
 			prefab: "market"
+			faction: "null"
 			position: [485.375, 62.625]
 			rotation: 0.017453
 			scale: [-1.000, 1.000]
@@ -1589,12 +1628,6 @@
 		{
 			prefab: "essence_node.life"
 			position: [211.2869, 31.04687]
-			rotation: 0.000
-			scale: [1.000, 1.000]
-		}
-		{
-			prefab: "essence_node.energy"
-			position: [251.5621, 35.36008]
 			rotation: 0.000
 			scale: [1.000, 1.000]
 		}

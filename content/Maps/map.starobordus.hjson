@@ -1,7 +1,26 @@
 {
-	$name: "Starobordus"
-	$desc: "A decommissioned artillery training area surrounded by mountains."
 	$tag: "frontier"
+	$name: "Starobordus"
+	$desc:
+		'''
+		A decommissioned artillery training area surrounded by mountains.
+		'''
+	
+	$infrastructure: electricity, telegraph, water, railway, highway, airport, police, healthcare, education, military
+	$industry: mining, manufacturing, low_tech, high_tech, metallurgy, scrap, chemical, automotive, power, military, logging, hunting
+	$crime: piracy, theft, murder, embezzlement, drugs, prostitution, bribery, corruption, fraud, smuggling, forgery, raiding, pillaging
+	$geography: mountains, hills, lakes, excavated, forested, windy, rough, rocky, warm
+	$urbanization: 0.350
+	$industrialization: 0.600
+	$education: 0.240
+	$wealth: 0.320
+	$wilderness: 0.300
+	$devastation: 0.250
+	$savagery: 0.150
+	$anarchy: 0.100
+	$elevation: 110.000
+	$population: 13000
+	
 	$features:
 	[
 		"Underground tunnels"
@@ -19,36 +38,48 @@
 			position: [166.500, 67.750]
 			rotation: 0.000
 			scale: [3.500, 3.500]
+			z: 4.000
+			color: "0xffffffff"
 		}
 		{
 			prefab: "background.forest"
 			position: [135.375, 59.250]
 			rotation: 0.000
 			scale: [8.000, 8.000]
+			z: 16.000
+			color: "0xffffffff"
 		}
 		{
 			prefab: "background.mountains"
 			position: [215.625, 51.750]
 			rotation: 0.000
 			scale: [12.000, 12.000]
+			z: 24.000
+			color: "0xffffffff"
 		}
 		{
 			prefab: "background.ridge"
 			position: [370.250, 25.875]
 			rotation: 0.000
 			scale: [16.000, 16.000]
+			z: 32.000
+			color: "0xffffffff"
 		}
 		{
 			prefab: "background.nostalgia"
 			position: [324.375, 44.125]
 			rotation: 0.000
 			scale: [24.000, 24.000]
+			z: 64.000
+			color: "0xffffffff"
 		}
 		{
 			prefab: "background.sea"
 			position: [180.625, 69.125]
 			rotation: 0.000
 			scale: [48.000, 48.000]
+			z: 96.000
+			color: "0xffffffff"
 		}
 		{
 			prefab: "ruins"
@@ -344,60 +375,70 @@
 		}
 		{
 			prefab: "mine"
+			faction: "null"
 			position: [161.625, 64.875]
 			rotation: 0.000
 			scale: [1.000, 1.000]
 		}
 		{
 			prefab: "market"
+			faction: "null"
 			position: [75.000, 60.250]
 			rotation: 0.000
 			scale: [-1.000, 1.000]
 		}
 		{
 			prefab: "mine"
+			faction: "null"
 			position: [60.875, 43.875]
 			rotation: 0.000
 			scale: [-1.000, 1.000]
 		}
 		{
 			prefab: "mine"
+			faction: "null"
 			position: [228.125, 65.875]
 			rotation: 0.000
 			scale: [-1.000, 1.000]
 		}
 		{
 			prefab: "market"
+			faction: "null"
 			position: [172.125, 67.750]
 			rotation: 0.000
 			scale: [1.000, 1.000]
 		}
 		{
 			prefab: "market"
+			faction: "null"
 			position: [283.875, 49.250]
 			rotation: 0.000
 			scale: [1.000, 1.000]
 		}
 		{
 			prefab: "market"
+			faction: "null"
 			position: [432.625, 61.000]
 			rotation: 0.000
 			scale: [1.000, 1.000]
 		}
 		{
 			prefab: "market"
+			faction: "null"
 			position: [567.375, 47.250]
 			rotation: -0
 			scale: [1.000, 1.000]
 		}
 		{
 			prefab: "mine"
+			faction: "null"
 			position: [519.500, 59.250]
 			rotation: 0.000
 			scale: [1.000, 1.000]
 		}
 		{
 			prefab: "mine"
+			faction: "null"
 			position: [382.125, 56.375]
 			rotation: 0.000
 			scale: [1.000, 1.000]
@@ -434,14 +475,14 @@
 		}
 		{
 			prefab: "wreck.car"
-			position: [210.6201, 69.01288]
-			rotation: -0.55094
+			position: [210.6198, 69.01292]
+			rotation: -0.550903
 			scale: [-1.000, 1.000]
 		}
 		{
 			prefab: "wreck.car"
-			position: [419.2249, 64.34615]
-			rotation: 0.191314
+			position: [419.225, 64.34619]
+			rotation: 0.191429
 			scale: [1.000, 1.000]
 		}
 		{
@@ -536,20 +577,20 @@
 		}
 		{
 			prefab: "wreck.trashcan"
-			position: [254.5591, 62.50209]
-			rotation: -0.162499
+			position: [254.5589, 62.50211]
+			rotation: -0.162509
 			scale: [1.000, 1.000]
 		}
 		{
 			prefab: "wreck.trashcan"
-			position: [262.7628, 63.36001]
-			rotation: 1.880431
+			position: [262.7628, 63.36004]
+			rotation: 1.88043
 			scale: [1.000, 1.000]
 		}
 		{
 			prefab: "wreck.trashcan"
 			position: [444.9469, 68.33717]
-			rotation: 1.511749
+			rotation: 1.511748
 			scale: [1.000, 1.000]
 		}
 		{
@@ -844,6 +885,7 @@
 		}
 		{
 			prefab: "hatch.wood"
+			faction: "null"
 			position: [263.625, 41.125]
 			rotation: -0
 			scale: [1.000, 1.000]
@@ -892,6 +934,7 @@
 		}
 		{
 			prefab: "hatch.wood"
+			faction: "null"
 			position: [266.750, 45.250]
 			rotation: 0.000
 			scale: [1.000, 1.000]
@@ -910,32 +953,34 @@
 		}
 		{
 			prefab: "hatch.metal"
+			faction: "null"
 			position: [267.000, 55.500]
 			rotation: 0.000
 			scale: [1.000, 1.000]
 		}
 		{
 			prefab: "wreck.trashcan"
-			position: [260.8701, 44.12985]
-			rotation: 0.000249
+			position: [260.8701, 44.12984]
+			rotation: 0.000268
 			scale: [1.000, 1.000]
 		}
 		{
 			prefab: "hatch.wood"
+			faction: "null"
 			position: [266.875, 49.875]
 			rotation: 0.000
 			scale: [1.000, 1.000]
 		}
 		{
 			prefab: "wreck.keg"
-			position: [268.6013, 44.35434]
-			rotation: -1.569472
+			position: [268.6013, 44.35431]
+			rotation: -1.569426
 			scale: [1.000, 1.000]
 		}
 		{
 			prefab: "wreck.keg"
-			position: [268.538, 63.00882]
-			rotation: -0.109932
+			position: [268.5381, 63.00879]
+			rotation: -0.109826
 			scale: [1.000, 1.000]
 		}
 		{
@@ -960,6 +1005,7 @@
 		}
 		{
 			prefab: "door.wood"
+			faction: "null"
 			position: [311.125, 41.125]
 			rotation: 0.000
 			scale: [1.000, 1.000]
@@ -985,15 +1031,15 @@
 		{
 			prefab: "badger_den"
 			name: "Badger Den"
-			faction_id: 201
+			faction: "badger"
 			position: [321.875, 43.625]
 			rotation: -0.069813
 			scale: [1.000, 1.000]
 		}
 		{
 			prefab: "wreck.car"
-			position: [327.753, 43.32322]
-			rotation: 0.018093
+			position: [327.7527, 43.32285]
+			rotation: 0.018264
 			scale: [1.000, 1.000]
 		}
 		{
@@ -1124,6 +1170,7 @@
 		}
 		{
 			prefab: "mine"
+			faction: "null"
 			position: [611.375, 66.500]
 			rotation: 0.000
 			scale: [1.000, 1.000]
@@ -1472,8 +1519,8 @@
 		}
 		{
 			prefab: "wreck.trashcan"
-			position: [429.3317, 61.81053]
-			rotation: 0.104817
+			position: [429.3317, 61.81052]
+			rotation: 0.104846
 			scale: [1.000, 1.000]
 		}
 		{
@@ -1520,6 +1567,7 @@
 		}
 		{
 			prefab: "market"
+			faction: "null"
 			position: [517.750, 31.750]
 			rotation: 0.000
 			scale: [-1.000, 1.000]
@@ -1544,8 +1592,8 @@
 		}
 		{
 			prefab: "builder"
-			position: [436.8676, 61.60115]
-			rotation: 0.000004
+			position: [436.8679, 61.60118]
+			rotation: 0.000002
 			scale: [-1.000, 1.000]
 		}
 		{
@@ -1603,7 +1651,7 @@
 		{
 			prefab: "badger_den"
 			name: "Badger Den"
-			faction_id: 201
+			faction: "badger"
 			position: [456.000, 64.375]
 			rotation: 0.000
 			scale: [-1.000, 1.000]
@@ -1611,7 +1659,7 @@
 		{
 			prefab: "badger_den"
 			name: "Badger Den"
-			faction_id: 201
+			faction: "badger"
 			position: [50.875, 45.750]
 			rotation: 0.139626
 			scale: [1.000, 1.000]
@@ -1634,20 +1682,20 @@
 		}
 		{
 			prefab: "barrel.metal.wreck.00"
-			position: [295.1842, 49.45935]
-			rotation: -1.90253
+			position: [295.1786, 49.54274]
+			rotation: -1.905865
 			scale: [1.000, 1.000]
 		}
 		{
-			prefab: "pallet.ingot.iron.wreck.00"
+			prefab: "pallet.ingot.steel.wreck.00"
 			position: [261.9152, 53.91484]
 			rotation: 0.000585
 			scale: [-1.000, 1.000]
 		}
 		{
 			prefab: "barricade.wood.01"
-			position: [287.6675, 49.85159]
-			rotation: 0.064273
+			position: [287.6679, 49.85166]
+			rotation: 0.064312
 			scale: [1.000, 1.000]
 		}
 		{
@@ -1663,7 +1711,7 @@
 			scale: [-1.000, 1.000]
 		}
 		{
-			prefab: "pallet.ingot.iron.wreck.00"
+			prefab: "pallet.ingot.steel.wreck.00"
 			position: [460.1794, 63.87762]
 			rotation: 0.097469
 			scale: [1.000, 1.000]
@@ -1689,19 +1737,19 @@
 			offset_d: [18.000, -4.000]
 		}
 		{
-			prefab: "essence_node.energy"
+			prefab: "essence_node.heat"
 			position: [122.125, 51.875]
 			rotation: 0.000
 			scale: [1.000, 1.000]
 		}
 		{
-			prefab: "essence_node.energy"
+			prefab: "essence_node.heat"
 			position: [251.9889, 37.16113]
 			rotation: 0.000
 			scale: [1.000, 1.000]
 		}
 		{
-			prefab: "essence_node.energy"
+			prefab: "essence_node.heat"
 			position: [319.1524, 23.30696]
 			rotation: 0.000
 			scale: [1.000, 1.000]

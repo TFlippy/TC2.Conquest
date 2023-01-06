@@ -1,7 +1,26 @@
 {
-	$name: "Valej"
-	$desc: "A large map with a gold-rich valley in the middle."
 	$tag: "frontier"
+	$name: "Valej"
+	$desc:
+		'''
+		A large map with a gold-rich valley in the middle.
+		'''
+	
+	$infrastructure: electricity, telegraph, water, railway, highway, airport, police, healthcare, education, military
+	$industry: mining, agricultural, manufacturing, low_tech, metallurgy, mining, scrap, chemical, power, military, logging, hunting
+	$crime: piracy, theft, murder, embezzlement, drugs, prostitution, vandalism, bribery, corruption, fraud, smuggling, forgery, arson, extortion, raiding, pillaging, espionage
+	$geography: mountains, hills, lakes, excavated, forested, windy, rough, rocky, warm
+	$urbanization: 0.300
+	$industrialization: 0.350
+	$education: 0.140
+	$wealth: 0.200
+	$wilderness: 0.670
+	$devastation: 0.210
+	$savagery: 0.680
+	$anarchy: 0.100
+	$elevation: 90.000
+	$population: 14000
+	
 	$features:
 	[
 		"Lots of wreckages"
@@ -18,36 +37,48 @@
 			position: [391.750, 58.250]
 			rotation: 0.000
 			scale: [3.500, 3.500]
+			z: 4.000
+			color: "0xffffffff"
 		}
 		{
 			prefab: "background.forest"
 			position: [503.625, 39.750]
 			rotation: 0.000
 			scale: [8.000, 8.000]
+			z: 16.000
+			color: "0xffffffff"
 		}
 		{
 			prefab: "background.mountains"
 			position: [133.2073, 33.6016]
 			rotation: 0.000
 			scale: [12.000, 12.000]
+			z: 24.000
+			color: "0xffffffff"
 		}
 		{
 			prefab: "background.ridge"
 			position: [133.1355, 33.66088]
 			rotation: 0.000
 			scale: [16.000, 16.000]
+			z: 32.000
+			color: "0xffffffff"
 		}
 		{
 			prefab: "background.nostalgia"
 			position: [426.875, 58.125]
 			rotation: 0.000
 			scale: [24.000, 24.000]
+			z: 64.000
+			color: "0xffffffff"
 		}
 		{
 			prefab: "background.sea"
 			position: [133.2073, 33.6016]
 			rotation: 0.000
 			scale: [48.000, 48.000]
+			z: 96.000
+			color: "0xffffffff"
 		}
 		{
 			prefab: "ruins"
@@ -86,7 +117,7 @@
 		{
 			prefab: "badger_den"
 			name: "West"
-			faction_id: 201
+			faction: "badger"
 			position: [109.875, 49.250]
 			rotation: 0.000
 			scale: [1.000, 1.000]
@@ -94,7 +125,7 @@
 		{
 			prefab: "badger_den"
 			name: "East"
-			faction_id: 201
+			faction: "badger"
 			position: [515.375, 45.625]
 			rotation: 0.000
 			scale: [1.000, 1.000]
@@ -219,6 +250,7 @@
 		}
 		{
 			prefab: "mine"
+			faction: "null"
 			position: [160.625, 42.125]
 			rotation: 0.017453
 			scale: [1.003819, 0.996181]
@@ -285,12 +317,14 @@
 		}
 		{
 			prefab: "mine"
+			faction: "null"
 			position: [31.125, 58.875]
 			rotation: 0.000
 			scale: [-1.000, 1.000]
 		}
 		{
 			prefab: "market"
+			faction: "null"
 			position: [144.125, 46.375]
 			rotation: -0.034907
 			scale: [1.000, 1.000]
@@ -423,12 +457,14 @@
 		}
 		{
 			prefab: "mine"
+			faction: "null"
 			position: [330.750, 60.000]
 			rotation: 0.000
 			scale: [-1.000, 1.000]
 		}
 		{
 			prefab: "market"
+			faction: "null"
 			position: [361.750, 65.875]
 			rotation: 0.000
 			scale: [1.000, 1.000]
@@ -597,6 +633,7 @@
 		}
 		{
 			prefab: "market"
+			faction: "null"
 			position: [498.125, 47.000]
 			rotation: 0.000
 			scale: [-1.000, 1.000]
@@ -742,7 +779,7 @@
 		{
 			prefab: "wreck.car"
 			position: [597.3391, 55.11989]
-			rotation: -0.599104
+			rotation: -0.599105
 			scale: [1.000, 1.000]
 		}
 		{
@@ -873,8 +910,8 @@
 		}
 		{
 			prefab: "wreck.car"
-			position: [615.023, 28.20733]
-			rotation: 0.16015
+			position: [615.023, 28.20732]
+			rotation: 0.160147
 			scale: [1.000, 1.000]
 		}
 		{
@@ -1072,7 +1109,7 @@
 		{
 			prefab: "wreck.trashcan"
 			position: [508.9705, 48.47127]
-			rotation: -8.254146
+			rotation: -1.970949
 			scale: [1.000, 1.000]
 		}
 		{
@@ -1185,6 +1222,7 @@
 		}
 		{
 			prefab: "mine"
+			faction: "null"
 			position: [459.875, 59.875]
 			rotation: 0.000
 			scale: [1.000, 1.000]
@@ -1479,6 +1517,7 @@
 		}
 		{
 			prefab: "market"
+			faction: "null"
 			position: [729.625, 42.750]
 			rotation: 0.000
 			scale: [1.000, 1.000]
@@ -1607,6 +1646,7 @@
 		}
 		{
 			prefab: "market"
+			faction: "null"
 			position: [814.375, 47.000]
 			rotation: 0.000
 			scale: [-1.000, 1.000]
@@ -1657,8 +1697,8 @@
 		}
 		{
 			prefab: "wreck.trashcan"
-			position: [794.5723, 47.9966]
-			rotation: -14.39856
+			position: [794.5723, 47.99662]
+			rotation: -1.832165
 			scale: [1.000, 1.000]
 		}
 		{
@@ -1723,6 +1763,7 @@
 		}
 		{
 			prefab: "market"
+			faction: "null"
 			position: [925.250, 15.125]
 			rotation: 0.000
 			scale: [1.000, 1.000]
@@ -1771,8 +1812,8 @@
 		}
 		{
 			prefab: "wreck.car"
-			position: [927.3835, 34.6544]
-			rotation: 0.11068
+			position: [927.3835, 34.65439]
+			rotation: 0.110689
 			scale: [1.000, 1.000]
 		}
 		{
@@ -1897,8 +1938,8 @@
 		}
 		{
 			prefab: "miner"
-			position: [327.7136, 60.89685]
-			rotation: -0.000014
+			position: [327.7134, 60.89687]
+			rotation: -0.000001
 			scale: [-1.000, 1.000]
 		}
 		{
@@ -1921,8 +1962,8 @@
 		}
 		{
 			prefab: "miner"
-			position: [141.7934, 67.43716]
-			rotation: -0.000005
+			position: [141.7933, 67.4372]
+			rotation: -0.000001
 			scale: [-1.000, 1.000]
 		}
 		{
@@ -1975,6 +2016,7 @@
 		}
 		{
 			prefab: "hornet_hive"
+			faction: "hornet"
 			position: [596.625, 36.875]
 			rotation: 0.15708
 			scale: [1.000, 1.000]
@@ -2133,8 +2175,8 @@
 		}
 		{
 			prefab: "wreck.car"
-			position: [481.731, 61.09616]
-			rotation: -0.537962
+			position: [481.7309, 61.09609]
+			rotation: -0.538024
 			scale: [-1.000, 1.000]
 		}
 		{
@@ -2145,6 +2187,7 @@
 		}
 		{
 			prefab: "mine"
+			faction: "null"
 			position: [871.5001, 58.250]
 			rotation: 0.000
 			scale: [-1.000, 1.000]
@@ -2208,7 +2251,7 @@
 			scale: [1.000, 1.000]
 		}
 		{
-			prefab: "essence_node.energy"
+			prefab: "essence_node.heat"
 			position: [505.0877, 25.70003]
 			rotation: 0.000
 			scale: [1.000, 1.000]
@@ -2310,33 +2353,33 @@
 			scale: [1.000, 1.000]
 		}
 		{
-			prefab: "pallet.ingot.iron.wreck.00"
+			prefab: "pallet.ingot.steel.wreck.00"
 			position: [567.0537, 34.41349]
-			rotation: 0.000725
+			rotation: 0.000724
 			scale: [1.000, 1.000]
 		}
 		{
 			prefab: "barrel.metal.wreck.00"
-			position: [593.1544, 58.94195]
-			rotation: 1.503074
+			position: [593.405, 58.64198]
+			rotation: 1.537916
 			scale: [1.000, 1.000]
 		}
 		{
 			prefab: "wreck.chair.wood.01"
-			position: [603.3013, 52.66128]
-			rotation: -0.148902
+			position: [603.2974, 52.79018]
+			rotation: -0.146184
 			scale: [1.000, 1.000]
 		}
 		{
 			prefab: "barrel.metal.wreck.00"
-			position: [536.625, 37.73001]
-			rotation: -0.000002
+			position: [536.6364, 37.80164]
+			rotation: 0.001492
 			scale: [1.000, 1.000]
 		}
 		{
-			prefab: "pallet.ingot.iron.wreck.00"
+			prefab: "pallet.ingot.steel.wreck.00"
 			position: [459.3876, 48.10931]
-			rotation: -0.053522
+			rotation: -0.053521
 			scale: [1.000, 1.000]
 		}
 		{
@@ -2357,8 +2400,8 @@
 		}
 		{
 			prefab: "barrel.metal.wreck.00"
-			position: [624.0612, 28.98001]
-			rotation: 0.000001
+			position: [624.0765, 29.05149]
+			rotation: 0.01086
 			scale: [1.000, 1.000]
 		}
 		{
@@ -2376,15 +2419,9 @@
 			offset_b: [0.000, 5.125]
 		}
 		{
-			prefab: "billboard.wall.wide.02"
-			position: [574.7247, 25.34732]
-			rotation: 0.000
-			scale: [1.000, 1.000]
-		}
-		{
 			prefab: "barrel.metal.wreck.00"
-			position: [827.6332, 48.04742]
-			rotation: -0.008585
+			position: [827.6322, 48.1269]
+			rotation: -0.008025
 			scale: [1.000, 1.000]
 		}
 	]
