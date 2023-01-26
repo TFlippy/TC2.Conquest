@@ -6,9 +6,14 @@
 		'''
 	
 	flags: none
-	character_flags: human
-	origin: "hunter"
-	cost: 4.000
+
+	character_flags:
+	{
+		require: none
+		include: armed, criminal, nobility, farmer, hunter
+		exclude: unarmed
+		weight: 1.000
+	}
 	
 	shipment:
 	{

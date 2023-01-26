@@ -6,10 +6,15 @@
 		'''
 	
 	flags: none
-	character_flags: human
-	origin: "prospector"
-	cost: 1.500
-	
+
+	character_flags:
+	{
+		require: none
+		include: scientist, military, farmer, rich, civillian, engineer, hunter, educated
+		exclude: none
+		weight: 1.000
+	}
+
 	shipment:
 	{
 		name: "Binoculars"

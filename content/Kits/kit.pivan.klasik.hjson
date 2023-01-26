@@ -1,5 +1,5 @@
 {
-	name: "Crowbar"
+	name: "Pivan Klasik"
 	desc:
 		'''
 		TODO: Desc
@@ -10,19 +10,19 @@
 	character_flags:
 	{
 		require: none
-		include: construction, laborer, engineer, artisan, technician, scientist
-		exclude: nobility, medical, social
+		include: unskilled, criminal, laborer, lowlife, poor, alcoholic
+		exclude: nobility, professional, scientist, educated, rich
 		weight: 1.000
 	}
 	
 	shipment:
 	{
-		name: "Crowbar"
+		name: "Pivan Klasik"
 		items:
 		[
 			{
 				type: prefab
-				prefab: "crowbar"
+				prefab: "bp.pivan.klasik"
 				quantity: 1.000
 			}
 		]

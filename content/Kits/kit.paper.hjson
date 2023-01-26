@@ -6,9 +6,14 @@
 		'''
 	
 	flags: none
-	character_flags: human
-	origin: "clerk"
-	cost: 1.000
+
+	character_flags:
+	{
+		require: none
+		include: law, educated, social
+		exclude: none
+		weight: 1.000
+	}
 	
 	shipment:
 	{

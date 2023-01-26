@@ -1,0 +1,31 @@
+{
+	name: "Pivan Brum-Brum"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+
+	character_flags:
+	{
+		require: none
+		include: unskilled, military, farmer, criminal, construction, artisan, laborer, alcoholic
+		exclude: nobility, professional, scientist
+		weight: 1.000
+	}
+	
+	shipment:
+	{
+		name: "Pivan Brum-Brum"
+		items:
+		[
+			{
+				type: prefab
+				prefab: "bp.pivan.brumbrum"
+				quantity: 1.000
+			}
+		]
+		flags: unpack
+	}
+}

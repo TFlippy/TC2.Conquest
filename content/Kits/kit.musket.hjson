@@ -6,9 +6,14 @@
 		'''
 	
 	flags: none
-	character_flags: human, military, armed
-	origin: "soldier"
-	cost: 4.000
+
+	character_flags:
+	{
+		require: none
+		include: armed, civillian, farmer, artisan, nobility, military, construction, criminal
+		exclude: unarmed
+		weight: 1.000
+	}
 	
 	shipment:
 	{
@@ -23,7 +28,7 @@
 			{
 				type: resource
 				material: "ammo_musket"
-				quantity: 8.000
+				quantity: 12.000
 			}
 		]
 		flags: unpack

@@ -6,9 +6,15 @@
 		'''
 	
 	flags: none
-	character_flags: human
-	cost: 1.000
-	
+
+	character_flags:
+	{
+		require: none
+		include: construction, laborer, engineer, artisan, technician, farmer, unskilled, commerce, criminal
+		exclude: nobility, medical
+		weight: 1.000
+	}
+
 	shipment:
 	{
 		name: "Small Crate"

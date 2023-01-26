@@ -1,0 +1,31 @@
+{
+	name: "Pivan Forte"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+
+	character_flags:
+	{
+		require: none
+		include: scientist, educated, professional, commerce, military, medical, law, artisan, engineer, technician, alcoholic
+		exclude: poor
+		weight: 1.000
+	}
+	
+	shipment:
+	{
+		name: "Pivan Forte"
+		items:
+		[
+			{
+				type: prefab
+				prefab: "bp.pivan.forte"
+				quantity: 1.000
+			}
+		]
+		flags: unpack
+	}
+}
