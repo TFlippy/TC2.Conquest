@@ -10,8 +10,8 @@
 	character_flags:
 	{
 		require: none
-		include: unskilled, criminal, laborer, lowlife, poor, alcoholic
-		exclude: nobility, professional, scientist, educated, rich
+		include: unskilled, criminal, laborer, lowlife, poor, alcoholic, lower_class, slave, lower_middle_class, middle_class
+		exclude: rich, upper_class, elite_class
 		weight: 1.000
 	}
 	

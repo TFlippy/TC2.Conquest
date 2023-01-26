@@ -27,7 +27,7 @@
 			}
 			{
 				type: resource
-				material: "ammo_hc.lv"
+				material: "ammo_hc.rr"
 				quantity: 12.000
 			}
 		]

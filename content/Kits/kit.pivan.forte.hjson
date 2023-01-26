@@ -10,8 +10,8 @@
 	character_flags:
 	{
 		require: none
-		include: scientist, educated, professional, commerce, military, medical, law, artisan, engineer, technician, alcoholic
-		exclude: poor
+		include: scientist, educated, professional, commerce, military, medical, law, artisan, engineer, technician, alcoholic, rich, middle_class, upper_middle_class
+		exclude: poor, lower_class, upper_class, elite_class
 		weight: 1.000
 	}
 	

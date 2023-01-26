@@ -22,11 +22,6 @@
 		[
 			{
 				type: resource
-				material: "alcohol"
-				quantity: 15.000
-			}
-			{
-				type: resource
 				material: "sulfuric_acid"
 				quantity: 25.000
 			}

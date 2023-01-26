@@ -1,0 +1,31 @@
+{
+	name: "Dynamite"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+
+	character_flags:
+	{
+		require: professional, armed, miner
+		include: professional, armed, miner, military
+		exclude: unarmed
+		weight: 1.000
+	}
+
+	shipment:
+	{
+		name: "Dynamite"
+		items:
+		[
+			{
+				type: prefab
+				prefab: "dynamite"
+				quantity: 1.000
+			}
+		]
+		flags: unpack
+	}
+}

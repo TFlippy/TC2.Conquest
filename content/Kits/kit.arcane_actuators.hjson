@@ -1,5 +1,5 @@
 {
-	name: "Lost Documents"
+	name: "Arcane Actuators"
 	desc:
 		'''
 		TODO: Desc
@@ -9,21 +9,21 @@
 
 	character_flags:
 	{
-		require: none
-		include: law, educated, social, bureaucrat, commerce
+		require: arcane
+		include: arcane, engineer, technician
 		exclude: none
 		weight: 1.000
 	}
 	
 	shipment:
 	{
-		name: "Lost Documents"
+		name: "Arcane Actuators"
 		items:
 		[
 			{
 				type: resource
-				material: "paper"
-				quantity: 20.000
+				material: "arcane_actuator"
+				quantity: 7.000
 			}
 		]
 		flags: unpack

@@ -1,5 +1,5 @@
 {
-	name: "Musket"
+	name: "Pistol"
 	desc:
 		'''
 		TODO: Desc
@@ -10,25 +10,25 @@
 	character_flags:
 	{
 		require: none
-		include: armed, civillian, farmer, artisan, nobility, military, construction, criminal, hunter
+		include: armed, military, professional, educated, construction, law, commerce, rich
 		exclude: unarmed
 		weight: 1.000
 	}
-	
+
 	shipment:
 	{
-		name: "Musket"
+		name: "Pistol"
 		items:
 		[
 			{
 				type: prefab
-				prefab: "musket"
+				prefab: "pistol"
 				quantity: 1.000
 			}
 			{
 				type: resource
-				material: "ammo_musket"
-				quantity: 12.000
+				material: "ammo_lc.rr"
+				quantity: 24.000
 			}
 		]
 		flags: unpack
