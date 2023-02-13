@@ -6,7 +6,7 @@
 		A mushroom-infested forest.
 		'''
 	
-	$infrastructure: railway, military
+	$infrastructure: telegraph, railway, military
 	$industry: logging, hunting, agricultural, low_tech
 	$crime: piracy, theft, murder, drugs, smuggling, raiding, pillaging
 	$geography: mountains, hills, meadows, lakes, forested, rough, warm

@@ -1,0 +1,2630 @@
+{
+	$tag: "dev"
+	$name: "Crater"
+	$desc:
+		'''
+		A place favored by developers.
+		'''
+	
+	$infrastructure: none
+	$industry: none
+	$crime: none
+	$geography: none
+	$urbanization: 0.000
+	$industrialization: 0.000
+	$education: 0.000
+	$wealth: 0.000
+	$wilderness: 0.000
+	$devastation: 0.000
+	$savagery: 0.000
+	$anarchy: 0.000
+	$elevation: 0.000
+	$population: 0
+	
+	$features: []
+	
+	entities:
+	[
+		{
+			prefab: "background.plains"
+			position: [257.750, 133.125]
+			rotation: 0.000
+			scale: [3.500, 3.500]
+			z: 4.000
+			color: "0xffffffff"
+		}
+		{
+			prefab: "background.forest"
+			position: [150.375, 103.375]
+			rotation: 0.000
+			scale: [8.000, 8.000]
+			z: 16.000
+			color: "0xffffffff"
+		}
+		{
+			prefab: "background.mountains"
+			position: [133.2073, 33.6016]
+			rotation: 0.000
+			scale: [12.000, 12.000]
+			z: 24.000
+			color: "0xffffffff"
+		}
+		{
+			prefab: "background.ridge"
+			position: [133.1355, 33.66088]
+			rotation: 0.000
+			scale: [16.000, 16.000]
+			z: 32.000
+			color: "0xffffffff"
+		}
+		{
+			prefab: "background.nostalgia"
+			position: [112.375, 43.000]
+			rotation: 0.000
+			scale: [24.000, 24.000]
+			z: 64.000
+			color: "0xffffffff"
+		}
+		{
+			prefab: "biome.wasteland.00"
+			position: [125.750, 146.875]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "chain_fence.00"
+			position: [66.750, 59.125]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.brown"
+			position: [141.625, 114.750]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "log.00"
+			position: [135.6589, 107.8865]
+			rotation: 0.722218
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "boulder.02"
+			position: [204.750, 138.750]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "shrubbery.00"
+			position: [349.500, 128.625]
+			rotation: 2.199115
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.brown"
+			position: [131.125, 106.000]
+			rotation: 0.10472
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.brown"
+			position: [112.250, 81.625]
+			rotation: 0.733038
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "boulder.01.moss"
+			position: [346.000, 122.875]
+			rotation: -0.05236
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "boulder.00.moss"
+			position: [108.375, 73.000]
+			rotation: 0.541052
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "cigarette"
+			position: [87.73109, 50.20353]
+			rotation: 1.572879
+			scale: [-1.000, 1.000]
+		}
+		{
+			prefab: "barricade.wood.01"
+			position: [102.1681, 59.21267]
+			rotation: -0.291461
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "shrubbery.02"
+			position: [350.625, 120.000]
+			rotation: -2.286382
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "vending_machine.00"
+			position: [75.45583, 54.10501]
+			rotation: -0.000002
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.maple"
+			position: [111.375, 79.750]
+			rotation: 0.261799
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "vine"
+			position: [115.000, 86.875]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "boulder.00"
+			position: [243.625, 165.125]
+			rotation: -0.453786
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "boulder.01.moss"
+			position: [352.125, 154.750]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "shrubbery.01"
+			position: [144.8062, 115.0785]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "storage"
+			faction: "null"
+			position: [34.875, 58.750]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "shrubbery.01"
+			position: [341.375, 124.875]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "shrubbery.02"
+			position: [139.000, 110.875]
+			rotation: 0.453786
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "shrubbery.00"
+			position: [108.500, 69.625]
+			rotation: 1.082104
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "chain_fence.00"
+			position: [71.28211, 59.11787]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "chain_fence.00"
+			position: [61.750, 59.125]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.crates.00"
+			position: [294.250, 138.625]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.maple"
+			position: [107.500, 69.875]
+			rotation: 0.575959
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "bramble.00"
+			position: [403.000, 115.500]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "shrubbery.01"
+			position: [454.875, 170.125]
+			rotation: -0.087266
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "vine.01"
+			position: [451.000, 168.375]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.maple.dead"
+			position: [115.250, 87.000]
+			rotation: 0.541052
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "boulder.01"
+			position: [223.625, 141.125]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "shrubbery.00"
+			position: [125.375, 97.500]
+			rotation: 0.959931
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [226.500, 141.125]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.000, -6.250]
+		}
+		{
+			prefab: "boulder.00.moss"
+			position: [104.625, 64.875]
+			rotation: -0.855211
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "cigarette"
+			position: [231.3519, 134.0277]
+			rotation: -0.005449
+			scale: [-1.000, 1.000]
+		}
+		{
+			prefab: "market"
+			faction: "null"
+			position: [64.750, 59.375]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [249.250, 140.375]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [1.3573, -4.812256]
+		}
+		{
+			prefab: "tree.maple"
+			position: [137.125, 111.125]
+			rotation: 0.244346
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.pine.dead"
+			position: [255.982, 138.4747]
+			rotation: 1.854304
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "shrubbery.01"
+			position: [150.875, 119.000]
+			rotation: 0.296706
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "storage"
+			faction: "null"
+			position: [55.375, 53.875]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ruins"
+			name: "Ruins"
+			position: [157.4081, 118.8685]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ruins"
+			name: "Ruins"
+			position: [307.4453, 132.315]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ruins"
+			name: "East Crater"
+			position: [412.2582, 57.16091]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [160.875, 159.250]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [-1.491028, -3.440826]
+		}
+		{
+			prefab: "crossbow"
+			position: [319.4345, 131.7288]
+			rotation: -3.631228
+			scale: [-1.000, 1.000]
+		}
+		{
+			prefab: "track"
+			position: [148.875, 208.125]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.000, -32.000]
+		}
+		{
+			prefab: "cabin.wood.00"
+			position: [148.5334, 208.8522]
+			rotation: -0.002941
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [129.375, 101.000]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.000, -7.500]
+		}
+		{
+			prefab: "ladder.metal"
+			position: [106.625, 62.125]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.000, -2.500]
+		}
+		{
+			prefab: "vine"
+			position: [209.875, 148.000]
+			rotation: -0.087266
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "bramble.03"
+			position: [221.000, 145.875]
+			rotation: -2.80998
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.metal"
+			position: [440.625, 56.375]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, -2.500]
+			offset_b: [0.000, 2.500]
+		}
+		{
+			prefab: "pickaxe"
+			position: [492.8811, 63.779]
+			rotation: 1.56997
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "gate.metal"
+			faction: "null"
+			position: [437.375, 53.750]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "hatch.metal"
+			faction: "null"
+			position: [440.750, 46.625]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mine"
+			faction: "null"
+			position: [110.500, 91.125]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.metal"
+			position: [440.625, 50.000]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, -2.500]
+			offset_b: [0.000, 2.500]
+		}
+		{
+			prefab: "chain_fence.00"
+			position: [459.375, 59.500]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "lamp_post.metal.02"
+			position: [455.250, 56.750]
+			rotation: -3.141593
+			scale: [1.000, -1.028557]
+		}
+		{
+			prefab: "lamp_post.metal"
+			position: [429.625, 57.500]
+			rotation: -0.05236
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "door.metal"
+			faction: "null"
+			position: [476.125, 59.750]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.metal"
+			position: [473.375, 44.875]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.000, -3.750]
+		}
+		{
+			prefab: "tree.maple.dead"
+			position: [149.000, 119.250]
+			rotation: -0.087266
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "door.metal"
+			faction: "null"
+			position: [462.250, 59.750]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.maple.stump"
+			position: [362.000, 107.375]
+			rotation: -0.471239
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.metal"
+			position: [473.375, 49.250]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.000, -3.125]
+		}
+		{
+			prefab: "ladder.metal"
+			position: [473.375, 54.375]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.000, -3.750]
+		}
+		{
+			prefab: "ladder.metal"
+			position: [473.375, 60.875]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.000, -5.000]
+		}
+		{
+			prefab: "lamp"
+			position: [468.125, 57.625]
+			rotation: 3.1765
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "lamp"
+			position: [468.125, 52.500]
+			rotation: 3.1765
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "lamp"
+			position: [468.1667, 47.48122]
+			rotation: 3.1765
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "lamp"
+			position: [468.1944, 42.39995]
+			rotation: 3.1765
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "vine"
+			position: [207.250, 159.250]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "chair.wood.00"
+			position: [466.3347, 60.105]
+			rotation: 0.000003
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "chair.wood.00"
+			position: [465.0115, 55.22991]
+			rotation: 0.000137
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "chair.wood.00"
+			position: [465.9454, 50.10491]
+			rotation: 0.000137
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "chair.wood.00"
+			position: [464.1118, 45.1048]
+			rotation: 0.000306
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.maple"
+			position: [388.625, 68.500]
+			rotation: -0.383972
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "vending_machine.00"
+			position: [453.369, 57.85482]
+			rotation: 0.000145
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "billboard.04"
+			position: [190.8793, 132.5571]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "workbench"
+			position: [469.500, 49.60493]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wrench"
+			position: [453.5973, 59.54903]
+			rotation: 1.460137
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "trashcan"
+			position: [458.8836, 60.5033]
+			rotation: 0.002829
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "crank"
+			position: [442.625, 55.000]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "billboard.07"
+			position: [457.8438, 46.35976]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "billboard.09"
+			position: [423.9537, 58.10411]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "lamp.02"
+			position: [434.125, 44.875]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "lamp.02"
+			position: [442.7639, 45.02036]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "bramble.00"
+			position: [456.375, 168.500]
+			rotation: -0.418879
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "chain_fence.00"
+			position: [445.875, 57.875]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "chain_fence.00"
+			position: [450.500, 57.875]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ornament.01"
+			position: [429.000, 46.750]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "bramble.01"
+			position: [462.625, 157.125]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.car"
+			position: [342.5908, 122.8318]
+			rotation: 0.31864
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.lamp_post.00"
+			position: [338.7303, 122.7968]
+			rotation: -0.296706
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.pine.stump"
+			position: [393.375, 58.125]
+			rotation: 0.349066
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "market"
+			faction: "null"
+			position: [242.2534, 132.3912]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "track"
+			position: [196.250, 132.625]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [31.99976, -0.125]
+		}
+		{
+			prefab: "cabin.metal.00"
+			position: [228.1554, 132.7276]
+			rotation: 0.001605
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mount.heavy"
+			faction: "null"
+			position: [17.12501, 59.01035]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "crane.arm.articulated"
+			position: [26.61183, 76.21268]
+			rotation: 2.323995
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "crane.arm.basic.00"
+			position: [22.57231, 70.32269]
+			rotation: 0.547939
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [10.000, 0.000]
+		}
+		{
+			prefab: "winch"
+			position: [26.09003, 80.19024]
+			rotation: -0.686832
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [199.994, 136.7289]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [-1.375, -2.000]
+			offset_b: [-1.375, 1.500]
+		}
+		{
+			prefab: "barricade.wood.01"
+			position: [171.3617, 128.6001]
+			rotation: 0.385884
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.keg"
+			position: [427.7744, 80.22808]
+			rotation: -1.566955
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "lamp_post.wood"
+			position: [247.3234, 131.9382]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mine"
+			faction: "null"
+			position: [319.7894, 182.4068]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [118.375, 92.625]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.621178, -5.590599]
+		}
+		{
+			prefab: "barrel.metal.wreck.00"
+			position: [217.0695, 165.4266]
+			rotation: 0.985646
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "bramble.02"
+			position: [209.500, 158.500]
+			rotation: 1.605703
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [119.250, 143.875]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [2.371712, -7.115128]
+		}
+		{
+			prefab: "billboard.09"
+			position: [232.1724, 132.5331]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.crates.00"
+			position: [236.7507, 133.8732]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "miner"
+			position: [3220.507, 2918240.000]
+			rotation: 0.000
+			scale: [-1.000, 1.000]
+		}
+		{
+			prefab: "truss.metal.00"
+			position: [150.875, 176.250]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.000, -3.500]
+		}
+		{
+			prefab: "mine"
+			faction: "null"
+			position: [242.000, 142.250]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "lamp.01"
+			position: [146.750, 172.500]
+			rotation: 3.141593
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "sledgehammer"
+			position: [453.8038, 59.60501]
+			rotation: -4.712386
+			scale: [-1.000, 1.000]
+		}
+		{
+			prefab: "billboard.01"
+			position: [110.3119, 57.34689]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "hatch.metal"
+			faction: "null"
+			position: [78.875, 56.375]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "door.metal"
+			faction: "null"
+			position: [74.125, 59.625]
+			rotation: 0.000
+			scale: [-1.000, 1.000]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [117.625, 135.375]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [1.932472, -7.246765]
+		}
+		{
+			prefab: "shrubbery.01"
+			position: [112.375, 79.625]
+			rotation: 0.925025
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "barrel.metal.wreck.00"
+			position: [172.9458, 133.4657]
+			rotation: -1.212064
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "door.wood"
+			faction: "null"
+			position: [311.4532, 180.3811]
+			rotation: 0.15708
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "door.metal"
+			faction: "null"
+			position: [467.750, 39.375]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "lamp"
+			position: [468.750, 34.875]
+			rotation: 2.687807
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.metal"
+			position: [147.125, 188.000]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.000, 10.000]
+		}
+		{
+			prefab: "tree.maple.stump"
+			position: [384.250, 79.125]
+			rotation: -0.820305
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.maple"
+			position: [380.250, 86.000]
+			rotation: -0.331613
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "truss.metal.00"
+			position: [146.000, 176.125]
+			rotation: 1.553343
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.000, -5.000]
+		}
+		{
+			prefab: "shovel"
+			position: [231.0457, 151.8465]
+			rotation: -0.476897
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "storage"
+			faction: "null"
+			position: [83.125, 42.000]
+			rotation: -0
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [43.375, 65.250]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [-3.660702, 4.27082]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [35.750, 72.625]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.620174, 4.961388]
+		}
+		{
+			prefab: "truss.metal.00"
+			position: [47.875, 62.625]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [-16.000, 0.000]
+		}
+		{
+			prefab: "door.wood"
+			faction: "null"
+			position: [80.750, 51.750]
+			rotation: 0.000
+			scale: [-1.000, 1.000]
+		}
+		{
+			prefab: "truss.metal.00"
+			position: [20.375, 62.625]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [11.000, 0.000]
+		}
+		{
+			prefab: "door.wood"
+			faction: "null"
+			position: [27.250, 79.000]
+			rotation: 0.000
+			scale: [-1.000, 1.000]
+		}
+		{
+			prefab: "door.wood"
+			faction: "null"
+			position: [33.250, 79.500]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "workbench"
+			position: [29.68539, 79.25942]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [146.250, 119.750]
+			rotation: 0.122173
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.000, -3.750]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [71.000, 112.500]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.618721, -4.331032]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [73.000, 105.750]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [-2.089073, -5.222679]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [349.250, 125.625]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.000, -7.500]
+		}
+		{
+			prefab: "badger_den"
+			name: "Badger Den"
+			faction: "null"
+			position: [35.49304, 80.91453]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "door.metal"
+			faction: "null"
+			position: [94.500, 59.375]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.metal"
+			position: [83.500, 60.125]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.000, -5.000]
+		}
+		{
+			prefab: "lamp"
+			position: [51.250, 52.125]
+			rotation: 3.159046
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "boulder.03"
+			position: [356.125, 141.375]
+			rotation: -1.151918
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.metal"
+			position: [83.500, 53.875]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.000, -3.750]
+		}
+		{
+			prefab: "door.metal"
+			faction: "null"
+			position: [80.78905, 59.34562]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "lamp"
+			position: [84.250, 48.375]
+			rotation: 2.75762
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "lamp"
+			position: [88.875, 52.125]
+			rotation: 3.12414
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "lamp"
+			position: [89.000, 57.125]
+			rotation: 3.12414
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [216.375, 163.250]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [1.686447, -7.307938]
+		}
+		{
+			prefab: "fern"
+			position: [199.625, 139.500]
+			rotation: 0.15708
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "barricade.wood.01"
+			position: [206.7468, 139.4302]
+			rotation: 0.216876
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "shrubbery.02"
+			position: [217.625, 150.000]
+			rotation: 1.396264
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "vine"
+			position: [215.375, 150.500]
+			rotation: -0
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [220.000, 154.500]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.000, -6.250]
+		}
+		{
+			prefab: "barricade.wood.01"
+			position: [220.6767, 141.042]
+			rotation: 0.034478
+			scale: [-1.000, 1.000]
+		}
+		{
+			prefab: "bramble.01"
+			position: [196.0073, 137.9016]
+			rotation: 0.244346
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "barrel.metal.wreck.00"
+			position: [224.4573, 141.3573]
+			rotation: -3.270804
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [219.375, 146.625]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [-2.284027, -4.44783]
+		}
+		{
+			prefab: "boulder.03"
+			position: [209.000, 145.375]
+			rotation: 1.082104
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "boulder.01"
+			position: [223.500, 147.250]
+			rotation: -2.652901
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "boulder.01"
+			position: [208.125, 141.875]
+			rotation: -0.942478
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "bramble.01"
+			position: [228.625, 140.500]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "vine.01"
+			position: [208.000, 152.000]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "shrubbery.00"
+			position: [215.000, 148.000]
+			rotation: -0.191986
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.pump.00"
+			position: [266.2792, 140.7279]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.trashcan"
+			position: [288.3036, 141.3714]
+			rotation: 1.282793
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "bramble.03"
+			position: [222.500, 154.000]
+			rotation: -0.401426
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.crates.00"
+			position: [216.875, 147.875]
+			rotation: 0.366519
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "pickaxe"
+			position: [306.7505, 181.426]
+			rotation: -1.528224
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "door.wood"
+			faction: "null"
+			position: [304.875, 180.250]
+			rotation: 0.000
+			scale: [-1.000, 1.000]
+		}
+		{
+			prefab: "vine.01"
+			position: [355.500, 146.125]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [354.250, 133.750]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [-1.470886, -7.354355]
+		}
+		{
+			prefab: "bramble.02"
+			position: [213.375, 150.250]
+			rotation: -1.553343
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "badger_den"
+			name: "Badger Den"
+			faction: "null"
+			position: [421.0837, 179.5224]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [236.500, 147.125]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.612869, -3.064316]
+		}
+		{
+			prefab: "vine.01"
+			position: [361.750, 155.500]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.ladder.wood"
+			position: [353.125, 140.875]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [-0.875, -6.500]
+			offset_b: [-1.250, 1.375]
+		}
+		{
+			prefab: "wreck.crates.01"
+			position: [399.375, 58.250]
+			rotation: 0.069813
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.oak.stump"
+			position: [376.125, 92.125]
+			rotation: -0.680678
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "boulder.00.moss"
+			position: [349.375, 131.625]
+			rotation: 1.658063
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "shrubbery.00"
+			position: [349.875, 149.000]
+			rotation: 0.733038
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "revolver"
+			position: [343.8369, 123.9818]
+			rotation: -3.500289
+			scale: [-1.412042, 1.320486]
+		}
+		{
+			prefab: "banner.kobold.00"
+			faction: "null"
+			position: [300.2881, 179.1245]
+			rotation: -0.314159
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "workbench"
+			position: [308.750, 180.375]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [297.750, 181.000]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [1.458588, -6.077423]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [309.375, 174.125]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [-1.225738, -6.128632]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [317.125, 173.125]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [-1.755615, 4.68164]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [315.125, 182.875]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [-1.185852, -3.557556]
+		}
+		{
+			prefab: "lamp"
+			position: [306.750, 178.750]
+			rotation: 2.897247
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "crate"
+			position: [42.25014, 69.89773]
+			rotation: -0.323034
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.crates.00"
+			position: [38.375, 70.875]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.chain_fence.00"
+			position: [269.5684, 140.6606]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.oven.00"
+			position: [273.500, 141.375]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.ladder.wood"
+			position: [192.4679, 203.2828]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, -2.250]
+			offset_b: [0.000, 2.250]
+		}
+		{
+			prefab: "log.00"
+			position: [365.4886, 102.6358]
+			rotation: -0.732323
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.metal"
+			position: [147.125, 209.250]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.000, -10.000]
+		}
+		{
+			prefab: "wreck.lamp_post.01"
+			position: [297.375, 138.750]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.chain_fence.01"
+			position: [264.875, 140.375]
+			rotation: 0.314159
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.maple"
+			position: [379.250, 87.375]
+			rotation: -0.575959
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.chain_fence.00"
+			position: [274.1757, 140.6983]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.pine.stump"
+			position: [258.125, 139.625]
+			rotation: 0.139626
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "pickaxe"
+			position: [242.9386, 144.8539]
+			rotation: 4.632564
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.blue"
+			position: [367.000, 176.500]
+			rotation: -0.558505
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "truss.metal.00"
+			position: [146.125, 176.125]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.000, -3.500]
+		}
+		{
+			prefab: "book"
+			position: [257.9587, 138.4299]
+			rotation: -2.674309
+			scale: [-1.000, 1.000]
+		}
+		{
+			prefab: "bramble.03"
+			position: [192.625, 158.625]
+			rotation: -2.234022
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.blue"
+			position: [313.6553, 134.0112]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.maple.dead"
+			position: [320.875, 131.750]
+			rotation: -0.122173
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "badger_den"
+			name: "Badger Den"
+			faction: "null"
+			position: [427.7043, 109.6558]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "sledgehammer"
+			position: [234.5193, 149.5452]
+			rotation: 0.797602
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "barrel.metal.wreck.00"
+			position: [274.4037, 141.5978]
+			rotation: 0.022402
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.car"
+			position: [300.6893, 136.5895]
+			rotation: -0.395431
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.chain_fence.00"
+			position: [301.375, 135.750]
+			rotation: -0.680678
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.metal"
+			position: [147.125, 176.750]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.000, 10.000]
+		}
+		{
+			prefab: "wreck.chain_fence.01"
+			position: [297.000, 137.250]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "shrubbery.00"
+			position: [460.500, 161.375]
+			rotation: -1.239184
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "door.metal"
+			faction: "null"
+			position: [49.375, 59.625]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mount.heavy.wreck"
+			position: [325.750, 126.750]
+			rotation: -0.279253
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.hand_crank.00"
+			position: [352.500, 123.125]
+			rotation: -2.164208
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [192.375, 163.000]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.559021, -1.118027]
+		}
+		{
+			prefab: "boulder.01.moss"
+			position: [285.250, 140.750]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ruins"
+			name: "Imperial Township"
+			position: [98.250, 58.500]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "shovel"
+			position: [231.069, 151.8382]
+			rotation: -0.48829
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "workbench"
+			position: [143.058, 174.689]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "sledgehammer"
+			position: [233.2841, 149.9374]
+			rotation: 0.135853
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mine"
+			faction: "null"
+			position: [410.000, 76.625]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "door.metal"
+			faction: "null"
+			position: [58.875, 59.500]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "crate.small"
+			position: [444.9494, 136.6009]
+			rotation: -0.221318
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.blue"
+			position: [444.000, 145.875]
+			rotation: 0.541052
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.blue"
+			position: [468.375, 130.875]
+			rotation: -2.234022
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "blueprint"
+			faction: "null"
+			position: [239.823, 144.2957]
+			rotation: -4.957326
+			scale: [-1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.blue"
+			position: [458.125, 137.875]
+			rotation: -0.15708
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "barricade.wood.01"
+			position: [203.6926, 162.4799]
+			rotation: -0
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "barricade.wood.01"
+			position: [182.8413, 201.3551]
+			rotation: -0.000071
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "pickaxe"
+			position: [243.1728, 144.6976]
+			rotation: 1.260607
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.red.00"
+			position: [433.250, 140.125]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "shrubbery.00"
+			position: [425.000, 151.500]
+			rotation: 2.321288
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "bramble.02"
+			position: [408.875, 129.000]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "vine"
+			position: [428.250, 106.250]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "hornet_hive"
+			faction: "null"
+			position: [434.500, 151.625]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.ladder.wood"
+			position: [440.750, 139.750]
+			rotation: 0.349066
+			scale: [1.000, 1.000]
+			offset_a: [0.000, -2.250]
+			offset_b: [0.000, 2.250]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [355.250, 171.500]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.000, -3.125]
+		}
+		{
+			prefab: "tree.maple.dead"
+			position: [353.750, 114.375]
+			rotation: -0.226893
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "log.00"
+			position: [317.0543, 132.1663]
+			rotation: -0.357784
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "blueprint"
+			faction: "null"
+			position: [244.1943, 144.0663]
+			rotation: -0.156653
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "shrubbery.01"
+			position: [349.500, 144.250]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "shrubbery.02"
+			position: [446.875, 170.375]
+			rotation: -1.48353
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.chain_fence.00"
+			position: [278.875, 140.500]
+			rotation: -0.087266
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.maple.stump"
+			position: [316.8495, 133.1141]
+			rotation: -0.191986
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.maple.dead"
+			position: [290.8025, 140.7355]
+			rotation: 0.034907
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.chain_fence.01"
+			position: [283.500, 140.000]
+			rotation: -0.139626
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.maple.dead"
+			position: [276.375, 142.875]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.pine.stump"
+			position: [280.121, 143.393]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "vine"
+			position: [459.750, 148.500]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.red.01"
+			position: [440.2592, 183.6829]
+			rotation: -0.017453
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "chair.wood.00"
+			position: [246.5387, 134.0786]
+			rotation: 0.043763
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.red.01"
+			position: [406.250, 176.500]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "vine"
+			position: [456.500, 158.125]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "vine.01"
+			position: [402.625, 120.500]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "vine"
+			position: [387.500, 70.875]
+			rotation: 0.087266
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "vine.01"
+			position: [458.625, 155.250]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "vine.01"
+			position: [454.3889, 160.1154]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "vine"
+			position: [448.125, 137.750]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "barrel.metal.wreck.00"
+			position: [462.7376, 136.6797]
+			rotation: 1.569976
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.keg"
+			position: [480.8826, 139.497]
+			rotation: 0.613798
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.keg"
+			position: [478.7281, 139.3705]
+			rotation: -0.481848
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [419.875, 66.750]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.621887, -6.218982]
+		}
+		{
+			prefab: "mushroom.brown"
+			position: [441.125, 157.000]
+			rotation: -3.054326
+			scale: [0.788553, 0.772455]
+		}
+		{
+			prefab: "mushroom.tree.00"
+			position: [416.000, 178.000]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "shrubbery.01"
+			position: [402.875, 162.375]
+			rotation: 1.466077
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.blue"
+			position: [411.750, 159.500]
+			rotation: 2.792527
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "crate"
+			position: [452.7326, 137.2261]
+			rotation: 0.550724
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.crates.00"
+			position: [456.125, 137.625]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.crates.00"
+			position: [465.7361, 137.6413]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "lamp"
+			position: [55.125, 57.375]
+			rotation: 3.12414
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.blue"
+			position: [460.500, 120.250]
+			rotation: -2.548181
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.brown"
+			position: [425.500, 137.250]
+			rotation: 0.383972
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "bramble.00"
+			position: [448.000, 146.750]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "hatch.metal"
+			faction: "null"
+			position: [51.250, 56.250]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.green"
+			position: [417.1677, 131.121]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "vine.01"
+			position: [431.250, 151.375]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "vine"
+			position: [407.500, 158.375]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.blue"
+			position: [465.875, 155.875]
+			rotation: -1.134464
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "vine"
+			position: [442.625, 160.000]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.pine.stump"
+			position: [184.7256, 135.174]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.blue"
+			position: [441.750, 124.875]
+			rotation: 2.827434
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.yellow"
+			position: [430.5067, 183.3398]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.blue"
+			position: [454.500, 112.375]
+			rotation: -2.844887
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.blue"
+			position: [421.125, 132.500]
+			rotation: 0.401426
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.blue"
+			position: [410.625, 124.125]
+			rotation: -2.635448
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.blue"
+			position: [398.4784, 176.5465]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.steam_engine.00"
+			position: [461.2437, 135.1596]
+			rotation: -0.10472
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "log.00"
+			position: [445.7293, 180.3434]
+			rotation: 0.019117
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.oak.stump"
+			position: [437.3648, 183.6105]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.pine.stump"
+			position: [409.250, 176.125]
+			rotation: -0.226893
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.oak.stump"
+			position: [401.2068, 177.3424]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.green"
+			position: [385.875, 170.125]
+			rotation: 0.244346
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "vine"
+			position: [374.750, 169.750]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "vine.01"
+			position: [417.500, 160.000]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.green"
+			position: [477.750, 139.500]
+			rotation: 0.191986
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.blue"
+			position: [454.625, 159.500]
+			rotation: -3.752458
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.pine.dead"
+			position: [175.8643, 135.0153]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "barrel.metal.wreck.00"
+			position: [451.3346, 149.0933]
+			rotation: -3.036054
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.pump.00"
+			position: [451.250, 136.250]
+			rotation: 0.383972
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.oak.stump"
+			position: [201.875, 140.125]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "gas.swamp"
+			position: [446.5849, 179.8076]
+			rotation: -0.785341
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "water.swamp.00"
+			position: [438.125, 184.000]
+			rotation: 0.000
+			scale: [1.444446, 1.000]
+			offset_a: [10.000, 4.000]
+			offset_b: [-10.000, 4.000]
+			offset_c: [-10.000, -4.000]
+			offset_d: [10.000, -4.000]
+		}
+		{
+			prefab: "mushroom.blue"
+			position: [446.250, 183.125]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "shrubbery.00"
+			position: [434.875, 183.125]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.green"
+			position: [428.875, 151.500]
+			rotation: 3.543019
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.yellow"
+			position: [420.750, 157.375]
+			rotation: 2.827434
+			scale: [1.584561, 1.553954]
+		}
+		{
+			prefab: "shrubbery.02"
+			position: [417.875, 177.875]
+			rotation: 0.20944
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.blue"
+			position: [424.250, 180.875]
+			rotation: 0.349066
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.blue"
+			position: [445.875, 165.500]
+			rotation: 4.55531
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mount.heavy.wreck"
+			position: [437.000, 43.250]
+			rotation: 0.000
+			scale: [-1.000, 1.000]
+		}
+		{
+			prefab: "cannon.wreck"
+			position: [436.4014, 45.17396]
+			rotation: 0.268748
+			scale: [-1.000, 1.000]
+		}
+		{
+			prefab: "tree.oak.stump"
+			position: [168.3536, 129.5049]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "jabweed"
+			position: [437.625, 158.250]
+			rotation: 0.593412
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "jabweed"
+			position: [447.250, 121.250]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "jabweed"
+			position: [455.750, 112.625]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "jabweed"
+			position: [415.0139, 158.689]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.oak.stump"
+			position: [230.500, 141.500]
+			rotation: -0.191986
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "gas.swamp"
+			position: [455.6202, 136.9295]
+			rotation: -1.129428
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "gas.swamp"
+			position: [431.5472, 137.4801]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "lamp_post.wood"
+			position: [446.750, 134.750]
+			rotation: -0.418879
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "ladder.metal"
+			position: [51.125, 60.750]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [0.000, -3.750]
+		}
+		{
+			prefab: "ladder.wood"
+			position: [420.125, 75.500]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [-0.374451, -6.864792]
+		}
+		{
+			prefab: "gas.swamp"
+			position: [424.9571, 179.2754]
+			rotation: 0.711879
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "gas.swamp"
+			position: [402.7168, 175.6834]
+			rotation: -0.259709
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.chair.wood.01"
+			position: [423.7112, 133.5166]
+			rotation: -4.347116
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "gas.swamp"
+			position: [414.7527, 128.9801]
+			rotation: 3.263766
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "lamp_post.wood"
+			position: [436.375, 180.875]
+			rotation: -0.296706
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.blue"
+			position: [420.375, 180.250]
+			rotation: -0.244346
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.lamp_post.01"
+			position: [423.000, 179.125]
+			rotation: 0.226893
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "boulder.00.moss"
+			position: [450.625, 178.250]
+			rotation: -0.698132
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "shrubbery.02"
+			position: [453.250, 175.000]
+			rotation: -0.645772
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "boulder.01.moss"
+			position: [459.500, 166.375]
+			rotation: -0.506146
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "shrubbery.02"
+			position: [424.125, 111.625]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "bramble.03"
+			position: [404.625, 166.125]
+			rotation: 1.884956
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "boulder.00.moss"
+			position: [456.625, 151.625]
+			rotation: 0.698132
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "bramble.00"
+			position: [423.875, 154.375]
+			rotation: 1.186824
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "bramble.01"
+			position: [426.750, 180.875]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "bramble.02"
+			position: [400.875, 172.500]
+			rotation: 2.583088
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "bramble.03"
+			position: [444.500, 161.750]
+			rotation: -1.780236
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "bramble.02"
+			position: [444.375, 169.000]
+			rotation: -1.972222
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "jabweed"
+			position: [417.875, 98.500]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "fern"
+			position: [414.250, 113.250]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "shrubbery.00"
+			position: [418.500, 113.125]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "shrubbery.01"
+			position: [428.000, 105.250]
+			rotation: -1.169371
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "boulder.02"
+			position: [406.375, 114.000]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "boulder.00.moss"
+			position: [421.125, 111.500]
+			rotation: -0.244346
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "boulder.02"
+			position: [444.750, 100.625]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "boulder.00.moss"
+			position: [449.9895, 102.8297]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "boulder.00"
+			position: [449.3576, 99.18027]
+			rotation: 3.01942
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "boulder.03"
+			position: [454.7291, 102.6535]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.keg"
+			position: [463.502, 104.3729]
+			rotation: 1.167038
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "barricade.wood.01"
+			position: [358.7833, 172.111]
+			rotation: 0.080892
+			scale: [-1.000, 1.000]
+		}
+		{
+			prefab: "wreck.chair.wood.01"
+			position: [362.4086, 173.6664]
+			rotation: -0.303725
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "hatch.wood"
+			faction: "null"
+			position: [364.250, 173.375]
+			rotation: 2.059489
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.crates.00"
+			position: [437.625, 102.000]
+			rotation: 0.10472
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.maple.dead"
+			position: [165.6245, 128.0193]
+			rotation: 0.401426
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.crates.00"
+			position: [432.9366, 103.2795]
+			rotation: -0.139626
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "door.wood"
+			faction: "null"
+			position: [441.625, 101.375]
+			rotation: 0.139626
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "barrel.metal.wreck.00"
+			position: [360.628, 173.1279]
+			rotation: 1.705115
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.crates.00"
+			position: [368.875, 173.625]
+			rotation: -0.523599
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "wreck.lamp_post.02"
+			position: [361.8149, 174.6262]
+			rotation: 0.436332
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.blue"
+			position: [447.283, 102.4974]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.blue"
+			position: [451.4332, 102.9482]
+			rotation: 0.139626
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "vine"
+			position: [433.125, 94.500]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "barbed_wire"
+			position: [371.625, 171.625]
+			rotation: -3.22886
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [3.000, 0.000]
+		}
+		{
+			prefab: "vine.01"
+			position: [424.625, 96.750]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "bramble.00"
+			position: [443.000, 101.500]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "shrubbery.02"
+			position: [410.375, 114.000]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "barbed_wire"
+			position: [368.250, 174.875]
+			rotation: 1.500983
+			scale: [1.000, 1.000]
+			offset_a: [0.000, 0.000]
+			offset_b: [-3.170502, 2.438843]
+		}
+		{
+			prefab: "mushroom.blue"
+			position: [435.2935, 102.9056]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.blue"
+			position: [426.2519, 111.2116]
+			rotation: -0.191986
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.tree.00"
+			position: [414.0491, 114.1803]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.brown"
+			position: [423.4307, 113.5941]
+			rotation: -0.191986
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "gas.swamp"
+			position: [420.0851, 111.9189]
+			rotation: -0.253763
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "vine.01"
+			position: [396.125, 113.375]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "vine"
+			position: [406.750, 123.125]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "vine"
+			position: [401.000, 117.375]
+			rotation: 0.087266
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.blue"
+			position: [393.500, 119.000]
+			rotation: 0.15708
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.maple"
+			position: [372.625, 96.375]
+			rotation: -0.314159
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.green"
+			position: [401.750, 128.875]
+			rotation: 0.20944
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.brown"
+			position: [398.000, 127.000]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.blue"
+			position: [413.0588, 131.5764]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.brown"
+			position: [449.1852, 138.6218]
+			rotation: 0.000
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "tree.maple"
+			position: [359.250, 109.000]
+			rotation: -0.279253
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "mushroom.green"
+			position: [466.250, 123.250]
+			rotation: -2.268928
+			scale: [1.000, 1.000]
+		}
+		{
+			prefab: "badger_den"
+			name: "Badger Den"
+			faction: "null"
+			position: [428.750, 138.500]
+			rotation: -0
+			scale: [1.000, 1.000]
+		}
+	]
+}

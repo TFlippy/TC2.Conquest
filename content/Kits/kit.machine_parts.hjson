@@ -22,11 +22,6 @@
 		[
 			{
 				type: resource
-				material: "scrap"
-				quantity: 30.000
-			}
-			{
-				type: resource
 				material: "machine_parts"
 				quantity: 8.000
 			}

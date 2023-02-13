@@ -6,18 +6,18 @@
 		Densely forested highland in the vicinity of Lopat-Prospekto, capital city of the Krumpel island.
 		'''
 	
-	$infrastructure: electricity, telegraph, water, railway, highway, airport, docks, police, healthcare, education, military
-	$industry: financial, administrative, manufacturing, low_tech, high_tech, metallurgy, chemical, automotive, power, military
-	$crime: theft, murder, embezzlement, drugs, prostitution, vandalism, bribery, corruption, fraud, forgery, extortion
-	$geography: hills, excavated, hills, meadows, lakes, forested, rough, coastal, warm
+	$infrastructure: electricity, telegraph, water, railway, highway, airport, docks, police, healthcare, education, military, zoo, laboratory, university
+	$industry: financial, administrative, manufacturing, low_tech, high_tech, metallurgy, chemical, automotive, power, military, entertainment, arcane, biology, construction, tourism, logistics, food, hospitality, textile, fishing
+	$crime: theft, murder, embezzlement, drugs, prostitution, vandalism, bribery, corruption, fraud, forgery, extortion, espionage
+	$geography: hills, excavated, hills, meadows, lakes, forested, rough, coastal, warm, urban
 	$urbanization: 0.880
 	$industrialization: 0.850
 	$education: 0.760
 	$wealth: 0.730
-	$wilderness: 0.200
-	$devastation: 0.140
-	$savagery: 0.050
-	$anarchy: 0.040
+	$wilderness: 0.150
+	$devastation: 0.190
+	$savagery: 0.100
+	$anarchy: 0.070
 	$elevation: 35.000
 	$population: 210000
 	
@@ -27,7 +27,7 @@
 		"Abandoned structures and wreckages"
 		"Lopat-Prospekto checkpoint"
 		"Kobold squatter settlement"
-		"Dangerous wildlife (hornets, badgers)"
+		"Dangerous wildlife (badgers)"
 		"Rough terrain"
 		"Medium size"
 	]

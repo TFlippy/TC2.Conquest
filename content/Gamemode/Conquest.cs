@@ -29,9 +29,9 @@
 
 			public static void Init()
 			{
-				App.WriteLine("Conquest Init!", App.Color.Magenta);
+				//App.WriteLine("Conquest Init!", App.Color.Magenta);
 
-				App.WriteLine(System.IO.File.Exists("derp"), App.Color.Green);
+				//App.WriteLine(System.IO.File.Exists("derp"), App.Color.Green);
 			}
 		}
 
