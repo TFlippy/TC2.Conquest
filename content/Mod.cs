@@ -14,15 +14,15 @@ namespace TC2.Conquest
 		}
 
 #if SERVER
-		protected override void OnPreprocessMap(ref Map.Data map_data, ref Map.Info map_info)
+		protected override void OnPreprocessMap(Bitmap bitmap, ref IMap.Info map_info)
 		{
 			if (!Constants.World.edit_mode)
 			{
 				var random = XorRandom.New(true);
 
-				var pixels_span = map_data.GetPixels();
-				var w = map_data.width;
-				var h = map_data.height;
+				var pixels_span = bitmap.GetPixels();
+				var w = bitmap.width;
+				var h = bitmap.height;
 
 				Map.GenerateOres(ref random, pixels_span, w, h, IBlock.GetColor("kruskite"), "stone", 0.80f, h_offset: -0.50f, scale_0: 0.50f, scale_1: 0.80f, scale_2: 2.00f);
 				Map.GenerateOres(ref random, pixels_span, w, h, IBlock.GetColor("pjerdelite"), "stone", 0.50f, h_offset: 0.00f, scale_0: 0.50f, scale_1: 0.80f, scale_2: 1.50f);
@@ -36,25 +36,76 @@ namespace TC2.Conquest
 #endif
 
 #if CLIENT
+		public static Vector2 worldmap_offset;
+		public static float worldmap_zoom = 1.00f;
+
 		protected override void OnDrawRegionMenu()
 		{
-			//GUI.RegionMenu.enabled = false;
-			//GUI.Menu.enable_background = false;
+			return;
 
-			//using (var window = GUI.Window.Standalone("region_menu", position: GUI.CanvasSize * 0.50f, size: new Vector2(600, 400), padding: new(8), force_position: false))
-			//{
-			//	if (window.show)
-			//	{
-			//		var aspect = GUI.CanvasSize.GetNormalized();
-			//		var scale = 3.00f;
+			GUI.RegionMenu.enabled = false;
+			GUI.Menu.enable_background = false;
 
-			//		GUI.DrawTexture("ui_worldmap_grid", new AABB(Vector2.Zero, GUI.CanvasSize), uv_0: Vector2.Zero, uv_1: Vector2.One * aspect * scale, clip: false);
+			using (var window = GUI.Window.Standalone("region_menu", position: GUI.CanvasSize * 0.00f, size: new Vector2(600, 400), pivot: new(0, 0), padding: new(8), force_position: true))
+			{
+				if (window.show)
+				{
+					var aspect = GUI.CanvasSize.GetNormalized();
 
-			//		//GUI.DrawBackground(GUI.tex_window_menu, window.group.GetOuterRect(), new(4));
+					var mouse = GUI.GetMouse();
+					var kb = GUI.GetKeyboard();
 
-			//		GUI.Text("derp");
-			//	}
-			//}
+					worldmap_zoom -= mouse.GetScroll(0.25f);
+					worldmap_zoom = Maths.Clamp(worldmap_zoom, 1.00f, 4.00f);
+
+					var zoom = MathF.Pow(2.00f, worldmap_zoom);
+
+					if (mouse.GetKey(Mouse.Key.Left))
+					{
+						worldmap_offset += mouse.GetDelta() * GUI.GetWorldToCanvasScale() / zoom;
+					}
+
+					var uv_offset = worldmap_offset / GUI.GetWorldToCanvasScale();
+					GUI.DrawTexture("ui_worldmap_grid", new AABB(Vector2.Zero, GUI.CanvasSize), GUI.Layer.Background, uv_0: Vector2.Zero - uv_offset, uv_1: (Vector2.One * aspect / (zoom * 0.125f * 0.125f)) - uv_offset, clip: false, color: Color32BGRA.White.WithAlphaMult(1.00f));
+
+
+					//if (kb.GetKey(Keyboard.Key.MoveRight)) worldmap_offset.X += speed;
+					//if (kb.GetKey(Keyboard.Key.MoveLeft)) worldmap_offset.X -= speed;
+					//if (kb.GetKey(Keyboard.Key.MoveUp)) worldmap_offset.Y -= speed;
+					//if (kb.GetKey(Keyboard.Key.MoveDown)) worldmap_offset.Y += speed;
+
+					var h_location = new ILocation.Handle("province.krumpel_island");
+					ref var location_data = ref h_location.GetData();
+					if (location_data.IsNotNull())
+					{
+						var points = location_data.points;
+						if (points != null)
+						{
+							var count = points.Length;
+
+							var last_vert = default(int2);
+							for (var i = 0; i < (count + 1); i++)
+							{
+								ref var vert = ref points[i % count];
+								if (i > 0)
+								{
+									var a = last_vert;
+									var b = vert;
+
+									GUI.DrawLine((((Vector2)a) + worldmap_offset) * zoom, (((Vector2)b) + worldmap_offset) * zoom, Color32BGRA.Black, thickness: 4.00f, layer: GUI.Layer.Foreground);
+
+									//DebugDrawFatSegment(a, b, radius, outlineColor, fillColor, data);
+								}
+								last_vert = vert;
+							}
+						}
+					}
+
+					//GUI.DrawBackground(GUI.tex_window_menu, window.group.GetOuterRect(), new(4));
+
+					GUI.Text($"derp {zoom}; {mouse.position}");
+				}
+			}
 		}
 #endif
 	}
