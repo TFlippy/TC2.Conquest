@@ -48,6 +48,7 @@ namespace TC2.Conquest
 					{
 						ref var region = ref Client.GetRegion();
 						ref var player = ref Client.GetPlayer();
+						var random = XorRandom.New(true);
 
 						GUI.DrawWindowBackground(GUI.tex_window_menu, padding: new Vector4(8, 8, 8, 8));
 
@@ -55,17 +56,30 @@ namespace TC2.Conquest
 						{
 							if (!Spawn.RespawnGUI.ent_selected_spawn.IsAlive())
 							{
-								region.Query<Region.GetSpawnsQuery>(Func).Execute(ref this);
-								static void Func(ISystem.Info info, Entity entity, in Spawn.Data spawn, in Nameable.Data nameable, in Transform.Data transform, in Faction.Data faction)
-								{
-									ref var player = ref Client.GetPlayer();
-									if (faction.id == 0 || (faction.id == player.faction_id))
-									{
-										var random = XorRandom.New();
+								var player_faction_id = player.faction_id;
 
-										if (Spawn.RespawnGUI.ent_selected_spawn.id == 0 || random.NextBool(0.30f)) ent_selected_spawn_new = entity;
-									}
+								foreach (ref var row in region.IterateQuery<Region.GetSpawnsQuery>())
+								{
+									row.Run((ISystem.Info info, Entity entity, in Spawn.Data spawn, in Nameable.Data nameable, in Transform.Data transform, in Faction.Data faction) =>
+									{
+										if (faction.id == 0 || (faction.id == player_faction_id))
+										{
+											if (Spawn.RespawnGUI.ent_selected_spawn.id == 0 || random.NextBool(0.30f)) ent_selected_spawn_new = entity;
+										}
+									});
 								}
+
+								//region.Query<Region.GetSpawnsQuery>(Func).Execute(ref this);
+								//static void Func(ISystem.Info info, Entity entity, in Spawn.Data spawn, in Nameable.Data nameable, in Transform.Data transform, in Faction.Data faction)
+								//{
+								//	ref var player = ref Client.GetPlayer();
+								//	if (faction.id == 0 || (faction.id == player.faction_id))
+								//	{
+								//		var random = XorRandom.New();
+
+								//		if (Spawn.RespawnGUI.ent_selected_spawn.id == 0 || random.NextBool(0.30f)) ent_selected_spawn_new = entity;
+								//	}
+								//}
 							}
 
 							{
@@ -315,6 +329,8 @@ namespace TC2.Conquest
 
 								using (var row = GUI.Table.Row.New(new Vector2(GUI.GetRemainingWidth(), 24)))
 								{
+									
+
 									using (GUI.ID.Push(entity))
 									{
 										var spawn_name = nameable.name;
@@ -376,31 +392,44 @@ namespace TC2.Conquest
 							//App.WriteLine(faction.id);
 							if (this.faction_id != 0)
 							{
-								region.Query<Region.GetSpawnsQuery>(FuncA).Execute(ref this);
-								static void FuncA(ISystem.Info info, Entity entity, in Spawn.Data spawn, in Nameable.Data nameable, in Transform.Data transform, in Faction.Data faction)
+								var faction_id_tmp = this.faction_id;
+
+								foreach (ref var row in region.IterateQuery<Region.GetSpawnsQuery>())
 								{
-									ref var data = ref info.GetParameter<RespawnGUI>();
-									if (!data.IsNull())
+									row.Run((ISystem.Info info, Entity entity, in Spawn.Data spawn, in Nameable.Data nameable, in Transform.Data transform, in Faction.Data faction) =>
 									{
-										if (faction.id != 0 && faction.id == data.faction_id)
+										if (faction.id != 0 && faction.id == faction_id_tmp)
 										{
 											//GUI.DrawBackground(GUI.tex_panel_white, GUI.GetRemainingRect(), new(4), faction.color_a);
 
 											DrawSpawnsRow(entity, in spawn, in nameable, in faction);
 										}
-									}
+									});
 								}
+
+								//region.Query<Region.GetSpawnsQuery>(FuncA).Execute(ref this);
+								//static void FuncA(ISystem.Info info, Entity entity, in Spawn.Data spawn, in Nameable.Data nameable, in Transform.Data transform, in Faction.Data faction)
+								//{
+								//	ref var data = ref info.GetParameter<RespawnGUI>();
+								//	if (!data.IsNull())
+								//	{
+								//		if (faction.id != 0 && faction.id == data.faction_id)
+								//		{
+								//			//GUI.DrawBackground(GUI.tex_panel_white, GUI.GetRemainingRect(), new(4), faction.color_a);
+
+								//			DrawSpawnsRow(entity, in spawn, in nameable, in faction);
+								//		}
+								//	}
+								//}
 
 								//GUI.NewLine(4);
 								//GUI.Separator(faction.color_a.WithAlphaMult(0.50f));
 								//GUI.NewLine(4);
 							}
 
-							region.Query<Region.GetSpawnsQuery>(FuncB).Execute(ref this);
-							static void FuncB(ISystem.Info info, Entity entity, in Spawn.Data spawn, in Nameable.Data nameable, in Transform.Data transform, in Faction.Data faction)
+							foreach (ref var row in region.IterateQuery<Region.GetSpawnsQuery>())
 							{
-								ref var data = ref info.GetParameter<RespawnGUI>();
-								if (!data.IsNull())
+								row.Run((ISystem.Info info, Entity entity, in Spawn.Data spawn, in Nameable.Data nameable, in Transform.Data transform, in Faction.Data faction) =>
 								{
 									if (faction.id == 0)
 									{
@@ -414,8 +443,29 @@ namespace TC2.Conquest
 											//rpc.Send(data.ent_respawn);
 										}
 									}
-								}
+								});
 							}
+
+							//	region.Query<Region.GetSpawnsQuery>(FuncB).Execute(ref this);
+							//static void FuncB(ISystem.Info info, Entity entity, in Spawn.Data spawn, in Nameable.Data nameable, in Transform.Data transform, in Faction.Data faction)
+							//{
+							//	ref var data = ref info.GetParameter<RespawnGUI>();
+							//	if (!data.IsNull())
+							//	{
+							//		if (faction.id == 0)
+							//		{
+							//			var pressed = DrawSpawnsRow(entity, in spawn, in nameable, in faction);
+							//			if (pressed)
+							//			{
+							//				//var rpc = new RespawnExt.SetSpawnRPC()
+							//				//{
+							//				//	ent_spawn = entity
+							//				//};
+							//				//rpc.Send(data.ent_respawn);
+							//			}
+							//		}
+							//	}
+							//}
 						}
 					}
 				}

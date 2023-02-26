@@ -154,7 +154,7 @@ namespace TC2.Conquest
 						//if (random.NextBool(0.50f)) spawn_info.kits.TryAdd(kits.GetRandom(ref random));
 					}
 
-					spawn_info.next_reroll = time + 15.00f;
+					spawn_info.next_reroll = time + 120.00f;
 
 					//App.WriteLine($"rerolled character {spawn_info.character}");
 
@@ -246,15 +246,13 @@ namespace TC2.Conquest
 											//using (row.Column(4)) GUI.Title("Deaths");
 										}
 
-										region.Query<Region.GetPlayersQuery>(Func).Execute(ref this);
-										static void Func(ISystem.Info info, Entity entity, in Player.Data player)
+										foreach (ref var row in region.IterateQuery<Region.GetPlayersQuery>())
 										{
-											var is_online = player.flags.HasAny(Player.Flags.Online);
-											if (!is_online) return;
-
-											ref var arg = ref info.GetParameter<ScoreboardGUI>();
-											if (!arg.IsNull())
+											row.Run((ISystem.Info info, Entity entity, in Player.Data player) =>
 											{
+												var is_online = player.flags.HasAny(Player.Flags.Online);
+												if (!is_online) return;
+
 												using (var row = GUI.Table.Row.New(size: new(GUI.GetRemainingWidth(), 16)))
 												{
 													using (GUI.ID.Push(entity))
@@ -292,8 +290,57 @@ namespace TC2.Conquest
 														GUI.Selectable2(false, play_sound: false, enabled: false, size: new Vector2(0, 0), is_readonly: true);
 													}
 												}
-											}
+											});
 										}
+
+										//region.Query<Region.GetPlayersQuery>(Func).Execute(ref this);
+										//static void Func(ISystem.Info info, Entity entity, in Player.Data player)
+										//{
+										//	var is_online = player.flags.HasAny(Player.Flags.Online);
+										//	if (!is_online) return;
+
+										//	ref var arg = ref info.GetParameter<ScoreboardGUI>();
+										//	if (!arg.IsNull())
+										//	{
+										//		using (var row = GUI.Table.Row.New(size: new(GUI.GetRemainingWidth(), 16)))
+										//		{
+										//			using (GUI.ID.Push(entity))
+										//			{
+										//				var alpha = is_online ? 1.00f : 0.50f;
+
+										//				using (row.Column(0))
+										//				{
+										//					GUI.Text(player.GetName(), color: GUI.font_color_default.WithAlphaMult(alpha));
+										//				}
+
+										//				using (row.Column(1))
+										//				{
+										//					if (player.faction_id.TryGetData(out var ref_faction))
+										//					{
+										//						GUI.Title(ref_faction.value.name, color: ref_faction.value.color_a.WithAlphaMult(alpha));
+										//					}
+										//				}
+
+										//				//ref var money = ref player.GetMoneyReadOnly().Value;
+										//				//if (!money.IsNull())
+										//				//{
+										//				//	using (row.Column(2))
+										//				//	{
+										//				//		GUI.Text($"{money.amount:0}", color: GUI.font_color_default.WithAlphaMult(alpha));
+										//				//	}
+										//				//}
+
+										//				using (row.Column(2))
+										//				{
+										//					GUI.Text(is_online ? "Online" : "Offline", color: GUI.font_color_default.WithAlphaMult(alpha));
+										//				}
+
+										//				GUI.SameLine();
+										//				GUI.Selectable2(false, play_sound: false, enabled: false, size: new Vector2(0, 0), is_readonly: true);
+										//			}
+										//		}
+										//	}
+										//}
 									}
 								}
 							}
