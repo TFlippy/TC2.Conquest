@@ -6,31 +6,38 @@
 		'''
 	
 	flags: none
-
+	categories: weapon
+	faction: "null"
+	species: "null"
+	
 	character_flags:
 	{
-		require: none
-		include: armed, civillian, unskilled, laborer, lowlife, criminal, poor
+		include: criminal, unskilled, laborer, civillian, armed, lowlife, poor
 		exclude: unarmed
 		weight: 1.000
 	}
 	
 	shipment:
 	{
-		name: "Derringer"
 		items:
 		[
 			{
 				type: prefab
 				prefab: "derringer"
 				quantity: 1.000
+				mass_per_unit: 0.000
+				flags: despawn, no_consume
 			}
 			{
 				type: resource
 				material: "ammo_musket"
 				quantity: 10.000
+				mass_per_unit: 0.000
+				flags: despawn, no_consume
 			}
+			null
+			null
 		]
-		flags: unpack
+		flags: dirty, unpack
 	}
 }

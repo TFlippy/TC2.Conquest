@@ -6,26 +6,32 @@
 		'''
 	
 	flags: none
-
+	categories: weapon
+	faction: "null"
+	species: "null"
+	
 	character_flags:
 	{
-		require: none
-		include: armed, criminal, medical, nobility, farmer, artisan, social, culinary, law, military
+		include: criminal, military, medical, nobility, artisan, farmer, armed, law, social, culinary
 		exclude: unarmed
 		weight: 1.000
 	}
 	
 	shipment:
 	{
-		name: "Threatening Knife"
 		items:
 		[
 			{
 				type: prefab
 				prefab: "knife"
 				quantity: 1.000
+				mass_per_unit: 0.000
+				flags: no_consume, despawn
 			}
+			null
+			null
+			null
 		]
-		flags: unpack
+		flags: dirty, unpack
 	}
 }

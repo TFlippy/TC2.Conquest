@@ -6,26 +6,32 @@
 		'''
 	
 	flags: none
-
+	categories: tools
+	faction: "null"
+	species: "human"
+	
 	character_flags:
 	{
 		require: miner
-		include: construction, professional, engineer, miner, scientist, laborer
-		exclude: none
+		include: construction, scientist, professional, laborer, engineer, miner
 		weight: 1.000
 	}
-
+	
 	shipment:
 	{
-		name: "Prospector Pick"
 		items:
 		[
 			{
 				type: prefab
 				prefab: "prospector_pick"
 				quantity: 1.000
+				mass_per_unit: 0.000
+				flags: no_consume, despawn
 			}
+			null
+			null
+			null
 		]
-		flags: unpack
+		flags: dirty, unpack
 	}
 }

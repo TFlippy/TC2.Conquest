@@ -6,26 +6,32 @@
 		'''
 	
 	flags: none
-
+	categories: tools
+	faction: "null"
+	species: "null"
+	
 	character_flags:
 	{
-		require: none
-		include: construction, laborer, engineer, artisan, technician, farmer, unskilled, commerce, criminal
-		exclude: nobility, medical
+		include: construction, criminal, unskilled, artisan, farmer, laborer, commerce, technician, engineer
+		exclude: medical, nobility
 		weight: 1.000
 	}
-
+	
 	shipment:
 	{
-		name: "Small Crate"
 		items:
 		[
 			{
 				type: prefab
 				prefab: "crate.small"
 				quantity: 1.000
+				mass_per_unit: 0.000
+				flags: no_consume
 			}
+			null
+			null
+			null
 		]
-		flags: unpack
+		flags: dirty, unpack
 	}
 }

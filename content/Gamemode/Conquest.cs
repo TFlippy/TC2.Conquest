@@ -98,78 +98,78 @@ namespace TC2.Conquest
 			}
 		}
 
-#if SERVER
-		[ISystem.LateUpdate(ISystem.Mode.Single, interval: 5.00f)]
-		public static void OnUpdate(ISystem.Info info, Entity entity, ref XorRandom random, [Source.Owned] in Player.Data player, [Source.Owned] ref Respawn.Data respawn)
-		{
-			ref var region = ref info.GetRegion();
+//#if SERVER
+//		[ISystem.LateUpdate(ISystem.Mode.Single, interval: 5.00f)]
+//		public static void OnUpdate(ISystem.Info info, Entity entity, ref XorRandom random, [Source.Owned] in Player.Data player, [Source.Owned] ref Respawn.Data respawn)
+//		{
+//			ref var region = ref info.GetRegion();
 
-			if (player.ent_controlled.IsValid()) return;
+//			if (player.ent_controlled.IsValid()) return;
 
-			var time = info.WorldTime;
-			var sync = false;
+//			var time = info.WorldTime;
+//			var sync = false;
 
-			//App.WriteLine($"tick {time}; {info.DeltaTime}");
+//			//App.WriteLine($"tick {time}; {info.DeltaTime}");
 
-			var index = 0;
-			foreach (ref var spawn_info in respawn.spawns_values)
-			{
-				//if (spawn_info.character.id == 0 || (time >= spawn_info.next_reroll && respawn.spawns_keys[index].id != 0))
-				//if (spawn_info.character.id == 0 && time >= spawn_info.next_reroll)
-				if (((player.faction_id == 0 && respawn.spawns_keys[index].IsValid()) || spawn_info.character.id == 0) && time >= spawn_info.next_reroll)
-				{
-					var map_info_copy = region.GetMapInfo();
+//			var index = 0;
+//			foreach (ref var spawn_info in respawn.spawns_values)
+//			{
+//				//if (spawn_info.character.id == 0 || (time >= spawn_info.next_reroll && respawn.spawns_keys[index].id != 0))
+//				//if (spawn_info.character.id == 0 && time >= spawn_info.next_reroll)
+//				if (((player.faction_id == 0 && respawn.spawns_keys[index].IsValid()) || spawn_info.character.id == 0) && time >= spawn_info.next_reroll)
+//				{
+//					var map_info_copy = region.GetMapInfo();
 
-					var species_tmp = new ISpecies.Handle("human");
-					var origins = new WeightedList<IOrigin.Handle>(IOrigin.Database.GetAssets().Where(x => x.id != 0 && x.data.species == species_tmp).Select(x => new WeightedList<IOrigin.Handle>.Item(x.data.conditions.CalculateWeight(map_info_copy), x)));
+//					var species_tmp = new ISpecies.Handle("human");
+//					var origins = new WeightedList<IOrigin.Handle>(IOrigin.Database.GetAssets().Where(x => x.id != 0 && x.data.species == species_tmp).Select(x => new WeightedList<IOrigin.Handle>.Item(x.data.conditions.CalculateWeight(map_info_copy), x)));
 
-					var h_character = Dormitory.CreateCharacter(ref region, ref random, origins.GetRandom(ref random), spawn_info.character);
-					spawn_info = default;
+//					var h_character = Dormitory.CreateCharacter(ref region, ref random, origins.GetRandom(ref random), spawn_info.character);
+//					spawn_info = default;
 
-					var definition = h_character.GetDefinition();
-					if (definition != null)
-					{
-						definition.Flags.SetFlag(Asset.Flags.No_Save, true);
-					}
+//					var definition = h_character.GetDefinition();
+//					if (definition != null)
+//					{
+//						definition.Flags.SetFlag(Asset.Flags.No_Save, true);
+//					}
 
-					spawn_info.character = h_character;
-					spawn_info.kits.TryAdd("survival");
+//					spawn_info.character = h_character;
+//					spawn_info.kits.TryAdd("survival");
 
-					ref var character_data = ref spawn_info.character.GetData();
-					if (character_data.IsNotNull())
-					{
-						var character_flags = character_data.flags;
+//					ref var character_data = ref spawn_info.character.GetData();
+//					if (character_data.IsNotNull())
+//					{
+//						var character_flags = character_data.flags;
 
-						// old
-						//var kits = IKit.Database.GetAssets().Where(x => x.id != 0 && character_flags.HasAll(x.data.character_flags)).ToArray();
-						//spawn_info.kits.TryAdd(kits.GetRandom(ref random)?.GetHandle() ?? default);
+//						// old
+//						//var kits = IKit.Database.GetAssets().Where(x => x.id != 0 && character_flags.HasAll(x.data.character_flags)).ToArray();
+//						//spawn_info.kits.TryAdd(kits.GetRandom(ref random)?.GetHandle() ?? default);
 
-						// new
-						Span<IKit.Handle> kits = stackalloc IKit.Handle[16];
-						//IKit.Database.GetHandles(ref kits, (x) => character_flags.HasAll(x.data.character_flags));
-						IKit.Database.GetHandles(ref kits, (x) => x.data.character_flags.Evaluate(character_flags) >= 0.50f);
-						//App.WriteLine($"{kits.Length}; {character_flags}");
+//						// new
+//						Span<IKit.Handle> kits = stackalloc IKit.Handle[16];
+//						//IKit.Database.GetHandles(ref kits, (x) => character_flags.HasAll(x.data.character_flags));
+//						IKit.Database.GetHandles(ref kits, (x) => x.data.character_flags.Evaluate(character_flags) >= 0.50f);
+//						//App.WriteLine($"{kits.Length}; {character_flags}");
 
-						spawn_info.kits.TryAdd(kits.GetRandom(ref random));
-						//if (random.NextBool(0.50f)) spawn_info.kits.TryAdd(kits.GetRandom(ref random));
-					}
+//						spawn_info.kits.TryAdd(kits.GetRandom(ref random));
+//						//if (random.NextBool(0.50f)) spawn_info.kits.TryAdd(kits.GetRandom(ref random));
+//					}
 
-					spawn_info.next_reroll = time + 120.00f;
+//					spawn_info.next_reroll = time + 120.00f;
 
-					//App.WriteLine($"rerolled character {spawn_info.character}");
+//					//App.WriteLine($"rerolled character {spawn_info.character}");
 
-					sync = true;
-				}
+//					sync = true;
+//				}
 
-				index++;
-			}
+//				index++;
+//			}
 
-			if (sync)
-			{
-				respawn.Sync(entity);
-			}
-		}
-#endif
+//			if (sync)
+//			{
+//				respawn.Sync(entity);
+//			}
+//		}
+//#endif
 
 #if CLIENT
 		public struct ScoreboardGUI: IGUICommand
@@ -183,8 +183,8 @@ namespace TC2.Conquest
 			{
 				var alive = this.player.flags.HasAny(Player.Flags.Alive);
 
-				var window_pos = (GUI.CanvasSize * new Vector2(0.50f, 0.00f)) + new Vector2(100, 48);
-				using (var window = GUI.Window.Standalone("Scoreboard", position: alive ? null : window_pos, size: new Vector2(700, 400), pivot: alive ? new Vector2(0.50f, 0.00f) : new(1.00f, 0.00f)))
+				var window_pos = (GUI.CanvasSize * new Vector2(0.50f, 0.00f)) + new Vector2(000, 48);
+				using (var window = GUI.Window.Standalone("Scoreboard", position: alive ? null : window_pos, size: new Vector2(600, 400), pivot: alive ? new Vector2(0.50f, 0.00f) : new(1.00f, 0.00f)))
 				{
 					this.StoreCurrentWindowTypeID();
 					if (window.show)
@@ -361,7 +361,7 @@ namespace TC2.Conquest
 					ScoreboardGUI.show = !ScoreboardGUI.show;
 				}
 
-				Spawn.RespawnGUI.window_offset = new Vector2(100, 90);
+				Spawn.RespawnGUI.window_offset = new Vector2(0, 90);
 				Spawn.RespawnGUI.window_pivot = new Vector2(0, 0);
 
 				if (ScoreboardGUI.show || (!player.flags.HasAny(Player.Flags.Alive) && Editor.show_respawn_menu))

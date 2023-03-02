@@ -6,31 +6,38 @@
 		'''
 	
 	flags: none
-
+	categories: weapon
+	faction: "null"
+	species: "human"
+	
 	character_flags:
 	{
-		require: none
-		include: armed, military, professional, educated, construction, law, commerce, rich
+		include: construction, educated, military, professional, armed, law, commerce, rich
 		exclude: unarmed
 		weight: 1.000
 	}
-
+	
 	shipment:
 	{
-		name: "Revolver"
 		items:
 		[
 			{
 				type: prefab
 				prefab: "revolver"
 				quantity: 1.000
+				mass_per_unit: 0.000
+				flags: no_consume, despawn
 			}
 			{
 				type: resource
-				material: "ammo_hc.rr"
+				material: "ammo_hc"
 				quantity: 12.000
+				mass_per_unit: 0.000
+				flags: no_consume
 			}
+			null
+			null
 		]
-		flags: unpack
+		flags: dirty, unpack
 	}
 }

@@ -6,26 +6,32 @@
 		'''
 	
 	flags: none
-
+	categories: food
+	faction: "null"
+	species: "null"
+	
 	character_flags:
 	{
-		require: none
-		include: unskilled, criminal, laborer, lowlife, poor, alcoholic, lower_class, slave, lower_middle_class, middle_class
+		include: slave, criminal, unskilled, laborer, lowlife, poor, alcoholic, lower_class, lower_middle_class, middle_class
 		exclude: rich, upper_class, elite_class
 		weight: 1.000
 	}
 	
 	shipment:
 	{
-		name: "Pivan Klasik"
 		items:
 		[
 			{
 				type: prefab
 				prefab: "bp.pivan.klasik"
 				quantity: 1.000
+				mass_per_unit: 0.000
+				flags: no_consume, despawn
 			}
+			null
+			null
+			null
 		]
-		flags: unpack
+		flags: dirty, unpack
 	}
 }

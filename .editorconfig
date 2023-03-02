@@ -1,8 +1,10 @@
 # Remove the line below if you want to inherit .editorconfig settings from higher directories
 root = true
+# is_global = true
 
 # C# files
 [*.cs]
+charset = utf8-8
 
 #### Core EditorConfig Options ####
 
@@ -37,8 +39,6 @@ dotnet_style_parentheses_in_arithmetic_binary_operators = always_for_clarity
 dotnet_style_parentheses_in_other_binary_operators = always_for_clarity
 dotnet_style_parentheses_in_other_operators = always_for_clarity
 dotnet_style_parentheses_in_relational_binary_operators = always_for_clarity
-
-
 
 # Modifier preferences
 dotnet_style_require_accessibility_modifiers = for_non_interface_members
@@ -101,7 +101,7 @@ csharp_prefer_static_local_function = true:suggestion
 csharp_preferred_modifier_order = public,private,protected,internal,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,volatile,async:silent
 
 # Code-block preferences
-csharp_prefer_braces = when_multiline:silent
+csharp_prefer_braces = when_multiline
 csharp_prefer_simple_using_statement = false:suggestion
 
 # Expression-level preferences
@@ -228,14 +228,14 @@ dotnet_naming_style.snake_case.required_suffix =
 dotnet_naming_style.snake_case.word_separator = _
 dotnet_naming_style.snake_case.capitalization = all_lower
 
-dotnet_diagnostic.IDE0001.severity = none;
-dotnet_diagnostic.IDE0002.severity = none;
-dotnet_diagnostic.CS1998.severity = none;
-dotnet_diagnostic.CS4014.severity = none;
-dotnet_diagnostic.CS0169.severity = none;
-dotnet_diagnostic.CS8632.severity = none;
-dotnet_diagnostic.CS0649.severity = none;
-dotnet_diagnostic.CA2014.severity = none;
+dotnet_diagnostic.IDE0001.severity = none
+dotnet_diagnostic.IDE0002.severity = none
+dotnet_diagnostic.CS1998.severity = none
+dotnet_diagnostic.CS4014.severity = none
+dotnet_diagnostic.CS0169.severity = none
+dotnet_diagnostic.CS8632.severity = none
+dotnet_diagnostic.CS0649.severity = none
+dotnet_diagnostic.CA2014.severity = none
 
 # CA2211: Non-constant fields should not be visible
 dotnet_diagnostic.CA2211.severity = none
@@ -252,32 +252,24 @@ dotnet_diagnostic.IDE0017.severity = none
 
 # IDE0005: Using directive is unnecessary.
 dotnet_diagnostic.IDE0005.severity = suggestion
-dotnet_diagnostic.IDE0043.severity=error
-dotnet_diagnostic.CA1309.severity=error
-csharp_style_namespace_declarations = block_scoped:silent
-csharp_style_prefer_method_group_conversion = true:silent
-csharp_style_prefer_top_level_statements = true:silent
+dotnet_diagnostic.IDE0043.severity = error
+dotnet_diagnostic.CA1309.severity = error
+dotnet_diagnostic.CA2245.severity = error
+dotnet_diagnostic.CA2251.severity = error
+dotnet_diagnostic.CA2242.severity = warning
+dotnet_diagnostic.CA1024.severity = silent
+dotnet_diagnostic.CA1021.severity = silent
+dotnet_diagnostic.CA1028.severity = silent
+dotnet_diagnostic.CA1307.severity = error
+dotnet_diagnostic.CA1310.severity = error
+dotnet_diagnostic.CS8500.severity = none
 
-[*.{cs,vb}]
-dotnet_diagnostic.CA2245.severity=error
-dotnet_diagnostic.CA2251.severity=error
-dotnet_diagnostic.CA2242.severity=warning
-dotnet_diagnostic.CA1024.severity=silent
-dotnet_diagnostic.CA1021.severity=silent
-dotnet_diagnostic.CA1028.severity=silent
-dotnet_diagnostic.CA1307.severity=error
-dotnet_diagnostic.CA1310.severity=error
-dotnet_style_coalesce_expression = true:suggestion
-dotnet_style_null_propagation = true:suggestion
-dotnet_style_prefer_is_null_check_over_reference_equality_method = true:suggestion
-dotnet_style_prefer_auto_properties = true:silent
-dotnet_style_object_initializer = true:none
-dotnet_style_collection_initializer = true:suggestion
-dotnet_style_prefer_simplified_boolean_expressions = true:suggestion
-dotnet_style_prefer_conditional_expression_over_assignment = true:silent
-dotnet_style_prefer_conditional_expression_over_return = true:silent
-dotnet_style_operator_placement_when_wrapping = beginning_of_line
-tab_width = 4
-indent_size = 4
-end_of_line = crlf
-dotnet_style_explicit_tuple_names = true:suggestion
+[*.Generated.cs]
+generated_code = true
+dotnet_analyzer_diagnostic.category-Style.severity = none
+dotnet_analyzer_diagnostic.category-Design.severity = none
+dotnet_analyzer_diagnostic.category-Documentation.severity = none
+dotnet_analyzer_diagnostic.category-Globalization.severity = none
+dotnet_analyzer_diagnostic.category-Maintainability.severity = none
+dotnet_analyzer_diagnostic.category-Naming.severity = none
+dotnet_diagnostic.CS8981.severity = none

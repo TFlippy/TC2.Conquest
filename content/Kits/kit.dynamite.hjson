@@ -6,26 +6,33 @@
 		'''
 	
 	flags: none
-
+	categories: tools, weapon
+	faction: "null"
+	species: "human"
+	
 	character_flags:
 	{
 		require: professional, armed, miner
-		include: professional, armed, miner, military
+		include: military, professional, armed, miner
 		exclude: unarmed
 		weight: 1.000
 	}
-
+	
 	shipment:
 	{
-		name: "Dynamite"
 		items:
 		[
 			{
 				type: prefab
 				prefab: "dynamite"
 				quantity: 1.000
+				mass_per_unit: 0.000
+				flags: despawn, no_consume
 			}
+			null
+			null
+			null
 		]
-		flags: unpack
+		flags: dirty, unpack
 	}
 }

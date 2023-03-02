@@ -6,31 +6,38 @@
 		'''
 	
 	flags: none
-
+	categories: weapon
+	faction: "null"
+	species: "null"
+	
 	character_flags:
 	{
-		require: none
-		include: armed, criminal, nobility, farmer, hunter
+		include: criminal, nobility, farmer, armed, hunter
 		exclude: unarmed
 		weight: 1.000
 	}
 	
 	shipment:
 	{
-		name: "Blunderbuss"
 		items:
 		[
 			{
 				type: prefab
 				prefab: "blunderbuss"
 				quantity: 1.000
+				mass_per_unit: 0.000
+				flags: despawn, no_consume
 			}
 			{
 				type: resource
 				material: "ammo_musket.shot"
 				quantity: 8.000
+				mass_per_unit: 0.000
+				flags: despawn, no_consume
 			}
+			null
+			null
 		]
-		flags: unpack
+		flags: dirty, unpack
 	}
 }

@@ -6,26 +6,32 @@
 		'''
 	
 	flags: none
-
+	categories: food
+	faction: "null"
+	species: "null"
+	
 	character_flags:
 	{
-		require: none
-		include: unskilled, military, farmer, criminal, construction, artisan, laborer, alcoholic, lower_class, lower_middle_class, middle_class
-		exclude: nobility, professional, scientist, upper_class, elite_class
+		include: construction, criminal, unskilled, military, artisan, farmer, laborer, alcoholic, lower_class, lower_middle_class, middle_class
+		exclude: scientist, nobility, professional, upper_class, elite_class
 		weight: 1.000
 	}
 	
 	shipment:
 	{
-		name: "Pivan Brum-Brum"
 		items:
 		[
 			{
 				type: prefab
 				prefab: "bp.pivan.brumbrum"
 				quantity: 1.000
+				mass_per_unit: 0.000
+				flags: no_consume, despawn
 			}
+			null
+			null
+			null
 		]
-		flags: unpack
+		flags: dirty, unpack
 	}
 }

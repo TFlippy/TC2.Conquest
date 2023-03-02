@@ -6,26 +6,32 @@
 		'''
 	
 	flags: none
-
+	categories: none
+	faction: "null"
+	species: "null"
+	
 	character_flags:
 	{
 		require: arcane
-		include: arcane, engineer, technician
-		exclude: none
+		include: technician, engineer, arcane
 		weight: 1.000
 	}
 	
 	shipment:
 	{
-		name: "Arcane Actuators"
 		items:
 		[
 			{
 				type: resource
 				material: "arcane_actuator"
 				quantity: 7.000
+				mass_per_unit: 0.000
+				flags: no_consume
 			}
+			null
+			null
+			null
 		]
-		flags: unpack
+		flags: dirty, unpack
 	}
 }

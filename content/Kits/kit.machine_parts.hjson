@@ -6,26 +6,31 @@
 		'''
 	
 	flags: none
-
+	categories: materials
+	faction: "null"
+	species: "null"
+	
 	character_flags:
 	{
-		require: none
-		include: construction, professional, engineer, artisan, technician, scientist
-		exclude: none
+		include: construction, scientist, artisan, professional, technician, engineer
 		weight: 1.000
 	}
 	
 	shipment:
 	{
-		name: "Spare Parts"
 		items:
 		[
 			{
 				type: resource
 				material: "machine_parts"
 				quantity: 8.000
+				mass_per_unit: 0.000
+				flags: no_consume
 			}
+			null
+			null
+			null
 		]
-		flags: unpack
+		flags: dirty, unpack
 	}
 }
