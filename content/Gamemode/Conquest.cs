@@ -64,7 +64,7 @@ namespace TC2.Conquest
 		{
 			ref var world = ref Server.GetWorld();
 
-			ref var region_new = ref world.ImportRegion(region_id, map);
+			ref var region_new = ref world.ImportRegion2(region_id, map);
 			if (!region_new.IsNull())
 			{
 				//world.SetContinueRegionID(region_id);

@@ -322,8 +322,6 @@ namespace TC2.Conquest
 
 								Crafting.Context.New(ref region, ent_selected_spawn, ent_selected_spawn, out var crafting_context, inventory: h_inventory, shipment: oc_shipment, search_radius: 0.00f);
 
-								var selected_items = Spawn.RespawnGUI.character_id_to_selected_items.GetOrAdd(h_selected_character_tmp);
-
 								//var context = GUI.ItemContext.Begin();
 
 								using (var group_title = GUI.Group.New(size: new(GUI.GetRemainingWidth(), 40), padding: new(4, 0)))
@@ -411,7 +409,19 @@ namespace TC2.Conquest
 
 								using (var group_character = GUI.Group.New(size: GUI.GetRemainingSpace()))
 								{
+									var selected_items = Spawn.RespawnGUI.character_id_to_selected_items.GetOrAdd(h_selected_character_tmp);
+
 									ref var character_data = ref h_selected_character_tmp.GetData();
+									if (character_data.IsNotNull())
+									{
+										if (selected_items != null)
+										{
+											foreach (ref var h_kit in character_data.kits)
+											{
+												selected_items.Add(h_kit);
+											}
+										}
+									}
 
 									using (var group_title = GUI.Group.New(size: new(GUI.GetRemainingWidth(), 24), padding: new(8, 8)))
 									{
@@ -427,9 +437,22 @@ namespace TC2.Conquest
 
 									GUI.SeparatorThick();
 
-									using (var group_title = GUI.Group.New(size: GUI.GetRemainingSpace(y: -350), padding: new(8, 8)))
+									using (var group_title = GUI.Group.New(size: GUI.GetRemainingSpace(y: -300), padding: new(8, 8)))
 									{
+										using (var scrollbox = GUI.Scrollbox.New("scrollbox_xp", size: GUI.GetRemainingSpace()))
+										{
+											GUI.DrawBackground(GUI.tex_panel, scrollbox.group_frame.GetOuterRect(), new(8, 8, 8, 8));
 
+											if (character_data.IsNotNull())
+											{
+												Experience.DrawTableSmall2(ref character_data.experience);
+											}
+
+											//if (origin_data.IsNotNull())
+											//{
+											//	Experience.DrawTableSmall(ref origin_data.experience);
+											//}
+										}
 									}
 
 									GUI.SeparatorThick();
@@ -442,59 +465,79 @@ namespace TC2.Conquest
 										{
 											if (character_data.IsNotNull())
 											{
-												var kits_unavailable_count = 0;
-												Span<IKit.Handle> kits_unavailable = stackalloc IKit.Handle[32];
-
-												foreach (var asset in IKit.Database.GetAssets())
+												if (dormitory.flags.HasAny(Dormitory.Flags.No_Kit_Selection))
 												{
-													if (asset.id == 0) continue;
-													ref var kit_data = ref asset.GetData();
-													var h_kit = asset.GetHandle();
-
-													if (kit_data.character_flags.Evaluate(character_data.flags) < 0.50f) continue;
-
-													var valid = false;
-
-													if (h_kit.Evaluate(ref character_data))
+													foreach (var h_kit in selected_items)
 													{
-														Span<Crafting.Requirement> requirements = stackalloc Crafting.Requirement[8];
-
-														foreach (ref var item in kit_data.shipment.items)
-														{
-															if (!item.IsValid()) continue;
-															if (item.flags.HasAny(Shipment.Item.Flags.No_Consume)) continue;
-
-															requirements.Add(item.ToRequirement());
-														}
-
-														if (Crafting.Evaluate2(ref crafting_context, requirements, Crafting.EvaluateFlags.None))
-														{
-															valid = true;
-														}
-													}
-
-													//GUI.Text($"{valid}");
-
-													if (valid)
-													{
-														Dormitory.DrawKit(ref h_kit, ref kit_data, selected_items, true, h_inventory, available_items);
-													}
-													else
-													{
-														kits_unavailable.Add(h_kit, ref kits_unavailable_count);
+														Dormitory.DrawKit(in h_kit, true, true, h_inventory, available_items, force_readonly: true);
 													}
 												}
-
-												if (has_storage)
+												else
 												{
-													for (var i = 0; i < kits_unavailable_count; i++)
-													{
-														var h_kit_unavailable = kits_unavailable[i];
-														ref var kit_unavailable_data = ref h_kit_unavailable.GetData();
+													var kits_unavailable_count = 0;
+													Span<IKit.Handle> kits_unavailable = stackalloc IKit.Handle[32];
 
-														if (kit_unavailable_data.IsNotNull())
+													foreach (var asset in IKit.Database.GetAssets())
+													{
+														if (asset.id == 0) continue;
+														ref var kit_data = ref asset.GetData();
+														var h_kit = asset.GetHandle();
+
+														if (kit_data.character_flags.Evaluate(character_data.flags) < 0.50f) continue;
+
+														var valid = false;
+
+														if (h_kit.Evaluate(ref character_data))
 														{
-															Dormitory.DrawKit(ref h_kit_unavailable, ref kit_unavailable_data, selected_items, false, h_inventory, available_items);
+															Span<Crafting.Requirement> requirements = stackalloc Crafting.Requirement[8];
+
+															foreach (ref var item in kit_data.shipment.items)
+															{
+																if (!item.IsValid()) continue;
+																if (item.flags.HasAny(Shipment.Item.Flags.No_Consume)) continue;
+
+																requirements.Add(item.ToRequirement());
+															}
+
+															if (Crafting.Evaluate2(ref crafting_context, requirements, Crafting.EvaluateFlags.None))
+															{
+																valid = true;
+															}
+														}
+
+														//GUI.Text($"{valid}");
+
+														if (valid)
+														{
+															var selected = selected_items.Contains(h_kit);
+															if (Dormitory.DrawKit(in h_kit, true, selected: selected, h_inventory: h_inventory, available_items: available_items))
+															{
+																if (selected) selected_items.Remove(h_kit);
+																else selected_items.Add(h_kit);
+															}
+														}
+														else
+														{
+															kits_unavailable.Add(h_kit, ref kits_unavailable_count);
+														}
+													}
+
+													if (has_storage)
+													{
+														for (var i = 0; i < kits_unavailable_count; i++)
+														{
+															var h_kit = kits_unavailable[i];
+															ref var kit_data = ref h_kit.GetData();
+
+															if (kit_data.IsNotNull())
+															{
+																var selected = selected_items.Contains(h_kit);
+																if (Dormitory.DrawKit(in h_kit, false, false, h_inventory, available_items))
+																{
+																	if (selected) selected_items.Remove(h_kit);
+																	else selected_items.Add(h_kit);
+																}
+															}
 														}
 													}
 												}
