@@ -6,17 +6,20 @@
 		'''
 	
 	flags: none
-	categories: tools, weapon
+	categories: tools, weapon, dangerous
 	faction: "null"
 	species: "human"
 	
 	character_flags:
 	{
-		require: professional, armed, miner
-		include: military, professional, armed, miner
-		exclude: unarmed
-		weight: 1.000
+		require: armed, miner
+		include: military, engineer, miner
+		exclude: slave, unskilled, farmer, unarmed, insane
+		weight: 1.200
 	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
 	
 	shipment:
 	{

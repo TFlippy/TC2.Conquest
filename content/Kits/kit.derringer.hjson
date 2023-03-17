@@ -6,16 +6,19 @@
 		'''
 	
 	flags: none
-	categories: weapon
+	categories: weapon, dangerous
 	faction: "null"
 	species: "null"
 	
 	character_flags:
 	{
 		include: criminal, unskilled, laborer, civillian, armed, lowlife, poor
-		exclude: unarmed
+		exclude: unarmed, middle_class, upper_middle_class, upper_class, elite_class
 		weight: 1.000
 	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
 	
 	shipment:
 	{

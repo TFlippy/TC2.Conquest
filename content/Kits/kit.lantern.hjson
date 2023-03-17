@@ -1,24 +1,20 @@
 {
-	name: "Crowbar"
+	name: "Lantern"
 	desc:
 		'''
 		TODO: Desc
 		'''
 	
 	flags: none
-	categories: tools, weapon, dangerous
+	categories: tools
 	faction: "null"
 	species: "null"
 	
 	character_flags:
 	{
-		include: construction, scientist, artisan, laborer, technician, engineer
-		exclude: medical, nobility, social
-		weight: 1.200
+		include: civillian, hunter, nomad
+		weight: 2.500
 	}
-	
-	amount_multiplier_min: 1.000
-	amount_multiplier_max: 1.000
 	
 	shipment:
 	{
@@ -26,7 +22,7 @@
 		[
 			{
 				type: prefab
-				prefab: "crowbar"
+				prefab: "lantern"
 				quantity: 1.000
 				mass_per_unit: 0.000
 				flags: despawn, no_consume

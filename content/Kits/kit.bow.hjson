@@ -1,20 +1,19 @@
 {
-	name: "Musket"
+	name: "Bow"
 	desc:
 		'''
 		TODO: Desc
 		'''
 	
 	flags: none
-	categories: weapon, dangerous
+	categories: weapon, dangerous, junk
 	faction: "null"
-	species: "human"
+	species: "null"
 	
 	character_flags:
 	{
-		require: hunter
-		include: construction, criminal, military, nobility, artisan, farmer, civillian, armed, hunter
-		exclude: military, unarmed, upper_middle_class, upper_class, elite_class
+		include: slave, unskilled, farmer, laborer, lowlife, poor, hunter, insane, nomad, feral, lower_class
+		exclude: construction, scientist, military, medical, professional, technician, engineer, rich, miner, upper_middle_class, upper_class, elite_class
 		weight: 1.000
 	}
 	
@@ -27,15 +26,15 @@
 		[
 			{
 				type: prefab
-				prefab: "musket"
+				prefab: "bow"
 				quantity: 1.000
 				mass_per_unit: 0.000
 				flags: despawn, no_consume
 			}
 			{
 				type: resource
-				material: "ammo_musket"
-				quantity: 12.000
+				material: "ammo_arrow"
+				quantity: 14.000
 				mass_per_unit: 0.000
 				flags: despawn, no_consume
 			}

@@ -6,16 +6,20 @@
 		'''
 	
 	flags: none
-	categories: weapon
+	categories: weapon, dangerous
 	faction: "null"
 	species: "human"
 	
 	character_flags:
 	{
-		include: construction, educated, military, professional, armed, law, commerce, rich
+		require: bureaucrat
+		include: bureaucrat, educated, professional, civillian, armed, law, social, commerce, rich, entertainer, sedentary, lower_middle_class, middle_class, upper_middle_class
 		exclude: unarmed
-		weight: 1.000
+		weight: 1.700
 	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
 	
 	shipment:
 	{
@@ -26,7 +30,7 @@
 				prefab: "pistol"
 				quantity: 1.000
 				mass_per_unit: 0.000
-				flags: no_consume, despawn
+				flags: despawn, no_consume
 			}
 			{
 				type: resource

@@ -1,20 +1,21 @@
 {
-	name: "Crowbar"
+	name: "Codeine (20mg, IR)"
 	desc:
 		'''
 		TODO: Desc
 		'''
 	
 	flags: none
-	categories: tools, weapon, dangerous
+	categories: food, dangerous
 	faction: "null"
 	species: "null"
 	
 	character_flags:
 	{
-		include: construction, scientist, artisan, laborer, technician, engineer
-		exclude: medical, nobility, social
-		weight: 1.200
+		require: medical
+		include: medical, professional, chemist
+		exclude: unskilled, farmer
+		weight: 1.000
 	}
 	
 	amount_multiplier_min: 1.000
@@ -26,7 +27,7 @@
 		[
 			{
 				type: prefab
-				prefab: "crowbar"
+				prefab: "bp.codeine.20mg.ir"
 				quantity: 1.000
 				mass_per_unit: 0.000
 				flags: despawn, no_consume

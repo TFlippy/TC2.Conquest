@@ -482,6 +482,7 @@ namespace TC2.Conquest
 														if (asset.id == 0) continue;
 														ref var kit_data = ref asset.GetData();
 														var h_kit = asset.GetHandle();
+														if (!dormitory.kit_filter.Evaluate(kit_data.flags) && !character_data.kits.Contains(h_kit)) continue;
 
 														if (kit_data.character_flags.Evaluate(character_data.flags) < 0.50f) continue;
 
@@ -548,7 +549,7 @@ namespace TC2.Conquest
 									if (ent_selected_spawn.IsAlive())
 									{
 										ref var faction = ref ent_selected_spawn.GetComponent<Faction.Data>();
-										if (faction.IsNull() || faction.id == player.faction_id)
+										if (faction.IsNull() || faction.id == 0 || faction.id == player.faction_id)
 										{
 											if (GUI.DrawButton("Respawn", size: new Vector2(GUI.GetRemainingWidth(), 48), color: GUI.col_button_ok, enabled: h_selected_character_tmp.id != 0 && dormitory.IsNotNull()))
 											{

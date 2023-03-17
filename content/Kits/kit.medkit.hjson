@@ -1,5 +1,5 @@
 {
-	name: "Prospector Pick"
+	name: "Medkit"
 	desc:
 		'''
 		TODO: Desc
@@ -12,13 +12,11 @@
 	
 	character_flags:
 	{
-		require: miner
-		include: construction, scientist, professional, laborer, engineer, miner, lower_class, lower_middle_class
-		weight: 1.000
+		require: medical
+		include: scientist, educated, military, medical, soldier, sedentary
+		exclude: unskilled, lowlife, illiterate
+		weight: 2.500
 	}
-	
-	amount_multiplier_min: 1.000
-	amount_multiplier_max: 1.000
 	
 	shipment:
 	{
@@ -26,7 +24,7 @@
 		[
 			{
 				type: prefab
-				prefab: "prospector_pick"
+				prefab: "medkit"
 				quantity: 1.000
 				mass_per_unit: 0.000
 				flags: despawn, no_consume

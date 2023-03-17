@@ -13,8 +13,11 @@
 	character_flags:
 	{
 		include: construction, scientist, artisan, professional, technician, engineer
-		weight: 1.000
+		weight: 1.400
 	}
+	
+	amount_multiplier_min: 0.700
+	amount_multiplier_max: 1.200
 	
 	shipment:
 	{

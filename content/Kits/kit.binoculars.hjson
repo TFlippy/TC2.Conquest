@@ -12,8 +12,9 @@
 	
 	character_flags:
 	{
-		include: scientist, educated, military, farmer, civillian, engineer, rich, hunter
-		weight: 1.000
+		include: construction, scientist, educated, military, farmer, civillian, engineer, rich, hunter, nomad, entertainer, middle_class, upper_middle_class
+		exclude: unskilled, lower_class
+		weight: 1.200
 	}
 	
 	shipment:

@@ -6,16 +6,19 @@
 		'''
 	
 	flags: none
-	categories: weapon
+	categories: weapon, dangerous
 	faction: "null"
 	species: "human"
 	
 	character_flags:
 	{
-		include: construction, educated, military, professional, armed, law, commerce, rich
-		exclude: unarmed
-		weight: 1.000
+		include: construction, educated, military, nobility, professional, armed, law, commerce, rich
+		exclude: unarmed, lower_class, lower_middle_class
+		weight: 1.700
 	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
 	
 	shipment:
 	{
@@ -26,7 +29,7 @@
 				prefab: "revolver"
 				quantity: 1.000
 				mass_per_unit: 0.000
-				flags: no_consume, despawn
+				flags: despawn, no_consume
 			}
 			{
 				type: resource

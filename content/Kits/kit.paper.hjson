@@ -6,15 +6,20 @@
 		'''
 	
 	flags: none
-	categories: materials
+	categories: materials, junk
 	faction: "null"
 	species: "human"
 	
 	character_flags:
 	{
-		include: bureaucrat, educated, law, social, commerce
+		require: bureaucrat
+		include: bureaucrat, scientist, educated, law, social, commerce, sedentary
+		exclude: illiterate
 		weight: 1.000
 	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
 	
 	shipment:
 	{
@@ -25,7 +30,7 @@
 				material: "paper"
 				quantity: 20.000
 				mass_per_unit: 0.000
-				flags: no_consume, despawn
+				flags: despawn, no_consume
 			}
 			null
 			null

@@ -1,25 +1,24 @@
 {
-	name: "Chemical Goods"
+	name: "Mushrooms"
 	desc:
 		'''
 		TODO: Desc
 		'''
 	
 	flags: none
-	categories: materials, dangerous
+	categories: food, materials
 	faction: "null"
-	species: "human"
+	species: "null"
 	
 	character_flags:
 	{
-		require: chemist
-		include: scientist, educated, medical, chemist, sedentary
-		exclude: unskilled, poor, illiterate, lower_class, lower_middle_class
-		weight: 1.400
+		include: unskilled, farmer, laborer, hunter, culinary, nomad
+		exclude: military, technician, engineer, miner, upper_middle_class, upper_class, elite_class
+		weight: 1.300
 	}
 	
 	amount_multiplier_min: 0.700
-	amount_multiplier_max: 1.100
+	amount_multiplier_max: 1.200
 	
 	shipment:
 	{
@@ -27,7 +26,7 @@
 		[
 			{
 				type: resource
-				material: "sulfuric_acid"
+				material: "mushroom.brown"
 				quantity: 25.000
 				mass_per_unit: 0.000
 				flags: despawn, no_consume

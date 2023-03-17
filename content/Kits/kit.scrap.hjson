@@ -1,0 +1,41 @@
+{
+	name: "Scrap Metal"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+	categories: materials, junk
+	faction: "null"
+	species: "null"
+	
+	character_flags:
+	{
+		require: construction
+		include: construction, artisan, laborer, technician, engineer, nomad, lower_class, lower_middle_class, middle_class
+		exclude: farmer, social, culinary, upper_class, elite_class
+		weight: 1.400
+	}
+	
+	amount_multiplier_min: 0.400
+	amount_multiplier_max: 1.400
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: resource
+				material: "scrap"
+				quantity: 25.000
+				mass_per_unit: 0.000
+				flags: despawn, no_consume
+			}
+			null
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}
