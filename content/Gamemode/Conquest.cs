@@ -26,7 +26,7 @@ namespace TC2.Conquest
 
 			public static void Configure()
 			{
-				Constants.World.multi_region = true;
+
 			}
 
 			public static void Init()

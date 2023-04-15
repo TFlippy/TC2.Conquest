@@ -232,6 +232,7 @@ namespace TC2.Conquest
 													//var nameable_copy = default(Nameable.Data);
 													var color = selected ? Color32BGRA.White : new Color32BGRA(0xff9a7f7f);
 													var marker_copy = default(Minimap.Marker.Data);
+													var alpha = 1.00f;
 
 													var faction_id_tmp = this.faction_id;
 
@@ -251,12 +252,24 @@ namespace TC2.Conquest
 															}
 															//sprite.frame.X = 1;
 															ok = true;
+
+															ref var dormitory = ref entity.GetComponent<Dormitory.Data>();
+															if (dormitory.IsNotNull())
+															{
+																var dormitory_characters = dormitory.characters.Slice(dormitory.characters_capacity);
+
+																var is_empty = dormitory_characters.GetFilledCount() == 0;
+																if (is_empty)
+																{
+																	alpha = 0.65f;
+																}
+															}
 														}
 													});
 
 													if (ok)
 													{
-														using (var node = map.DrawNode(marker_copy.sprite, transform_copy.GetInterpolatedPosition() + new Vector2(0, -3), color: selected ? Color32BGRA.White : color, color_hovered: selected ? Color32BGRA.White : Color32BGRA.Lerp(color, Color32BGRA.White, 0.50f)))
+														using (var node = map.DrawNode(marker_copy.sprite, transform_copy.GetInterpolatedPosition() + new Vector2(0, -3), color: (selected ? Color32BGRA.White : color).WithAlphaMult(alpha), color_hovered: selected ? Color32BGRA.White : Color32BGRA.Lerp(color, Color32BGRA.White, 0.50f).WithAlphaMult(alpha)))
 														{
 															//GUI.DrawTextCentered(nameable_copy.name, node.rect.GetPosition() + new Vector2(16, 0), piv layer: GUI.Layer.Window, font: GUI.Font.Superstar, size: 16);
 
@@ -305,7 +318,8 @@ namespace TC2.Conquest
 								ref var dormitory = ref ent_selected_spawn.GetComponent<Dormitory.Data>();
 								if (dormitory.IsNotNull())
 								{
-									if (h_selected_character_tmp.id != 0 && !dormitory.characters.Contains(h_selected_character_tmp))
+									var characters = dormitory.characters.Slice(dormitory.characters_capacity);
+									if (h_selected_character_tmp.id != 0 && !characters.Contains(h_selected_character_tmp))
 									{
 										h_selected_character_tmp = default;
 									}
@@ -318,7 +332,13 @@ namespace TC2.Conquest
 								}
 
 								var has_storage = h_inventory.IsValid() || !available_items.IsEmpty;
+								var is_empty = true;
 
+								//if (dormitory.IsNotNull())
+								//{
+								//	var characters = dormitory.characters.Slice(dormitory.characters_capacity);
+								//	is_empty = characters.GetFilledCount() == 0;
+								//}
 
 								Crafting.Context.New(ref region, ent_selected_spawn, ent_selected_spawn, out var crafting_context, inventory: h_inventory, shipment: oc_shipment, search_radius: 0.00f);
 
@@ -328,6 +348,12 @@ namespace TC2.Conquest
 								{
 									var spawn_name = ent_selected_spawn.GetFullName();
 									GUI.TitleCentered(spawn_name, size: 32, pivot: new(0.00f, 0.50f));
+
+									//if (is_empty)
+									//{
+									//	GUI.TitleCentered("This spawnpoint is empty.", size: 16, pivot: new(1.00f, 0.50f), color: GUI.font_color_yellow, offset: new(0, -8));
+									//	GUI.TitleCentered("Select another one on the map!", size: 16, pivot: new(1.00f, 0.50f), color: GUI.font_color_yellow, offset: new(0, 8));
+									//}
 								}
 
 								GUI.SeparatorThick();
@@ -346,10 +372,10 @@ namespace TC2.Conquest
 									{
 										if (dormitory.IsNotNull())
 										{
-											var characters = dormitory.characters.AsSpan();
+											var characters = dormitory.characters.Slice(dormitory.characters_capacity);
 
-											var characters_count_max = Math.Min(characters.Length, dormitory.characters_capacity);
-											for (var i = 0; i < characters_count_max; i++)
+											//var characters_count_max = Math.Min(characters.Length, dormitory.characters_capacity);
+											for (var i = 0; i < characters.Length; i++)
 											{
 												//DrawCharacter(characters[i].GetHandle());
 
@@ -364,6 +390,8 @@ namespace TC2.Conquest
 															h_selected_character_tmp = h_character;
 															h_selected_character = h_character;
 														}
+
+														is_empty &= h_character.id == 0;
 
 														Dormitory.DormitoryGUI.DrawCharacterSmall(h_character);
 
@@ -437,7 +465,7 @@ namespace TC2.Conquest
 
 									GUI.SeparatorThick();
 
-									using (var group_title = GUI.Group.New(size: GUI.GetRemainingSpace(y: -300), padding: new(8, 8)))
+									using (var group_title = GUI.Group.New(size: GUI.GetRemainingSpace(y: -300), padding: new(2, 4)))
 									{
 										using (var scrollbox = GUI.Scrollbox.New("scrollbox_xp", size: GUI.GetRemainingSpace()))
 										{
@@ -457,7 +485,7 @@ namespace TC2.Conquest
 
 									GUI.SeparatorThick();
 
-									using (var group_kits = GUI.Group.New(size: GUI.GetRemainingSpace(y: -48), padding: new(8, 8)))
+									using (var group_kits = GUI.Group.New(size: GUI.GetRemainingSpace(y: -48), padding: new(2, 4)))
 									{
 										GUI.DrawBackground(GUI.tex_panel, group_kits.GetOuterRect(), new(8, 8, 8, 8));
 
@@ -551,21 +579,32 @@ namespace TC2.Conquest
 										ref var faction = ref ent_selected_spawn.GetComponent<Faction.Data>();
 										if (faction.IsNull() || faction.id == 0 || faction.id == player.faction_id)
 										{
-											if (GUI.DrawButton("Respawn", size: new Vector2(GUI.GetRemainingWidth(), 48), color: GUI.col_button_ok, enabled: h_selected_character_tmp.id != 0 && dormitory.IsNotNull()))
+											if (is_empty)
 											{
-												var rpc = new Dormitory.DEV_SpawnRPC()
+												if (GUI.DrawButton("No characters available.", size: new Vector2(GUI.GetRemainingWidth(), 48), color: GUI.col_button_error, error: true))
 												{
-													h_character = h_selected_character_tmp
-												};
 
-												foreach (var h_kit in selected_items)
-												{
-													rpc.kits.TryAdd(in h_kit);
 												}
+												GUI.DrawHoverTooltip("This spawnpoint doesn't have any more characters left.\n\nSelect another spawnpoint on the map.");
+											}
+											else
+											{
+												if (GUI.DrawButton("Respawn", size: new Vector2(GUI.GetRemainingWidth(), 48), color: GUI.col_button_ok, enabled: h_selected_character_tmp.id != 0 && dormitory.IsNotNull()))
+												{
+													var rpc = new Dormitory.DEV_SpawnRPC()
+													{
+														h_character = h_selected_character_tmp
+													};
 
-												rpc.Send(ent_selected_spawn);
+													foreach (var h_kit in selected_items)
+													{
+														rpc.kits.TryAdd(in h_kit);
+													}
 
-												h_selected_character = default;
+													rpc.Send(ent_selected_spawn);
+
+													h_selected_character = default;
+												}
 											}
 										}
 										else
