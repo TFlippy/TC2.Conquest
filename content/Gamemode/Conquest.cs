@@ -77,26 +77,25 @@ namespace TC2.Conquest
 		}
 #endif
 
-#if SERVER
-		[ISystem.AddFirst(ISystem.Mode.Single)]
-		public static void OnAdd(ISystem.Info info, [Source.Owned] ref MapCycle.Global mapcycle)
-		{
-			ref var region = ref info.GetRegion();
-			mapcycle.AddMaps(ref region, "conquest");
-		}
-#endif
+//#if SERVER
+//		[ISystem.AddFirst(ISystem.Mode.Single)]
+//		public static void OnAdd(ISystem.Info info, ref Region.Data region, [Source.Owned] ref MapCycle.Global mapcycle)
+//		{
+//			mapcycle.AddMaps(ref region, "conquest");
+//		}
+//#endif
 
-		[ISystem.VeryLateUpdate(ISystem.Mode.Single)]
-		public static void OnUpdate(ISystem.Info info, [Source.Global] ref Conquest.Gamemode conquest, [Source.Global] in MapCycle.Global mapcycle, [Source.Global] ref MapCycle.Voting voting)
-		{
-			if (true)
-			{
-				if (!conquest.flags.HasAny(Conquest.Gamemode.Flags.Paused))
-				{
-					conquest.elapsed += info.DeltaTime;
-				}
-			}
-		}
+//		[ISystem.VeryLateUpdate(ISystem.Mode.Single)]
+//		public static void OnUpdate(ISystem.Info info, [Source.Global] ref Conquest.Gamemode conquest, [Source.Global] in MapCycle.Global mapcycle, [Source.Global] ref MapCycle.Voting voting)
+//		{
+//			if (true)
+//			{
+//				if (!conquest.flags.HasAny(Conquest.Gamemode.Flags.Paused))
+//				{
+//					conquest.elapsed += info.DeltaTime;
+//				}
+//			}
+//		}
 
 //#if SERVER
 //		[ISystem.LateUpdate(ISystem.Mode.Single, interval: 5.00f)]
@@ -184,7 +183,7 @@ namespace TC2.Conquest
 				var alive = this.player.flags.HasAny(Player.Flags.Alive);
 
 				var window_pos = (GUI.CanvasSize * new Vector2(0.50f, 0.00f)) + new Vector2(000, 48);
-				using (var window = GUI.Window.Standalone("Scoreboard", position: alive ? null : window_pos, size: new Vector2(600, 400), pivot: alive ? new Vector2(0.50f, 0.00f) : new(1.00f, 0.00f)))
+				using (var window = GUI.Window.Standalone("Scoreboard", position: alive ? null : window_pos, size: new Vector2(600, 400), pivot: alive ? new Vector2(0.50f, 0.00f) : new(1.00f, 0.00f), flags: GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.No_Click_Focus))
 				{
 					this.StoreCurrentWindowTypeID();
 					if (window.show)

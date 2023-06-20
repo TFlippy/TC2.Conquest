@@ -7,14 +7,14 @@
 	
 	flags: none
 	slot: utility
-	categories: food, junk, small, consumable
+	categories: food, junk, small, consumable, cheap
 	faction: "null"
 	species: "null"
 	
 	character_flags:
 	{
 		require: none
-		include: slave, criminal, unskilled, laborer, lowlife, poor, alcoholic, lower_class, lower_middle_class, middle_class
+		include: slave, construction, criminal, unskilled, farmer, laborer, civillian, lowlife, poor, miner, alcoholic, nomad, pet, illiterate, sedentary, brawler, outdoor, strong, junkie, thief, murderer, lower_class, lower_middle_class, middle_class
 		exclude: rich, upper_class, elite_class
 		weight: 1.000
 	}

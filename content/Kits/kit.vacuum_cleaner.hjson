@@ -1,5 +1,5 @@
 ﻿{
-	name: "Binoculars"
+	name: "Vacuum Cleaner"
 	desc:
 		'''
 		TODO: Desc
@@ -7,16 +7,16 @@
 	
 	flags: none
 	slot: utility
-	categories: tools, long_range, advanced, small, device
+	categories: tools, advanced, machine, device
 	faction: "null"
 	species: "human"
 	
 	character_flags:
 	{
 		require: none
-		include: construction, scientist, educated, military, farmer, civillian, engineer, rich, hunter, nomad, entertainer, middle_class, upper_middle_class
-		exclude: unskilled, lower_class
-		weight: 1.200
+		include: slave, laborer, civillian, social, technician, unarmed, entertainer, sedentary, lower_middle_class, middle_class, upper_middle_class
+		exclude: none
+		weight: 1.000
 	}
 	
 	amount_multiplier_min: 1.000
@@ -28,7 +28,7 @@
 		[
 			{
 				type: prefab
-				prefab: "binoculars"
+				prefab: "vacuum_cleaner"
 				quantity: 1.000
 				flags: despawn, no_consume
 			}

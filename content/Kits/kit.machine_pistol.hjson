@@ -1,0 +1,46 @@
+﻿{
+	name: "Machine Pistol"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+	slot: secondary
+	categories: weapon, gun, short_range, small, fancy
+	faction: "null"
+	species: "human"
+	
+	character_flags:
+	{
+		require: none
+		include: bureaucrat, educated, professional, civillian, armed, law, social, commerce, rich, entertainer, sedentary, middle_class, upper_middle_class
+		exclude: slave, unskilled, laborer, unarmed, poor, lower_class
+		weight: 1.400
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "machine_pistol"
+				quantity: 1.000
+				flags: despawn, no_consume
+			}
+			{
+				type: resource
+				material: "ammo_lc"
+				quantity: 30.000
+				flags: no_consume
+			}
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

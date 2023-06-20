@@ -1,5 +1,5 @@
 ﻿{
-	name: "Universal Brown Sauce"
+	name: "Tallow"
 	desc:
 		'''
 		TODO: Desc
@@ -28,7 +28,7 @@
 		[
 			{
 				type: resource
-				material: "sauce"
+				material: "tallow"
 				quantity: 10.000
 				flags: despawn, no_consume
 			}

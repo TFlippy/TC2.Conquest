@@ -7,7 +7,7 @@
 	
 	flags: none
 	slot: utility
-	categories: tools, heavy, construction
+	categories: tools, heavy, small, construction, storage, cheap
 	faction: "null"
 	species: "null"
 	

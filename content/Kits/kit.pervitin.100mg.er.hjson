@@ -1,0 +1,38 @@
+﻿{
+	name: "Pervitin 100mg ER"
+	desc: ""
+	
+	flags: none
+	slot: utility
+	categories: dangerous, advanced, usable, small, drug, chemical, consumable
+	faction: "null"
+	species: "human"
+	
+	character_flags:
+	{
+		require: none
+		include: scientist, criminal, educated, military, medical, professional, law, technician, engineer, chemist, insane, pet, entertainer, artist, sedentary, junkie, politician, middle_class, upper_middle_class, upper_class
+		exclude: none
+		weight: 1.000
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "bp.pervitin.100mg.er"
+				quantity: 1.000
+				flags: despawn
+			}
+			null
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

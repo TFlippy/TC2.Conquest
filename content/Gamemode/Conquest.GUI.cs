@@ -43,7 +43,7 @@ namespace TC2.Conquest
 				ref var ent_selected_spawn = ref Spawn.RespawnGUI.ent_selected_spawn;
 				ent_selected_spawn = this.respawn.ent_selected_spawn;
 
-				using (var window = GUI.Window.Standalone("Respawn", position: new Vector2(GUI.CanvasSize.X * 0.50f, 0) + Spawn.RespawnGUI.window_offset, pivot: Spawn.RespawnGUI.window_pivot, size: Spawn.RespawnGUI.window_size))
+				using (var window = GUI.Window.Standalone("Respawn", position: new Vector2(GUI.CanvasSize.X * 0.50f, 0) + Spawn.RespawnGUI.window_offset, pivot: Spawn.RespawnGUI.window_pivot, size: Spawn.RespawnGUI.window_size, flags: GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.No_Click_Focus))
 				{
 					Spawn.RespawnGUI.window_size = new Vector2(632, 700);
 
@@ -444,7 +444,7 @@ namespace TC2.Conquest
 									{
 										if (selected_items != null)
 										{
-											foreach (ref var h_kit in character_data.kits)
+											foreach (var h_kit in character_data.kits)
 											{
 												selected_items.Add(h_kit);
 											}

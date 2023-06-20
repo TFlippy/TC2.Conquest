@@ -7,7 +7,7 @@
 	
 	flags: none
 	slot: tool
-	categories: tools, weapon, melee, mining, construction, gathering
+	categories: tools, weapon, melee, mining, construction, gathering, cheap
 	faction: "null"
 	species: "null"
 	

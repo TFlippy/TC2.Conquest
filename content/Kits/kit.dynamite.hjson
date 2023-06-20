@@ -7,7 +7,7 @@
 	
 	flags: none
 	slot: utility
-	categories: tools, weapon, dangerous, explosive, destructive, mining, construction, gathering
+	categories: tools, weapon, dangerous, explosive, powerful, destructive, small, mining, construction, gathering
 	faction: "null"
 	species: "human"
 	

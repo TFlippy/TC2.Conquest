@@ -6,7 +6,7 @@
 		'''
 	
 	flags: none
-	slot: secondary
+	slot: tool
 	categories: tools, small, chemical, consumable, healing
 	faction: "null"
 	species: "human"

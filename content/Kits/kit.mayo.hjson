@@ -1,5 +1,5 @@
 ﻿{
-	name: "Universal Brown Sauce"
+	name: "Majonez"
 	desc:
 		'''
 		TODO: Desc
@@ -7,15 +7,15 @@
 	
 	flags: none
 	slot: resources
-	categories: food, materials, junk
+	categories: food, materials, powerful, expensive, fancy
 	faction: "null"
 	species: "null"
 	
 	character_flags:
 	{
 		require: none
-		include: farmer, laborer, hunter, culinary, nomad, lower_class, lower_middle_class, middle_class
-		exclude: upper_middle_class, upper_class, elite_class
+		include: bureaucrat, educated, nobility, professional, civillian, social, rich, culinary, artist, sedentary, middle_class, upper_middle_class, upper_class, elite_class
+		exclude: none
 		weight: 1.200
 	}
 	
@@ -28,8 +28,8 @@
 		[
 			{
 				type: resource
-				material: "sauce"
-				quantity: 10.000
+				material: "mayo"
+				quantity: 5.000
 				flags: despawn, no_consume
 			}
 			null

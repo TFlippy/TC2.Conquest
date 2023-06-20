@@ -7,7 +7,7 @@
 	
 	flags: none
 	slot: secondary
-	categories: weapon, junk, gun, short_range, weak, inaccurate, small
+	categories: weapon, junk, gun, short_range, weak, inaccurate, small, cheap
 	faction: "null"
 	species: "null"
 	

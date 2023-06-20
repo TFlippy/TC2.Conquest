@@ -1,4 +1,4 @@
-{
+﻿{
 	name: "Lost Documents"
 	desc:
 		'''
@@ -6,7 +6,8 @@
 		'''
 	
 	flags: none
-	categories: materials, junk
+	slot: resources
+	categories: materials, advanced, small, fancy, cheap
 	faction: "null"
 	species: "human"
 	
@@ -29,7 +30,6 @@
 				type: resource
 				material: "paper"
 				quantity: 20.000
-				mass_per_unit: 0.000
 				flags: despawn, no_consume
 			}
 			null

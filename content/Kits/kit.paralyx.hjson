@@ -1,21 +1,18 @@
 ﻿{
-	name: "Prospector Pick"
-	desc:
-		'''
-		TODO: Desc
-		'''
+	name: "Paralyx"
+	desc: ""
 	
 	flags: none
 	slot: utility
-	categories: tools, mining
+	categories: weapon, dangerous, advanced, small, drug, chemical, consumable, expensive
 	faction: "null"
 	species: "human"
 	
 	character_flags:
 	{
 		require: none
-		include: scientist, educated, professional, laborer, engineer, miner, nomad, outdoor, lower_middle_class, middle_class, upper_middle_class
-		exclude: none
+		include: military, medical, armed, chemist, insane, sedentary, junkie, evil, murderer, terrorist, fanatic
+		exclude: unskilled, laborer
 		weight: 1.000
 	}
 	
@@ -28,9 +25,9 @@
 		[
 			{
 				type: prefab
-				prefab: "prospector_pick"
+				prefab: "bp.paralyx"
 				quantity: 1.000
-				flags: despawn, no_consume
+				flags: despawn
 			}
 			null
 			null

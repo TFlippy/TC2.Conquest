@@ -7,7 +7,7 @@
 	
 	flags: none
 	slot: resources
-	categories: materials, dangerous, rare, explosive, advanced, chemical, construction
+	categories: materials, dangerous, rare, heavy, explosive, advanced, powerful, chemical, construction, expensive
 	faction: "null"
 	species: "null"
 	

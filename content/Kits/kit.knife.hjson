@@ -7,7 +7,7 @@
 	
 	flags: none
 	slot: secondary
-	categories: tools, weapon, junk, small
+	categories: tools, weapon, melee, weak, small, cheap
 	faction: "null"
 	species: "null"
 	

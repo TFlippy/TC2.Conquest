@@ -1,20 +1,17 @@
 ﻿{
-	name: "Prospector Pick"
-	desc:
-		'''
-		TODO: Desc
-		'''
+	name: "Morfitin-B"
+	desc: ""
 	
 	flags: none
 	slot: utility
-	categories: tools, mining
+	categories: usable, small, drug, chemical, consumable, healing
 	faction: "null"
 	species: "human"
 	
 	character_flags:
 	{
-		require: none
-		include: scientist, educated, professional, laborer, engineer, miner, nomad, outdoor, lower_middle_class, middle_class, upper_middle_class
+		require: medical
+		include: educated, military, medical, professional, chemist, middle_class, upper_middle_class
 		exclude: none
 		weight: 1.000
 	}
@@ -28,9 +25,9 @@
 		[
 			{
 				type: prefab
-				prefab: "prospector_pick"
+				prefab: "bp.morfitin.b"
 				quantity: 1.000
-				flags: despawn, no_consume
+				flags: despawn
 			}
 			null
 			null

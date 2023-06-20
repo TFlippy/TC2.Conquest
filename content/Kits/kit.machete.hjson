@@ -1,22 +1,22 @@
 ﻿{
-	name: "Lantern"
+	name: "Machete"
 	desc:
 		'''
 		TODO: Desc
 		'''
 	
 	flags: none
-	slot: utility
-	categories: tools, small, mining, construction, device, cheap
+	slot: secondary
+	categories: tools, weapon, melee, powerful, small, cheap
 	faction: "null"
 	species: "null"
 	
 	character_flags:
 	{
 		require: none
-		include: civillian, hunter, nomad
-		exclude: none
-		weight: 2.500
+		include: criminal, military, medical, nobility, artisan, farmer, armed, law, social, culinary
+		exclude: unarmed
+		weight: 1.000
 	}
 	
 	amount_multiplier_min: 1.000
@@ -28,7 +28,7 @@
 		[
 			{
 				type: prefab
-				prefab: "lantern"
+				prefab: "machete"
 				quantity: 1.000
 				flags: despawn, no_consume
 			}

@@ -7,7 +7,7 @@
 	
 	flags: none
 	slot: primary
-	categories: weapon, gun, long_range, primitive
+	categories: weapon, junk, gun, long_range, cheap
 	faction: "null"
 	species: "human"
 	

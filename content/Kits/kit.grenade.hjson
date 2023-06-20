@@ -1,5 +1,5 @@
 ﻿{
-	name: "Binoculars"
+	name: "Grenade"
 	desc:
 		'''
 		TODO: Desc
@@ -7,15 +7,15 @@
 	
 	flags: none
 	slot: utility
-	categories: tools, long_range, advanced, small, device
+	categories: weapon, dangerous, explosive, powerful, destructive, small
 	faction: "null"
 	species: "human"
 	
 	character_flags:
 	{
-		require: none
-		include: construction, scientist, educated, military, farmer, civillian, engineer, rich, hunter, nomad, entertainer, middle_class, upper_middle_class
-		exclude: unskilled, lower_class
+		require: armed, miner
+		include: military, engineer, miner
+		exclude: slave, unskilled, farmer, unarmed, insane
 		weight: 1.200
 	}
 	
@@ -28,7 +28,7 @@
 		[
 			{
 				type: prefab
-				prefab: "binoculars"
+				prefab: "grenade"
 				quantity: 1.000
 				flags: despawn, no_consume
 			}

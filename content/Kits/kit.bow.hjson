@@ -7,7 +7,7 @@
 	
 	flags: none
 	slot: primary
-	categories: weapon, junk, short_range, primitive, weak
+	categories: weapon, junk, short_range, primitive, weak, cheap
 	faction: "null"
 	species: "null"
 	

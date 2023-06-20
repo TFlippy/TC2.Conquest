@@ -7,14 +7,14 @@
 	
 	flags: none
 	slot: utility
-	categories: food, small, consumable
+	categories: food, small, drug, consumable, healing
 	faction: "null"
 	species: "null"
 	
 	character_flags:
 	{
 		require: none
-		include: construction, criminal, unskilled, military, artisan, farmer, laborer, alcoholic, lower_class, lower_middle_class, middle_class
+		include: slave, construction, criminal, unskilled, military, artisan, farmer, laborer, poor, miner, insane, alcoholic, nomad, feral, brawler, strong, junkie, lower_class, lower_middle_class, middle_class
 		exclude: scientist, nobility, professional, upper_class, elite_class
 		weight: 1.000
 	}

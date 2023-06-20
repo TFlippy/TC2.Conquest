@@ -1,5 +1,5 @@
 ﻿{
-	name: "Blunderbuss"
+	name: "Scattergun"
 	desc:
 		'''
 		TODO: Desc
@@ -7,15 +7,15 @@
 	
 	flags: none
 	slot: primary
-	categories: weapon, gun, short_range, inaccurate, cheap
+	categories: weapon, gun, short_range, inaccurate
 	faction: "null"
 	species: "null"
 	
 	character_flags:
 	{
 		require: none
-		include: criminal, farmer, armed, poor, hunter, nomad, lower_class, lower_middle_class
-		exclude: unarmed, middle_class, upper_middle_class, upper_class, elite_class
+		include: criminal, farmer, armed, hunter, nomad
+		exclude: unarmed
 		weight: 1.200
 	}
 	
@@ -28,14 +28,14 @@
 		[
 			{
 				type: prefab
-				prefab: "blunderbuss"
+				prefab: "scattergun"
 				quantity: 1.000
 				flags: despawn, no_consume
 			}
 			{
 				type: resource
-				material: "ammo_musket.shot"
-				quantity: 8.000
+				material: "ammo_sg.buck"
+				quantity: 12.000
 				flags: despawn, no_consume
 			}
 			null

@@ -7,7 +7,7 @@
 	
 	flags: none
 	slot: resources
-	categories: food, materials, junk
+	categories: food, materials, junk, primitive, cheap
 	faction: "null"
 	species: "null"
 	

@@ -7,7 +7,7 @@
 	
 	flags: none
 	slot: secondary
-	categories: weapon, junk, melee, primitive, weak
+	categories: weapon, junk, melee, primitive, weak, destructive, gathering, cheap
 	faction: "null"
 	species: "null"
 	

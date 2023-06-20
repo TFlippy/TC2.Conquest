@@ -7,7 +7,7 @@
 	
 	flags: none
 	slot: tool
-	categories: tools, melee, destructive, mining, gathering
+	categories: tools, melee, destructive, mining, gathering, cheap
 	faction: "null"
 	species: "human"
 	

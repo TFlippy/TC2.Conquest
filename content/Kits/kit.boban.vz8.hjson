@@ -1,0 +1,39 @@
+﻿{
+	name: "Boban vz.8"
+	desc: ""
+	
+	flags: none
+	slot: utility
+	categories: weapon, dangerous, explosive, powerful, destructive, small, device
+	faction: "null"
+	species: "human"
+	
+	character_flags:
+	{
+		require: none
+		include: military, farmer, armed, technician, engineer, hunter, soldier, evil, terrorist, fanatic
+		exclude: none
+		weight: 1.100
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "bp.boban.vz8"
+				quantity: 1.000
+				max: 1.000
+				flags: none
+			}
+			null
+			null
+			null
+		]
+		flags: dirty, allow_withdraw, allow_deposit, storable
+	}
+}
