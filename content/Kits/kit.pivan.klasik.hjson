@@ -1,4 +1,4 @@
-{
+﻿{
 	name: "Pivan Klasik"
 	desc:
 		'''
@@ -6,16 +6,21 @@
 		'''
 	
 	flags: none
-	categories: food
+	slot: utility
+	categories: food, junk, small, consumable
 	faction: "null"
 	species: "null"
 	
 	character_flags:
 	{
+		require: none
 		include: slave, criminal, unskilled, laborer, lowlife, poor, alcoholic, lower_class, lower_middle_class, middle_class
 		exclude: rich, upper_class, elite_class
 		weight: 1.000
 	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
 	
 	shipment:
 	{
@@ -25,8 +30,7 @@
 				type: prefab
 				prefab: "bp.pivan.klasik"
 				quantity: 1.000
-				mass_per_unit: 0.000
-				flags: no_consume, despawn
+				flags: despawn, no_consume
 			}
 			null
 			null

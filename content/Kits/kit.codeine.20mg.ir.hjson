@@ -1,4 +1,4 @@
-{
+﻿{
 	name: "Codeine (20mg, IR)"
 	desc:
 		'''
@@ -6,7 +6,8 @@
 		'''
 	
 	flags: none
-	categories: food, dangerous
+	slot: utility
+	categories: food, dangerous, small, drug, chemical, consumable, healing
 	faction: "null"
 	species: "null"
 	
@@ -29,7 +30,6 @@
 				type: prefab
 				prefab: "bp.codeine.20mg.ir"
 				quantity: 1.000
-				mass_per_unit: 0.000
 				flags: despawn, no_consume
 			}
 			null

@@ -1,4 +1,4 @@
-{
+﻿{
 	name: "Sauce"
 	desc:
 		'''
@@ -6,12 +6,14 @@
 		'''
 	
 	flags: none
+	slot: resources
 	categories: food, materials, junk
 	faction: "null"
 	species: "null"
 	
 	character_flags:
 	{
+		require: none
 		include: farmer, laborer, hunter, culinary, nomad, lower_class, lower_middle_class, middle_class
 		exclude: upper_middle_class, upper_class, elite_class
 		weight: 1.200
@@ -28,7 +30,6 @@
 				type: resource
 				material: "sauce"
 				quantity: 10.000
-				mass_per_unit: 0.000
 				flags: despawn, no_consume
 			}
 			null

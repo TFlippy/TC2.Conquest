@@ -1,4 +1,4 @@
-{
+﻿{
 	name: "Pistol"
 	desc:
 		'''
@@ -6,7 +6,8 @@
 		'''
 	
 	flags: none
-	categories: weapon, dangerous
+	slot: secondary
+	categories: weapon, gun, short_range, weak, small
 	faction: "null"
 	species: "human"
 	
@@ -29,14 +30,12 @@
 				type: prefab
 				prefab: "pistol"
 				quantity: 1.000
-				mass_per_unit: 0.000
 				flags: despawn, no_consume
 			}
 			{
 				type: resource
 				material: "ammo_lc"
 				quantity: 24.000
-				mass_per_unit: 0.000
 				flags: no_consume
 			}
 			null

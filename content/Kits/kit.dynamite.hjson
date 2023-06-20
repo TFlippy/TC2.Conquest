@@ -1,4 +1,4 @@
-{
+﻿{
 	name: "Dynamite"
 	desc:
 		'''
@@ -6,7 +6,8 @@
 		'''
 	
 	flags: none
-	categories: tools, weapon, dangerous
+	slot: utility
+	categories: tools, weapon, dangerous, explosive, destructive, mining, construction, gathering
 	faction: "null"
 	species: "human"
 	
@@ -29,7 +30,6 @@
 				type: prefab
 				prefab: "dynamite"
 				quantity: 1.000
-				mass_per_unit: 0.000
 				flags: despawn, no_consume
 			}
 			null

@@ -1,4 +1,4 @@
-{
+﻿{
 	name: "Arcane Actuators"
 	desc:
 		'''
@@ -6,7 +6,8 @@
 		'''
 	
 	flags: none
-	categories: materials, rare
+	slot: resources
+	categories: materials, rare, advanced, machine, construction
 	faction: "null"
 	species: "null"
 	
@@ -29,7 +30,6 @@
 				type: resource
 				material: "arcane_actuator"
 				quantity: 7.000
-				mass_per_unit: 0.000
 				flags: no_consume
 			}
 			null

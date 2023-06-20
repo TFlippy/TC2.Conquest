@@ -1,4 +1,4 @@
-{
+﻿{
 	name: "Shovel"
 	desc:
 		'''
@@ -6,16 +6,21 @@
 		'''
 	
 	flags: none
-	categories: tools
+	slot: tool
+	categories: tools, melee, destructive, mining, gathering
 	faction: "null"
 	species: "human"
 	
 	character_flags:
 	{
+		require: none
 		include: construction, laborer, miner, nomad, lower_class, lower_middle_class
-		exclude: upper_middle_class, upper_class, elite_class, professional
+		exclude: professional, upper_middle_class, upper_class, elite_class
 		weight: 2.500
 	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
 	
 	shipment:
 	{
@@ -23,9 +28,8 @@
 		[
 			{
 				type: prefab
-				prefab: "pickaxe"
+				prefab: "shovel"
 				quantity: 1.000
-				mass_per_unit: 0.000
 				flags: despawn, no_consume
 			}
 			null

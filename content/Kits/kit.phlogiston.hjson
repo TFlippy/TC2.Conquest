@@ -1,4 +1,4 @@
-{
+﻿{
 	name: "Phlogiston"
 	desc:
 		'''
@@ -6,7 +6,8 @@
 		'''
 	
 	flags: none
-	categories: materials, dangerous, rare
+	slot: resources
+	categories: materials, dangerous, rare, explosive, advanced, chemical, construction
 	faction: "null"
 	species: "null"
 	
@@ -29,7 +30,6 @@
 				type: resource
 				material: "phlogiston"
 				quantity: 25.000
-				mass_per_unit: 0.000
 				flags: despawn, no_consume
 			}
 			null

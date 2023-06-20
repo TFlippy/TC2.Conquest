@@ -1,4 +1,4 @@
-{
+﻿{
 	name: "Prospector Pick"
 	desc:
 		'''
@@ -6,7 +6,8 @@
 		'''
 	
 	flags: none
-	categories: tools
+	slot: utility
+	categories: tools, mining
 	faction: "null"
 	species: "human"
 	
@@ -14,6 +15,7 @@
 	{
 		require: miner
 		include: construction, scientist, professional, laborer, engineer, miner, lower_class, lower_middle_class
+		exclude: none
 		weight: 1.000
 	}
 	
@@ -28,7 +30,6 @@
 				type: prefab
 				prefab: "prospector_pick"
 				quantity: 1.000
-				mass_per_unit: 0.000
 				flags: despawn, no_consume
 			}
 			null

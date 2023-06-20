@@ -1,4 +1,4 @@
-{
+﻿{
 	name: "Crossbow"
 	desc:
 		'''
@@ -6,12 +6,14 @@
 		'''
 	
 	flags: none
-	categories: weapon, dangerous
+	slot: undefined
+	categories: weapon, long_range, primitive
 	faction: "null"
 	species: "null"
 	
 	character_flags:
 	{
+		require: none
 		include: unskilled, farmer, civillian, lowlife, poor, hunter, insane, nomad, lower_middle_class
 		exclude: slave, construction, rich, miner, soldier
 		weight: 1.000
@@ -28,14 +30,12 @@
 				type: prefab
 				prefab: "crossbow"
 				quantity: 1.000
-				mass_per_unit: 0.000
 				flags: despawn, no_consume
 			}
 			{
 				type: resource
 				material: "ammo_arrow"
 				quantity: 14.000
-				mass_per_unit: 0.000
 				flags: despawn, no_consume
 			}
 			null

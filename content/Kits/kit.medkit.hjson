@@ -1,4 +1,4 @@
-{
+﻿{
 	name: "Medkit"
 	desc:
 		'''
@@ -6,7 +6,8 @@
 		'''
 	
 	flags: none
-	categories: tools
+	slot: secondary
+	categories: tools, small, chemical, consumable, healing
 	faction: "null"
 	species: "human"
 	
@@ -18,6 +19,9 @@
 		weight: 2.500
 	}
 	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
 	shipment:
 	{
 		items:
@@ -26,7 +30,6 @@
 				type: prefab
 				prefab: "medkit"
 				quantity: 1.000
-				mass_per_unit: 0.000
 				flags: despawn, no_consume
 			}
 			null

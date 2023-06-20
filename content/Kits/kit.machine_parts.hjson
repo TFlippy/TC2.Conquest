@@ -1,4 +1,4 @@
-{
+﻿{
 	name: "Spare Parts"
 	desc:
 		'''
@@ -6,13 +6,16 @@
 		'''
 	
 	flags: none
-	categories: materials
+	slot: resources
+	categories: materials, machine, small, construction
 	faction: "null"
 	species: "null"
 	
 	character_flags:
 	{
+		require: none
 		include: construction, scientist, artisan, professional, technician, engineer
+		exclude: none
 		weight: 1.400
 	}
 	
@@ -27,7 +30,6 @@
 				type: resource
 				material: "machine_parts"
 				quantity: 8.000
-				mass_per_unit: 0.000
 				flags: no_consume
 			}
 			null
