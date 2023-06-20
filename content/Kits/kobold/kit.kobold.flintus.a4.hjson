@@ -1,0 +1,43 @@
+﻿{
+	name: "Flintus A-4"
+	desc: ""
+	
+	flags: none
+	slot: primary
+	categories: weapon, junk, rare, gun, short_range, advanced
+	faction: "null"
+	species: "kobold"
+	
+	character_flags:
+	{
+		require: technician
+		include: scientist, technician, engineer, insane, arcane
+		exclude: none
+		weight: 1.800
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "bp.flintus.a4"
+				quantity: 1.000
+				flags: pickup, despawn
+			}
+			{
+				type: resource
+				material: "ammo_musket.motion"
+				quantity: 30.000
+				flags: none
+			}
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

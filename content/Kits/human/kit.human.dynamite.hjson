@@ -1,0 +1,41 @@
+﻿{
+	name: "Dynamite"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+	slot: utility
+	categories: tools, weapon, dangerous, explosive, powerful, destructive, small, mining, construction, gathering
+	faction: "null"
+	species: "human"
+	
+	character_flags:
+	{
+		require: none
+		include: construction, military, technician, engineer, miner, insane, terrorist
+		exclude: slave, unskilled, farmer, unarmed, insane
+		weight: 0.600
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "dynamite"
+				quantity: 1.000
+				flags: despawn, no_consume
+			}
+			null
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

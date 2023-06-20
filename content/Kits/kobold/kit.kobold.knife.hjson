@@ -1,0 +1,38 @@
+﻿{
+	name: "Knife"
+	desc: ""
+	
+	flags: none
+	slot: secondary
+	categories: weapon, junk, melee, short_range, weak
+	faction: "null"
+	species: "kobold"
+	
+	character_flags:
+	{
+		require: none
+		include: criminal, laborer, lowlife, hunter, brawler
+		exclude: none
+		weight: 1.300
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "knife"
+				quantity: 1.000
+				flags: pickup, despawn
+			}
+			null
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

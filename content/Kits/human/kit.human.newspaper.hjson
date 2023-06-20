@@ -1,0 +1,41 @@
+﻿{
+	name: "Newspaper"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+	slot: utility
+	categories: small, fancy, cheap
+	faction: "null"
+	species: "human"
+	
+	character_flags:
+	{
+		require: none
+		include: bureaucrat, scientist, educated, professional, civillian, law, social, commerce, sedentary, politician, lower_middle_class, middle_class, upper_middle_class
+		exclude: illiterate
+		weight: 1.300
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "newspaper.00"
+				quantity: 1.000
+				flags: despawn, no_consume
+			}
+			null
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

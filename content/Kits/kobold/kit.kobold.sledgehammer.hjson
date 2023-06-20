@@ -1,0 +1,38 @@
+﻿{
+	name: "Sledgehammer"
+	desc: ""
+	
+	flags: none
+	slot: primary
+	categories: tools, weapon, dangerous, heavy, melee, short_range, powerful
+	faction: "null"
+	species: "kobold"
+	
+	character_flags:
+	{
+		require: strong
+		include: slave, construction, laborer, miner, brawler, strong
+		exclude: sedentary
+		weight: 1.300
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "sledgehammer"
+				quantity: 1.000
+				flags: pickup, despawn
+			}
+			null
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

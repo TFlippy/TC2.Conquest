@@ -1,0 +1,41 @@
+﻿{
+	name: "Drill"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+	slot: tool
+	categories: armor, tools, dangerous, heavy, advanced, powerful, machine, defensive, mining, gathering, device, expensive
+	faction: "null"
+	species: "human"
+	
+	character_flags:
+	{
+		require: miner
+		include: construction, scientist, professional, laborer, technician, engineer, miner, strong, terrorist, fanatic, lower_class, lower_middle_class
+		exclude: none
+		weight: 0.300
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "drill"
+				quantity: 1.000
+				flags: despawn, no_consume
+			}
+			null
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

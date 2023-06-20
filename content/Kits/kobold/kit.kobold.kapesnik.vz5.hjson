@@ -1,0 +1,43 @@
+﻿{
+	name: "Kapesnik vz.5"
+	desc: ""
+	
+	flags: none
+	slot: secondary
+	categories: weapon, junk, melee, gun, short_range, weak
+	faction: "null"
+	species: "kobold"
+	
+	character_flags:
+	{
+		require: none
+		include: slave, unskilled, lowlife, poor
+		exclude: none
+		weight: 1.400
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "bp.kapesnik.vz5"
+				quantity: 1.000
+				flags: pickup, despawn
+			}
+			{
+				type: resource
+				material: "ammo_musket.scrapshot"
+				quantity: 20.000
+				flags: none
+			}
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

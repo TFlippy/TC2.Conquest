@@ -1,0 +1,46 @@
+﻿{
+	name: "Bow"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+	slot: primary
+	categories: weapon, junk, short_range, primitive, weak, cheap
+	faction: "null"
+	species: "null"
+	
+	character_flags:
+	{
+		require: none
+		include: slave, unskilled, farmer, laborer, lowlife, poor, hunter, insane, nomad, feral, brawler, outdoor, strong, lower_class, lower_middle_class
+		exclude: none
+		weight: 1.000
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "bow"
+				quantity: 1.000
+				flags: despawn, no_consume
+			}
+			{
+				type: resource
+				material: "ammo_arrow"
+				quantity: 14.000
+				flags: despawn, no_consume
+			}
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

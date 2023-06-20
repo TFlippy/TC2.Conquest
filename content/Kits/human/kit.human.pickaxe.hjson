@@ -1,0 +1,41 @@
+﻿{
+	name: "Pickaxe"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+	slot: tool
+	categories: tools, melee, destructive, mining, gathering, cheap
+	faction: "null"
+	species: "null"
+	
+	character_flags:
+	{
+		require: miner
+		include: construction, laborer, technician, miner, nomad, lower_class, lower_middle_class
+		exclude: upper_middle_class, upper_class, elite_class
+		weight: 2.500
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "pickaxe"
+				quantity: 1.000
+				flags: despawn, no_consume
+			}
+			null
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

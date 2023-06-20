@@ -1,0 +1,41 @@
+﻿{
+	name: "Pivan Klasik"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+	slot: utility
+	categories: food, junk, small, consumable, cheap
+	faction: "null"
+	species: "null"
+	
+	character_flags:
+	{
+		require: none
+		include: slave, construction, criminal, unskilled, farmer, laborer, civillian, lowlife, poor, miner, alcoholic, nomad, pet, illiterate, sedentary, brawler, outdoor, strong, junkie, thief, murderer, lower_class, lower_middle_class, middle_class
+		exclude: rich, upper_class, elite_class
+		weight: 1.300
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "bp.pivan.klasik"
+				quantity: 1.000
+				flags: despawn, no_consume
+			}
+			null
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

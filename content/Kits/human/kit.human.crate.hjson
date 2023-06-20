@@ -1,0 +1,41 @@
+﻿{
+	name: "Small Crate"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+	slot: utility
+	categories: tools, heavy, small, construction, storage, cheap
+	faction: "null"
+	species: "null"
+	
+	character_flags:
+	{
+		require: none
+		include: slave, construction, criminal, unskilled, artisan, farmer, laborer, commerce, technician, miner, hunter, nomad, entertainer, outdoor, thief, terrorist
+		exclude: medical, nobility
+		weight: 1.000
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "crate.small"
+				quantity: 1.000
+				flags: no_consume
+			}
+			null
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

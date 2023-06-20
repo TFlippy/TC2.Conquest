@@ -1,0 +1,46 @@
+﻿{
+	name: "Derringer"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+	slot: secondary
+	categories: weapon, junk, gun, short_range, weak, inaccurate, small, cheap
+	faction: "null"
+	species: "null"
+	
+	character_flags:
+	{
+		require: none
+		include: criminal, unskilled, laborer, civillian, armed, lowlife, poor, sedentary
+		exclude: unarmed, middle_class, upper_middle_class, upper_class, elite_class
+		weight: 1.300
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "derringer"
+				quantity: 1.000
+				flags: despawn, no_consume
+			}
+			{
+				type: resource
+				material: "ammo_musket"
+				quantity: 10.000
+				flags: despawn, no_consume
+			}
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

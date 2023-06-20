@@ -1,0 +1,38 @@
+﻿{
+	name: "Chainsaw"
+	desc: ""
+	
+	flags: none
+	slot: primary
+	categories: tools, weapon, dangerous, heavy, melee, short_range, advanced, powerful, machine
+	faction: "null"
+	species: "kobold"
+	
+	character_flags:
+	{
+		require: none
+		include: farmer, laborer, technician, engineer, hunter, insane, brawler, outdoor, strong, evil, murderer, terrorist, fanatic
+		exclude: none
+		weight: 1.300
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "chainsaw"
+				quantity: 1.000
+				flags: pickup, despawn
+			}
+			null
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

@@ -1,0 +1,41 @@
+﻿{
+	name: "Lost Documents"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+	slot: resources
+	categories: materials, advanced, small, fancy, cheap
+	faction: "null"
+	species: "human"
+	
+	character_flags:
+	{
+		require: none
+		include: bureaucrat, scientist, educated, professional, law, social, commerce, technician, engineer, chemist, entertainer, sedentary, politician, fanatic
+		exclude: illiterate
+		weight: 1.000
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: resource
+				material: "paper"
+				quantity: 20.000
+				flags: despawn, no_consume
+			}
+			null
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

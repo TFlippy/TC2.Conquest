@@ -1,0 +1,43 @@
+﻿{
+	name: "Musket"
+	desc: ""
+	
+	flags: none
+	slot: primary
+	categories: weapon, junk, gun, long_range, primitive, weak
+	faction: "null"
+	species: "kobold"
+	
+	character_flags:
+	{
+		require: lowlife
+		include: slave, unskilled, lowlife, poor, hunter, outdoor
+		exclude: none
+		weight: 1.500
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "musket"
+				quantity: 1.000
+				flags: pickup, despawn
+			}
+			{
+				type: resource
+				material: "ammo_musket"
+				quantity: 30.000
+				flags: none
+			}
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

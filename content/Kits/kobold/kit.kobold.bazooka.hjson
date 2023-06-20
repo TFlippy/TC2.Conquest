@@ -1,0 +1,43 @@
+﻿{
+	name: "Bazooka"
+	desc: ""
+	
+	flags: none
+	slot: primary
+	categories: weapon, dangerous, heavy, explosive, gun, short_range, powerful
+	faction: "null"
+	species: "kobold"
+	
+	character_flags:
+	{
+		require: insane, terrorist
+		include: construction, armed, technician, miner, insane, strong, terrorist, fanatic
+		exclude: slave, unskilled
+		weight: 1.100
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "bazooka"
+				quantity: 1.000
+				flags: pickup, despawn
+			}
+			{
+				type: resource
+				material: "ammo_rocket"
+				quantity: 4.000
+				flags: none
+			}
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

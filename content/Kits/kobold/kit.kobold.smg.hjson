@@ -1,0 +1,43 @@
+﻿{
+	name: "SMG"
+	desc: ""
+	
+	flags: none
+	slot: primary
+	categories: weapon, gun
+	faction: "null"
+	species: "kobold"
+	
+	character_flags:
+	{
+		require: none
+		include: criminal, armed, lowlife, poor
+		exclude: none
+		weight: 1.200
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "smg"
+				quantity: 1.000
+				flags: pickup, despawn
+			}
+			{
+				type: resource
+				material: "ammo_lc"
+				quantity: 60.000
+				flags: none
+			}
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

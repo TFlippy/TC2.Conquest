@@ -1,0 +1,38 @@
+﻿{
+	name: "Helmet (Light)"
+	desc: ""
+	
+	flags: none
+	slot: head
+	categories: armor, weak, defensive
+	faction: "null"
+	species: "kobold"
+	
+	character_flags:
+	{
+		require: none
+		include: none
+		exclude: none
+		weight: 1.300
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "helmet.03"
+				quantity: 1.000
+				flags: equip, despawn
+			}
+			null
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

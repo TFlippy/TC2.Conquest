@@ -1,0 +1,43 @@
+﻿{
+	name: "Bambula Dvoj-B"
+	desc: ""
+	
+	flags: none
+	slot: primary
+	categories: weapon, dangerous, gun, powerful
+	faction: "null"
+	species: "kobold"
+	
+	character_flags:
+	{
+		require: military, brawler, strong
+		include: military, technician, engineer, soldier, brawler, strong, murderer, terrorist
+		exclude: sedentary
+		weight: 2.200
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "bp.bambula.dvoj_b"
+				quantity: 1.000
+				flags: pickup, despawn
+			}
+			{
+				type: resource
+				material: "ammo_mg"
+				quantity: 20.000
+				flags: none
+			}
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

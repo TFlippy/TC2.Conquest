@@ -1,0 +1,43 @@
+﻿{
+	name: "Muskant vz.2"
+	desc: ""
+	
+	flags: none
+	slot: primary
+	categories: weapon, melee, gun, short_range
+	faction: "null"
+	species: "kobold"
+	
+	character_flags:
+	{
+		require: none
+		include: criminal, farmer, hunter, alcoholic
+		exclude: sedentary
+		weight: 0.900
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "bp.muskant.vz2"
+				quantity: 1.000
+				flags: pickup, despawn
+			}
+			{
+				type: resource
+				material: "ammo_musket"
+				quantity: 32.000
+				flags: none
+			}
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

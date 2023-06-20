@@ -1,0 +1,43 @@
+﻿{
+	name: "Burt-Mini"
+	desc: ""
+	
+	flags: none
+	slot: secondary
+	categories: weapon, gun, expensive, fancy
+	faction: "null"
+	species: "human"
+	
+	character_flags:
+	{
+		require: none
+		include: educated, military, nobility, professional, armed, law, technician, engineer, rich, soldier, arcane, sedentary, middle_class, upper_middle_class, upper_class, elite_class
+		exclude: unarmed, poor, lower_class, lower_middle_class
+		weight: 1.400
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "bp.burt.mini"
+				quantity: 1.000
+				flags: pickup, despawn
+			}
+			{
+				type: resource
+				material: "ammo_lc.hv"
+				quantity: 150.000
+				flags: none
+			}
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

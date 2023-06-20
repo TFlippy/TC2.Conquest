@@ -1,0 +1,38 @@
+﻿{
+	name: "Machete"
+	desc: ""
+	
+	flags: none
+	slot: secondary
+	categories: tools, weapon, melee, short_range
+	faction: "null"
+	species: "kobold"
+	
+	character_flags:
+	{
+		require: none
+		include: artisan, farmer, nomad, outdoor, murderer, fanatic
+		exclude: none
+		weight: 1.300
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "machete"
+				quantity: 1.000
+				flags: pickup, despawn
+			}
+			null
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

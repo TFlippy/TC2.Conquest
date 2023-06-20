@@ -1,0 +1,41 @@
+﻿{
+	name: "Lantern"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+	slot: utility
+	categories: tools, small, mining, construction, device, cheap
+	faction: "null"
+	species: "null"
+	
+	character_flags:
+	{
+		require: none
+		include: farmer, civillian, hunter, nomad, outdoor
+		exclude: none
+		weight: 1.000
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "lantern"
+				quantity: 1.000
+				flags: despawn, no_consume
+			}
+			null
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}
