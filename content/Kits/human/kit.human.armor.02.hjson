@@ -1,0 +1,38 @@
+﻿{
+	name: "Uniform"
+	desc: ""
+	
+	flags: none
+	slot: chest
+	categories: armor, defensive, cheap
+	faction: "null"
+	species: "human"
+	
+	character_flags:
+	{
+		require: military
+		include: military
+		exclude: none
+		weight: 1.000
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "armor.02"
+				quantity: 1.000
+				flags: equip, despawn, no_consume
+			}
+			null
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

@@ -14,7 +14,7 @@
 	character_flags:
 	{
 		require: none
-		include: farmer, civillian, hunter, nomad, outdoor
+		include: construction, farmer, laborer, civillian, armed, miner, hunter, soldier, nomad, outdoor
 		exclude: none
 		weight: 1.000
 	}

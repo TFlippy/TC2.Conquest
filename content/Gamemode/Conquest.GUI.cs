@@ -68,7 +68,10 @@ namespace TC2.Conquest
 									{
 										if (faction.id == 0 || (faction.id == player_faction_id))
 										{
-											if (Spawn.RespawnGUI.ent_selected_spawn.id == 0 || random.NextBool(0.30f)) ent_selected_spawn_new = entity;
+											if (Spawn.RespawnGUI.ent_selected_spawn.id == 0 || random.NextBool(0.30f))
+											{
+												ent_selected_spawn_new = entity;
+											}
 										}
 									});
 								}
@@ -497,7 +500,7 @@ namespace TC2.Conquest
 												{
 													foreach (var h_kit in selected_items)
 													{
-														Dormitory.DrawKit(in h_kit, true, true, h_inventory, available_items, force_readonly: true);
+														Dormitory.DrawKit(in h_kit, true, true, h_inventory, available_items, force_readonly: true, ignore_requirements: dormitory.flags.HasAny(Dormitory.Flags.No_Kit_Requirements));
 													}
 												}
 												else
@@ -523,7 +526,7 @@ namespace TC2.Conquest
 															foreach (ref var item in kit_data.shipment.items)
 															{
 																if (!item.IsValid()) continue;
-																if (item.flags.HasAny(Shipment.Item.Flags.No_Consume)) continue;
+																if (dormitory.flags.HasAny(Dormitory.Flags.No_Kit_Requirements) || item.flags.HasAny(Shipment.Item.Flags.No_Consume)) continue;
 
 																requirements.Add(item.ToRequirement());
 															}
