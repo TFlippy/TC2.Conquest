@@ -363,6 +363,9 @@ namespace TC2.Conquest
 								var context = GUI.ItemContext.Begin(is_readonly: true);
 								var available_items = Span<Shipment.Item>.Empty;
 
+								ref var faction = ref ent_selected_spawn.GetComponent<Faction.Data>();
+								ref var spawn = ref ent_selected_spawn.GetComponent<Spawn.Data>();
+
 								var oc_shipment = ent_selected_spawn.GetComponentWithOwner<Shipment.Data>(Relation.Type.Instance);
 								if (oc_shipment.IsValid())
 								{
@@ -443,24 +446,22 @@ namespace TC2.Conquest
 													{
 														var h_character = characters[i];
 														ref var character_data = ref h_character.GetData();
-														if (character_data.IsNotNull())
+
+														if (h_character.id != 0 && h_selected_character_tmp.id == 0)
 														{
-															if (h_character.id != 0 && h_selected_character_tmp.id == 0)
-															{
-																h_selected_character_tmp = h_character;
-																h_selected_character = h_character;
-															}
+															h_selected_character_tmp = h_character;
+															h_selected_character = h_character;
+														}
 
-															is_empty &= h_character.id == 0;
-															var selectable = character_data.faction == faction_id;
+														is_empty &= h_character.id == 0;
+														//var selectable = h_character.CanSpawnAsCharacter(faction_id, faction.id, spawn.flags); //  character_data.IsNotNull() && character_data.faction == faction_id;
 
-															Dormitory.DormitoryGUI.DrawCharacterSmall(h_character);
+														Dormitory.DormitoryGUI.DrawCharacterSmall(h_character);
 
-															var selected = h_selected_character_tmp.id != 0 && h_character == h_selected_character_tmp; // selected_index;
-															if (GUI.Selectable3("selectable", group_row.GetOuterRect(), selected))
-															{
-																h_selected_character = h_character;
-															}
+														var selected = h_selected_character_tmp.id != 0 && h_character == h_selected_character_tmp; // selected_index;
+														if (GUI.Selectable3("selectable", group_row.GetOuterRect(), selected))
+														{
+															h_selected_character = h_character;
 														}
 													}
 												}
@@ -637,58 +638,48 @@ namespace TC2.Conquest
 										}
 									}
 
-									if (ent_selected_spawn.IsAlive())
+									//if (spawn.IsNotNull() && (faction.IsNull() || faction.id == 0 || faction.id == player.faction_id || (player.faction_id == 0 && spawn.flags.HasAny(Spawn.Flags.Neutral_Only))))
+									//{
+									if (is_empty)
 									{
-										ref var faction = ref ent_selected_spawn.GetComponent<Faction.Data>();
-										ref var spawn = ref ent_selected_spawn.GetComponent<Spawn.Data>();
-
-										//if (spawn.IsNotNull() && (faction.IsNull() || faction.id == 0 || faction.id == player.faction_id || (player.faction_id == 0 && spawn.flags.HasAny(Spawn.Flags.Neutral_Only))))
-										//{
-										if (is_empty)
+										if (GUI.DrawButton("No characters available.", size: new Vector2(GUI.GetRemainingWidth(), 48), color: GUI.col_button_error, error: true))
 										{
-											if (GUI.DrawButton("No characters available.", size: new Vector2(GUI.GetRemainingWidth(), 48), color: GUI.col_button_error, error: true))
-											{
 
+										}
+										GUI.DrawHoverTooltip("This spawnpoint doesn't have any more characters left.\n\nSelect another spawnpoint on the map.");
+									}
+									else
+									{
+										var is_selected_character_spawnable = h_selected_character_tmp.CanSpawnAsCharacter(h_faction, faction.id, spawn_flags: spawn.flags);
+										if (is_selected_character_spawnable)
+										{
+											if (GUI.DrawButton("Respawn", size: new Vector2(GUI.GetRemainingWidth(), 48), color: GUI.col_button_ok))
+											{
+												var rpc = new Dormitory.DEV_SpawnRPC()
+												{
+													h_character = h_selected_character_tmp
+												};
+
+												foreach (var h_kit in selected_items)
+												{
+													rpc.kits.TryAdd(in h_kit);
+												}
+
+												rpc.Send(ent_selected_spawn);
+
+												h_selected_character = default;
 											}
-											GUI.DrawHoverTooltip("This spawnpoint doesn't have any more characters left.\n\nSelect another spawnpoint on the map.");
 										}
 										else
 										{
-											var is_selected_character_spawnable = h_selected_character_tmp.CanSpawnAsCharacter(h_faction, faction.id, spawn_flags: spawn.flags);
-											if (is_selected_character_spawnable)
+											if (GUI.DrawButton("Cannot spawn as this character.", size: new Vector2(GUI.GetRemainingWidth(), 48), color: GUI.col_button_error, error: true))
 											{
-												if (GUI.DrawButton("Respawn", size: new Vector2(GUI.GetRemainingWidth(), 48), color: GUI.col_button_ok))
-												{
-													var rpc = new Dormitory.DEV_SpawnRPC()
-													{
-														h_character = h_selected_character_tmp
-													};
 
-													foreach (var h_kit in selected_items)
-													{
-														rpc.kits.TryAdd(in h_kit);
-													}
-
-													rpc.Send(ent_selected_spawn);
-
-													h_selected_character = default;
-												}
 											}
-											else
-											{
-												if (GUI.DrawButton("Cannot spawn as this character.", size: new Vector2(GUI.GetRemainingWidth(), 48), color: GUI.col_button_error, error: true))
-												{
-
-												}
-												GUI.DrawHoverTooltip("Character belongs to another faction.");
-											}
+											GUI.DrawHoverTooltip("Character belongs to another faction.");
 										}
-										//}
-										//else
-										//{
-										//	ent_selected_spawn = default;
-										//}
 									}
+
 								}
 							}
 
