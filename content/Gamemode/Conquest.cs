@@ -37,6 +37,78 @@ namespace TC2.Conquest
 			}
 		}
 
+		public struct DeployInfiltratorRPC: Net.IGRPC<Conquest.Gamemode>
+		{
+			public ICharacter.Handle h_character;
+
+#if SERVER
+			public void Invoke(ref NetConnection connection, ref Conquest.Gamemode data)
+			{
+				ref var player = ref connection.GetPlayer();
+				Assert.NotNull(ref player, Assert.Level.Error);
+
+				ref var region = ref connection.GetRegion();
+				Assert.NotNull(ref region, Assert.Level.Error);
+
+				var h_faction = player.faction_id;
+				ref var faction_data = ref h_faction.GetData();
+				Assert.NotNull(ref faction_data, Assert.Level.Error);
+
+				var random = XorRandom.New(true);
+
+				this.h_character = Spawner.CreateCharacter(ref region, ref random, "human.scout", h_faction: h_faction, scope: Asset.Scope.World);
+				if (this.h_character.IsValid())
+				{
+					Spawner.TryGenerateKits(ref random, this.h_character);
+
+					//App.WriteLine(this.h_character);
+
+					Span<Entity> ents_span = stackalloc Entity[16];
+					var ents_span_count = 0;
+
+					foreach (ref var row in region.IterateQuery<Region.GetSpawnsQuery>())
+					{
+						var ok = false;
+						row.Run((ISystem.Info info, Entity entity, in Spawn.Data spawn, in Nameable.Data nameable, in Transform.Data transform, in Faction.Data faction) =>
+						{
+							if (faction.id == 0 && spawn.IsVisibleToFaction(h_faction, faction.id))
+							{
+								//App.WriteLine(entity.GetFullName());
+								ok = true;
+							}
+						});
+
+						if (ok)
+						{
+							ents_span[ents_span_count++] = row.Entity;
+						}
+					}
+
+					ents_span = ents_span.Slice(0, ents_span_count);
+					//App.WriteLine(ents_span.Length);
+
+					var ent_spawn = ents_span.GetRandom(ref random);
+					ref var dormitory = ref ent_spawn.GetComponent<Dormitory.Data>();
+					if (dormitory.IsNotNull())
+					{
+						var span_characters = dormitory.GetCharacterSpan();
+						if (span_characters.TryAdd(in h_character))
+						{
+							App.WriteLine("added spy");
+						}
+						else
+						{
+							App.WriteLine("replaced spy");
+							span_characters[random.NextIntRange(0, span_characters.Length - 1)] = h_character;
+						}
+
+						dormitory.Sync(ent_spawn, true);
+					}
+				}
+			}
+#endif
+		}
+
 #if SERVER
 		[ChatCommand.Region("pause", "", admin: true)]
 		public static void PauseCommand(ref ChatCommand.Context context, bool? value = null)
@@ -77,98 +149,98 @@ namespace TC2.Conquest
 		}
 #endif
 
-//#if SERVER
-//		[ISystem.AddFirst(ISystem.Mode.Single)]
-//		public static void OnAdd(ISystem.Info info, ref Region.Data region, [Source.Owned] ref MapCycle.Global mapcycle)
-//		{
-//			mapcycle.AddMaps(ref region, "conquest");
-//		}
-//#endif
+		//#if SERVER
+		//		[ISystem.AddFirst(ISystem.Mode.Single)]
+		//		public static void OnAdd(ISystem.Info info, ref Region.Data region, [Source.Owned] ref MapCycle.Global mapcycle)
+		//		{
+		//			mapcycle.AddMaps(ref region, "conquest");
+		//		}
+		//#endif
 
-//		[ISystem.VeryLateUpdate(ISystem.Mode.Single)]
-//		public static void OnUpdate(ISystem.Info info, [Source.Global] ref Conquest.Gamemode conquest, [Source.Global] in MapCycle.Global mapcycle, [Source.Global] ref MapCycle.Voting voting)
-//		{
-//			if (true)
-//			{
-//				if (!conquest.flags.HasAny(Conquest.Gamemode.Flags.Paused))
-//				{
-//					conquest.elapsed += info.DeltaTime;
-//				}
-//			}
-//		}
+		//		[ISystem.VeryLateUpdate(ISystem.Mode.Single)]
+		//		public static void OnUpdate(ISystem.Info info, [Source.Global] ref Conquest.Gamemode conquest, [Source.Global] in MapCycle.Global mapcycle, [Source.Global] ref MapCycle.Voting voting)
+		//		{
+		//			if (true)
+		//			{
+		//				if (!conquest.flags.HasAny(Conquest.Gamemode.Flags.Paused))
+		//				{
+		//					conquest.elapsed += info.DeltaTime;
+		//				}
+		//			}
+		//		}
 
-//#if SERVER
-//		[ISystem.LateUpdate(ISystem.Mode.Single, interval: 5.00f)]
-//		public static void OnUpdate(ISystem.Info info, Entity entity, ref XorRandom random, [Source.Owned] in Player.Data player, [Source.Owned] ref Respawn.Data respawn)
-//		{
-//			ref var region = ref info.GetRegion();
+		//#if SERVER
+		//		[ISystem.LateUpdate(ISystem.Mode.Single, interval: 5.00f)]
+		//		public static void OnUpdate(ISystem.Info info, Entity entity, ref XorRandom random, [Source.Owned] in Player.Data player, [Source.Owned] ref Respawn.Data respawn)
+		//		{
+		//			ref var region = ref info.GetRegion();
 
-//			if (player.ent_controlled.IsValid()) return;
+		//			if (player.ent_controlled.IsValid()) return;
 
-//			var time = info.WorldTime;
-//			var sync = false;
+		//			var time = info.WorldTime;
+		//			var sync = false;
 
-//			//App.WriteLine($"tick {time}; {info.DeltaTime}");
+		//			//App.WriteLine($"tick {time}; {info.DeltaTime}");
 
-//			var index = 0;
-//			foreach (ref var spawn_info in respawn.spawns_values)
-//			{
-//				//if (spawn_info.character.id == 0 || (time >= spawn_info.next_reroll && respawn.spawns_keys[index].id != 0))
-//				//if (spawn_info.character.id == 0 && time >= spawn_info.next_reroll)
-//				if (((player.faction_id == 0 && respawn.spawns_keys[index].IsValid()) || spawn_info.character.id == 0) && time >= spawn_info.next_reroll)
-//				{
-//					var map_info_copy = region.GetMapInfo();
+		//			var index = 0;
+		//			foreach (ref var spawn_info in respawn.spawns_values)
+		//			{
+		//				//if (spawn_info.character.id == 0 || (time >= spawn_info.next_reroll && respawn.spawns_keys[index].id != 0))
+		//				//if (spawn_info.character.id == 0 && time >= spawn_info.next_reroll)
+		//				if (((player.faction_id == 0 && respawn.spawns_keys[index].IsValid()) || spawn_info.character.id == 0) && time >= spawn_info.next_reroll)
+		//				{
+		//					var map_info_copy = region.GetMapInfo();
 
-//					var species_tmp = new ISpecies.Handle("human");
-//					var origins = new WeightedList<IOrigin.Handle>(IOrigin.Database.GetAssets().Where(x => x.id != 0 && x.data.species == species_tmp).Select(x => new WeightedList<IOrigin.Handle>.Item(x.data.conditions.CalculateWeight(map_info_copy), x)));
+		//					var species_tmp = new ISpecies.Handle("human");
+		//					var origins = new WeightedList<IOrigin.Handle>(IOrigin.Database.GetAssets().Where(x => x.id != 0 && x.data.species == species_tmp).Select(x => new WeightedList<IOrigin.Handle>.Item(x.data.conditions.CalculateWeight(map_info_copy), x)));
 
-//					var h_character = Dormitory.CreateCharacter(ref region, ref random, origins.GetRandom(ref random), spawn_info.character);
-//					spawn_info = default;
+		//					var h_character = Dormitory.CreateCharacter(ref region, ref random, origins.GetRandom(ref random), spawn_info.character);
+		//					spawn_info = default;
 
-//					var definition = h_character.GetDefinition();
-//					if (definition != null)
-//					{
-//						definition.Flags.SetFlag(Asset.Flags.No_Save, true);
-//					}
+		//					var definition = h_character.GetDefinition();
+		//					if (definition != null)
+		//					{
+		//						definition.Flags.SetFlag(Asset.Flags.No_Save, true);
+		//					}
 
-//					spawn_info.character = h_character;
-//					spawn_info.kits.TryAdd("survival");
+		//					spawn_info.character = h_character;
+		//					spawn_info.kits.TryAdd("survival");
 
-//					ref var character_data = ref spawn_info.character.GetData();
-//					if (character_data.IsNotNull())
-//					{
-//						var character_flags = character_data.flags;
+		//					ref var character_data = ref spawn_info.character.GetData();
+		//					if (character_data.IsNotNull())
+		//					{
+		//						var character_flags = character_data.flags;
 
-//						// old
-//						//var kits = IKit.Database.GetAssets().Where(x => x.id != 0 && character_flags.HasAll(x.data.character_flags)).ToArray();
-//						//spawn_info.kits.TryAdd(kits.GetRandom(ref random)?.GetHandle() ?? default);
+		//						// old
+		//						//var kits = IKit.Database.GetAssets().Where(x => x.id != 0 && character_flags.HasAll(x.data.character_flags)).ToArray();
+		//						//spawn_info.kits.TryAdd(kits.GetRandom(ref random)?.GetHandle() ?? default);
 
-//						// new
-//						Span<IKit.Handle> kits = stackalloc IKit.Handle[16];
-//						//IKit.Database.GetHandles(ref kits, (x) => character_flags.HasAll(x.data.character_flags));
-//						IKit.Database.GetHandles(ref kits, (x) => x.data.character_flags.Evaluate(character_flags) >= 0.50f);
-//						//App.WriteLine($"{kits.Length}; {character_flags}");
+		//						// new
+		//						Span<IKit.Handle> kits = stackalloc IKit.Handle[16];
+		//						//IKit.Database.GetHandles(ref kits, (x) => character_flags.HasAll(x.data.character_flags));
+		//						IKit.Database.GetHandles(ref kits, (x) => x.data.character_flags.Evaluate(character_flags) >= 0.50f);
+		//						//App.WriteLine($"{kits.Length}; {character_flags}");
 
-//						spawn_info.kits.TryAdd(kits.GetRandom(ref random));
-//						//if (random.NextBool(0.50f)) spawn_info.kits.TryAdd(kits.GetRandom(ref random));
-//					}
+		//						spawn_info.kits.TryAdd(kits.GetRandom(ref random));
+		//						//if (random.NextBool(0.50f)) spawn_info.kits.TryAdd(kits.GetRandom(ref random));
+		//					}
 
-//					spawn_info.next_reroll = time + 120.00f;
+		//					spawn_info.next_reroll = time + 120.00f;
 
-//					//App.WriteLine($"rerolled character {spawn_info.character}");
+		//					//App.WriteLine($"rerolled character {spawn_info.character}");
 
-//					sync = true;
-//				}
+		//					sync = true;
+		//				}
 
-//				index++;
-//			}
+		//				index++;
+		//			}
 
-//			if (sync)
-//			{
-//				respawn.Sync(entity);
-//			}
-//		}
-//#endif
+		//			if (sync)
+		//			{
+		//				respawn.Sync(entity);
+		//			}
+		//		}
+		//#endif
 
 #if CLIENT
 		public struct ScoreboardGUI: IGUICommand
