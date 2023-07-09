@@ -1,4 +1,5 @@
-﻿using TC2.Base.Components;
+﻿using System.Threading;
+using TC2.Base.Components;
 
 namespace TC2.Conquest
 {
@@ -51,14 +52,18 @@ namespace TC2.Conquest
 				Assert.NotNull(ref region, Assert.Level.Error);
 
 				var h_faction = player.faction_id;
-				ref var faction_data = ref h_faction.GetData();
+				ref var faction_data = ref h_faction.GetData(out IFaction.Definition s_faction);
 				Assert.NotNull(ref faction_data, Assert.Level.Error);
+				Assert.Check(faction_data.scout_count > 0, Assert.Level.Error);
 
 				var random = XorRandom.New(true);
 
 				this.h_character = Spawner.CreateCharacter(ref region, ref random, "human.scout", h_faction: h_faction, scope: Asset.Scope.World);
 				if (this.h_character.IsValid())
 				{
+					faction_data.scout_count--;
+					s_faction.Sync(false);
+
 					Spawner.TryGenerateKits(ref random, this.h_character);
 
 					//App.WriteLine(this.h_character);
@@ -100,6 +105,15 @@ namespace TC2.Conquest
 						{
 							App.WriteLine("replaced spy");
 							span_characters[random.NextIntRange(0, span_characters.Length - 1)] = h_character;
+						}
+
+						if (dormitory.kit_default.IsValid())
+						{
+							ref var character_data = ref h_character.GetData();
+							if (character_data.IsNotNull())
+							{
+								character_data.kits.TryAdd(dormitory.kit_default);
+							}
 						}
 
 						dormitory.Sync(ent_spawn, true);

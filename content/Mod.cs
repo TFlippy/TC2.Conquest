@@ -42,8 +42,8 @@ namespace TC2.Conquest
 		public static float worldmap_zoom = 1.00f;
 		public static float worldmap_zoom_lerp = 1.00f;
 
-		public static Matrix4x4 mat_proj;
-		public static Matrix4x4 mat_view;
+		public static Matrix3x2 mat_proj;
+		public static Matrix3x2 mat_view;
 
 		public static float rotation;
 
@@ -53,20 +53,27 @@ namespace TC2.Conquest
 
 		protected override void OnDrawRegionMenu()
 		{
-			//return;
+			ref var world = ref Client.GetWorld();
+			if (world.IsNull()) return;
+
+			return;
 
 			GUI.RegionMenu.enabled = false;
 			GUI.Menu.enable_background = false;
 
 			var viewport_size = new Vector2(1200, 800);
+			var window_pos = new Vector2(GUI.CanvasSize.X * 0.50f, GUI.CanvasSize.Y * 0.50f);
+			var pivot = new Vector2(0.50f, 0.50f);
 
 			//using (var window = GUI.Window.Standalone("region_menu", position: GUI.CanvasSize * 0.00f, size: new Vector2(600, 400), pivot: new(0, 0), padding: new(8), force_position: true))
-			//using (var window = GUI.Window.Standalone("region_menu", position: new Vector2(GUI.CanvasSize.X * 0.50f, 64), size: viewport_size, pivot: new(0.50f, 0.00f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus))
-			using (var window = GUI.Window.Standalone("region_menu", position: GUI.CanvasSize * 0.50f, size: viewport_size, pivot: new(0.50f, 0.50f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus))
+			using (var window = GUI.Window.Standalone("region_menu", position: window_pos, size: viewport_size, pivot: pivot, padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus))
+			//using (var window = GUI.Window.Standalone("region_menu", position: GUI.CanvasSize * 0.50f, size: viewport_size, pivot: new(0.50f, 0.50f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus))
 			{
 				if (window.show)
 				{
 					GUI.DrawWindowBackground(GUI.tex_frame);
+
+					
 
 					var aspect = GUI.CanvasSize.GetNormalized();
 					var scale_canvas = GUI.GetWorldToCanvasScale();
@@ -86,8 +93,9 @@ namespace TC2.Conquest
 					var zoom = MathF.Pow(2.00f, worldmap_zoom_lerp);
 					var zoom_inv = 1.00f / zoom;
 
-					var mouse_pos = mouse.GetInterpolatedPosition() * scale_canvas;
-					var mouse_delta = (mouse.GetDelta() * scale_canvas * zoom);
+					//var mouse_pos = GUI.WorldToCanvas(mouse.GetInterpolatedPosition());  // * scale_canvas;
+					var mouse_pos = mouse.GetInterpolatedPosition()* scale_canvas;
+					var mouse_delta = (mouse.GetDelta() * scale_canvas);
 
 
 					//mouse_delta *= zoom;
@@ -98,6 +106,10 @@ namespace TC2.Conquest
 						{
 							worldmap_offset = default;
 							rotation = default;
+						}
+
+						if (kb.GetKeyDown(Keyboard.Key.Tab))
+						{
 						}
 
 						if (kb.GetKey(Keyboard.Key.Q))
@@ -128,10 +140,24 @@ namespace TC2.Conquest
 					//mat2.Translation += window.group.a + (window.group.size * 0.50f);
 
 
-					var mat_l2c = Maths.TRS3x2(worldmap_offset, rotation, new Vector2(zoom));
+					mat_proj = Matrix3x2.Identity;
+					mat_proj.M11 = 2.00f / viewport_size.X;
+					mat_proj.M22 = 2.00f / viewport_size.Y;
+
+					mat_view = Maths.TRS3x2(worldmap_offset, rotation, new Vector2(zoom));
+
+					var mat_vp = Matrix3x2.Multiply(mat_view, mat_proj);
+					Matrix3x2.Invert(mat_vp, out mat_vp);
+
+					var mat_l2c = Maths.TRS3x2(worldmap_offset * zoom, rotation, new Vector2(zoom));
+					//var mat_l2c = Matrix3x2.Multiply(mat_view, mat_proj);
+					//mat_l2c.Translation += window.group.a + (window.group.size * 0.50f);
 					Matrix3x2.Invert(mat_l2c, out var mat_c2l);
-					mat_l2c.Translation += window.group.a + (window.group.size * 0.50f);
-					
+					mat_l2c.Translation += new Vector2(window.group.a.X, window.group.a.Y) + (window.group.size * 0.50f);
+					//mat_c2l.Translation -= new Vector2(window.group.a.X, window.group.a.Y) + (window.group.size * 0.50f);
+
+					//mat_c2l.Translation += (GUI.CanvasSize * 0.50f) - (window_pos + (viewport_size * pivot));
+					//mat_c2l.Translation = (((GUI.CanvasSize * 0.50f) - (window_pos + (viewport_size * pivot))) / scale_canvas);
 
 					//GUI.DrawCircleFilled(Vector2.Transform(new Vector2(0, 0), mat_l2c), 0.125f * zoom, Color32BGRA.Magenta, 8, layer: GUI.Layer.Foreground);
 
@@ -153,7 +179,7 @@ namespace TC2.Conquest
 					//if (kb.GetKey(Keyboard.Key.MoveDown)) worldmap_offset.Y += speed;
 
 					var tm = Vector2.Transform(mouse_pos, mat_c2l);
-					var tm2 = Vector2.Transform(tm, mat_l2c);
+					//var tm2 = Vector2.Transform(tm, mat_l2c);
 					//GUI.DrawCircleFilled(tm2, 0.125f * zoom, Color32BGRA.White, 8, layer: GUI.Layer.Foreground);
 
 
@@ -240,7 +266,7 @@ namespace TC2.Conquest
 
 							DrawOutline(points, asset_data.color_border.WithAlphaMult(0.50f), 0.100f);
 
-							GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(pos_center, mat_l2c), pivot: new(0.50f, 0.50f), font: GUI.Font.Superstar, size: 1.50f * zoom, layer: GUI.Layer.Window);
+							GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(pos_center, mat_l2c), pivot: new(0.50f, 0.50f), font: GUI.Font.Superstar, size: 1.00f * zoom, color: GUI.font_color_title.WithAlphaMult(1.00f), layer: GUI.Layer.Window);
 						}
 					}
 
@@ -306,8 +332,8 @@ namespace TC2.Conquest
 
 						ref var asset_data = ref asset.GetData();
 
-						GUI.DrawCircleFilled(Vector2.Transform((Vector2)asset_data.point, mat_l2c), 0.25f * asset_data.size * zoom, asset_data.color, layer: GUI.Layer.Window);
-						GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(((Vector2)asset_data.point) + new Vector2(0.00f, -0.7500f * asset_data.size), mat_l2c), pivot: new(0.50f, 0.50f), color: asset_data.color, font: GUI.Font.Superstar, size: 1 * asset_data.size * zoom, layer: GUI.Layer.Window);
+						GUI.DrawCircleFilled(Vector2.Transform((Vector2)asset_data.point, mat_l2c), 0.175f * asset_data.size * zoom, asset_data.color, segments: 4, layer: GUI.Layer.Window);
+						GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(((Vector2)asset_data.point) + new Vector2(0.00f, -0.50f * asset_data.size), mat_l2c), pivot: new(0.50f, 0.50f), color: asset_data.color, font: GUI.Font.Superstar, size: 0.75f * asset_data.size * zoom, layer: GUI.Layer.Window);
 					}
 
 					if (edit_points_index.TryGetValue(out var v_edit_points_index))
@@ -329,7 +355,8 @@ namespace TC2.Conquest
 					//GUI.DrawBackground(GUI.tex_window_menu, window.group.GetOuterRect(), new(4));
 
 					//GUI.TitleCentered($"{zoom}\n{worldmap_offset}\n{mouse.GetInterpolatedPosition()}\n{tm}\n{mat_l2c}\n{sb.ToString()}", pivot: new(0.00f, 0.00f));
-					GUI.TitleCentered($"{tm}", pivot: new(0.00f, 0.00f));
+					//GUI.TitleCentered($"{zoom}\n{worldmap_offset}\n{mouse.GetInterpolatedPosition()}\n{tm}\n{mat_proj}\n{mat_view}\n{mat_l2c}\n{mat_c2l}\n{mat_vp}", pivot: new(0.00f, 0.00f));
+					GUI.TitleCentered($"{tm}\n{window.group.a}\n{window.group.size}\n{window_pos}\n{mouse_pos}\n{tm}\n{mat_c2l}", pivot: new(0.00f, 0.00f));
 				}
 			}
 		}

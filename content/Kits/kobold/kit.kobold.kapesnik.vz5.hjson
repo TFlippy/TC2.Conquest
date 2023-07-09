@@ -27,13 +27,13 @@
 				type: prefab
 				prefab: "bp.kapesnik.vz5"
 				quantity: 1.000
-				flags: pickup, despawn
+				flags: pickup, despawn, no_consume
 			}
 			{
 				type: resource
 				material: "ammo_musket.scrapshot"
 				quantity: 20.000
-				flags: none
+				flags: no_consume
 			}
 			null
 			null

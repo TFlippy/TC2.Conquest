@@ -27,7 +27,7 @@
 				type: prefab
 				prefab: "bp.medimax"
 				quantity: 1.000
-				flags: pickup, despawn
+				flags: pickup, despawn, no_consume
 			}
 			null
 			null
