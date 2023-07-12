@@ -537,35 +537,41 @@ namespace TC2.Conquest
 										}
 									}
 
-									GUI.SeparatorThick();
-
-									using (var group_title = GUI.Group.New(size: GUI.GetRemainingSpace(y: -300), padding: new(2, 4)))
+									if (!dormitory.flags.HasAny(Dormitory.Flags.Hide_XP))
 									{
-										using (var scrollbox = GUI.Scrollbox.New("scrollbox_xp", size: GUI.GetRemainingSpace()))
+										GUI.SeparatorThick();
+
+										using (var group_title = GUI.Group.New(size: GUI.GetRemainingSpace(y: -300), padding: new(2, 4)))
 										{
-											GUI.DrawBackground(GUI.tex_panel, scrollbox.group_frame.GetOuterRect(), new(8, 8, 8, 8));
-
-											if (character_data.IsNotNull())
+											using (var scrollbox = GUI.Scrollbox.New("scrollbox_xp", size: GUI.GetRemainingSpace()))
 											{
-												Experience.DrawTableSmall2(ref character_data.experience);
-											}
+												GUI.DrawBackground(GUI.tex_panel, scrollbox.group_frame.GetOuterRect(), new(8, 8, 8, 8));
 
-											//if (origin_data.IsNotNull())
-											//{
-											//	Experience.DrawTableSmall(ref origin_data.experience);
-											//}
+												if (character_data.IsNotNull())
+												{
+													Experience.DrawTableSmall2(ref character_data.experience);
+												}
+
+												//if (origin_data.IsNotNull())
+												//{
+												//	Experience.DrawTableSmall(ref origin_data.experience);
+												//}
+											}
 										}
 									}
 
-									GUI.SeparatorThick();
-
-									using (var group_kits = GUI.Group.New(size: GUI.GetRemainingSpace(y: -48), padding: new(2, 4)))
+									if (!dormitory.flags.HasAny(Dormitory.Flags.Hide_Kits))
 									{
-										GUI.DrawBackground(GUI.tex_panel, group_kits.GetOuterRect(), new(8, 8, 8, 8));
+										GUI.SeparatorThick();
 
-										using (var scrollable = GUI.Scrollbox.New("kits", size: GUI.GetRemainingSpace(), padding: new(4, 4), force_scrollbar: true))
+										using (var group_kits = GUI.Group.New(size: GUI.GetRemainingSpace(y: -48), padding: new(2, 4)))
 										{
-											Dormitory.DrawKits(ref dormitory, ref crafting_context, ref character_data, h_inventory, has_storage, available_items, selected_items);
+											GUI.DrawBackground(GUI.tex_panel, group_kits.GetOuterRect(), new(8, 8, 8, 8));
+
+											using (var scrollable = GUI.Scrollbox.New("kits", size: GUI.GetRemainingSpace(), padding: new(4, 4), force_scrollbar: true))
+											{
+												Dormitory.DrawKits(ref dormitory, ref crafting_context, ref character_data, h_inventory, has_storage, available_items, selected_items);
+											}
 										}
 									}
 

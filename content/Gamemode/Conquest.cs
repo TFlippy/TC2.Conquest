@@ -110,7 +110,7 @@ namespace TC2.Conquest
 						if (dormitory.kit_default.IsValid())
 						{
 							ref var character_data = ref h_character.GetData();
-							if (character_data.IsNotNull())
+							if (character_data.IsNotNull() && !character_data.kits.Contains(dormitory.kit_default))
 							{
 								character_data.kits.TryAdd(dormitory.kit_default);
 							}
