@@ -16,7 +16,7 @@
 		require: none
 		include: criminal, farmer, civillian, armed, miner, hunter, culinary, soldier, alcoholic, nomad, outdoor, strong, thief, murderer
 		exclude: unarmed
-		weight: 1.200
+		weight: 0.800
 	}
 	
 	amount_multiplier_min: 1.000

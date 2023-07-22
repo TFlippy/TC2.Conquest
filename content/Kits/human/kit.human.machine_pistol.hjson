@@ -16,7 +16,7 @@
 		require: none
 		include: bureaucrat, educated, professional, civillian, armed, law, social, commerce, rich, entertainer, sedentary, middle_class, upper_middle_class
 		exclude: slave, unskilled, laborer, unarmed, poor, lower_class
-		weight: 1.400
+		weight: 0.700
 	}
 	
 	amount_multiplier_min: 1.000

@@ -16,7 +16,7 @@
 		require: none
 		include: construction, criminal, laborer, armed, hunter, culinary, soldier, nomad, outdoor, murderer
 		exclude: unarmed, lower_class, lower_middle_class
-		weight: 1.700
+		weight: 0.700
 	}
 	
 	amount_multiplier_min: 1.000

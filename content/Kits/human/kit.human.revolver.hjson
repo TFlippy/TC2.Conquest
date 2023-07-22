@@ -16,7 +16,7 @@
 		require: none
 		include: bureaucrat, construction, educated, military, nobility, artisan, professional, civillian, armed, law, commerce, soldier, nomad, sedentary, politician, thief, murderer
 		exclude: unarmed, lower_class, lower_middle_class
-		weight: 1.700
+		weight: 0.800
 	}
 	
 	amount_multiplier_min: 1.000

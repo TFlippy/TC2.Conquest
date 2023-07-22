@@ -13,7 +13,7 @@
 		require: none
 		include: educated, military, nobility, professional, armed, law, technician, engineer, rich, soldier, arcane, sedentary, middle_class, upper_middle_class, upper_class, elite_class
 		exclude: unarmed, poor, lower_class, lower_middle_class
-		weight: 1.400
+		weight: 0.500
 	}
 	
 	amount_multiplier_min: 1.000

@@ -16,7 +16,7 @@
 		require: hunter
 		include: construction, criminal, military, nobility, artisan, farmer, civillian, armed, hunter
 		exclude: military, unarmed, upper_middle_class, upper_class, elite_class
-		weight: 1.000
+		weight: 1.300
 	}
 	
 	amount_multiplier_min: 1.000

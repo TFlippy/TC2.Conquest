@@ -16,7 +16,7 @@
 		require: none
 		include: construction, military, technician, engineer, miner, insane, terrorist
 		exclude: slave, unskilled, farmer, unarmed, insane
-		weight: 0.600
+		weight: 0.300
 	}
 	
 	amount_multiplier_min: 1.000

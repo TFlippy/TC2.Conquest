@@ -13,7 +13,7 @@
 		require: none
 		include: military, farmer, armed, technician, engineer, hunter, soldier, evil, terrorist, fanatic
 		exclude: none
-		weight: 1.000
+		weight: 0.800
 	}
 	
 	amount_multiplier_min: 1.000
