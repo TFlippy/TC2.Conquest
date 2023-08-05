@@ -58,7 +58,7 @@ namespace TC2.Conquest
 
 						GUI.DrawWindowBackground(GUI.tex_window_menu, padding: new Vector4(8, 8, 8, 8));
 
-						using (GUI.Group.New(size: new Vector2(GUI.GetRemainingWidth(), GUI.GetRemainingHeight()), padding: new(8, 8)))
+						using (GUI.Group.New(size: new Vector2(GUI.RmX, GUI.RmY), padding: new(8, 8)))
 						{
 							var is_selected_spawn_valid = false;
 
@@ -122,11 +122,11 @@ namespace TC2.Conquest
 							//{
 							//	ref var info = ref region.GetMapInfo();
 
-							//	using (GUI.Wrap.Push(GUI.GetRemainingWidth()))
+							//	using (GUI.Wrap.Push(GUI.RmX))
 							//	{
-							//		using (GUI.Group.New(size: new(GUI.GetRemainingWidth(), 0), padding: new(4)))
+							//		using (GUI.Group.New(size: new(GUI.RmX, 0), padding: new(4)))
 							//		{
-							//			using (GUI.Wrap.Push(GUI.GetRemainingWidth()))
+							//			using (GUI.Wrap.Push(GUI.RmX))
 							//			{
 							//				//if (!info.name.IsEmpty()) GUI.Title(info.name, size: 32);
 							//				//if (!info.desc.IsEmpty()) GUI.Text(info.desc);
@@ -134,13 +134,13 @@ namespace TC2.Conquest
 							//		}
 
 							//		//var ts = Timestamp.Now();
-							//		using (var group = GUI.Group.New(size: new(GUI.GetRemainingWidth(), 0), padding: new(4)))
+							//		using (var group = GUI.Group.New(size: new(GUI.RmX, 0), padding: new(4)))
 							//		{
 							//			//ref var minimap = ref Minimap.MinimapHUD.minimaps[region.GetID()];
 							//			//if (minimap != null)
 							//			//{
 							//			//	var map_frame_size = minimap.GetFrameSize(2);
-							//			//	map_frame_size = map_frame_size.ScaleToSize(new Vector2(GUI.GetRemainingWidth(), 80));
+							//			//	map_frame_size = map_frame_size.ScaleToSize(new Vector2(GUI.RmX, 80));
 
 							//			//	Minimap.DrawMap(ref region, minimap, map_frame_size, map_scale: 1.00f);
 							//			//}
@@ -149,7 +149,7 @@ namespace TC2.Conquest
 							//			if (minimap != null)
 							//			{
 							//				var map_frame_size = minimap.GetFrameSize(2);
-							//				map_frame_size = map_frame_size.ScaleToSize(new Vector2(GUI.GetRemainingWidth(), 80));
+							//				map_frame_size = map_frame_size.ScaleToSize(new Vector2(GUI.RmX, 80));
 
 							//				using (var map = GUI.Map.New(ref region, minimap, size: map_frame_size, map_scale: 1.00f, draw_markers: false))
 							//				{
@@ -203,7 +203,7 @@ namespace TC2.Conquest
 							//		//GUI.Separator();
 							//		//GUI.NewLine(4);
 
-							//		//using (GUI.Group.New(size: new(GUI.GetRemainingWidth() * 0.50f, 0), padding: new(4)))
+							//		//using (GUI.Group.New(size: new(GUI.RmX * 0.50f, 0), padding: new(4)))
 							//		//{
 							//		//	GUI.LabelShaded("Urbanization:", info.urbanization, format: "{0:P2}", color_a: GUI.font_color_default, color_b: GUI.font_color_desc);
 							//		//	GUI.DrawHoverTooltip("TODO: desc");
@@ -223,7 +223,7 @@ namespace TC2.Conquest
 
 							//		//GUI.SameLine();
 
-							//		//using (GUI.Group.New(size: new(GUI.GetRemainingWidth(), 0), padding: new(4)))
+							//		//using (GUI.Group.New(size: new(GUI.RmX, 0), padding: new(4)))
 							//		//{
 							//		//	GUI.LabelShaded("Devastation:", info.devastation, format: "{0:P2}", color_a: GUI.font_color_default, color_b: GUI.font_color_desc);
 							//		//	GUI.DrawHoverTooltip("Destruction of the environment through\ndisasters, warfare and industry.");
@@ -246,15 +246,15 @@ namespace TC2.Conquest
 							{
 								ref var info = ref region.GetMapInfo();
 
-								using (GUI.Wrap.Push(GUI.GetRemainingWidth()))
+								using (GUI.Wrap.Push(GUI.RmX))
 								{
-									using (var group = GUI.Group.New(size: new(GUI.GetRemainingWidth(), 92), padding: new(4)))
+									using (var group = GUI.Group.New(size: new(GUI.RmX, 92), padding: new(4)))
 									{
 										//ref var minimap = ref Minimap.MinimapHUD.minimaps[region.GetID()];
 										//if (minimap != null)
 										//{
 										//	var map_frame_size = minimap.GetFrameSize(2);
-										//	map_frame_size = map_frame_size.ScaleToSize(new Vector2(GUI.GetRemainingWidth(), 80));
+										//	map_frame_size = map_frame_size.ScaleToSize(new Vector2(GUI.RmX, 80));
 
 										//	Minimap.DrawMap(ref region, minimap, map_frame_size, map_scale: 1.00f);
 										//}
@@ -263,7 +263,7 @@ namespace TC2.Conquest
 										if (minimap != null)
 										{
 											var map_frame_size = minimap.GetFrameSize(2);
-											map_frame_size = map_frame_size.ScaleToSize(new Vector2(GUI.GetRemainingWidth(), 80));
+											map_frame_size = map_frame_size.ScaleToSize(new Vector2(GUI.RmX, 80));
 
 											using (group.Split(size: map_frame_size, GUI.AlignX.Center, GUI.AlignY.Top))
 											{
@@ -416,7 +416,7 @@ namespace TC2.Conquest
 
 								//var context = GUI.ItemContext.Begin();
 
-								using (var group_title = GUI.Group.New(size: new(GUI.GetRemainingWidth(), 40), padding: new(4, 0)))
+								using (var group_title = GUI.Group.New(size: new(GUI.RmX, 40), padding: new(4, 0)))
 								{
 									var spawn_name = ent_selected_spawn.GetFullName();
 									GUI.TitleCentered(spawn_name, size: 32, pivot: new(0.00f, 0.50f));
@@ -430,9 +430,9 @@ namespace TC2.Conquest
 
 								GUI.SeparatorThick();
 
-								using (GUI.Group.New(size: GUI.GetRemainingSpace() with { X = 304 }, padding: new(0, 0)))
+								using (GUI.Group.New(size: GUI.Rm with { X = 304 }, padding: new(0, 0)))
 								{
-									//using (var group_title = GUI.Group.New(size: new(GUI.GetRemainingWidth(), 32), padding: new(4, 0)))
+									//using (var group_title = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(4, 0)))
 									//{
 									//	var spawn_name = ent_selected_spawn.GetFullName();
 									//	GUI.TitleCentered(spawn_name, size: 24, pivot: new(0.00f, 0.50f));
@@ -453,7 +453,7 @@ namespace TC2.Conquest
 
 												using (GUI.ID.Push(i - 100))
 												{
-													using (var group_row = GUI.Group.New(size: new(GUI.GetRemainingWidth(), 40)))
+													using (var group_row = GUI.Group.New(size: new(GUI.RmX, 40)))
 													{
 														var h_character = characters[i];
 														ref var character_data = ref h_character.GetData();
@@ -482,7 +482,7 @@ namespace TC2.Conquest
 
 									if (has_storage)
 									{
-										using (var group_storage = GUI.Group.New(size: GUI.GetRemainingSpace(), padding: new(8, 8)))
+										using (var group_storage = GUI.Group.New(size: GUI.Rm, padding: new(8, 8)))
 										{
 											GUI.DrawBackground(GUI.tex_frame, group_storage.GetOuterRect(), new(8, 8, 8, 8));
 
@@ -498,7 +498,7 @@ namespace TC2.Conquest
 
 											if (oc_shipment.data.IsNotNull())
 											{
-												using (GUI.Group.New(size: GUI.GetRemainingSpace()))
+												using (GUI.Group.New(size: GUI.Rm))
 												{
 													GUI.DrawShipment(ref context, ent_selected_spawn, ref oc_shipment.data, slot_size: new(96, 48));
 												}
@@ -509,7 +509,7 @@ namespace TC2.Conquest
 
 								GUI.SameLine();
 
-								using (var group_character = GUI.Group.New(size: GUI.GetRemainingSpace()))
+								using (var group_character = GUI.Group.New(size: GUI.Rm))
 								{
 									var selected_items = Spawn.RespawnGUI.character_id_to_selected_items.GetOrAdd(h_selected_character_tmp);
 
@@ -525,7 +525,7 @@ namespace TC2.Conquest
 									//	}
 									//}
 
-									using (var group_title = GUI.Group.New(size: new(GUI.GetRemainingWidth(), 24), padding: new(8, 8)))
+									using (var group_title = GUI.Group.New(size: new(GUI.RmX, 24), padding: new(8, 8)))
 									{
 										if (character_data.IsNotNull())
 										{
@@ -543,7 +543,7 @@ namespace TC2.Conquest
 
 										using (var group_title = GUI.Group.New(size: GUI.GetRemainingSpace(y: -300), padding: new(2, 4)))
 										{
-											using (var scrollbox = GUI.Scrollbox.New("scrollbox_xp", size: GUI.GetRemainingSpace()))
+											using (var scrollbox = GUI.Scrollbox.New("scrollbox_xp", size: GUI.Rm))
 											{
 												GUI.DrawBackground(GUI.tex_panel, scrollbox.group_frame.GetOuterRect(), new(8, 8, 8, 8));
 
@@ -568,7 +568,7 @@ namespace TC2.Conquest
 										{
 											GUI.DrawBackground(GUI.tex_panel, group_kits.GetOuterRect(), new(8, 8, 8, 8));
 
-											using (var scrollable = GUI.Scrollbox.New("kits", size: GUI.GetRemainingSpace(), padding: new(4, 4), force_scrollbar: true))
+											using (var scrollable = GUI.Scrollbox.New("kits", size: GUI.Rm, padding: new(4, 4), force_scrollbar: true))
 											{
 												Dormitory.DrawKits(ref dormitory, ref crafting_context, ref character_data, h_inventory, has_storage, available_items, selected_items);
 											}
@@ -579,7 +579,7 @@ namespace TC2.Conquest
 									//{
 									if (is_empty)
 									{
-										if (GUI.DrawButton("No characters available.", size: new Vector2(GUI.GetRemainingWidth(), 48), color: GUI.col_button_error, error: true))
+										if (GUI.DrawButton("No characters available.", size: new Vector2(GUI.RmX, 48), color: GUI.col_button_error, error: true))
 										{
 
 										}
@@ -590,7 +590,7 @@ namespace TC2.Conquest
 										var is_selected_character_spawnable = h_selected_character_tmp.CanSpawnAsCharacter(h_faction, faction.id, spawn_flags: spawn.flags);
 										if (is_selected_character_spawnable)
 										{
-											if (GUI.DrawButton("Spawn", size: new Vector2(GUI.GetRemainingWidth(), 48), color: GUI.col_button_ok))
+											if (GUI.DrawButton("Spawn", size: new Vector2(GUI.RmX, 48), color: GUI.col_button_ok))
 											{
 												var rpc = new Dormitory.DEV_SpawnRPC()
 												{
@@ -610,7 +610,7 @@ namespace TC2.Conquest
 										}
 										else
 										{
-											if (GUI.DrawButton("Cannot spawn as this character.", size: new Vector2(GUI.GetRemainingWidth(), 48), color: GUI.col_button_error, error: true))
+											if (GUI.DrawButton("Cannot spawn as this character.", size: new Vector2(GUI.RmX, 48), color: GUI.col_button_error, error: true))
 											{
 
 											}
@@ -622,7 +622,7 @@ namespace TC2.Conquest
 							}
 							else
 							{
-								using (var group_title = GUI.Group.New(size: new(GUI.GetRemainingWidth(), 40), padding: new(4, 0)))
+								using (var group_title = GUI.Group.New(size: new(GUI.RmX, 40), padding: new(4, 0)))
 								{
 									GUI.TitleCentered("No Spawns Available", size: 32, pivot: new(0.50f, 1.00f));
 
@@ -633,14 +633,14 @@ namespace TC2.Conquest
 									//}
 								}
 
-								using (GUI.Group.New(size: GUI.GetRemainingSpace(), padding: new(8)))
+								using (GUI.Group.New(size: GUI.Rm, padding: new(8)))
 								{
 									GUI.SeparatorThick();
 
 									ref var faction_data = ref faction_id.GetData(out IFaction.Definition s_faction);
 									if (faction_data.IsNotNull())
 									{
-										using (GUI.Group.New(size: GUI.GetRemainingSpace(), padding: new(8)))
+										using (GUI.Group.New(size: GUI.Rm, padding: new(8)))
 										{
 											GUI.Title("Your faction has no established presence in this region.", size: 20);
 

@@ -285,7 +285,7 @@ namespace TC2.Conquest
 
 						using (GUI.Group.New(size: GUI.GetAvailableSize(), padding: new(14, 12)))
 						{
-							using (GUI.Group.New(size: new Vector2(GUI.GetRemainingWidth(), 32)))
+							using (GUI.Group.New(size: new Vector2(GUI.RmX, 32)))
 							{
 								GUI.Title($"{game_info.name}", size: 32);
 								//GUI.SameLine();
@@ -296,7 +296,7 @@ namespace TC2.Conquest
 
 							using (GUI.Group.New(padding: new Vector2(4, 4)))
 							{
-								using (GUI.Group.New(size: new(GUI.GetRemainingWidth() * 0.50f, 0), padding: new Vector2(8, 4)))
+								using (GUI.Group.New(size: new(GUI.RmX * 0.50f, 0), padding: new Vector2(8, 4)))
 								{
 									GUI.Label("Players:", $"{game_info.player_count}/{game_info.player_count_max}", font: GUI.Font.Superstar, size: 16);
 									//GUI.Label("Map:", game_info.map, font: GUI.Font.Superstar, size: 16);
@@ -310,9 +310,9 @@ namespace TC2.Conquest
 
 							GUI.NewLine(4);
 
-							using (GUI.Group.New(size: GUI.GetRemainingSpace(), padding: new Vector2(4, 4)))
+							using (GUI.Group.New(size: GUI.Rm, padding: new Vector2(4, 4)))
 							{
-								using (var table = GUI.Table.New("Players", 3, size: new Vector2(0, GUI.GetRemainingHeight())))
+								using (var table = GUI.Table.New("Players", 3, size: new Vector2(0, GUI.RmY)))
 								{
 									if (table.show)
 									{
@@ -322,7 +322,7 @@ namespace TC2.Conquest
 										//table.SetupColumnFixed(64);
 										//table.SetupColumnFixed(64);
 
-										using (var row = GUI.Table.Row.New(size: new(GUI.GetRemainingWidth(), 16), header: true))
+										using (var row = GUI.Table.Row.New(size: new(GUI.RmX, 16), header: true))
 										{
 											using (row.Column(0)) GUI.Title("Name", size: 20);
 											using (row.Column(1)) GUI.Title("Faction", size: 20);
@@ -338,7 +338,7 @@ namespace TC2.Conquest
 												var is_online = player.flags.HasAny(Player.Flags.Online);
 												if (!is_online) return;
 
-												using (var row = GUI.Table.Row.New(size: new(GUI.GetRemainingWidth(), 16)))
+												using (var row = GUI.Table.Row.New(size: new(GUI.RmX, 16)))
 												{
 													using (GUI.ID.Push(entity))
 													{
@@ -387,7 +387,7 @@ namespace TC2.Conquest
 										//	ref var arg = ref info.GetParameter<ScoreboardGUI>();
 										//	if (!arg.IsNull())
 										//	{
-										//		using (var row = GUI.Table.Row.New(size: new(GUI.GetRemainingWidth(), 16)))
+										//		using (var row = GUI.Table.Row.New(size: new(GUI.RmX, 16)))
 										//		{
 										//			using (GUI.ID.Push(entity))
 										//			{
