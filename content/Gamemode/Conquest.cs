@@ -161,6 +161,22 @@ namespace TC2.Conquest
 				//});
 			}
 		}
+
+		[ChatCommand.Region("scout", "", creative: true)]
+		public static void ScoutCommand(ref ChatCommand.Context context, int count)
+		{
+			ref var region = ref context.GetRegion();
+			ref var player = ref context.GetPlayer();
+
+			ref var faction_data = ref player.faction_id.GetData(out IFaction.Definition faction_asset);
+			if (faction_data.IsNotNull())
+			{
+				faction_data.scout_count += count;
+				faction_data.scout_count.Min(0);
+
+				faction_asset.Sync(false);
+			}
+		}
 #endif
 
 		//#if SERVER
@@ -298,9 +314,9 @@ namespace TC2.Conquest
 							{
 								using (GUI.Group.New(size: new(GUI.RmX * 0.50f, 0), padding: new Vector2(8, 4)))
 								{
-									GUI.Label("Players:", $"{game_info.player_count}/{game_info.player_count_max}", font: GUI.Font.Superstar, size: 16);
+									GUI.LabelShaded("Players:", $"{game_info.player_count}/{game_info.player_count_max}", font_a: GUI.Font.Superstar, size_a: 16);
 									//GUI.Label("Map:", game_info.map, font: GUI.Font.Superstar, size: 16);
-									GUI.Label("Gamemode:", $"{game_info.gamemode}", font: GUI.Font.Superstar, size: 16);
+									GUI.LabelShaded("Gamemode:", $"{game_info.gamemode}", font_a: GUI.Font.Superstar, size_a: 16);
 								}
 							}
 

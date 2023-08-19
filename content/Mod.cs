@@ -366,62 +366,63 @@ namespace TC2.Conquest
 					ref var world_info = ref Client.GetWorldInfo();
 					if (world_info.IsNotNull())
 					{
-						if (world_info.maps != null)
+						if (world_info.regions != null)
 						{
 							var mod_context = App.GetModContext();
 
-							for (var i = 0u; i < world_info.maps.Length; i++)
-							{
-								ref var map_info = ref world_info.maps[i];
-								if (map_info.IsNotNull())
-								{
-									var size = 0.75f;
-									var color = GUI.font_color_title;
+							//for (var i = 1u; i < world_info.regions.Length; i++)
+							//{
+							//	ref var map_info = ref world_info.[i];
+							//	if (map_info.IsNotNull())
+							//	{
+							//		var size = 0.75f;
+							//		var color = GUI.font_color_title;
 
-									//map_info.
+							//		//map_info.
 
-									var rect_map = AABB.Centered(Vector2.Transform((Vector2)map_info.point, mat_l2c), new Vector2(size * zoom * 0.50f));
-									var rect_map_lg = AABB.Centered(Vector2.Transform(((Vector2)map_info.point) + new Vector2(0.00f, -0.875f), mat_l2c), new Vector2(size * zoom * 1.50f));
+							//		var rect_map = AABB.Centered(Vector2.Transform((Vector2)map_info.point, mat_l2c), new Vector2(size * zoom * 0.50f));
+							//		var rect_map_lg = AABB.Centered(Vector2.Transform(((Vector2)map_info.point) + new Vector2(0.00f, -0.875f), mat_l2c), new Vector2(size * zoom * 1.50f));
 
-									var is_hovered = GUI.IsHoveringRect(rect_map_lg);
-									var scale = 1.00f;
-									//if (is_hovered) scale *= 1.50f;
+							//		var is_hovered = GUI.IsHoveringRect(rect_map_lg);
+							//		var scale = 1.00f;
+							//		//if (is_hovered) scale *= 1.50f;
 
-									var map_asset = mod_context.GetMap(map_info.identifier);
-									if (map_asset != null)
-									{
-										var tex_thumbnail = map_asset.GetThumbnail();
-										if (tex_thumbnail != null)
-										{
-											GUI.DrawTexture(tex_thumbnail.Identifier, rect_map_lg, GUI.Layer.Window);
-										}
+							//		var map_asset = mod_context.GetMap(map_info.identifier);
+							//		if (map_asset != null)
+							//		{
+							//			var tex_thumbnail = map_asset.GetThumbnail();
+							//			if (tex_thumbnail != null)
+							//			{
+							//				GUI.DrawTexture(tex_thumbnail.Identifier, rect_map_lg, GUI.Layer.Window);
+							//			}
 
-										GUI.DrawBackground(is_hovered ? GUI.tex_frame_white : GUI.tex_frame, rect_map_lg, padding: new(4 * zoom_inv));
-										//GUI.DrawTexture(is_hovered ? GUI.tex_frame_white : GUI.tex_frame, rect_map_lg, layer: GUI.Layer.Window);
+							//			GUI.DrawBackground(is_hovered ? GUI.tex_frame_white : GUI.tex_frame, rect_map_lg, padding: new(4 * zoom_inv));
+							//			//GUI.DrawTexture(is_hovered ? GUI.tex_frame_white : GUI.tex_frame, rect_map_lg, layer: GUI.Layer.Window);
 
-										//if (tex_thumbnail != null && GUI.IsItemHovered())
-										//{
-										//	using (GUI.Tooltip.New())
-										//	{
-										//		using (var group_preview = GUI.Group.New(size: tex_thumbnail.size))
-										//		{
-										//			GUI.DrawTexture(tex_thumbnail.handle, tex_thumbnail.size);
-										//			GUI.DrawBackground(GUI.tex_frame, group_preview.GetInnerRect(), new(8));
-										//		}
-										//	}
-										//}
-									}
+							//			//if (tex_thumbnail != null && GUI.IsItemHovered())
+							//			//{
+							//			//	using (GUI.Tooltip.New())
+							//			//	{
+							//			//		using (var group_preview = GUI.Group.New(size: tex_thumbnail.size))
+							//			//		{
+							//			//			GUI.DrawTexture(tex_thumbnail.handle, tex_thumbnail.size);
+							//			//			GUI.DrawBackground(GUI.tex_frame, group_preview.GetInnerRect(), new(8));
+							//			//		}
+							//			//	}
+							//			//}
+							//		}
 
-									if (is_hovered)
-									{
-										GUI.SetCursor(App.CursorType.Hand, 1000);
-									}
+							//		if (is_hovered)
+							//		{
+							//			GUI.SetCursor(App.CursorType.Hand, 1000);
+							//		}
 
-									GUI.DrawSpriteCentered(new Sprite(h_texture_icons, 16, 16, 0, 0), rect_map, layer: GUI.Layer.Window, color: is_hovered ? GUI.col_white : GUI.col_button, scale: zoom * 0.0625f * scale);
-									//GUI.DrawRectFilled(rect_map, color, layer: GUI.Layer.Window);
-									GUI.DrawTextCentered(map_info.name, Vector2.Transform(((Vector2)map_info.point) + new Vector2(0.00f, -0.25f - 0.10f), mat_l2c), pivot: new Vector2(0.50f, 0.50f), color: color, font: GUI.Font.Superstar, size: 0.37f * size * zoom * scale, layer: GUI.Layer.Window, box_shadow: true);
-								}
-							}
+							//		GUI.DrawSpriteCentered(new Sprite(h_texture_icons, 16, 16, 0, 0), rect_map, layer: GUI.Layer.Window, color: is_hovered ? GUI.col_white : GUI.col_button, scale: zoom * 0.0625f * scale);
+							//		//GUI.DrawRectFilled(rect_map, color, layer: GUI.Layer.Window);
+							//		GUI.DrawTextCentered(map_info.name, Vector2.Transform(((Vector2)map_info.point) + new Vector2(0.00f, -0.25f - 0.10f), mat_l2c), pivot: new Vector2(0.50f, 0.50f), color: color, font: GUI.Font.Superstar, size: 0.37f * size * zoom * scale, layer: GUI.Layer.Window, box_shadow: true);
+							//	}
+							//}
+						
 						}
 					}
 

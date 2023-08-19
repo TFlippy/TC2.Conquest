@@ -474,6 +474,8 @@ namespace TC2.Conquest
 														{
 															h_selected_character = h_character;
 														}
+
+														GUI.FocusableAsset(h_character);
 													}
 												}
 											}
