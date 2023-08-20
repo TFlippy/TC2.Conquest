@@ -7,6 +7,7 @@ namespace TC2.Conquest
 	{
 #if CLIENT
 		public static Vector2 worldmap_offset;
+		public static Vector2 worldmap_offset_target;
 		public static Vector2 momentum;
 		public static float worldmap_zoom = 6.00f;
 		public static float worldmap_zoom_lerp = 6.00f;
@@ -107,16 +108,21 @@ namespace TC2.Conquest
 
 							if (!is_dragging)
 							{
-								worldmap_offset += momentum * zoom_inv;
 								momentum = Vector2.Lerp(momentum, Vector2.Zero, 0.10f);
+								worldmap_offset_target += momentum * zoom_inv;
+								worldmap_offset = Vector2.Lerp(worldmap_offset, worldmap_offset_target, 0.25f);
 							}
 							else
 							{
-								worldmap_offset += mouse_delta * zoom_inv;
-								momentum = Vector2.Lerp(momentum, mouse_delta, 0.50f);
+								//worldmap_offset += mouse_delta * zoom_inv;
+								momentum = Vector2.Lerp(momentum, mouse_delta, 0.50f); // mouse_delta.LengthSquared() > 0.50f || mouse.GetKeyUp(Mouse.Key.Left) ? Vector2.Lerp(momentum, mouse_delta, 0.50f) : Vector2.Zero;
+								worldmap_offset_target += (mouse_delta * zoom_inv) + (momentum * zoom_inv * 0.10f);
+								worldmap_offset = Vector2.Lerp(worldmap_offset, worldmap_offset_target, 0.40f);
 
 								//worldmap_offset += momentum * zoom_inv * 0.10f;
 							}
+
+							
 
 							if (mouse.GetKeyUp(Mouse.Key.Left))
 							{
@@ -152,7 +158,9 @@ namespace TC2.Conquest
 									clip: false,
 									color: color_grid.WithAlphaMult(0.10f));
 
-								var tm = Vector2.Transform(mouse_pos, mat_c2l);
+								var mouse_local = Vector2.Transform(mouse_pos, mat_c2l);
+								var mouse_local_snapped = mouse_local;
+								mouse_local_snapped.Snap(1);
 
 								var tex_line_district = h_texture_line_00;
 								var tex_line_province = h_texture_line_01;
@@ -201,7 +209,7 @@ namespace TC2.Conquest
 
 											if (enable_editor)
 											{
-												if (rect.ContainsPoint(point_t) && ((Vector2.DistanceSquared(point, tm) <= 0.75f.Pow2()) || (edit_asset == asset && edit_points_index == i)))
+												if (rect.ContainsPoint(point_t) && ((Vector2.DistanceSquared(point, mouse_local) <= 0.75f.Pow2()) || (edit_asset == asset && edit_points_index == i)))
 												{
 													GUI.DrawCircleFilled(point_t, 0.25f * zoom, color: Color32BGRA.White.LumaBlend(asset_data.color_border, 0.50f), segments: 4, layer: GUI.Layer.Foreground);
 
@@ -268,7 +276,7 @@ namespace TC2.Conquest
 
 											if (enable_editor)
 											{
-												if (rect.ContainsPoint(point_t) && ((Vector2.DistanceSquared(point, tm) <= 0.25f.Pow2()) || (edit_asset == asset && edit_points_index == i)))
+												if (rect.ContainsPoint(point_t) && ((Vector2.DistanceSquared(point, mouse_local) <= 0.25f.Pow2()) || (edit_asset == asset && edit_points_index == i)))
 												{
 													GUI.DrawCircleFilled(point_t, 0.375f * zoom, color: color, segments: 4, layer: GUI.Layer.Foreground);
 
@@ -403,11 +411,11 @@ namespace TC2.Conquest
 									}
 								}
 
-								GUI.DrawTexture("vignette", rect, layer: GUI.Layer.Window, color: Color32BGRA.White.WithAlphaMult(0.30f));
+								GUI.DrawTexture(GUI.tex_vignette, rect, layer: GUI.Layer.Window, color: Color32BGRA.White.WithAlphaMult(0.30f));
 
 								if (edit_points_index.TryGetValue(out var v_edit_points_index))
 								{
-									edit_points[v_edit_points_index] = new int2((int)MathF.Round(tm.X), (int)MathF.Round(tm.Y));
+									edit_points[v_edit_points_index] = new int2((int)MathF.Round(mouse_local.X), (int)MathF.Round(mouse_local.Y));
 
 									if (mouse.GetKeyUp(Mouse.Key.Right))
 									{
@@ -419,7 +427,9 @@ namespace TC2.Conquest
 									}
 								}
 
-								GUI.DrawTextCentered($"Zoom: {worldmap_zoom:0.00}x", position: rect.GetPosition(new(1, 1)), new(1, 1), font: GUI.Font.Superstar, size: 24, layer: GUI.Layer.Foreground);
+								GUI.DrawSpriteCentered(new Sprite(h_texture_icons, 72, 72, 0, 1), rect: AABB.Centered(Vector2.Transform(mouse_local_snapped, mat_l2c), new Vector2(0.25f * zoom * 0.50f)), layer: GUI.Layer.Window, scale: 0.125f * 0.250f * zoom, color: Color32BGRA.Black.WithAlphaMult(0.20f));
+
+								GUI.DrawTextCentered($"Zoom: {worldmap_zoom:0.00}x\n[{mouse_local_snapped.X:0}, {mouse_local_snapped.Y:0}]", position: rect.GetPosition(new(1, 1)), new(1, 1), font: GUI.Font.Superstar, size: 24, layer: GUI.Layer.Foreground);
 							}
 
 							if (hovered)
@@ -435,7 +445,7 @@ namespace TC2.Conquest
 							{
 								if (kb.GetKeyDown(Keyboard.Key.Reload))
 								{
-									worldmap_offset = default;
+									worldmap_offset_target = default;
 									rotation = default;
 								}
 
@@ -463,26 +473,30 @@ namespace TC2.Conquest
 								//}
 							}
 
-							var move_speed = zoom_inv * 20;
+							var move_speed = (1.00f / MathF.Sqrt(worldmap_zoom_lerp)) * 10.00f;
 
 							if (kb.GetKey(Keyboard.Key.MoveLeft))
 							{
-								worldmap_offset.X += move_speed;
+								//worldmap_offset.X += move_speed;
+								momentum.X += move_speed;
 							}
 
 							if (kb.GetKey(Keyboard.Key.MoveRight))
 							{
-								worldmap_offset.X -= move_speed;
+								//worldmap_offset.X -= move_speed;
+								momentum.X -= move_speed;
 							}
 
 							if (kb.GetKey(Keyboard.Key.MoveUp))
 							{
-								worldmap_offset.Y += move_speed;
+								//worldmap_offset.Y += move_speed;
+								momentum.Y += move_speed;
 							}
 
 							if (kb.GetKey(Keyboard.Key.MoveDown))
 							{
-								worldmap_offset.Y -= move_speed;
+								//worldmap_offset.Y -= move_speed;
+								momentum.Y -= move_speed;
 							}
 						}
 
