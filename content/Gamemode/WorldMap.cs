@@ -7,8 +7,9 @@ namespace TC2.Conquest
 	{
 #if CLIENT
 		public static Vector2 worldmap_offset;
-		public static float worldmap_zoom = 1.00f;
-		public static float worldmap_zoom_lerp = 1.00f;
+		public static Vector2 momentum;
+		public static float worldmap_zoom = 6.00f;
+		public static float worldmap_zoom_lerp = 6.00f;
 
 		public static Matrix3x2 mat_proj;
 		public static Matrix3x2 mat_view;
@@ -31,42 +32,47 @@ namespace TC2.Conquest
 
 		public static bool enable_editor;
 
-		public static StringBuilder sb = new StringBuilder();
+		//public static StringBuilder sb = new StringBuilder();
 
-		public static void Draw()
+		public static void Draw(Vector2 size)
 		{
 			ref var world = ref Client.GetWorld();
 			if (world.IsNull()) return;
 
-			return;
+			//return;
 			var is_loading = Client.IsLoadingRegion();
 
 
 			//if (!Client.IsLoadingRegion())
 			{
-				GUI.RegionMenu.enabled = false;
-				GUI.Menu.enable_background = true;
+				//GUI.RegionMenu.enabled = false;
+				//GUI.Menu.enable_background = true;
 
-				if (!is_loading)
+				//if (!is_loading)
 				{
 					//var viewport_size = new Vector2(1200, 800);
-					var viewport_size = GUI.CanvasSize - new Vector2(64, 64);
+					//var viewport_size = GUI.CanvasSize - new Vector2(64, 64);
 					//var window_pos = new Vector2(GUI.CanvasSize.X * 0.50f, 48);
-					var window_pos = GUI.CanvasSize * 0.50f;
+					//var window_pos = GUI.CanvasSize * 0.50f;
 					//var pivot = new Vector2(0.50f, 0.00f);
-					var pivot = new Vector2(0.50f, 0.50f);
+					//var pivot = new Vector2(0.50f, 0.50f);
 					//using (var window = GUI.Window.Standalone("region_menu", position: GUI.CanvasSize * 0.00f, size: new Vector2(600, 400), pivot: new(0, 0), padding: new(8), force_position: true))
-					using (var window = GUI.Window.Standalone("region_menu", position: window_pos, size: viewport_size, pivot: pivot, padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus))
+					//using (var window = GUI.Window.Standalone("region_menu", position: window_pos, size: viewport_size, pivot: pivot, padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus))
 					//using (var window = GUI.Window.Standalone("region_menu", position: GUI.CanvasSize * 0.50f, size: viewport_size, pivot: new(0.50f, 0.50f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus))
+
+
+					using (var group_canvas = GUI.Group.New(size))
 					{
-						if (window.show)
+						var rect = group_canvas.GetInnerRect();
+
+						//if (window.show)
+						using (var button = GUI.CustomButton.New(id: "worldmap.button", size: GUI.Rm, set_cursor: false))
 						{
 							GUI.DrawWindowBackground(GUI.tex_window_character);
-							sb.Clear();
+							//sb.Clear();
 
-							var aspect = GUI.CanvasSize.GetNormalized();
 							var scale_canvas = GUI.GetWorldToCanvasScale();
-							var hovered = GUI.IsHoveringRect(window.group.GetInnerRect());
+							var hovered = button.hovered;
 
 							var mouse = GUI.GetMouse();
 							var kb = GUI.GetKeyboard();
@@ -82,9 +88,40 @@ namespace TC2.Conquest
 
 							var mouse_pos = mouse.GetInterpolatedPosition() * scale_canvas;
 							var mouse_delta = (mouse.GetDelta() * scale_canvas);
-
-							var rect = window.group.GetInnerRect();
 							var rect_center = rect.GetPosition();
+
+							var is_dragging = false;
+
+							if (hovered)
+							{
+								if (mouse.GetKey(Mouse.Key.Left))
+								{
+									//worldmap_offset += mouse.GetDelta() * scale_canvas / zoom;
+									is_dragging = true;
+								}
+								else if (mouse.GetKeyDown(Mouse.Key.Left))
+								{
+									momentum = mouse_delta;
+								}
+							}
+
+							if (!is_dragging)
+							{
+								worldmap_offset += momentum * zoom_inv;
+								momentum = Vector2.Lerp(momentum, Vector2.Zero, 0.10f);
+							}
+							else
+							{
+								worldmap_offset += mouse_delta * zoom_inv;
+								momentum = Vector2.Lerp(momentum, mouse_delta, 0.50f);
+
+								//worldmap_offset += momentum * zoom_inv * 0.10f;
+							}
+
+							if (mouse.GetKeyUp(Mouse.Key.Left))
+							{
+								//momentum = mouse_delta;
+							}
 
 							if (enable_editor)
 							{
@@ -94,8 +131,8 @@ namespace TC2.Conquest
 							using (GUI.Clip.Push(rect))
 							{
 								mat_proj = Matrix3x2.Identity;
-								mat_proj.M11 = 2.00f / viewport_size.X;
-								mat_proj.M22 = 2.00f / viewport_size.Y;
+								mat_proj.M11 = 2.00f / size.X;
+								mat_proj.M22 = 2.00f / size.Y;
 								mat_view = Maths.TRS3x2(worldmap_offset, rotation, new Vector2(zoom));
 
 								var mat_vp = Matrix3x2.Multiply(mat_view, mat_proj);
@@ -103,7 +140,7 @@ namespace TC2.Conquest
 
 								var mat_l2c = Maths.TRS3x2(worldmap_offset * zoom, rotation, new Vector2(zoom));
 								Matrix3x2.Invert(mat_l2c, out var mat_c2l);
-								mat_l2c.Translation += rect.GetPosition(new(0.50f)); 
+								mat_l2c.Translation += rect.GetPosition(new(0.50f));
 
 								var uv_offset = worldmap_offset / scale_canvas;
 
@@ -296,13 +333,13 @@ namespace TC2.Conquest
 
 											if (!region_info.map.IsNullOrEmpty())
 											{
-												var size = 0.75f; // * (zoom_inv * 128);
+												var icon_size = 0.75f; // * (zoom_inv * 128);
 												var color = GUI.font_color_title;
 
 												//map_info.
 
-												var rect_map = AABB.Centered(Vector2.Transform((Vector2)map_info.point, mat_l2c), new Vector2(size * zoom * 0.50f));
-												var rect_map_lg = AABB.Centered(Vector2.Transform(((Vector2)map_info.point) + new Vector2(0.00f, -0.875f), mat_l2c), new Vector2(size * zoom * 1.50f));
+												var rect_map = AABB.Centered(Vector2.Transform((Vector2)map_info.point, mat_l2c), new Vector2(icon_size * zoom * 0.50f));
+												var rect_map_lg = AABB.Centered(Vector2.Transform(((Vector2)map_info.point) + new Vector2(0.00f, -0.875f), mat_l2c), new Vector2(icon_size * zoom * 1.50f));
 
 												var is_hovered = GUI.IsHoveringRect(rect_map_lg);
 												var is_selected = selected_region_id == i;
@@ -359,7 +396,7 @@ namespace TC2.Conquest
 
 												GUI.DrawSpriteCentered(new Sprite(h_texture_icons, 24, 24, 3, 0), rect_map, layer: GUI.Layer.Window, color: (is_selected) ? GUI.col_white : GUI.col_button, scale: zoom * 0.0625f * scale);
 												//GUI.DrawRectFilled(rect_map, color, layer: GUI.Layer.Window);
-												GUI.DrawTextCentered(map_info.name, Vector2.Transform(((Vector2)map_info.point) + new Vector2(0.00f, -0.25f - 0.10f), mat_l2c), pivot: new Vector2(0.50f, 0.50f), color: color, font: GUI.Font.Superstar, size: 0.37f * MathF.Max(size * zoom * scale, 32), layer: GUI.Layer.Window, box_shadow: true);
+												GUI.DrawTextCentered(map_info.name, Vector2.Transform(((Vector2)map_info.point) + new Vector2(0.00f, -0.25f - 0.10f), mat_l2c), pivot: new Vector2(0.50f, 0.50f), color: color, font: GUI.Font.Superstar, size: 0.37f * MathF.Max(icon_size * zoom * scale, 32), layer: GUI.Layer.Window, box_shadow: true);
 											}
 										}
 
@@ -394,7 +431,6 @@ namespace TC2.Conquest
 
 							worldmap_zoom_lerp = Maths.Lerp(worldmap_zoom_lerp, worldmap_zoom, 0.20f);
 
-
 							if (hovered)
 							{
 								if (kb.GetKeyDown(Keyboard.Key.Reload))
@@ -408,23 +444,23 @@ namespace TC2.Conquest
 									enable_editor = !enable_editor;
 								}
 
-								if (kb.GetKey(Keyboard.Key.Q))
-								{
-									rotation -= MathF.PI * 0.025f;
-								}
+								//if (kb.GetKey(Keyboard.Key.Q))
+								//{
+								//	rotation -= MathF.PI * 0.025f;
+								//}
 
-								if (kb.GetKey(Keyboard.Key.E))
-								{
-									rotation += MathF.PI * 0.025f;
-								}
+								//if (kb.GetKey(Keyboard.Key.E))
+								//{
+								//	rotation += MathF.PI * 0.025f;
+								//}
 
 								//mouse_delta = mouse_delta.RotateByRad(0);
 
-								if (mouse.GetKey(Mouse.Key.Left))
-								{
-									//worldmap_offset += mouse.GetDelta() * scale_canvas / zoom;
-									worldmap_offset += mouse_delta * zoom_inv;
-								}
+								//if (mouse.GetKey(Mouse.Key.Left))
+								//{
+								//	//worldmap_offset += mouse.GetDelta() * scale_canvas / zoom;
+								//	worldmap_offset += mouse_delta * zoom_inv;
+								//}
 							}
 
 							var move_speed = zoom_inv * 20;
@@ -449,71 +485,74 @@ namespace TC2.Conquest
 								worldmap_offset.Y -= move_speed;
 							}
 						}
-					}
 
-					if (selected_region_id != 0)
-					{
-						using (var window = GUI.Window.Standalone("region_menu.region", position: new Vector2(GUI.CanvasSize.X, 0) + new Vector2(-48, 48), size: new(300, 550), pivot: new(1.00f, 0.00f), padding: new(8), force_position: true))
+						if (selected_region_id != 0)
 						{
-							if (window.show)
+							//GUI.SetFocusNext();
+
+							//using (var window = GUI.Window.Standalone("region_menu.region", position: new Vector2(GUI.CanvasSize.X, 0) + new Vector2(-48, 48), size: new(300, 550), pivot: new(1.00f, 0.00f), padding: new(8), force_position: true))
+							using (var window = GUI.Window.Standalone("region_menu.region", position: new Vector2(rect.b.X, rect.a.Y) + new Vector2(-4, 8), size: new(300, MathF.Min(rect.GetHeight() - 8, 550)), pivot: new(1.00f, 0.00f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus | GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.Child))
 							{
-								window.group.DrawBackground(GUI.tex_window_popup_l);
-
-								ref var region_info = ref World.GetRegionInfo(selected_region_id);
-								if (region_info.IsNotNull())
+								if (window.show)
 								{
-									ref var map_info = ref region_info.map_info;
-									var map_asset = App.GetModContext().GetMap(region_info.map);
+									window.group.DrawBackground(GUI.tex_window_popup_l, color: GUI.col_default);
 
-									using (GUI.Group.New(size: GUI.Rm))
+									ref var region_info = ref World.GetRegionInfo(selected_region_id);
+									if (region_info.IsNotNull())
 									{
-										using (var group_title = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(8, 0)))
-										{
-											GUI.TitleCentered(map_info.name, size: 32, pivot: new(0.00f, 0.50f));
-										}
+										ref var map_info = ref region_info.map_info;
+										var map_asset = App.GetModContext().GetMap(region_info.map);
 
-										GUI.SeparatorThick();
-
-										using (var group_top = GUI.Group.New(size: new(GUI.RmX, 0), padding: new(4, 4)))
+										using (GUI.Group.New(size: GUI.Rm))
 										{
-											using (var group_thumbnail = GUI.Group.New(size: new(GUI.RmX * 0.50f)))
+											using (var group_title = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(8, 0)))
 											{
-												var tex_thumbnail = map_asset.GetThumbnail();
-												if (tex_thumbnail != null)
-												{
-													GUI.DrawTexture(tex_thumbnail.Identifier, group_thumbnail.GetInnerRect(), GUI.Layer.Window);
-												}
-												GUI.DrawBackground(GUI.tex_frame, group_thumbnail.GetOuterRect(), padding: new(4));
+												GUI.TitleCentered(map_info.name, size: 32, pivot: new(0.00f, 0.50f));
 											}
 
-											GUI.SameLine();
+											GUI.SeparatorThick();
 
-											using (var group_desc = GUI.Group.New(size: new(GUI.RmX, 0), padding: new(8, 8)))
+											using (var group_top = GUI.Group.New(size: new(GUI.RmX, 0), padding: new(4, 4)))
 											{
-												using (GUI.Wrap.Push(GUI.RmX))
+												using (var group_thumbnail = GUI.Group.New(size: new(GUI.RmX * 0.50f)))
 												{
-													GUI.TextShaded(map_asset.Description);
+													var tex_thumbnail = map_asset.GetThumbnail();
+													if (tex_thumbnail != null)
+													{
+														GUI.DrawTexture(tex_thumbnail.Identifier, group_thumbnail.GetInnerRect(), GUI.Layer.Window);
+													}
+													GUI.DrawBackground(GUI.tex_frame, group_thumbnail.GetOuterRect(), padding: new(4));
+												}
+
+												GUI.SameLine();
+
+												using (var group_desc = GUI.Group.New(size: new(GUI.RmX, 0), padding: new(8, 8)))
+												{
+													using (GUI.Wrap.Push(GUI.RmX))
+													{
+														GUI.TextShaded(map_asset.Description);
+													}
 												}
 											}
-										}
 
-										GUI.SeparatorThick();
+											GUI.SeparatorThick();
 
-										using (var group_info = GUI.Group.New(size: new(GUI.RmX, GUI.RmY - 40), padding: new(8, 8)))
-										{
-											GUI.TextShaded("- some info here");
-										}
-
-										if (true)
-										{
-											var color = GUI.col_button_ok;
-											var alpha = 1.00f;
-
-											if (GUI.DrawButton("Enter", size: new(GUI.RmX * 0.50f, 40), font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+											using (var group_info = GUI.Group.New(size: new(GUI.RmX, GUI.RmY - 40), padding: new(8, 8)))
 											{
-												Client.RequestSetActiveRegion(selected_region_id);
+												GUI.TextShaded("- some info here");
+											}
 
-												//Client.TODO_LoadRegion(region_id);
+											if (true)
+											{
+												var color = GUI.col_button_ok;
+												var alpha = 1.00f;
+
+												if (GUI.DrawButton("Enter", size: new(GUI.RmX * 0.50f, 40), font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+												{
+													Client.RequestSetActiveRegion(selected_region_id, delay_seconds: 0.75f);
+
+													//Client.TODO_LoadRegion(region_id);
+												}
 											}
 										}
 									}
