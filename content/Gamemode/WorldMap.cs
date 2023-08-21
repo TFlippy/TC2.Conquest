@@ -28,6 +28,8 @@ namespace TC2.Conquest
 		public static Texture.Handle h_texture_line_01 = "ui_worldmap.line.01";
 		public static Texture.Handle h_texture_line_02 = "ui_worldmap.line.02";
 
+		public static IWorld.Handle h_world = "krumpel";
+
 		public static Texture.Handle h_texture_terrain_beach_00 = "worldmap.terrain.beach.00";
 
 		public static Vector2 mouse_pos_old;
@@ -67,7 +69,8 @@ namespace TC2.Conquest
 					//using (var window = GUI.Window.Standalone("region_menu", position: window_pos, size: viewport_size, pivot: pivot, padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus))
 					//using (var window = GUI.Window.Standalone("region_menu", position: GUI.CanvasSize * 0.50f, size: viewport_size, pivot: new(0.50f, 0.50f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus))
 
-					GUI.WorldMap.Renderer.Clear();
+					IWorld.WorldMap.Renderer.Clear();
+					IWorld.Doodad.Renderer.Clear();
 
 					using (var group_canvas = GUI.Group.New(size))
 					{
@@ -194,6 +197,36 @@ namespace TC2.Conquest
 								var tex_line_district = h_texture_line_00;
 								var tex_line_province = h_texture_line_01;
 
+								static void DrawOutlineShader(Matrix3x2 mat_l2c, float zoom, Span<int2> points, Color32BGRA color, float thickness, float cap_size, Texture.Handle h_texture)
+								{
+									var count = points.Length;
+
+									var last_vert = default(int2);
+									for (var i = 0; i < (count + 1); i++)
+									{
+										var index = i % count;
+										ref var vert = ref points[index];
+										if (i > 0)
+										{
+											var a = (Vector2)last_vert;
+											var b = (Vector2)vert;
+
+											IWorld.WorldMap.Renderer.Add(new()
+											{
+												a = a,
+												b = b,
+												color = Color32BGRA.White,
+												h_texture = h_texture,
+												thickness = thickness,
+												uv_scale = Vector2.Distance(a, b) * 0.5f
+											});
+
+											//GUI.DrawLineTexturedCapped(ta, tb, h_texture, color: color, thickness: thickness * zoom * 2, cap_size: cap_size, layer: GUI.Layer.Window);
+										}
+										last_vert = vert;
+									}
+								}
+
 								static void DrawOutline(Matrix3x2 mat_l2c, float zoom, Span<int2> points, Color32BGRA color, float thickness, float cap_size, Texture.Handle h_texture)
 								{
 									var count = points.Length;
@@ -211,17 +244,7 @@ namespace TC2.Conquest
 											var ta = Vector2.Transform(a, mat_l2c);
 											var tb = Vector2.Transform(b, mat_l2c);
 
-											GUI.WorldMap.Renderer.Add(new()
-											{
-												a = a,
-												b = b,
-												color = Color32BGRA.White,
-												h_texture = h_texture,
-												thickness = thickness,
-												uv_scale = Vector2.Distance(a, b) * 0.5f
-											});
-
-											//GUI.DrawLineTexturedCapped(ta, tb, h_texture, color: color, thickness: thickness * zoom * 2, cap_size: cap_size, layer: GUI.Layer.Window);
+											GUI.DrawLineTexturedCapped(ta, tb, h_texture, color: color, thickness: thickness * zoom * 2, cap_size: cap_size, layer: GUI.Layer.Window);
 										}
 										last_vert = vert;
 									}
@@ -284,7 +307,7 @@ namespace TC2.Conquest
 										GUI.DrawPolygon(points_t_span, asset_data.color_fill with { a = 100 }, GUI.Layer.Window);
 
 										//DrawOutline(points, asset_data.color_border.WithAlphaMult(0.50f), 0.100f);
-										//DrawOutline(mat_l2c, zoom, points, asset_data.color_border, 0.125f * 0.75f, 4.00f, tex_line_district);
+										DrawOutline(mat_l2c, zoom, points, asset_data.color_border, 0.125f * 0.75f, 4.00f, tex_line_district);
 
 										//GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(pos_center, mat_l2c), pivot: new(0.50f, 0.50f), font: GUI.Font.Superstar, size: 1.00f * zoom, color: GUI.font_color_title.WithAlphaMult(1.00f), layer: GUI.Layer.Window);
 										GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(pos_center, mat_l2c), pivot: new(0.50f, 0.50f), font: GUI.Font.Superstar, size: 0.75f * zoom * asset_data.size, color: asset_data.color_fill.WithColorMult(0.32f).WithAlphaMult(0.30f), layer: GUI.Layer.Window);
@@ -299,7 +322,7 @@ namespace TC2.Conquest
 									var points = asset_data.points;
 									if (points != null)
 									{
-										DrawOutline(mat_l2c, zoom, points, asset_data.color_border, 1.00f, 0.25f, h_texture_terrain_beach_00);
+										DrawOutlineShader(mat_l2c, zoom, points, asset_data.color_border, 1.00f, 0.25f, h_texture_terrain_beach_00);
 
 										var pos_center = Vector2.Zero;
 										var color = Color32BGRA.White.LumaBlend(asset_data.color_border, 0.50f);
@@ -564,7 +587,19 @@ namespace TC2.Conquest
 								worldmap_zoom_lerp = Maths.Lerp(worldmap_zoom_lerp, worldmap_zoom, 0.20f);
 
 
-								GUI.WorldMap.Renderer.UpdateCamera(worldmap_offset, 0.00f, Vector2.One);
+								IWorld.WorldMap.Renderer.UpdateCamera(worldmap_offset, 0.00f, Vector2.One);
+
+								ref var world_data = ref h_world.GetData();
+								if (world_data.IsNotNull())
+								{
+									if (world_data.doodads != null)
+									{
+										IWorld.Doodad.Renderer.Add(world_data.doodads.AsSpan());
+									}
+								}
+
+								IWorld.WorldMap.Renderer.Submit();
+								IWorld.Doodad.Renderer.Submit();
 
 
 								if (hovered)
