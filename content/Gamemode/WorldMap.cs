@@ -28,6 +28,8 @@ namespace TC2.Conquest
 		public static Texture.Handle h_texture_line_01 = "ui_worldmap.line.01";
 		public static Texture.Handle h_texture_line_02 = "ui_worldmap.line.02";
 
+		public static Texture.Handle h_texture_terrain_beach_00 = "worldmap.terrain.beach.00";
+
 		public static Vector2 mouse_pos_old;
 		public static Vector2 mouse_pos_new;
 
@@ -65,6 +67,7 @@ namespace TC2.Conquest
 					//using (var window = GUI.Window.Standalone("region_menu", position: window_pos, size: viewport_size, pivot: pivot, padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus))
 					//using (var window = GUI.Window.Standalone("region_menu", position: GUI.CanvasSize * 0.50f, size: viewport_size, pivot: new(0.50f, 0.50f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus))
 
+					GUI.WorldMap.Renderer.Clear();
 
 					using (var group_canvas = GUI.Group.New(size))
 					{
@@ -158,17 +161,28 @@ namespace TC2.Conquest
 
 								var mat_l2c = Maths.TRS3x2((worldmap_offset * -zoom) + rect.GetPosition(new(0.50f)), rotation, new Vector2(zoom));
 								Matrix3x2.Invert(mat_l2c, out var mat_c2l);
+
+								var mat_l2c2 = Maths.TRS3x2(rect.GetPosition(new(0.50f)), rotation, new Vector2(zoom));
+								Matrix3x2.Invert(mat_l2c2, out var mat_c2l2);
+
 								//mat_l2c.Translation += rect.GetPosition(new(0.50f));
 
 								var uv_offset = worldmap_offset / scale_canvas;
 
-								var tex_scale = 16.00f;
+								var tex_scale = 32.00f;
 								var tex_scale_inv = 1.00f / tex_scale;
 
 								var color_grid = new Color32BGRA(0xff4eabb5);
-								GUI.DrawTexture(h_texture_bg_00, rect, GUI.Layer.Window, uv_0: Vector2.Transform(rect.a, mat_c2l) * tex_scale_inv, uv_1: Vector2.Transform(rect.b, mat_c2l) * tex_scale_inv,
-									clip: false,
-									color: color_grid.WithAlphaMult(0.10f));
+								//GUI.DrawTexture(h_texture_bg_00, rect, GUI.Layer.Window, uv_0: Vector2.Transform(rect.a, mat_c2l) * tex_scale_inv, uv_1: Vector2.Transform(rect.b, mat_c2l) * tex_scale_inv,
+								//	clip: false,
+								//	color: color_grid.WithAlphaMult(0.10f));
+
+								//GUI.DrawTexture("_worldmap", rect, GUI.Layer.Window, uv_0: (Vector2.Transform(rect.a, mat_c2l) * tex_scale_inv) + new Vector2(0.50f), uv_1: (Vector2.Transform(rect.b, mat_c2l) * tex_scale_inv) + new Vector2(0.50f), clip: false);
+								GUI.DrawTexture("_worldmap", rect, GUI.Layer.Window, uv_0: (Vector2.Transform(rect.a, mat_c2l2) * tex_scale_inv) - new Vector2(0.50f), uv_1: (Vector2.Transform(rect.b, mat_c2l2) * tex_scale_inv) - new Vector2(0.50f), clip: false);
+
+								//GUI.DrawTexture("_worldmap", rect, GUI.Layer.Window, uv_0: Vector2.Transform(rect.a, mat_c2l) * tex_scale_inv, uv_1: Vector2.Transform(rect.b, mat_c2l) * tex_scale_inv,
+								//clip: false);
+
 
 								//var mouse_pos = GUI.GetMousePosition();
 								//var mouse_local = Vector2.Transform(mouse_pos, mat_c2l);
@@ -197,7 +211,17 @@ namespace TC2.Conquest
 											var ta = Vector2.Transform(a, mat_l2c);
 											var tb = Vector2.Transform(b, mat_l2c);
 
-											GUI.DrawLineTexturedCapped(ta, tb, h_texture, color: color, thickness: thickness * zoom * 2, cap_size: cap_size, layer: GUI.Layer.Window);
+											GUI.WorldMap.Renderer.Add(new()
+											{
+												a = a,
+												b = b,
+												color = Color32BGRA.White,
+												h_texture = h_texture,
+												thickness = thickness,
+												uv_scale = Vector2.Distance(a, b) * 0.5f
+											});
+
+											//GUI.DrawLineTexturedCapped(ta, tb, h_texture, color: color, thickness: thickness * zoom * 2, cap_size: cap_size, layer: GUI.Layer.Window);
 										}
 										last_vert = vert;
 									}
@@ -260,7 +284,7 @@ namespace TC2.Conquest
 										GUI.DrawPolygon(points_t_span, asset_data.color_fill with { a = 100 }, GUI.Layer.Window);
 
 										//DrawOutline(points, asset_data.color_border.WithAlphaMult(0.50f), 0.100f);
-										DrawOutline(mat_l2c, zoom, points, asset_data.color_border, 0.125f * 0.75f, 4.00f, tex_line_district);
+										//DrawOutline(mat_l2c, zoom, points, asset_data.color_border, 0.125f * 0.75f, 4.00f, tex_line_district);
 
 										//GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(pos_center, mat_l2c), pivot: new(0.50f, 0.50f), font: GUI.Font.Superstar, size: 1.00f * zoom, color: GUI.font_color_title.WithAlphaMult(1.00f), layer: GUI.Layer.Window);
 										GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(pos_center, mat_l2c), pivot: new(0.50f, 0.50f), font: GUI.Font.Superstar, size: 0.75f * zoom * asset_data.size, color: asset_data.color_fill.WithColorMult(0.32f).WithAlphaMult(0.30f), layer: GUI.Layer.Window);
@@ -275,7 +299,7 @@ namespace TC2.Conquest
 									var points = asset_data.points;
 									if (points != null)
 									{
-										DrawOutline(mat_l2c, zoom, points, asset_data.color_border, 0.125f, 0.25f, tex_line_province);
+										DrawOutline(mat_l2c, zoom, points, asset_data.color_border, 1.00f, 0.25f, h_texture_terrain_beach_00);
 
 										var pos_center = Vector2.Zero;
 										var color = Color32BGRA.White.LumaBlend(asset_data.color_border, 0.50f);
@@ -476,7 +500,7 @@ namespace TC2.Conquest
 
 								GUI.DrawSpriteCentered(new Sprite(h_texture_icons, 72, 72, 0, 1), rect: AABB.Centered(Vector2.Transform(mouse_local_snapped, mat_l2c), new Vector2(0.25f)), layer: GUI.Layer.Window, scale: 0.125f * 0.250f * zoom, color: Color32BGRA.Black.WithAlphaMult(0.20f));
 
-								//GUI.DrawTextCentered($"Zoom: {worldmap_zoom:0.00}x\n[{mouse_local_snapped.X:0}, {mouse_local_snapped.Y:0}]\n[{worldmap_offset_target.X:0.00}, {worldmap_offset_target.Y:0.00}]\n[{mouse_local.X:0.00}, {mouse_local.Y:0.00}]\n[{mouse_pos.X:0.00}, {mouse_pos.Y:0.00}]", position: rect.GetPosition(new(1, 1)), new(1, 1), font: GUI.Font.Superstar, size: 24, layer: GUI.Layer.Foreground);
+								GUI.DrawTextCentered($"Zoom: {worldmap_zoom:0.00}x\n[{mouse_local_snapped.X:0}, {mouse_local_snapped.Y:0}]\n[{worldmap_offset_target.X:0.00}, {worldmap_offset_target.Y:0.00}]\n[{mouse_local.X:0.00}, {mouse_local.Y:0.00}]\n[{mouse_pos.X:0.00}, {mouse_pos.Y:0.00}]", position: rect.GetPosition(new(1, 1)), new(1, 1), font: GUI.Font.Superstar, size: 24, layer: GUI.Layer.Foreground);
 
 
 								var mouse_delta = Vector2.Zero;
@@ -538,6 +562,10 @@ namespace TC2.Conquest
 								}
 
 								worldmap_zoom_lerp = Maths.Lerp(worldmap_zoom_lerp, worldmap_zoom, 0.20f);
+
+
+								GUI.WorldMap.Renderer.UpdateCamera(worldmap_offset, 0.00f, Vector2.One);
+
 
 								if (hovered)
 								{
