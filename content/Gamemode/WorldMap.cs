@@ -32,6 +32,7 @@ namespace TC2.Conquest
 		public static IWorld.Handle h_world = "krumpel";
 		public static ILocation.Handle h_selected_location;
 		public static int? edit_doodad_index;
+		public static Vector2 edit_doodad_offset;
 
 		public static Texture.Handle h_texture_bg_00 = "ui_worldmap.bg.00";
 		public static Texture.Handle h_texture_bg_01 = "ui_worldmap.bg.01";
@@ -231,6 +232,8 @@ namespace TC2.Conquest
 					//var hovered = true;
 					//var scale_canvas = GUI.GetWorldToCanvasScale();
 					//var hovered = button.hovered;
+
+					ref var scenario_data = ref h_world.GetData(out var scenario_asset);
 
 					var mouse = GUI.GetMouse();
 					var kb = GUI.GetKeyboard();
@@ -474,6 +477,8 @@ namespace TC2.Conquest
 
 							GUI.DrawSpriteCentered(asset_data.icon, rect_location, layer: GUI.Layer.Window, 0.125f * MathF.Max(scale * zoom * asset_scale, 16), color: color);
 							GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(((Vector2)asset_data.point) + new Vector2(0.00f, -0.625f * asset_scale), mat_l2c), pivot: new(0.50f, 0.50f), color: GUI.font_color_title, font: GUI.Font.Superstar, size: 0.75f * MathF.Max(asset_scale * zoom * scale, 16), layer: GUI.Layer.Window, box_shadow: true);
+
+							GUI.FocusableAsset(asset.GetHandle(), rect: rect_location);
 						}
 						#endregion
 
@@ -576,10 +581,14 @@ namespace TC2.Conquest
 						#endregion
 
 						#region Editor
+						var hovered = GUI.IsHoveringRect(rect, allow_blocked: false, allow_overlapped: false, root_window: false, child_windows: false);
+
 						switch (editor_mode)
 						{
 							case EditorMode.Province:
 							{
+								if (!hovered && edit_asset == null) break;
+
 								var province_handle = default(IProvince.Handle);
 								var distance_sq = float.MaxValue;
 								var index = int.MaxValue;
@@ -614,38 +623,44 @@ namespace TC2.Conquest
 										var point_t = Vector2.Transform((Vector2)point, mat_l2c);
 
 										var color = Color32BGRA.White.LumaBlend(asset_data.color_border, 0.50f);
-										GUI.DrawCircleFilled(point_t, 0.375f * zoom, color: color, segments: 4, layer: GUI.Layer.Foreground);
+										GUI.DrawCircleFilled(point_t, 0.125f * zoom, color: color, segments: 4, layer: GUI.Layer.Foreground);
 										GUI.DrawTextCentered($"{ts_elapsed:0.0000} ms", point_t, layer: GUI.Layer.Foreground);
 
 										if (!edit_points_index.HasValue)
 										{
-											if (mouse.GetKeyDown(Mouse.Key.Right))
+											if (!kb.GetKey(Keyboard.Key.LeftAlt | Keyboard.Key.LeftControl))
 											{
-												if (kb.GetKey(Keyboard.Key.LeftShift))
+												if (mouse.GetKeyDown(Mouse.Key.Right))
 												{
-													//d_district.points = points.Insert(i, (int2)(points[i] + points[(i + 1) % points.Length]) / 2);
-													asset_data.points = asset_data.points.Insert(index, asset_data.points[index]);
+													if (kb.GetKey(Keyboard.Key.LeftShift))
+													{
+														//d_district.points = points.Insert(i, (int2)(points[i] + points[(i + 1) % points.Length]) / 2);
+														asset_data.points = asset_data.points.Insert(index, asset_data.points[index]);
+														//asset.Save();
+														edit_asset = asset;
+														hs_pending_asset_saves.Add(asset);
+													}
+													else
+													{
+														edit_points_index = index;
+														edit_points = asset_data.points;
+														edit_asset = asset;
+
+														//GUI.FocusAsset(asset.GetHandle());
+
+														hs_pending_asset_saves.Add(asset);
+														Sound.PlayGUI(GUI.sound_pop, 0.07f, pitch: 1.00f);
+													}
+												}
+												else if (kb.GetKeyDown(Keyboard.Key.Delete))
+												{
+													asset_data.points = asset_data.points.Remove(index);
 													//asset.Save();
 													hs_pending_asset_saves.Add(asset);
 												}
-												else
-												{
-													edit_points_index = index;
-													edit_points = asset_data.points;
-													edit_asset = asset;
-
-													//GUI.FocusAsset(asset.GetHandle());
-
-													hs_pending_asset_saves.Add(asset);
-													Sound.PlayGUI(GUI.sound_pop, 0.07f, pitch: 1.00f);
-												}
 											}
-											else if (kb.GetKeyDown(Keyboard.Key.Delete))
-											{
-												asset_data.points = asset_data.points.Remove(index);
-												//asset.Save();
-												hs_pending_asset_saves.Add(asset);
-											}
+
+											GUI.FocusableAsset(asset.GetHandle(), rect: AABB.Centered(point_t, new(1.00f * zoom)));
 										}
 									}
 								}
@@ -654,6 +669,8 @@ namespace TC2.Conquest
 
 							case EditorMode.District:
 							{
+								if (!hovered && edit_asset == null) break;
+
 								var district_handle = default(IDistrict.Handle);
 								var distance_sq = float.MaxValue;
 								var index = int.MaxValue;
@@ -693,32 +710,38 @@ namespace TC2.Conquest
 
 										if (!edit_points_index.HasValue)
 										{
-											if (mouse.GetKeyDown(Mouse.Key.Right))
+											if (!kb.GetKey(Keyboard.Key.LeftAlt | Keyboard.Key.LeftControl))
 											{
-												if (kb.GetKey(Keyboard.Key.LeftShift))
+												if (mouse.GetKeyDown(Mouse.Key.Right))
 												{
-													//d_district.points = points.Insert(i, (int2)(points[i] + points[(i + 1) % points.Length]) / 2);
-													asset_data.points = asset_data.points.Insert(index, asset_data.points[index]);
+													if (kb.GetKey(Keyboard.Key.LeftShift))
+													{
+														//d_district.points = points.Insert(i, (int2)(points[i] + points[(i + 1) % points.Length]) / 2);
+														asset_data.points = asset_data.points.Insert(index, asset_data.points[index]);
+														//asset.Save();
+														edit_asset = asset;
+														hs_pending_asset_saves.Add(asset);
+													}
+													else
+													{
+														edit_points_index = index;
+														edit_points = asset_data.points;
+														edit_asset = asset;
+
+														//GUI.FocusAsset(asset.GetHandle());
+														hs_pending_asset_saves.Add(asset);
+														Sound.PlayGUI(GUI.sound_pop, 0.07f, pitch: 1.00f);
+													}
+												}
+												else if (kb.GetKeyDown(Keyboard.Key.Delete))
+												{
+													asset_data.points = asset_data.points.Remove(index);
 													//asset.Save();
 													hs_pending_asset_saves.Add(asset);
 												}
-												else
-												{
-													edit_points_index = index;
-													edit_points = asset_data.points;
-													edit_asset = asset;
+											}
 
-													//GUI.FocusAsset(asset.GetHandle());
-													hs_pending_asset_saves.Add(asset);
-													Sound.PlayGUI(GUI.sound_pop, 0.07f, pitch: 1.00f);
-												}
-											}
-											else if (kb.GetKeyDown(Keyboard.Key.Delete))
-											{
-												asset_data.points = asset_data.points.Remove(index);
-												//asset.Save();
-												hs_pending_asset_saves.Add(asset);
-											}
+											GUI.FocusableAsset(asset.GetHandle(), rect: AABB.Centered(point_t, new(1.00f * zoom)));
 										}
 									}
 								}
@@ -727,6 +750,8 @@ namespace TC2.Conquest
 
 							case EditorMode.Location:
 							{
+								if (!hovered && edit_asset == null) break;
+
 								var distance_sq = 0.00f;
 								var h_location = (edit_asset as ILocation.Definition)?.GetHandle() ?? GetNearestLocation(mouse_local, out distance_sq);
 								if (distance_sq <= 1.00f.Pow2())
@@ -741,12 +766,15 @@ namespace TC2.Conquest
 										GUI.DrawCircleFilled(point_t, 0.125f * zoom, color: color, segments: 4, layer: GUI.Layer.Foreground);
 										//GUI.DrawTextCentered($"{ts_elapsed:0.0000} ms", point_t, layer: GUI.Layer.Foreground);
 
-										if (mouse.GetKeyDown(Mouse.Key.Right))
+										if (!kb.GetKey(Keyboard.Key.LeftAlt | Keyboard.Key.LeftControl | Keyboard.Key.LeftShift))
 										{
-											edit_asset = asset;
-											hs_pending_asset_saves.Add(asset);
+											if (mouse.GetKeyDown(Mouse.Key.Right))
+											{
+												edit_asset = asset;
+												hs_pending_asset_saves.Add(asset);
 
-											Sound.PlayGUI(GUI.sound_pop, 0.07f, pitch: 1.00f);
+												Sound.PlayGUI(GUI.sound_pop, 0.07f, pitch: 1.00f);
+											}
 										}
 
 										if (mouse.GetKey(Mouse.Key.Right))
@@ -769,6 +797,8 @@ namespace TC2.Conquest
 
 							case EditorMode.Doodad:
 							{
+								if (!hovered && (edit_asset == null || !edit_doodad_index.HasValue)) break;
+
 								var ts = Timestamp.Now();
 								if (edit_doodad_index.HasValue && mouse.GetKeyDown(Mouse.Key.Left | Mouse.Key.Right))
 								{
@@ -802,15 +832,41 @@ namespace TC2.Conquest
 											GUI.DrawCircle(point_t, 0.50f * zoom, color: color, segments: 16, layer: GUI.Layer.Foreground);
 											GUI.DrawTextCentered($"{ts_elapsed:0.0000} ms", point_t, layer: GUI.Layer.Foreground);
 
-											if (mouse.GetKeyDown(Mouse.Key.Right))
+											if (!kb.GetKey(Keyboard.Key.LeftAlt | Keyboard.Key.LeftControl | Keyboard.Key.LeftShift))
 											{
-												edit_doodad_index = index;
-												hs_pending_asset_saves.Add(asset);
+												if (mouse.GetKeyDown(Mouse.Key.Right))
+												{
+													edit_doodad_index = index;
+													hs_pending_asset_saves.Add(asset);
+													Sound.PlayGUI(GUI.sound_pop, 0.07f, pitch: 1.00f);
+												}
+												else if (mouse.GetKeyDown(Mouse.Key.Left))
+												{
+													edit_doodad_index = index;
+													hs_pending_asset_saves.Add(asset);
+												}
 											}
-											else if (mouse.GetKeyDown(Mouse.Key.Left))
+
+											if (kb.GetKey(Keyboard.Key.LeftControl))
 											{
-												edit_doodad_index = index;
-												hs_pending_asset_saves.Add(asset);
+												if (kb.GetKeyDown(Keyboard.Key.C))
+												{
+													clipboard_doodad = doodad;
+													Notification.Push("Copied doodad to clipboard.", color: Color32BGRA.White, sound: "ui.copy", volume: 0.40f);
+												}
+											}
+											else
+											{
+												if (kb.GetKeyDown(Keyboard.Key.Delete))
+												{
+													asset_data.doodads = asset_data.doodads.Remove(index);
+
+													hs_pending_asset_saves.Add(asset);
+													edit_doodad_index = null;
+
+													App.ScheduleGC(1);
+													Notification.Push($"Deleted doodad at [{point.X:0.00}, {point.Y:0.00}].", color: Color32BGRA.Orange, sound: "ui.misc.02", volume: 0.70f, pitch: 1.00f);
+												}
 											}
 
 											if (mouse.GetKey(Mouse.Key.Right))
@@ -824,6 +880,7 @@ namespace TC2.Conquest
 
 												//asset.Save();
 												edit_doodad_index = null;
+												Sound.PlayGUI(GUI.sound_pop, 0.07f, pitch: 0.70f);
 											}
 										}
 									}
@@ -864,13 +921,30 @@ namespace TC2.Conquest
 									hs_pending_asset_saves.Clear();
 								}
 							}
-							else if (kb.GetKeyDown(Keyboard.Key.C))
+							//else if (kb.GetKeyDown(Keyboard.Key.C) && scenario_data.IsNotNull() && edit_doodad_index.HasValue)
+							//{
+							//	ref var doodad = ref scenario_data.doodads.AsSpan().GetRefAtIndexOrNull(edit_doodad_index.Value);
+							//	if (doodad.IsNotNull())
+							//	{
+							//		clipboard_doodad = doodad;
+							//		Notification.Push("Copied doodad to clipboard.", color: Color32BGRA.Yellow, sound: "ui.copy", volume: 0.40f);
+							//	}
+							//}
+							else if (kb.GetKeyDown(Keyboard.Key.V) && scenario_data.IsNotNull() && clipboard_doodad.HasValue)
 							{
-								Notification.Push("Copied doodad to clipboard.", color: Color32BGRA.Yellow, sound: "ui.copy", volume: 0.40f);
-							}
-							else if (kb.GetKeyDown(Keyboard.Key.V))
-							{
-								Notification.Push("Pasted doodad from clipboard.", color: Color32BGRA.Yellow, sound: "ui.copy", volume: 0.30f, pitch: 0.70f);
+								ref var doodad = ref clipboard_doodad.GetRefOrNull();
+								if (doodad.IsNotNull())
+								{
+									var doodad_tmp = doodad;
+									doodad_tmp.position = mouse_local;
+
+									scenario_data.doodads = scenario_data.doodads.Add(doodad_tmp);
+									hs_pending_asset_saves.Add(scenario_asset);
+
+									App.ScheduleGC(1);
+
+									Notification.Push("Pasted doodad from clipboard.", color: Color32BGRA.Green, sound: "ui.copy", volume: 0.30f, pitch: 0.70f);
+								}
 							}
 						}
 
@@ -892,7 +966,7 @@ namespace TC2.Conquest
 							}
 						}
 
-						if (editor_mode != EditorMode.None)
+						if (App.debug_mode_gui)
 						{
 							GUI.DrawTextCentered($"Editor: {editor_mode}", rect.GetPosition(new(0.50f, 1.00f)) - new Vector2(0, 16), font: GUI.Font.Superstar, size: 32, layer: GUI.Layer.Foreground, color: GUI.font_color_yellow);
 						}
@@ -903,7 +977,6 @@ namespace TC2.Conquest
 						mouse_pos_old = mouse_pos_new;
 						mouse_pos_new = mouse_pos;
 
-						var hovered = GUI.IsHoveringRect(rect, allow_blocked: false, allow_overlapped: false, root_window: false, child_windows: false);
 						if (hovered)
 						{
 							//if (mouse.GetKey(Mouse.Key.Left) || mouse.GetKeyDown(Mouse.Key.Left))
@@ -974,17 +1047,19 @@ namespace TC2.Conquest
 						{
 							if (kb.GetKeyDown(Keyboard.Key.Reload))
 							{
-								worldmap_offset_current = default;
-								worldmap_offset_current_snapped = default;
-								worldmap_offset_target = default;
-								momentum = default;
-								rotation = default;
-							}
-
-							if (kb.GetKeyDown(Keyboard.Key.Tab))
-							{
-								editor_mode = (EditorMode)Maths.Wrap(((int)editor_mode) + 1, 0, (int)EditorMode.Max);
-								//enable_editor = !enable_editor;
+								if (kb.GetKey(Keyboard.Key.LeftShift))
+								{
+									editor_mode = (EditorMode)Maths.Wrap(((int)editor_mode) + 1, 0, (int)EditorMode.Max);
+									edit_asset = null;
+								}
+								else
+								{
+									worldmap_offset_current = default;
+									worldmap_offset_current_snapped = default;
+									worldmap_offset_target = default;
+									momentum = default;
+									rotation = default;
+								}
 							}
 						}
 
