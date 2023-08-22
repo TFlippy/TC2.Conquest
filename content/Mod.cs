@@ -79,9 +79,11 @@ namespace TC2.Conquest
 			if (overlay_alpha < 0.98f)
 			{
 				//var viewport_size = new Vector2(1200, 800);
-				var viewport_size = WorldMap.worldmap_window_size; // GUI.CanvasSize - new Vector2(64, 64);
+				var viewport_size = GUI.CanvasSize - new Vector2(64, 64);
+				//var viewport_size = WorldMap.worldmap_window_size; // GUI.CanvasSize - new Vector2(64, 64);
 				//var window_pos = new Vector2(GUI.CanvasSize.X * 0.50f, 48);
-				var window_pos = (GUI.CanvasSize * 0.50f) + WorldMap.worldmap_window_offset;
+				//var window_pos = (GUI.CanvasSize * 0.50f) + WorldMap.worldmap_window_offset;
+				var window_pos = (GUI.CanvasSize * 0.50f);
 				//var pivot = new Vector2(0.50f, 0.00f);
 				var pivot = new Vector2(0.50f, 0.50f);
 				//using (var window = GUI.Window.Standalone("region_menu", position: GUI.CanvasSize * 0.00f, size: new Vector2(600, 400), pivot: new(0, 0), padding: new(8), force_position: true))
