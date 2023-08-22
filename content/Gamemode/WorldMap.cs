@@ -31,6 +31,7 @@ namespace TC2.Conquest
 		public static IAsset.IDefinition edit_asset;
 		public static IWorld.Handle h_world = "krumpel";
 		public static ILocation.Handle h_selected_location;
+		public static int? edit_doodad_index;
 
 		public static Texture.Handle h_texture_bg_00 = "ui_worldmap.bg.00";
 		public static Texture.Handle h_texture_bg_01 = "ui_worldmap.bg.01";
@@ -50,7 +51,7 @@ namespace TC2.Conquest
 
 		public static bool dragging;
 		//public static bool enable_editor;
-		public static bool use_renderer;
+		public static bool use_renderer = true;
 
 		public enum EditorMode: uint
 		{
@@ -601,9 +602,9 @@ namespace TC2.Conquest
 						{
 							case EditorMode.Province:
 							{
-								var nearest_province_handle = default(IProvince.Handle);
-								var nearest_distance_sq = float.MaxValue;
-								var nearest_index = int.MaxValue;
+								var province_handle = default(IProvince.Handle);
+								var distance_sq = float.MaxValue;
+								var index = int.MaxValue;
 
 								var ts = Timestamp.Now();
 								foreach (var asset in IProvince.Database.GetAssets())
@@ -616,22 +617,22 @@ namespace TC2.Conquest
 									{
 										GetNearestIndex(mouse_local, points, out var nearest_index_tmp, out var nearest_distance_sq_tmp);
 
-										if (nearest_distance_sq_tmp < nearest_distance_sq)
+										if (nearest_distance_sq_tmp < distance_sq)
 										{
-											nearest_province_handle = asset;
-											nearest_distance_sq = nearest_distance_sq_tmp;
-											nearest_index = nearest_index_tmp;
+											province_handle = asset;
+											distance_sq = nearest_distance_sq_tmp;
+											index = nearest_index_tmp;
 										}
 									}
 								}
 								var ts_elapsed = ts.GetMilliseconds();
 
-								if (nearest_distance_sq <= 1.00f.Pow2())
+								if (distance_sq <= 1.00f.Pow2())
 								{
-									ref var province_data = ref nearest_province_handle.GetData(out var province_asset);
+									ref var province_data = ref province_handle.GetData(out var province_asset);
 									if (province_data.IsNotNull())
 									{
-										var point = province_data.points[nearest_index];
+										var point = province_data.points[index];
 										var point_t = Vector2.Transform((Vector2)point, mat_l2c);
 
 										var color = Color32BGRA.White.LumaBlend(province_data.color_border, 0.50f);
@@ -645,12 +646,12 @@ namespace TC2.Conquest
 												if (kb.GetKey(Keyboard.Key.LeftShift))
 												{
 													//d_district.points = points.Insert(i, (int2)(points[i] + points[(i + 1) % points.Length]) / 2);
-													province_data.points = province_data.points.Insert(nearest_index, province_data.points[nearest_index]);
+													province_data.points = province_data.points.Insert(index, province_data.points[index]);
 													province_asset.Save();
 												}
 												else
 												{
-													edit_points_index = nearest_index;
+													edit_points_index = index;
 													edit_points = province_data.points;
 													edit_asset = province_asset;
 
@@ -659,7 +660,7 @@ namespace TC2.Conquest
 											}
 											else if (kb.GetKeyDown(Keyboard.Key.Delete))
 											{
-												province_data.points = province_data.points.Remove(nearest_index);
+												province_data.points = province_data.points.Remove(index);
 												province_asset.Save();
 											}
 										}
@@ -670,9 +671,9 @@ namespace TC2.Conquest
 
 							case EditorMode.District:
 							{
-								var nearest_district_handle = default(IDistrict.Handle);
-								var nearest_distance_sq = float.MaxValue;
-								var nearest_index = int.MaxValue;
+								var district_handle = default(IDistrict.Handle);
+								var distance_sq = float.MaxValue;
+								var index = int.MaxValue;
 
 								var ts = Timestamp.Now();
 								foreach (var asset in IDistrict.Database.GetAssets())
@@ -685,25 +686,25 @@ namespace TC2.Conquest
 									{
 										GetNearestIndex(mouse_local, points, out var nearest_index_tmp, out var nearest_distance_sq_tmp);
 
-										if (nearest_distance_sq_tmp < nearest_distance_sq)
+										if (nearest_distance_sq_tmp < distance_sq)
 										{
-											nearest_district_handle = asset;
-											nearest_distance_sq = nearest_distance_sq_tmp;
-											nearest_index = nearest_index_tmp;
+											district_handle = asset;
+											distance_sq = nearest_distance_sq_tmp;
+											index = nearest_index_tmp;
 										}
-									}	
+									}
 								}
 								var ts_elapsed = ts.GetMilliseconds();
 
-								if (nearest_distance_sq <= 1.00f.Pow2())
+								if (distance_sq <= 1.00f.Pow2())
 								{
-									ref var district_data = ref nearest_district_handle.GetData(out var district_asset);
-									if (district_data.IsNotNull())
+									ref var asset_data = ref district_handle.GetData(out var asset);
+									if (asset_data.IsNotNull())
 									{
-										var point = district_data.points[nearest_index];
+										var point = asset_data.points[index];
 										var point_t = Vector2.Transform((Vector2)point, mat_l2c);
 
-										var color = Color32BGRA.White.LumaBlend(district_data.color_border, 0.50f);
+										var color = Color32BGRA.White.LumaBlend(asset_data.color_border, 0.50f);
 										GUI.DrawCircleFilled(point_t, 0.125f * zoom, color: color, segments: 4, layer: GUI.Layer.Foreground);
 										GUI.DrawTextCentered($"{ts_elapsed:0.0000} ms", point_t, layer: GUI.Layer.Foreground);
 
@@ -714,22 +715,22 @@ namespace TC2.Conquest
 												if (kb.GetKey(Keyboard.Key.LeftShift))
 												{
 													//d_district.points = points.Insert(i, (int2)(points[i] + points[(i + 1) % points.Length]) / 2);
-													district_data.points = district_data.points.Insert(nearest_index, district_data.points[nearest_index]);
-													district_asset.Save();
+													asset_data.points = asset_data.points.Insert(index, asset_data.points[index]);
+													asset.Save();
 												}
 												else
 												{
-													edit_points_index = nearest_index;
-													edit_points = district_data.points;
-													edit_asset = district_asset;
+													edit_points_index = index;
+													edit_points = asset_data.points;
+													edit_asset = asset;
 
-													GUI.FocusAsset(district_asset.GetHandle());
+													GUI.FocusAsset(asset.GetHandle());
 												}
 											}
 											else if (kb.GetKeyDown(Keyboard.Key.Delete))
 											{
-												district_data.points = district_data.points.Remove(nearest_index);
-												district_asset.Save();
+												asset_data.points = asset_data.points.Remove(index);
+												asset.Save();
 											}
 										}
 									}
@@ -739,13 +740,110 @@ namespace TC2.Conquest
 
 							case EditorMode.Location:
 							{
+								var distance_sq = 0.00f;
+								var h_location = (edit_asset as ILocation.Definition)?.GetHandle() ?? GetNearestLocation(mouse_local, out distance_sq);
+								if (distance_sq <= 1.00f.Pow2())
+								{
+									ref var asset_data = ref h_location.GetData(out var asset);
+									if (asset_data.IsNotNull())
+									{
+										ref var point = ref asset_data.point;
+										var point_t = Vector2.Transform((Vector2)point, mat_l2c);
 
+										var color = Color32BGRA.White.LumaBlend(asset_data.color, 0.50f);
+										GUI.DrawCircleFilled(point_t, 0.125f * zoom, color: color, segments: 4, layer: GUI.Layer.Foreground);
+										//GUI.DrawTextCentered($"{ts_elapsed:0.0000} ms", point_t, layer: GUI.Layer.Foreground);
+
+										if (mouse.GetKeyDown(Mouse.Key.Right))
+										{
+											edit_asset = asset;
+										}
+
+										if (mouse.GetKey(Mouse.Key.Right))
+										{
+											point = new int2((int)MathF.Round(mouse_local.X), (int)MathF.Round(mouse_local.Y));
+										}
+
+										if (mouse.GetKeyUp(Mouse.Key.Right))
+										{
+											point = new int2((int)MathF.Round(mouse_local.X), (int)MathF.Round(mouse_local.Y));
+
+											asset.Save();
+											edit_asset = null;
+										}
+									}
+								}
 							}
 							break;
 
 							case EditorMode.Doodad:
 							{
+								var ts = Timestamp.Now();
+								if (edit_doodad_index.HasValue && mouse.GetKeyDown(Mouse.Key.Left | Mouse.Key.Right))
+								{
+									edit_doodad_index = null;
+								}
 
+								ref var asset_data = ref h_world.GetData(out var asset);
+								if (asset_data.IsNotNull())
+								{
+									if (kb.GetKey(Keyboard.Key.LeftControl))
+									{
+										if (kb.GetKeyDown(Keyboard.Key.MoveDown))
+										{
+											asset.Save();
+										}
+
+									}
+
+									var index = edit_doodad_index ?? -1;
+									var distance_sq = 0.00f;
+
+									var doodads = asset_data.doodads.AsSpan();
+
+									ref var doodad = ref doodads.GetRefAtIndexOrNull(index);
+									if (doodad.IsNull())
+									{
+										doodad = ref GetNearestDoodad(mouse_local, doodads, out index, out distance_sq);
+									}
+									var ts_elapsed = ts.GetMilliseconds();
+
+									if (doodad.IsNotNull() && distance_sq <= 1.00f.Pow2())
+									{
+										{
+											ref var point = ref doodad.position;
+											var point_t = Vector2.Transform(point, mat_l2c);
+
+											var selected = edit_doodad_index == index;
+											var color = Color32BGRA.White.LumaBlend(doodad.color, 0.50f);
+
+											GUI.DrawCircle(point_t, 0.50f * zoom, color: color, segments: 16, layer: GUI.Layer.Foreground);
+											GUI.DrawTextCentered($"{ts_elapsed:0.0000} ms", point_t, layer: GUI.Layer.Foreground);
+
+											if (mouse.GetKeyDown(Mouse.Key.Right))
+											{
+												edit_doodad_index = index;
+											}
+											else if (mouse.GetKeyDown(Mouse.Key.Left))
+											{
+												edit_doodad_index = index;
+											}
+
+											if (mouse.GetKey(Mouse.Key.Right))
+											{
+												point = Maths.Snap(mouse_local, 1.00f / scale_b);
+											}
+
+											if (mouse.GetKeyUp(Mouse.Key.Right))
+											{
+												point = Maths.Snap(mouse_local, 1.00f / scale_b);
+
+												//asset.Save();
+												edit_doodad_index = null;
+											}
+										}
+									}
+								}
 							}
 							break;
 						}
@@ -857,28 +955,31 @@ namespace TC2.Conquest
 
 						var move_speed = (1.00f / MathF.Sqrt(worldmap_zoom_current)) * 10.00f;
 
-						if (kb.GetKey(Keyboard.Key.MoveLeft))
+						if (!kb.GetKey(Keyboard.Key.LeftControl))
 						{
-							//worldmap_offset.X += move_speed;
-							momentum.X -= move_speed;
-						}
+							if (kb.GetKey(Keyboard.Key.MoveLeft))
+							{
+								//worldmap_offset.X += move_speed;
+								momentum.X -= move_speed;
+							}
 
-						if (kb.GetKey(Keyboard.Key.MoveRight))
-						{
-							//worldmap_offset.X -= move_speed;
-							momentum.X += move_speed;
-						}
+							if (kb.GetKey(Keyboard.Key.MoveRight))
+							{
+								//worldmap_offset.X -= move_speed;
+								momentum.X += move_speed;
+							}
 
-						if (kb.GetKey(Keyboard.Key.MoveUp))
-						{
-							//worldmap_offset.Y += move_speed;
-							momentum.Y -= move_speed;
-						}
+							if (kb.GetKey(Keyboard.Key.MoveUp))
+							{
+								//worldmap_offset.Y += move_speed;
+								momentum.Y -= move_speed;
+							}
 
-						if (kb.GetKey(Keyboard.Key.MoveDown))
-						{
-							//worldmap_offset.Y -= move_speed;
-							momentum.Y += move_speed;
+							if (kb.GetKey(Keyboard.Key.MoveDown))
+							{
+								//worldmap_offset.Y -= move_speed;
+								momentum.Y += move_speed;
+							}
 						}
 						#endregion
 
