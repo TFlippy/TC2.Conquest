@@ -13,7 +13,7 @@
 				frame: [3, 0]
 			}
 			
-			position: [9.8125, -0.625]
+			position: [9.4375, -0.500]
 			scale: [1.000, 1.000]
 			rotation: 0.000
 			color: "0xffd1ff27"

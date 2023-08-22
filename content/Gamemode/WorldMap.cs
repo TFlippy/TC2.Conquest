@@ -45,13 +45,18 @@ namespace TC2.Conquest
 		public static Vector2 mouse_pos_old;
 		public static Vector2 mouse_pos_new;
 
-		public static EditorMode editor_mode;
+		public static HashSet<IAsset.IDefinition> hs_pending_asset_saves = new HashSet<IAsset.IDefinition>(64);
 
 		public static byte selected_region_id;
 
-		public static bool dragging;
 		//public static bool enable_editor;
-		public static bool use_renderer = true;
+
+		public static EditorMode editor_mode;
+		public static bool enable_renderer = true;
+		public static bool enable_momentum = true;
+		public static bool enable_snapping = true;
+		public static bool snap_camera = true;
+		public static bool dragging;
 
 		public enum EditorMode: uint
 		{
@@ -204,7 +209,7 @@ namespace TC2.Conquest
 
 			//if (!is_loading)
 
-			if (use_renderer)
+			if (enable_renderer)
 			{
 				IWorld.WorldMap.Renderer.Clear();
 				IWorld.Doodad.Renderer.Clear();
@@ -213,10 +218,6 @@ namespace TC2.Conquest
 			using (var group_canvas = GUI.Group.New(size))
 			{
 				var rect = group_canvas.GetInnerRect();
-
-				var enable_momentum = true;
-				var enable_snapping = true;
-				var snap_camera = true;
 
 				//if (window.show)
 				//using (var button = GUI.CustomButton.New(id: "worldmap.button", size: GUI.Rm, set_cursor: false))
@@ -245,24 +246,10 @@ namespace TC2.Conquest
 
 					var rect_center = rect.GetPosition();
 
-					if (editor_mode != EditorMode.None)
-					{
-						GUI.DrawTextCentered($"Editor: {editor_mode}", rect.GetPosition(new(0.50f, 1.00f)) - new Vector2(0, 16), font: GUI.Font.Superstar, size: 32, layer: GUI.Layer.Foreground, color: GUI.font_color_yellow);
-					}
-
 					using (GUI.Clip.Push(rect))
 					{
 						var scale_b = IWorld.WorldMap.scale_b;
 						var snap_delta = (worldmap_offset_current_snapped - worldmap_offset_current) * 1.0f;
-						//snap_delta = default;
-
-						//mat_proj = Matrix3x2.Identity;
-						//mat_proj.M11 = 2.00f / size.X;
-						//mat_proj.M22 = 2.00f / size.Y;
-						//mat_view = Maths.TRS3x2(worldmap_offset, rotation, new Vector2(zoom));
-
-						//var mat_vp = Matrix3x2.Multiply(mat_view, mat_proj);
-						//Matrix3x2.Invert(mat_vp, out var mat_vp_inv);
 
 						var mat_l2c = Maths.TRS3x2((worldmap_offset_current * -zoom) + rect.GetPosition(new(0.50f)) - snap_delta, rotation, new Vector2(zoom));
 						Matrix3x2.Invert(mat_l2c, out var mat_c2l);
@@ -270,21 +257,16 @@ namespace TC2.Conquest
 						var mat_l2c2 = Maths.TRS3x2(rect.GetPosition(new Vector2(0.50f)), rotation, new Vector2(1));
 						Matrix3x2.Invert(mat_l2c2, out var mat_c2l2);
 
-						//var snap_delta_canvas = Vector2.Transform(snap_delta, mat_l2c);
 						var snap_delta_canvas = snap_delta * zoom;
 
-						//mat_l2c.Translation += rect.GetPosition(new(0.50f));
-
-						//var uv_offset = worldmap_offset_current_snapped / scale_canvas;
-
-						var tex_scale = use_renderer ? (IWorld.WorldMap.worldmap_size.X / scale_b) * zoom : 16.00f;
+						var tex_scale = enable_renderer ? (IWorld.WorldMap.worldmap_size.X / scale_b) * zoom : 16.00f;
 						var tex_scale_inv = 1.00f / tex_scale;
 
 						var color_grid = new Color32BGRA(0xff4eabb5);
 						//GUI.DrawTexture(h_texture_bg_00, rect, GUI.Layer.Window, uv_0: Vector2.Transform(rect.a, mat_c2l) * tex_scale_inv, uv_1: Vector2.Transform(rect.b, mat_c2l) * tex_scale_inv, clip: false, color: color_grid.WithAlphaMult(0.10f));
 						//GUI.DrawTexture("_worldmap", rect, GUI.Layer.Window, uv_0: (Vector2.Transform(rect.a, mat_c2l) * tex_scale_inv) + new Vector2(0.50f), uv_1: (Vector2.Transform(rect.b, mat_c2l) * tex_scale_inv) + new Vector2(0.50f), clip: false);
 
-						if (use_renderer)
+						if (enable_renderer)
 						{
 							//GUI.DrawTexture("_worldmap", rect, GUI.Layer.Window, uv_0: (Vector2.Transform(rect.a, mat_c2l2) * tex_scale_inv) - new Vector2(0.50f), uv_1: (Vector2.Transform(rect.b, mat_c2l2) * tex_scale_inv) - new Vector2(0.50f), clip: false);
 							//GUI.DrawTexture("_worldmap", rect, GUI.Layer.Window, uv_0: (Vector2.Transform(rect.a, mat_c2l2) * tex_scale_inv) + new Vector2(0.50f), uv_1: (Vector2.Transform(rect.b, mat_c2l2) * tex_scale_inv) + new Vector2(0.50f), clip: false);
@@ -298,11 +280,7 @@ namespace TC2.Conquest
 							GUI.DrawTexture(h_texture_bg_00, rect, GUI.Layer.Window, uv_0: Vector2.Transform(rect.a, mat_c2l) * tex_scale_inv, uv_1: Vector2.Transform(rect.b, mat_c2l) * tex_scale_inv, clip: false, color: color_grid.WithAlphaMult(0.10f));
 						}
 
-						//GUI.DrawTexture("_worldmap", rect, GUI.Layer.Window, uv_0: Vector2.Transform(rect.a, mat_c2l) * tex_scale_inv, uv_1: Vector2.Transform(rect.b, mat_c2l) * tex_scale_inv, clip: false);
-
-						//var mouse_pos = GUI.GetMousePosition();
-						//var mouse_local = Vector2.Transform(mouse_pos, mat_c2l);
-						var mouse_pos = GUI.GetMousePosition(); // Vector2.Transform(GUI.GetMousePosition(), mat_c2l);
+						var mouse_pos = GUI.GetMousePosition();
 						var mouse_local = Vector2.Transform(mouse_pos, mat_c2l);
 						var mouse_local_snapped = mouse_local;
 						mouse_local_snapped.Snap(1.00f / scale_b, out mouse_local_snapped);
@@ -370,7 +348,7 @@ namespace TC2.Conquest
 								GUI.DrawPolygon(points_t_span, asset_data.color_fill with { a = 100 }, GUI.Layer.Window);
 
 								//DrawOutline(points, asset_data.color_border.WithAlphaMult(0.50f), 0.100f);
-								if (use_renderer)
+								if (enable_renderer)
 								{
 									DrawOutline(mat_l2c, zoom, points, asset_data.color_border, 0.125f * 0.75f, 4.00f, tex_line_district);
 								}
@@ -394,7 +372,7 @@ namespace TC2.Conquest
 							var points = asset_data.points.AsSpan();
 							if (!points.IsEmpty)
 							{
-								if (use_renderer)
+								if (enable_renderer)
 								{
 									DrawOutlineShader(mat_l2c, zoom, points, asset_data.color_border, 1.00f, 0.25f, h_texture_terrain_beach_00);
 								}
@@ -629,13 +607,13 @@ namespace TC2.Conquest
 
 								if (distance_sq <= 1.00f.Pow2())
 								{
-									ref var province_data = ref province_handle.GetData(out var province_asset);
-									if (province_data.IsNotNull())
+									ref var asset_data = ref province_handle.GetData(out var asset);
+									if (asset_data.IsNotNull())
 									{
-										var point = province_data.points[index];
+										var point = asset_data.points[index];
 										var point_t = Vector2.Transform((Vector2)point, mat_l2c);
 
-										var color = Color32BGRA.White.LumaBlend(province_data.color_border, 0.50f);
+										var color = Color32BGRA.White.LumaBlend(asset_data.color_border, 0.50f);
 										GUI.DrawCircleFilled(point_t, 0.375f * zoom, color: color, segments: 4, layer: GUI.Layer.Foreground);
 										GUI.DrawTextCentered($"{ts_elapsed:0.0000} ms", point_t, layer: GUI.Layer.Foreground);
 
@@ -646,22 +624,27 @@ namespace TC2.Conquest
 												if (kb.GetKey(Keyboard.Key.LeftShift))
 												{
 													//d_district.points = points.Insert(i, (int2)(points[i] + points[(i + 1) % points.Length]) / 2);
-													province_data.points = province_data.points.Insert(index, province_data.points[index]);
-													province_asset.Save();
+													asset_data.points = asset_data.points.Insert(index, asset_data.points[index]);
+													//asset.Save();
+													hs_pending_asset_saves.Add(asset);
 												}
 												else
 												{
 													edit_points_index = index;
-													edit_points = province_data.points;
-													edit_asset = province_asset;
+													edit_points = asset_data.points;
+													edit_asset = asset;
 
-													GUI.FocusAsset(province_asset.GetHandle());
+													//GUI.FocusAsset(asset.GetHandle());
+
+													hs_pending_asset_saves.Add(asset);
+													Sound.PlayGUI(GUI.sound_pop, 0.07f, pitch: 1.00f);
 												}
 											}
 											else if (kb.GetKeyDown(Keyboard.Key.Delete))
 											{
-												province_data.points = province_data.points.Remove(index);
-												province_asset.Save();
+												asset_data.points = asset_data.points.Remove(index);
+												//asset.Save();
+												hs_pending_asset_saves.Add(asset);
 											}
 										}
 									}
@@ -716,7 +699,8 @@ namespace TC2.Conquest
 												{
 													//d_district.points = points.Insert(i, (int2)(points[i] + points[(i + 1) % points.Length]) / 2);
 													asset_data.points = asset_data.points.Insert(index, asset_data.points[index]);
-													asset.Save();
+													//asset.Save();
+													hs_pending_asset_saves.Add(asset);
 												}
 												else
 												{
@@ -724,13 +708,16 @@ namespace TC2.Conquest
 													edit_points = asset_data.points;
 													edit_asset = asset;
 
-													GUI.FocusAsset(asset.GetHandle());
+													//GUI.FocusAsset(asset.GetHandle());
+													hs_pending_asset_saves.Add(asset);
+													Sound.PlayGUI(GUI.sound_pop, 0.07f, pitch: 1.00f);
 												}
 											}
 											else if (kb.GetKeyDown(Keyboard.Key.Delete))
 											{
 												asset_data.points = asset_data.points.Remove(index);
-												asset.Save();
+												//asset.Save();
+												hs_pending_asset_saves.Add(asset);
 											}
 										}
 									}
@@ -757,6 +744,9 @@ namespace TC2.Conquest
 										if (mouse.GetKeyDown(Mouse.Key.Right))
 										{
 											edit_asset = asset;
+											hs_pending_asset_saves.Add(asset);
+
+											Sound.PlayGUI(GUI.sound_pop, 0.07f, pitch: 1.00f);
 										}
 
 										if (mouse.GetKey(Mouse.Key.Right))
@@ -768,8 +758,9 @@ namespace TC2.Conquest
 										{
 											point = new int2((int)MathF.Round(mouse_local.X), (int)MathF.Round(mouse_local.Y));
 
-											asset.Save();
+											//asset.Save();
 											edit_asset = null;
+											Sound.PlayGUI(GUI.sound_pop, 0.07f, pitch: 0.70f);
 										}
 									}
 								}
@@ -787,15 +778,6 @@ namespace TC2.Conquest
 								ref var asset_data = ref h_world.GetData(out var asset);
 								if (asset_data.IsNotNull())
 								{
-									if (kb.GetKey(Keyboard.Key.LeftControl))
-									{
-										if (kb.GetKeyDown(Keyboard.Key.MoveDown))
-										{
-											asset.Save();
-										}
-
-									}
-
 									var index = edit_doodad_index ?? -1;
 									var distance_sq = 0.00f;
 
@@ -823,10 +805,12 @@ namespace TC2.Conquest
 											if (mouse.GetKeyDown(Mouse.Key.Right))
 											{
 												edit_doodad_index = index;
+												hs_pending_asset_saves.Add(asset);
 											}
 											else if (mouse.GetKeyDown(Mouse.Key.Left))
 											{
 												edit_doodad_index = index;
+												hs_pending_asset_saves.Add(asset);
 											}
 
 											if (mouse.GetKey(Mouse.Key.Right))
@@ -854,12 +838,63 @@ namespace TC2.Conquest
 
 							if (mouse.GetKeyUp(Mouse.Key.Right))
 							{
-								edit_asset.Save();
+								//edit_asset.Save();
 
 								edit_points_index = null;
 								edit_points = null;
 								edit_asset = null;
+
+								Sound.PlayGUI(GUI.sound_pop, 0.07f, pitch: 0.80f);
 							}
+						}
+
+						if (kb.GetKey(Keyboard.Key.LeftControl))
+						{
+							if (kb.GetKeyDown(Keyboard.Key.MoveDown))
+							{
+								if (hs_pending_asset_saves.Count > 0)
+								{
+									foreach (var asset in hs_pending_asset_saves)
+									{
+										if (asset != null)
+										{
+											asset.Save();
+										}
+									}
+									hs_pending_asset_saves.Clear();
+								}
+							}
+							else if (kb.GetKeyDown(Keyboard.Key.C))
+							{
+								Notification.Push("Copied doodad to clipboard.", color: Color32BGRA.Yellow, sound: "ui.copy", volume: 0.40f);
+							}
+							else if (kb.GetKeyDown(Keyboard.Key.V))
+							{
+								Notification.Push("Pasted doodad from clipboard.", color: Color32BGRA.Yellow, sound: "ui.copy", volume: 0.30f, pitch: 0.70f);
+							}
+						}
+
+						{
+							if (hs_pending_asset_saves.Count > 0)
+							{
+								var text_offset = 16;
+								GUI.DrawTextCentered("Pending Saves:", rect.GetPosition(new(0.50f, 0.00f)) + new Vector2(0, text_offset), font: GUI.Font.Superstar, size: 24, layer: GUI.Layer.Foreground, color: GUI.font_color_yellow);
+								text_offset += 22;
+
+								foreach (var asset in hs_pending_asset_saves)
+								{
+									if (asset != null)
+									{
+										GUI.DrawTextCentered(asset.Identifier, rect.GetPosition(new(0.50f, 0.00f)) + new Vector2(0, text_offset), font: GUI.Font.Superstar, size: 16, layer: GUI.Layer.Foreground, color: GUI.font_color_yellow);
+										text_offset += 16;
+									}
+								}
+							}
+						}
+
+						if (editor_mode != EditorMode.None)
+						{
+							GUI.DrawTextCentered($"Editor: {editor_mode}", rect.GetPosition(new(0.50f, 1.00f)) - new Vector2(0, 16), font: GUI.Font.Superstar, size: 32, layer: GUI.Layer.Foreground, color: GUI.font_color_yellow);
 						}
 						#endregion
 
@@ -917,7 +952,7 @@ namespace TC2.Conquest
 
 						worldmap_zoom_current = Maths.Lerp(worldmap_zoom_current, worldmap_zoom_target, 0.20f);
 
-						if (use_renderer)
+						if (enable_renderer)
 						{
 							worldmap_offset_current_snapped = Maths.SnapFloor(worldmap_offset_current, 1 / scale_b);
 							IWorld.WorldMap.Renderer.UpdateCamera(worldmap_offset_current_snapped, 0.00f, new Vector2(1));
@@ -1249,7 +1284,7 @@ namespace TC2.Conquest
 
 							GUI.SeparatorThick();
 
-							GUI.Checkbox("DEV: Renderer", ref use_renderer, new(GUI.RmX, 32));
+							GUI.Checkbox("DEV: Renderer", ref enable_renderer, new(GUI.RmX, 32));
 							GUI.SliderFloat("DEV: Scale A", ref IWorld.WorldMap.scale, 1.00f, 256.00f, new(GUI.RmX, 32), snap: 0.001f);
 							GUI.SliderFloat("DEV: Scale B", ref IWorld.WorldMap.scale_b, 1.00f, 256.00f, new(GUI.RmX, 32), snap: 0.001f);
 
