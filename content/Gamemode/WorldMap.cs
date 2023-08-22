@@ -13,6 +13,10 @@ namespace TC2.Conquest
 		public static float worldmap_zoom_current = 6.00f;
 		public static float worldmap_zoom_target = 6.00f;
 
+		public static Vector2 worldmap_window_size = new Vector2(1024, 1024);
+		public static Vector2 worldmap_window_offset = new Vector2(0, 0);
+
+
 		//public static Matrix3x2 mat_proj;
 		//public static Matrix3x2 mat_view;
 
@@ -169,6 +173,8 @@ namespace TC2.Conquest
 
 					using (GUI.Clip.Push(rect))
 					{
+						var scale_b = IWorld.WorldMap.scale_b;
+
 						//mat_proj = Matrix3x2.Identity;
 						//mat_proj.M11 = 2.00f / size.X;
 						//mat_proj.M22 = 2.00f / size.Y;
@@ -180,14 +186,14 @@ namespace TC2.Conquest
 						var mat_l2c = Maths.TRS3x2((worldmap_offset_current * -zoom) + rect.GetPosition(new(0.50f)), rotation, new Vector2(zoom));
 						Matrix3x2.Invert(mat_l2c, out var mat_c2l);
 
-						var mat_l2c2 = Maths.TRS3x2(rect.GetPosition(new(0.50f)), rotation, new Vector2(zoom));
+						var mat_l2c2 = Maths.TRS3x2(rect.GetPosition(new(0.50f)), rotation, new Vector2(1));
 						Matrix3x2.Invert(mat_l2c2, out var mat_c2l2);
 
 						//mat_l2c.Translation += rect.GetPosition(new(0.50f));
 
 						var uv_offset = worldmap_offset_current / scale_canvas;
 
-						var tex_scale = use_renderer ? 32.00f : 16.00f;
+						var tex_scale = use_renderer ? (IWorld.WorldMap.worldmap_size.X / scale_b) * zoom : 16.00f;
 						var tex_scale_inv = 1.00f / tex_scale;
 
 						var color_grid = new Color32BGRA(0xff4eabb5);
@@ -196,7 +202,9 @@ namespace TC2.Conquest
 
 						if (use_renderer)
 						{
-							GUI.DrawTexture("_worldmap", rect, GUI.Layer.Window, uv_0: (Vector2.Transform(rect.a, mat_c2l2) * tex_scale_inv) - new Vector2(0.50f), uv_1: (Vector2.Transform(rect.b, mat_c2l2) * tex_scale_inv) - new Vector2(0.50f), clip: false);
+							//GUI.DrawTexture("_worldmap", rect, GUI.Layer.Window, uv_0: (Vector2.Transform(rect.a, mat_c2l2) * tex_scale_inv) - new Vector2(0.50f), uv_1: (Vector2.Transform(rect.b, mat_c2l2) * tex_scale_inv) - new Vector2(0.50f), clip: false);
+							//GUI.DrawTexture("_worldmap", rect, GUI.Layer.Window, uv_0: (Vector2.Transform(rect.a, mat_c2l2) * tex_scale_inv) + new Vector2(0.50f), uv_1: (Vector2.Transform(rect.b, mat_c2l2) * tex_scale_inv) + new Vector2(0.50f), clip: false);
+							GUI.DrawTexture("_worldmap", rect, GUI.Layer.Window, uv_0: (Vector2.Transform(rect.a, mat_c2l2) * tex_scale_inv) + new Vector2(0.50f), uv_1: (Vector2.Transform(rect.b, mat_c2l2) * tex_scale_inv) + new Vector2(0.50f), clip: false);
 						}
 						else
 						{
@@ -210,7 +218,7 @@ namespace TC2.Conquest
 						var mouse_pos = GUI.GetMousePosition(); // Vector2.Transform(GUI.GetMousePosition(), mat_c2l);
 						var mouse_local = Vector2.Transform(mouse_pos, mat_c2l);
 						var mouse_local_snapped = mouse_local;
-						mouse_local_snapped.Snap(1);
+						mouse_local_snapped.Snap(1, out mouse_local_snapped);
 
 						var tex_line_district = h_texture_line_00;
 						var tex_line_province = h_texture_line_01;
@@ -499,7 +507,7 @@ namespace TC2.Conquest
 						#region Overlays
 						GUI.DrawTexture(GUI.tex_vignette, rect, layer: GUI.Layer.Window, color: Color32BGRA.White.WithAlphaMult(0.30f));
 						GUI.DrawSpriteCentered(new Sprite(h_texture_icons, 72, 72, 0, 1), rect: AABB.Centered(Vector2.Transform(mouse_local_snapped, mat_l2c), new Vector2(0.25f)), layer: GUI.Layer.Window, scale: 0.125f * 0.250f * zoom, color: Color32BGRA.Black.WithAlphaMult(0.20f));
-						GUI.DrawTextCentered($"Zoom: {worldmap_zoom_target:0.00}x\n[{mouse_local_snapped.X:0}, {mouse_local_snapped.Y:0}]\n[{worldmap_offset_target.X:0.00}, {worldmap_offset_target.Y:0.00}]\n[{mouse_local.X:0.00}, {mouse_local.Y:0.00}]\n[{mouse_pos.X:0.00}, {mouse_pos.Y:0.00}]", position: rect.GetPosition(new(1, 1)), new(1, 1), font: GUI.Font.Superstar, size: 24, layer: GUI.Layer.Foreground);
+						GUI.DrawTextCentered($"Zoom: {zoom:0.00}x\n[{mouse_local_snapped.X:0}, {mouse_local_snapped.Y:0}]\n[{worldmap_offset_target.X:0.00}, {worldmap_offset_target.Y:0.00}]\n[{mouse_local.X:0.00}, {mouse_local.Y:0.00}]\n[{mouse_pos.X:0.00}, {mouse_pos.Y:0.00}]", position: rect.GetPosition(new(1, 1)), new(1, 1), font: GUI.Font.Superstar, size: 24, layer: GUI.Layer.Foreground);
 						#endregion
 
 						#region Editor
@@ -573,7 +581,7 @@ namespace TC2.Conquest
 
 						if (use_renderer)
 						{
-							IWorld.WorldMap.Renderer.UpdateCamera(worldmap_offset_current, 0.00f, Vector2.One);
+							IWorld.WorldMap.Renderer.UpdateCamera(worldmap_offset_current, 0.00f, new Vector2(1));
 
 							ref var world_data = ref h_world.GetData();
 							if (world_data.IsNotNull())
@@ -651,6 +659,8 @@ namespace TC2.Conquest
 						using (GUI.Group.New(size: GUI.Rm))
 						{
 							GUI.Checkbox("DEV: Renderer", ref use_renderer, new(GUI.RmX, 32));
+							GUI.SliderFloat("DEV: Scale A", ref IWorld.WorldMap.scale, 1.00f, 256.00f, new(GUI.RmX, 32));
+							GUI.SliderFloat("DEV: Scale B", ref IWorld.WorldMap.scale_b, 1.00f, 256.00f, new(GUI.RmX, 32));
 
 							GUI.SeparatorThick();
 
@@ -879,6 +889,34 @@ namespace TC2.Conquest
 				}
 				#endregion
 			}
+
+			#region Debug
+			{
+				if (App.debug_mode_gui)
+				{
+					using (var window = GUI.Window.Standalone("worldmap.debug", position: GUI.CanvasSize * 0.50f, size: new(244, 400), pivot: new(0.50f, 0.50f), padding: new(8), force_position: false))
+					{
+						if (window.show)
+						{
+							GUI.DrawWindowBackground();
+
+							GUI.Title("Worldmap Debug");
+
+							GUI.SeparatorThick();
+
+							GUI.SliderFloat("DEV: Size.X", ref worldmap_window_size.X, 1.00f, 1920.00f, new(GUI.RmX * 0.50f, 32), snap: 8);
+							GUI.SameLine();
+							GUI.SliderFloat("DEV: Size.Y", ref worldmap_window_size.Y, 1.00f, 1920.00f, new(GUI.RmX, 32), snap: 8);
+
+							GUI.SliderFloat("DEV: Offset.X", ref worldmap_window_offset.X, -512.00f, 512.00f, new(GUI.RmX * 0.50f, 32), snap: 1);
+							GUI.SameLine();
+							GUI.SliderFloat("DEV: Offset.Y", ref worldmap_window_offset.Y, -512.00f, 512.00f, new(GUI.RmX, 32), snap: 1);
+						}
+					}
+				}
+			}
+			#endregion
+
 		}
 #endif
 	}
