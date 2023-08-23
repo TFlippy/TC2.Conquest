@@ -256,7 +256,7 @@ namespace TC2.Conquest
 
 						dragging = false;
 						mouse.SetKeyState(~(Mouse.Key.ScrollUp | Mouse.Key.ScrollDown), false);
-						kb.SetKeyState(~(Keyboard.Key.MoveDown | Keyboard.Key.MoveLeft | Keyboard.Key.MoveRight | Keyboard.Key.MoveUp), false);
+						kb.SetKeyState(~(Keyboard.Key.MoveDown | Keyboard.Key.MoveLeft | Keyboard.Key.MoveRight | Keyboard.Key.MoveUp | Keyboard.Key.LeftControl | Keyboard.Key.C | Keyboard.Key.V), false);
 					}
 	
 					var zoom = MathF.Pow(2.00f, worldmap_zoom_current);
@@ -1100,14 +1100,14 @@ namespace TC2.Conquest
 										editor_mode = (EditorMode)Maths.Wrap(((int)editor_mode) + 1, 0, (int)EditorMode.Max);
 										edit_asset = null;
 									}
-									else
-									{
-										worldmap_offset_current = default;
-										worldmap_offset_current_snapped = default;
-										worldmap_offset_target = default;
-										momentum = default;
-										rotation = default;
-									}
+									//else
+									//{
+									//	worldmap_offset_current = default;
+									//	worldmap_offset_current_snapped = default;
+									//	worldmap_offset_target = default;
+									//	momentum = default;
+									//	rotation = default;
+									//}
 								}
 
 								//if (kb.GetKeyDown(Keyboard.Key.Tab))
