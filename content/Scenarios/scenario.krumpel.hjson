@@ -1,0 +1,23 @@
+﻿{
+	name: "Krumpel Island"
+	
+	doodads:
+	[
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [0, 0]
+			}
+			
+			position: [10.67763, -0.409461]
+			scale: [1.000, 1.000]
+			rotation: 0.000
+			z: 0.197
+			color: "0xffffffff"
+		}
+	]
+}
