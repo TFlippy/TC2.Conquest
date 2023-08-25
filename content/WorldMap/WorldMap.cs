@@ -459,6 +459,117 @@ namespace TC2.Conquest
 						}
 						#endregion
 
+						#region Regions
+						ref var world_info = ref Client.GetWorldInfo();
+						if (world_info.IsNotNull())
+						{
+							//if (world_info.regions != null)
+							{
+								var mod_context = App.GetModContext();
+
+								for (var i = 1; i < Region.max_count; i++)
+								{
+									using (GUI.ID.Push(i + 10000))
+									{
+										//ref var map_info = ref world_info.[i];
+
+										ref var region_info = ref World.GetRegionInfo((byte)i);
+
+										ref var map_info = ref region_info.map_info.GetRefOrNull();
+										if (region_info.IsValid() && map_info.IsNotNull())
+										{
+											var icon_size = 0.75f; // * (zoom_inv * 128);
+											var color = GUI.font_color_title;
+											var color_frame = GUI.col_frame;
+											var color_thumbnail = GUI.col_white;
+
+											var map_pos = (Vector2)map_info.point;
+											ref var location_data = ref map_info.h_location.GetData();
+											if (location_data.IsNotNull())
+											{
+												map_pos = (Vector2)location_data.point;
+											}
+											//var map_pos_c = Vector2.Transform(map_pos, mat_l2c);
+
+											//map_info.
+
+											var rect_text = AABB.Centered(Vector2.Transform(map_pos + map_info.text_offset, mat_l2c), new Vector2(icon_size * zoom * 0.50f));
+											//var rect_map_lg = AABB.Centered(Vector2.Transform(map_pos + new Vector2(0.00f, -0.875f), mat_l2c), new Vector2(icon_size * zoom * 1.50f));
+											var rect_icon = AABB.Centered(Vector2.Transform(map_pos + map_info.icon_offset, mat_l2c), new Vector2(icon_size * zoom * 1.00f));
+
+											//var is_pressed = GUI.ButtonBehavior(map_info.name, rect_map_lg, out var is_hovered, out var is_held);
+											//var is_hovered = GUI.IsHoveringRect(rect_map_lg);
+											var is_selected = selected_region_id == i || (location_data.IsNotNull() && h_selected_location == map_info.h_location);
+
+											var alpha = 0.50f;
+											if (is_selected)
+											{
+												alpha = 1.00f;
+												color_frame = GUI.col_white;
+												selected_region_id = (byte)i;
+											}
+
+											var scale = 1.00f;
+											//if (is_selected) scale *= 1.125f;
+											//GUI.DrawRect(rect_map_lg, Color32BGRA.Yellow, layer: GUI.Layer.Foreground);
+
+
+											var map_asset = mod_context.GetMap(region_info.map);
+											if (map_asset != null)
+											{
+												var tex_thumbnail = map_asset.GetThumbnail();
+												if (tex_thumbnail != null)
+												{
+													GUI.DrawTexture(tex_thumbnail.Identifier, rect_icon, GUI.Layer.Window, color: color_thumbnail.WithAlphaMult(alpha));
+												}
+
+												//GUI.DrawBackground(is_hovered ? GUI.tex_frame_white : GUI.tex_frame, rect_map_lg, padding: new(4 * zoom_inv));
+												GUI.DrawBackground(GUI.tex_frame_white, rect_icon, padding: new(2), color: color_frame.WithAlphaMult(alpha));
+												//GUI.DrawTexture(is_hovered ? GUI.tex_frame_white : GUI.tex_frame, rect_map_lg, layer: GUI.Layer.Window);
+
+												//if (tex_thumbnail != null && GUI.IsItemHovered())
+												//{
+												//	using (GUI.Tooltip.New())
+												//	{
+												//		using (var group_preview = GUI.Group.New(size: tex_thumbnail.size))
+												//		{
+												//			GUI.DrawTexture(tex_thumbnail.handle, tex_thumbnail.size);
+												//			GUI.DrawBackground(GUI.tex_frame, group_preview.GetInnerRect(), new(8));
+												//		}
+												//	}
+												//}
+											}
+
+											//if (is_hovered)
+											//{
+											//	GUI.SetCursor(App.CursorType.Hand, 1000);
+
+											//	if (is_pressed)
+											//	{
+											//		if (is_selected)
+											//		{
+											//			selected_region_id = 0;
+											//			Sound.PlayGUI(GUI.sound_select, volume: 0.09f, pitch: 0.80f);
+											//		}
+											//		else
+											//		{
+											//			selected_region_id = (byte)i;
+											//			Sound.PlayGUI(GUI.sound_select, volume: 0.09f);
+											//		}
+											//		// Client.RequestSetActiveRegion((byte)i);
+											//	}
+											//}
+
+											//GUI.DrawSpriteCentered(new Sprite(h_texture_icons, 24, 24, 3, 0), rect_map, layer: GUI.Layer.Window, color: (is_selected) ? GUI.col_white : GUI.col_button, scale: zoom * 0.0625f * scale);
+											//GUI.DrawRectFilled(rect_map, color, layer: GUI.Layer.Window);
+											//GUI.DrawTextCentered(map_info.name, Vector2.Transform(map_pos + new Vector2(0.00f, -0.25f - 0.10f), mat_l2c), pivot: new Vector2(0.50f, 0.50f), color: color, font: GUI.Font.Superstar, size: 0.37f * MathF.Max(icon_size * zoom * scale, 32), layer: GUI.Layer.Window, box_shadow: true);
+										}
+									}
+								}
+							}
+						}
+						#endregion
+
 						#region Locations
 						foreach (var asset in ILocation.Database.GetAssets())
 						{
@@ -500,101 +611,10 @@ namespace TC2.Conquest
 							}
 
 							GUI.DrawSpriteCentered(asset_data.icon, rect_location, layer: GUI.Layer.Window, 0.125f * MathF.Max(scale * zoom * asset_scale, 16), color: color);
-							GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(((Vector2)asset_data.point) + new Vector2(0.00f, -0.625f * asset_scale), mat_l2c), pivot: new(0.50f, 0.50f), color: GUI.font_color_title, font: GUI.Font.Superstar, size: 0.75f * MathF.Max(asset_scale * zoom * scale, 16), layer: GUI.Layer.Window, box_shadow: true);
+							//GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(((Vector2)asset_data.point) + new Vector2(0.00f, -0.625f * asset_scale) + asset_data.text_offset, mat_l2c), pivot: new(0.50f, 0.50f), color: GUI.font_color_title, font: GUI.Font.Superstar, size: 0.75f * MathF.Max(asset_scale * zoom * scale, 16), layer: GUI.Layer.Window, box_shadow: true);
+							GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(((Vector2)asset_data.point) + asset_data.text_offset, mat_l2c), pivot: new(0.50f, 0.50f), color: GUI.font_color_title, font: GUI.Font.Superstar, size: 0.50f * MathF.Max(asset_scale * zoom * scale, 16), layer: GUI.Layer.Window, box_shadow: true);
 
 							GUI.FocusableAsset(asset.GetHandle(), rect: rect_location);
-						}
-						#endregion
-
-						#region Regions
-						ref var world_info = ref Client.GetWorldInfo();
-						if (world_info.IsNotNull())
-						{
-							//if (world_info.regions != null)
-							{
-								var mod_context = App.GetModContext();
-
-								for (var i = 1; i < Region.max_count; i++)
-								{
-									using (GUI.ID.Push(i + 10000))
-									{
-										//ref var map_info = ref world_info.[i];
-
-										ref var region_info = ref World.GetRegionInfo((byte)i);
-
-										ref var map_info = ref region_info.map_info.GetRefOrNull();
-										if (region_info.IsValid() && map_info.IsNotNull())
-										{
-											var icon_size = 0.75f; // * (zoom_inv * 128);
-											var color = GUI.font_color_title;
-
-											//map_info.
-
-											var rect_map = AABB.Centered(Vector2.Transform((Vector2)map_info.point, mat_l2c), new Vector2(icon_size * zoom * 0.50f));
-											var rect_map_lg = AABB.Centered(Vector2.Transform(((Vector2)map_info.point) + new Vector2(0.00f, -0.875f), mat_l2c), new Vector2(icon_size * zoom * 1.50f));
-
-											var is_pressed = GUI.ButtonBehavior(map_info.name, rect_map_lg, out var is_hovered, out var is_held);
-											//var is_hovered = GUI.IsHoveringRect(rect_map_lg);
-											var is_selected = selected_region_id == i;
-
-											var scale = 1.00f;
-											//if (is_selected) scale *= 1.125f;
-											//GUI.DrawRect(rect_map_lg, Color32BGRA.Yellow, layer: GUI.Layer.Foreground);
-
-
-											var map_asset = mod_context.GetMap(region_info.map);
-											if (map_asset != null)
-											{
-												var tex_thumbnail = map_asset.GetThumbnail();
-												if (tex_thumbnail != null)
-												{
-													GUI.DrawTexture(tex_thumbnail.Identifier, rect_map_lg, GUI.Layer.Window);
-												}
-
-												//GUI.DrawBackground(is_hovered ? GUI.tex_frame_white : GUI.tex_frame, rect_map_lg, padding: new(4 * zoom_inv));
-												GUI.DrawBackground((is_hovered || is_selected) ? GUI.tex_frame_white : GUI.tex_frame, rect_map_lg, padding: new(4));
-												//GUI.DrawTexture(is_hovered ? GUI.tex_frame_white : GUI.tex_frame, rect_map_lg, layer: GUI.Layer.Window);
-
-												//if (tex_thumbnail != null && GUI.IsItemHovered())
-												//{
-												//	using (GUI.Tooltip.New())
-												//	{
-												//		using (var group_preview = GUI.Group.New(size: tex_thumbnail.size))
-												//		{
-												//			GUI.DrawTexture(tex_thumbnail.handle, tex_thumbnail.size);
-												//			GUI.DrawBackground(GUI.tex_frame, group_preview.GetInnerRect(), new(8));
-												//		}
-												//	}
-												//}
-											}
-
-											if (is_hovered)
-											{
-												GUI.SetCursor(App.CursorType.Hand, 1000);
-
-												if (is_pressed)
-												{
-													if (is_selected)
-													{
-														selected_region_id = 0;
-														Sound.PlayGUI(GUI.sound_select, volume: 0.09f, pitch: 0.80f);
-													}
-													else
-													{
-														selected_region_id = (byte)i;
-														Sound.PlayGUI(GUI.sound_select, volume: 0.09f);
-													}
-													// Client.RequestSetActiveRegion((byte)i);
-												}
-											}
-
-											GUI.DrawSpriteCentered(new Sprite(h_texture_icons, 24, 24, 3, 0), rect_map, layer: GUI.Layer.Window, color: (is_selected) ? GUI.col_white : GUI.col_button, scale: zoom * 0.0625f * scale);
-											//GUI.DrawRectFilled(rect_map, color, layer: GUI.Layer.Window);
-											GUI.DrawTextCentered(map_info.name, Vector2.Transform(((Vector2)map_info.point) + new Vector2(0.00f, -0.25f - 0.10f), mat_l2c), pivot: new Vector2(0.50f, 0.50f), color: color, font: GUI.Font.Superstar, size: 0.37f * MathF.Max(icon_size * zoom * scale, 32), layer: GUI.Layer.Window, box_shadow: true);
-										}
-									}
-								}
-							}
 						}
 						#endregion
 
