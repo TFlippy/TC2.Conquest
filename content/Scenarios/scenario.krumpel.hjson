@@ -1,5 +1,13 @@
 ﻿{
-	name: "Krumpel Island"
+	name: "Krumpel Charter Crisis"
+	desc: ""
+	
+	provinces:
+	[
+		"krumpelsutr"
+		"kapuca"
+		"spargl"
+	]
 	
 	doodads:
 	[

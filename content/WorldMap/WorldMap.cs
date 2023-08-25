@@ -34,12 +34,11 @@ namespace TC2.Conquest
 		public static int? edit_doodad_index;
 		public static Vector2 edit_doodad_offset;
 
-		public static Texture.Handle h_texture_bg_00 = "ui_worldmap.bg.00";
-		public static Texture.Handle h_texture_bg_01 = "ui_worldmap.bg.01";
-		public static Texture.Handle h_texture_icons = "ui_worldmap.icons";
-		public static Texture.Handle h_texture_line_00 = "ui_worldmap.line.00";
-		public static Texture.Handle h_texture_line_01 = "ui_worldmap.line.01";
-		public static Texture.Handle h_texture_line_02 = "ui_worldmap.line.02";
+		public static Texture.Handle h_texture_bg_00 = "worldmap.bg.00";
+		public static Texture.Handle h_texture_icons = "worldmap.icons.00";
+		public static Texture.Handle h_texture_line_00 = "worldmap.border.00";
+		public static Texture.Handle h_texture_line_01 = "worldmap.border.01";
+		public static Texture.Handle h_texture_line_02 = "worldmap.border.02";
 
 		public static Texture.Handle h_texture_terrain_beach_00 = "worldmap.terrain.beach.00";
 
@@ -258,7 +257,14 @@ namespace TC2.Conquest
 						mouse.SetKeyState(~(Mouse.Key.ScrollUp | Mouse.Key.ScrollDown), false);
 						kb.SetKeyState(~(Keyboard.Key.MoveDown | Keyboard.Key.MoveLeft | Keyboard.Key.MoveRight | Keyboard.Key.MoveUp | Keyboard.Key.LeftControl | Keyboard.Key.C | Keyboard.Key.V), false);
 					}
-	
+
+					if (editor_mode != EditorMode.None && !gizmo.IsHovered() && edit_asset != null && GUI.GetMouse().GetKeyDown(Mouse.Key.Left))
+					{
+						edit_asset = null;
+						h_selected_location = default;
+						edit_doodad_index = null;
+					}
+
 					var zoom = MathF.Pow(2.00f, worldmap_zoom_current);
 					var zoom_inv = 1.00f / zoom;
 
@@ -784,33 +790,49 @@ namespace TC2.Conquest
 										GUI.DrawCircleFilled(point_t, 0.125f * zoom, color: color, segments: 4, layer: GUI.Layer.Foreground);
 										//GUI.DrawTextCentered($"{ts_elapsed:0.0000} ms", point_t, layer: GUI.Layer.Foreground);
 
-										//if (!disable_input)
+										if (h_selected_location == h_location)
 										{
-											if (!kb.GetKey(Keyboard.Key.LeftAlt | Keyboard.Key.LeftControl | Keyboard.Key.LeftShift))
+											edit_asset = asset;
+
+											var point_tmp = (Vector2)point;
+											var scale = Vector2.One;
+											var rotation = 0.00f;
+
+											if (GUI.DrawGizmo(ref gizmo, zoom * 0.25f, ref point_tmp, ref scale, ref rotation, mat_l2c))
 											{
-												if (mouse.GetKeyDown(Mouse.Key.Right))
-												{
-													edit_asset = asset;
-													hs_pending_asset_saves.Add(asset);
+												hs_pending_asset_saves.Add(asset);
 
-													Sound.PlayGUI(GUI.sound_pop, 0.07f, pitch: 1.00f);
-												}
-											}
-
-											if (mouse.GetKey(Mouse.Key.Right))
-											{
-												point = new int2((int)MathF.Round(mouse_local.X), (int)MathF.Round(mouse_local.Y));
-											}
-
-											if (mouse.GetKeyUp(Mouse.Key.Right))
-											{
-												point = new int2((int)MathF.Round(mouse_local.X), (int)MathF.Round(mouse_local.Y));
-
-												//asset.Save();
-												edit_asset = null;
-												Sound.PlayGUI(GUI.sound_pop, 0.07f, pitch: 0.70f);
+												asset_data.point = new int2((int)MathF.Round(point_tmp.X), (int)MathF.Round(point_tmp.Y));
 											}
 										}
+
+										//if (!disable_input)
+										//{
+										//	if (!kb.GetKey(Keyboard.Key.LeftAlt | Keyboard.Key.LeftControl | Keyboard.Key.LeftShift))
+										//	{
+										//		if (mouse.GetKeyDown(Mouse.Key.Right))
+										//		{
+										//			edit_asset = asset;
+										//			hs_pending_asset_saves.Add(asset);
+
+										//			Sound.PlayGUI(GUI.sound_pop, 0.07f, pitch: 1.00f);
+										//		}
+										//	}
+
+										//	if (mouse.GetKey(Mouse.Key.Right))
+										//	{
+										//		point = new int2((int)MathF.Round(mouse_local.X), (int)MathF.Round(mouse_local.Y));
+										//	}
+
+										//	if (mouse.GetKeyUp(Mouse.Key.Right))
+										//	{
+										//		point = new int2((int)MathF.Round(mouse_local.X), (int)MathF.Round(mouse_local.Y));
+
+										//		//asset.Save();
+										//		edit_asset = null;
+										//		Sound.PlayGUI(GUI.sound_pop, 0.07f, pitch: 0.70f);
+										//	}
+										//}
 									}
 								}
 							}
@@ -821,10 +843,10 @@ namespace TC2.Conquest
 								if (!hovered && !edit_doodad_index.HasValue) break;
 
 								var ts = Timestamp.Now();
-								if (hovered && edit_doodad_index.HasValue && GUI.IsMouseDoubleClicked())
-								{
-									edit_doodad_index = null;
-								}
+								//if (hovered && edit_doodad_index.HasValue && GUI.IsMouseDoubleClicked())
+								//{
+								//	edit_doodad_index = null;
+								//}
 
 								ref var asset_data = ref h_world.GetData(out var asset);
 								if (asset_data.IsNotNull())
@@ -864,6 +886,7 @@ namespace TC2.Conquest
 
 											if (selected)
 											{
+												edit_asset = asset;
 												GUI.DrawGizmo(ref gizmo, zoom * 0.25f, ref doodad.position, ref doodad.scale, ref doodad.rotation, mat_l2c);
 											}
 
@@ -1009,7 +1032,7 @@ namespace TC2.Conquest
 							}
 						}
 
-						if (App.debug_mode_gui)
+						if (editor_mode != EditorMode.None) // App.debug_mode_gui)
 						{
 							GUI.DrawTextCentered($"Editor: {editor_mode}", rect.GetPosition(new(0.50f, 1.00f)) - new Vector2(0, 16), font: GUI.Font.Superstar, size: 32, layer: GUI.Layer.Foreground, color: GUI.font_color_yellow);
 						}
@@ -1061,7 +1084,7 @@ namespace TC2.Conquest
 								if (!enable_momentum) momentum = default;
 							}
 
-							if (hovered)
+							if (hovered && !kb.GetKey(Keyboard.Key.LeftShift))
 							{
 								worldmap_zoom_target -= mouse.GetScroll(0.25f);
 								//worldmap_zoom = Maths.Clamp(worldmap_zoom, 1.00f, 8.00f);
@@ -1093,12 +1116,15 @@ namespace TC2.Conquest
 						{
 							if (hovered && !gizmo.IsHovered())
 							{
-								if (kb.GetKeyDown(Keyboard.Key.Reload))
+								if (kb.GetKey(Keyboard.Key.LeftShift))
 								{
-									if (kb.GetKey(Keyboard.Key.LeftShift))
+									var scroll = mouse.GetScroll();
+									if (scroll != 0.00f)
 									{
-										editor_mode = (EditorMode)Maths.Wrap(((int)editor_mode) + 1, 0, (int)EditorMode.Max);
+										Sound.PlayGUI(GUI.sound_select, volume: 0.09f);
+										editor_mode = (EditorMode)Maths.Wrap(((int)editor_mode) - (int)(scroll), 0, (int)EditorMode.Max);
 										edit_asset = null;
+										edit_doodad_index = null;
 									}
 									//else
 									//{
@@ -1402,7 +1428,7 @@ namespace TC2.Conquest
 
 			#region Debug
 			{
-				if (App.debug_mode_gui)
+				if (editor_mode != EditorMode.None) // App.debug_mode_gui)
 				{
 					using (var window = GUI.Window.Standalone("worldmap.debug", position: GUI.CanvasSize * 0.50f, size: new(300, 400), pivot: new(0.50f, 0.50f), padding: new(8), force_position: false))
 					{
