@@ -408,7 +408,7 @@ namespace TC2.Conquest
 						kb.SetKeyState(~(Keyboard.Key.MoveDown | Keyboard.Key.MoveLeft | Keyboard.Key.MoveRight | Keyboard.Key.MoveUp | Keyboard.Key.LeftControl | Keyboard.Key.C | Keyboard.Key.V), false);
 					}
 
-					if (editor_mode != EditorMode.None && !gizmo.IsHovered() && edit_asset != null && GUI.GetMouse().GetKeyDown(Mouse.Key.Left))
+					if (editor_mode != EditorMode.None && !gizmo.IsHovered() && GUI.IsHoveringRect(rect, allow_blocked: false, allow_overlapped: false, root_window: false, child_windows: false) && edit_asset != null && GUI.GetMouse().GetKeyDown(Mouse.Key.Left))
 					{
 						edit_asset = null;
 						h_selected_location = default;
@@ -1275,7 +1275,7 @@ namespace TC2.Conquest
 											}
 
 											GUI.DrawCircleFilled(Vector2.Transform(road.points[road_point_index], mat_l2c), 0.125f * zoom, color: color, segments: 4, layer: GUI.Layer.Foreground);
-											GUI.DrawTextCentered($"{asset_data.name}\n{road.type}\n{ts_elapsed:0.0000} ms", Vector2.Transform(road.points[road_point_index], mat_l2c), layer: GUI.Layer.Foreground);
+											GUI.DrawTextCentered($"{asset_data.name}\n{road.type} [{road_index}]\n{ts_elapsed:0.0000} ms", Vector2.Transform(road.points[road_point_index], mat_l2c), layer: GUI.Layer.Foreground);
 										}
 									}
 								}
