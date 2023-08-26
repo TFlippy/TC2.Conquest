@@ -353,6 +353,66 @@ namespace TC2.Conquest
 
 		//public static StringBuilder sb = new StringBuilder();
 
+		public static void Rescale()
+		{
+			foreach (var asset in ILocation.Database.GetAssets())
+			{
+				if (asset.id == 0) continue;
+
+				ref var asset_data = ref asset.GetData();
+				asset_data.point *= 2;
+
+				hs_pending_asset_saves.Add(asset);
+			}
+
+			foreach (var asset in IProvince.Database.GetAssets())
+			{
+				if (asset.id == 0) continue;
+
+				ref var asset_data = ref asset.GetData();
+				foreach (ref var point in asset_data.points.AsSpan())
+				{
+					point *= 2;
+				}
+
+				hs_pending_asset_saves.Add(asset);
+			}
+
+			foreach (var asset in IDistrict.Database.GetAssets())
+			{
+				if (asset.id == 0) continue;
+
+				ref var asset_data = ref asset.GetData();
+				foreach (ref var point in asset_data.points.AsSpan())
+				{
+					point *= 2;
+				}
+
+				foreach (ref var road in asset_data.roads.AsSpan())
+				{
+					foreach (ref var point in road.points.AsSpan())
+					{
+						point *= 2;
+					}
+				}
+
+				hs_pending_asset_saves.Add(asset);
+			}
+
+			foreach (var asset in IScenario.Database.GetAssets())
+			{
+				if (asset.id == 0) continue;
+
+				ref var asset_data = ref asset.GetData();
+
+				foreach (ref var doodad in asset_data.doodads.AsSpan())
+				{
+					doodad.position *= 2;
+				}
+
+				hs_pending_asset_saves.Add(asset);
+			}
+		}
 		public static void Draw(Vector2 size)
 		{
 			ref var world = ref Client.GetWorld();
@@ -1622,6 +1682,11 @@ namespace TC2.Conquest
 						GUI.Checkbox("Show Fill", ref show_fill, new(32, 32), show_text: false, show_tooltip: true);
 						GUI.SameLine();
 						GUI.Checkbox("Show Borders", ref show_borders, new(32, 32), show_text: false, show_tooltip: true);
+
+						if (GUI.DrawButton("Rescale", size: new Vector2(100, 40)))
+						{
+							Rescale();
+						}
 
 						//GUI.EnumInputMasked("worldmap.filter.roads", ref filter_roads, new Vector2(GUI.RmX, 32), filter_roads_mask, show_none: true, show_all: true, close_on_select: false);
 						//GUI.EnumInput("worldmap.filter.roads", ref filter_roads, new Vector2(GUI.RmX, 32), filter_roads_mask, show_none: true, show_all: true, close_on_select: false);
