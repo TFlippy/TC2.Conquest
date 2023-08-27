@@ -1463,10 +1463,12 @@ namespace TC2.Conquest
 																	if (selected)
 																	{
 																		selected_region_id = 0;
+																		h_selected_location = default;
 																	}
 																	else
 																	{
 																		selected_region_id = (byte)i;
+																		h_selected_location = map_info.h_location;
 																		worldmap_offset_target = (Vector2)location_data.point;
 																	}
 																}

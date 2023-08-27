@@ -38,7 +38,7 @@ namespace TC2.Conquest
 
 		protected override void OnGUI()
 		{
-			GUI.worldmenu_widget_size_override = new Vector2(1000, 600);
+			GUI.worldmenu_widget_size_override = new Vector2(1200, 800);
 
 			if (Client.IsLoadingRegion())
 			{
