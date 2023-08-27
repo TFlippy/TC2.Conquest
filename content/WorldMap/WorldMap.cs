@@ -1746,7 +1746,24 @@ namespace TC2.Conquest
 
 									using (var group_info = GUI.Group.New(size: new(GUI.RmX, GUI.RmY - 40), padding: new(8, 8)))
 									{
-										GUI.TextShaded("- some info here");
+										using (var group_info_wide = GUI.Group.New2(size: new(GUI.RmX, 0), padding: new(2, 2, 12, 2)))
+										{
+											GUI.LabelShaded("Categories:", location_data.categories, font_a: GUI.Font.Superstar, size_a: 16);
+										}
+
+										using (var group_info_left = GUI.Group.New2(size: new(GUI.RmX * 0.50f, GUI.RmY), padding: new(2, 2, 12, 2)))
+										{
+											GUI.LabelShaded("Type:", location_data.type, font_a: GUI.Font.Superstar, size_a: 16);
+										}
+
+										GUI.SameLine();
+
+										using (var group_info_right = GUI.Group.New2(size: new(GUI.RmX, GUI.RmY), padding: new(12, 2, 2, 2)))
+										{
+											
+										}
+
+										//GUI.TextShaded("- some info here");
 									}
 
 									if (true)
