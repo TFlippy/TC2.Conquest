@@ -552,7 +552,7 @@ namespace TC2.Conquest
 									pos_center /= points.Length;
 									pos_center += asset_data.offset;
 
-									if (show_districts && show_fill) GUI.DrawPolygon(points_t_span, asset_data.color_fill with { a = 100 }, GUI.Layer.Window);
+									if (show_districts && show_fill) GUI.DrawPolygon(points_t_span, asset_data.color_fill with { a = 75 }, GUI.Layer.Window);
 
 									//DrawOutline(points, asset_data.color_border.WithAlphaMult(0.50f), 0.100f);
 									if (enable_renderer)
@@ -1446,23 +1446,30 @@ namespace TC2.Conquest
 
 												if (region_info.IsValid() && map_info.IsNotNull())
 												{
-													using (var group_row = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(4, 4)))
+													ref var location_data = ref map_info.h_location.GetData();
+													if (location_data.IsNotNull())
 													{
-														group_row.DrawBackground(GUI.tex_panel);
-
-														GUI.TitleCentered(map_info.name, size: 18, pivot: new(0.00f, 0.50f));
-
-														var selected = selected_region_id == i;
-														if (GUI.Selectable3((uint)i, group_row.GetOuterRect(), selected))
+														using (var group_row = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(4, 4)))
 														{
-															if (selected)
+															if (group_row.IsVisible())
 															{
-																selected_region_id = 0;
-															}
-															else
-															{
-																selected_region_id = (byte)i;
-																worldmap_offset_target = (Vector2)map_info.point;
+																group_row.DrawBackground(GUI.tex_panel);
+
+																GUI.TitleCentered(map_info.name, size: 18, pivot: new(0.00f, 0.50f));
+
+																var selected = selected_region_id == i;
+																if (GUI.Selectable3((uint)i, group_row.GetOuterRect(), selected))
+																{
+																	if (selected)
+																	{
+																		selected_region_id = 0;
+																	}
+																	else
+																	{
+																		selected_region_id = (byte)i;
+																		worldmap_offset_target = (Vector2)location_data.point;
+																	}
+																}
 															}
 														}
 													}
@@ -1491,24 +1498,27 @@ namespace TC2.Conquest
 
 												using (var group_row = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(4, 4)))
 												{
-													group_row.DrawBackground(GUI.tex_panel);
-
-													GUI.TitleCentered(asset_data.name, size: 20, pivot: new(0.00f, 0.50f));
-													GUI.TextShadedCentered(asset_data.type.GetEnumName(), size: 14, pivot: new(1.00f, 0.50f), color: GUI.font_color_desc);
-
-													var selected = asset == h_selected_location; // selected_region_id == i;
-													if (GUI.Selectable3((uint)asset.id, group_row.GetOuterRect(), selected))
+													if (group_row.IsVisible())
 													{
-														selected_region_id = 0;
+														group_row.DrawBackground(GUI.tex_panel);
 
-														if (selected)
+														GUI.TitleCentered(asset_data.name, size: 20, pivot: new(0.00f, 0.50f));
+														GUI.TextShadedCentered(asset_data.type.GetEnumName(), size: 14, pivot: new(1.00f, 0.50f), color: GUI.font_color_desc);
+
+														var selected = asset == h_selected_location; // selected_region_id == i;
+														if (GUI.Selectable3((uint)asset.id, group_row.GetOuterRect(), selected))
 														{
-															h_selected_location = default;
-														}
-														else
-														{
-															h_selected_location = asset;
-															worldmap_offset_target = (Vector2)asset_data.point;
+															selected_region_id = 0;
+
+															if (selected)
+															{
+																h_selected_location = default;
+															}
+															else
+															{
+																h_selected_location = asset;
+																worldmap_offset_target = (Vector2)asset_data.point;
+															}
 														}
 													}
 												}
