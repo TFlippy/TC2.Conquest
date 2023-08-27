@@ -413,6 +413,25 @@ namespace TC2.Conquest
 				hs_pending_asset_saves.Add(asset);
 			}
 		}
+
+		public static void RecalculateRoadIntersections()
+		{
+			foreach (var asset in IDistrict.Database.GetAssets())
+			{
+				if (asset.id == 0) continue;
+				ref var asset_data = ref asset.GetData();
+
+				var roads_span = asset_data.roads.AsSpan();
+				foreach (ref var road in roads_span)
+				{
+					if (road.type == ITransport.Type.Road && !show_roads) continue;
+					if (road.type == ITransport.Type.Rail && !show_rails) continue;
+
+					DrawOutlineShader(road.points, road.color_border, road.scale, road.h_texture, loop: false);
+				}
+			}
+		}
+
 		public static void Draw(Vector2 size)
 		{
 			ref var world = ref Client.GetWorld();
@@ -552,12 +571,12 @@ namespace TC2.Conquest
 									pos_center /= points.Length;
 									pos_center += asset_data.offset;
 
-									if (show_districts && show_fill) GUI.DrawPolygon(points_t_span, asset_data.color_fill with { a = 75 }, GUI.Layer.Window);
+									if (show_districts && show_fill) GUI.DrawPolygon(points_t_span, asset_data.color_fill with { a = 50 }, GUI.Layer.Window);
 
 									//DrawOutline(points, asset_data.color_border.WithAlphaMult(0.50f), 0.100f);
 									if (enable_renderer)
 									{
-										if (show_districts && show_borders) DrawOutline(mat_l2c, zoom, points, asset_data.color_border, asset_data.border_scale * 0.75f, 4.00f, asset_data.h_texture_border);
+										if (show_districts && show_borders) DrawOutline(mat_l2c, zoom, points, asset_data.color_border, asset_data.border_scale * 0.50f, 2.00f, asset_data.h_texture_border);
 
 										//if (show_roads)
 										{
@@ -742,7 +761,7 @@ namespace TC2.Conquest
 
 						#region Overlays
 						GUI.DrawTexture(GUI.tex_vignette, rect, layer: GUI.Layer.Window, color: Color32BGRA.White.WithAlphaMult(0.30f));
-						GUI.DrawSpriteCentered(new Sprite(h_texture_icons, 72, 72, 0, 1), rect: AABB.Centered(Vector2.Transform(mouse_local_snapped, mat_l2c), new Vector2(0.25f)), layer: GUI.Layer.Window, scale: 0.125f * 0.50f * zoom, color: Color32BGRA.Black.WithAlphaMult(1));
+						//GUI.DrawSpriteCentered(new Sprite(h_texture_icons, 72, 72, 0, 1), rect: AABB.Centered(Vector2.Transform(mouse_local_snapped, mat_l2c), new Vector2(0.25f)), layer: GUI.Layer.Window, scale: 0.125f * 0.50f * zoom, color: Color32BGRA.Black.WithAlphaMult(1));
 						//GUI.DrawTextCentered($"Zoom: {zoom:0.00}x\ndelta: [{snap_delta.X:0.000000}, {snap_delta.Y:0.000000}]\ndelta.c: [{snap_delta_canvas.X:0.000000}, {snap_delta_canvas.Y:0.000000}]\ncam: [{worldmap_offset_target.X:0.000000}, {worldmap_offset_target.Y:0.000000}]\ncam.s: [{worldmap_offset_current_snapped.X:0.000000}, {worldmap_offset_current_snapped.Y:0.000000}]\nmouse.l: [{mouse_local.X:0.0000}, {mouse_local.Y:0.0000}]\nmouse: [{mouse_pos.X:0.00}, {mouse_pos.Y:0.00}]", position: rect.GetPosition(new(1, 1)), new(1, 1), font: GUI.Font.Superstar, size: 24, layer: GUI.Layer.Foreground);
 						#endregion
 
@@ -1436,7 +1455,7 @@ namespace TC2.Conquest
 									{
 										GUI.TitleCentered("Regions", size: 24, pivot: new(0.00f, 0.50f));
 
-										if (collapsible.Inner(padding: new Vector4(12, 0, 0, 0)))
+										if (collapsible.Inner(padding: new Vector4(6, 0, 0, 0)))
 										{
 											var region_list_span = World.GetRegionList().AsSpan();
 											for (var i = 1; i < region_list_span.Length; i++)
@@ -1449,13 +1468,20 @@ namespace TC2.Conquest
 													ref var location_data = ref map_info.h_location.GetData();
 													if (location_data.IsNotNull())
 													{
-														using (var group_row = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(4, 4)))
+														using (var group_row = GUI.Group.New(size: new(GUI.RmX, 48)))
 														{
 															if (group_row.IsVisible())
 															{
+																GUI.DrawMapThumbnail(region_info.map, size: new(GUI.RmY));
+
 																group_row.DrawBackground(GUI.tex_panel);
 
-																GUI.TitleCentered(map_info.name, size: 18, pivot: new(0.00f, 0.50f));
+																GUI.SameLine();
+
+																using (GUI.Group.New(size: GUI.Rm, padding: new(4, 4)))
+																{
+																	GUI.TitleCentered(map_info.name, size: 18, pivot: new(0.00f, 0.00f));
+																}
 
 																var selected = selected_region_id == i;
 																if (GUI.Selectable3((uint)i, group_row.GetOuterRect(), selected))
@@ -1539,79 +1565,96 @@ namespace TC2.Conquest
 		{
 			if (selected_region_id != 0 || h_selected_location != 0)
 			{
-				using (var window = GUI.Window.Standalone("worldmap.side.right", position: new Vector2(rect.b.X, rect.a.Y) + new Vector2(-6, 12), size: new(300, MathF.Min(rect.GetHeight() - 8, 550)), pivot: new(1.00f, 0.00f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus | GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.Child))
+				using (var window = GUI.Window.Standalone("worldmap.side.right", position: new Vector2(rect.b.X, rect.a.Y) + new Vector2(-6, 12), size: new(322, MathF.Min(rect.GetHeight() - 8, 550)), pivot: new(1.00f, 0.00f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus | GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.Child))
 				{
 					if (window.show)
 					{
 						window.group.DrawBackground(GUI.tex_window_popup_l, color: GUI.col_default);
 
-						if (selected_region_id != 0)
-						{
-							ref var region_info = ref World.GetRegionInfo(selected_region_id);
-							if (region_info.IsNotNull() && region_info.IsValid())
-							{
-								ref var map_info = ref region_info.map_info.GetRefOrNull();
-								var map_asset = App.GetModContext().GetMap(region_info.map);
+						//if (selected_region_id != 0)
+						//{
+						//	ref var region_info = ref World.GetRegionInfo(selected_region_id);
+						//	if (region_info.IsNotNull() && region_info.IsValid())
+						//	{
+						//		ref var map_info = ref region_info.map_info.GetRefOrNull();
+						//		var map_asset = App.GetModContext().GetMap(region_info.map);
 
-								using (GUI.Group.New(size: GUI.Rm))
-								{
-									using (var group_title = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(8, 0)))
-									{
-										GUI.TitleCentered(map_info.name, size: 32, pivot: new(0.00f, 0.50f));
-									}
+						//		using (GUI.Group.New(size: GUI.Rm))
+						//		{
+						//			using (var group_title = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(8, 0)))
+						//			{
+						//				GUI.TitleCentered(map_info.name, size: 32, pivot: new(0.00f, 0.50f));
+						//			}
 
-									GUI.SeparatorThick();
+						//			GUI.SeparatorThick();
 
-									using (var group_top = GUI.Group.New(size: new(GUI.RmX, 0), padding: new(4, 4)))
-									{
-										using (var group_thumbnail = GUI.Group.New(size: new(GUI.RmX * 0.50f)))
-										{
-											var tex_thumbnail = map_asset.GetThumbnail();
-											if (tex_thumbnail != null)
-											{
-												GUI.DrawTexture(tex_thumbnail.Identifier, group_thumbnail.GetInnerRect(), GUI.Layer.Window);
-											}
-											GUI.DrawBackground(GUI.tex_frame, group_thumbnail.GetOuterRect(), padding: new(4));
-										}
+						//			using (var group_top = GUI.Group.New(size: new(GUI.RmX, 0), padding: new(4, 4)))
+						//			{
+						//				GUI.DrawMapThumbnail(map_asset.Identifier, size: new(GUI.RmX * 0.50f));
 
-										GUI.SameLine();
+						//				//using (var group_thumbnail = GUI.Group.New(size: new(GUI.RmX * 0.50f)))
+						//				//{
+						//				//	var tex_thumbnail = map_asset.GetThumbnail();
+						//				//	if (tex_thumbnail != null)
+						//				//	{
+						//				//		GUI.DrawTexture(tex_thumbnail.Identifier, group_thumbnail.GetInnerRect(), GUI.Layer.Window);
+						//				//	}
+						//				//	GUI.DrawBackground(GUI.tex_frame, group_thumbnail.GetOuterRect(), padding: new(4));
+						//				//}
 
-										using (var group_desc = GUI.Group.New(size: new(GUI.RmX, 0), padding: new(8, 8)))
-										{
-											using (GUI.Wrap.Push(GUI.RmX))
-											{
-												GUI.TextShaded(map_asset.Description);
-											}
-										}
-									}
+						//				GUI.SameLine();
 
-									GUI.SeparatorThick();
+						//				using (var group_desc = GUI.Group.New(size: new(GUI.RmX, 0), padding: new(8, 8)))
+						//				{
+						//					using (GUI.Wrap.Push(GUI.RmX))
+						//					{
+						//						GUI.TextShaded(map_asset.Description);
+						//					}
+						//				}
+						//			}
 
-									using (var group_info = GUI.Group.New(size: new(GUI.RmX, GUI.RmY - 40), padding: new(8, 8)))
-									{
-										GUI.TextShaded("- some info here");
-									}
+						//			GUI.SeparatorThick();
 
-									if (true)
-									{
-										var color = GUI.col_button_ok;
-										var alpha = 1.00f;
+						//			using (var group_info = GUI.Group.New(size: new(GUI.RmX, GUI.RmY - 40), padding: new(8, 8)))
+						//			{
+						//				GUI.TextShaded("- some info here");
+						//			}
 
-										if (GUI.DrawButton("Enter", size: new(GUI.RmX * 0.50f, 40), font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
-										{
-											Client.RequestSetActiveRegion(selected_region_id, delay_seconds: 0.75f);
+						//			if (true)
+						//			{
+						//				var color = GUI.col_button_ok;
+						//				var alpha = 1.00f;
 
-											//Client.TODO_LoadRegion(region_id);
-										}
-									}
-								}
-							}
-						}
-						else if (h_selected_location != 0)
+						//				if (GUI.DrawButton("Enter", size: new(GUI.RmX * 0.50f, 40), font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+						//				{
+						//					Client.RequestSetActiveRegion(selected_region_id, delay_seconds: 0.75f);
+
+						//					//Client.TODO_LoadRegion(region_id);
+						//				}
+						//			}
+						//		}
+						//	}
+						//}
+
+						if (h_selected_location != 0)
 						{
 							ref var location_data = ref h_selected_location.GetData();
 							if (location_data.IsNotNull())
 							{
+								for (var i = 0; i < Region.max_count; i++)
+								{
+									ref var region_info = ref World.GetRegionInfo((byte)i);
+									if (region_info.IsNotNull() && region_info.map_info.HasValue)
+									{
+										ref var map_info = ref region_info.map_info.GetRefOrNull();
+										if (map_info.IsNotNull() && map_info.h_location == h_selected_location)
+										{
+											selected_region_id = (byte)i;
+											break;
+										}
+									}
+								}
+
 								using (GUI.Group.New(size: GUI.Rm))
 								{
 									using (var group_title = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(8, 0)))
@@ -1620,6 +1663,61 @@ namespace TC2.Conquest
 									}
 
 									GUI.SeparatorThick();
+
+									ref var region_info = ref World.GetRegionInfo(selected_region_id);
+									if (region_info.IsNotNull() && region_info.IsValid())
+									{
+										ref var map_info = ref region_info.map_info.GetRefOrNull();
+										if (map_info.IsNotNull() && map_info.h_location == h_selected_location)
+										{
+											var map_asset = App.GetModContext().GetMap(region_info.map);
+											if (map_asset != null)
+											{
+												using (var group_map = GUI.Group.New(size: new(GUI.RmX, (GUI.RmX * 0.50f) + 40 + 4), padding: new(4, 4)))
+												{
+													using (var group_left = GUI.Group.New(size: new(GUI.RmX * 0.50f, GUI.RmY)))
+													{
+														GUI.DrawMapThumbnail(region_info.map, size: new(GUI.RmX));
+
+														//using (var group_thumbnail = GUI.Group.New(size: new(GUI.RmX * 0.50f)))
+														//{
+														//	var tex_thumbnail = map_asset.GetThumbnail();
+														//	if (tex_thumbnail != null)
+														//	{
+														//		GUI.DrawTexture(tex_thumbnail.Identifier, group_thumbnail.GetInnerRect(), GUI.Layer.Window);
+														//	}
+														//	GUI.DrawBackground(GUI.tex_frame, group_thumbnail.GetOuterRect(), padding: new(4));
+														//}
+
+														if (true)
+														{
+															var color = GUI.col_button_ok;
+															var alpha = 1.00f;
+
+															if (GUI.DrawButton("Enter", size: GUI.Rm, font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+															{
+																Client.RequestSetActiveRegion(selected_region_id, delay_seconds: 0.75f);
+
+																//Client.TODO_LoadRegion(region_id);
+															}
+														}
+													}
+
+													GUI.SameLine();
+
+													using (var group_desc = GUI.Group.New(size: GUI.Rm, padding: new(6, 2)))
+													{
+														using (GUI.Wrap.Push(GUI.RmX))
+														{
+															GUI.TextShaded(map_asset.Description);
+														}
+													}
+												}
+											}
+										}
+
+										GUI.SeparatorThick();
+									}
 
 									using (var group_top = GUI.Group.New(size: new(GUI.RmX, 0), padding: new(4, 4)))
 									{

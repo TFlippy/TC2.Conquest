@@ -33,134 +33,6 @@
 				texture: "worldmap.doodads.00"
 				fps: 0.000
 				count: 0
-				size: [24, 24]
-				frame: [3, 0]
-			}
-			
-			position: [26.68102, -15.53789]
-			scale: [0.50235, 0.600]
-			rotation: 0.000
-			z: 0.174
-			color: "0xffffffff"
-		}
-		{
-			sprite:
-			{
-				texture: "worldmap.doodads.00"
-				fps: 0.000
-				count: 0
-				size: [24, 24]
-				frame: [3, 0]
-			}
-			
-			position: [26.4844, -19.72417]
-			scale: [-0.50235, 0.600]
-			rotation: 0.000
-			z: 0.174
-			color: "0xffffffff"
-		}
-		{
-			sprite:
-			{
-				texture: "worldmap.doodads.00"
-				fps: 0.000
-				count: 0
-				size: [24, 24]
-				frame: [4, 0]
-			}
-			
-			position: [20.08338, -19.18645]
-			scale: [0.475, 0.550]
-			rotation: 0.090
-			z: 0.197
-			color: "0xffffffff"
-		}
-		{
-			sprite:
-			{
-				texture: "worldmap.doodads.00"
-				fps: 0.000
-				count: 0
-				size: [24, 24]
-				frame: [1, 0]
-			}
-			
-			position: [27.58434, -16.48525]
-			scale: [0.700, 0.625]
-			rotation: -0.100
-			z: 0.197
-			color: "0xffffffff"
-		}
-		{
-			sprite:
-			{
-				texture: "worldmap.doodads.00"
-				fps: 0.000
-				count: 0
-				size: [24, 24]
-				frame: [3, 0]
-			}
-			
-			position: [23.02434, -19.00767]
-			scale: [-0.496808, 0.609052]
-			rotation: 0.000
-			z: 0.174
-			color: "0xffffffff"
-		}
-		{
-			sprite:
-			{
-				texture: "worldmap.doodads.00"
-				fps: 0.000
-				count: 0
-				size: [24, 24]
-				frame: [3, 0]
-			}
-			
-			position: [20.5936, -16.90523]
-			scale: [0.496808, 0.609052]
-			rotation: -0.050
-			z: 0.174
-			color: "0xffffffff"
-		}
-		{
-			sprite:
-			{
-				texture: "worldmap.doodads.00"
-				fps: 0.000
-				count: 0
-				size: [24, 24]
-				frame: [2, 0]
-			}
-			
-			position: [19.95511, -17.73513]
-			scale: [-0.40004, 0.624917]
-			rotation: 0.030
-			z: 0.174
-			color: "0xffffffff"
-		}
-		{
-			sprite:
-			{
-				texture: "worldmap.doodads.00"
-				fps: 0.000
-				count: 0
-				size: [24, 24]
-				frame: [4, 0]
-			}
-			
-			position: [30.88487, -13.01636]
-			scale: [0.600, 0.550]
-			rotation: 0.000
-			z: 0.197
-			color: "0xffffffff"
-		}
-		{
-			sprite:
-			{
-				texture: "worldmap.doodads.00"
-				fps: 0.000
-				count: 0
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -170,230 +42,6 @@
 			rotation: -0.070
 			z: 0.455
 			color: "0xffcccccc"
-		}
-		{
-			sprite:
-			{
-				texture: "worldmap.doodads.00"
-				fps: 0.000
-				count: 0
-				size: [24, 24]
-				frame: [2, 0]
-			}
-			
-			position: [45.36776, -11.37378]
-			scale: [0.52504, 0.674917]
-			rotation: 0.100
-			z: 0.174
-			color: "0xffffffff"
-		}
-		{
-			sprite:
-			{
-				texture: "worldmap.doodads.00"
-				fps: 0.000
-				count: 0
-				size: [24, 24]
-				frame: [1, 0]
-			}
-			
-			position: [34.0682, -10.04238]
-			scale: [-0.700, 0.750]
-			rotation: 0.020
-			z: 0.197
-			color: "0xffffffff"
-		}
-		{
-			sprite:
-			{
-				texture: "worldmap.doodads.00"
-				fps: 0.000
-				count: 0
-				size: [24, 24]
-				frame: [3, 0]
-			}
-			
-			position: [28.91198, -12.56499]
-			scale: [-0.52735, 0.600]
-			rotation: -0.100
-			z: 0.174
-			color: "0xffffffff"
-		}
-		{
-			sprite:
-			{
-				texture: "worldmap.doodads.00"
-				fps: 0.000
-				count: 0
-				size: [24, 24]
-				frame: [1, 0]
-			}
-			
-			position: [40.62664, -7.026928]
-			scale: [0.700, 0.750]
-			rotation: -0.020
-			z: 0.197
-			color: "0xffffffff"
-		}
-		{
-			sprite:
-			{
-				texture: "worldmap.doodads.00"
-				fps: 0.000
-				count: 0
-				size: [24, 24]
-				frame: [3, 0]
-			}
-			
-			position: [39.49288, -7.677274]
-			scale: [0.67735, 0.725]
-			rotation: -0.070
-			z: 0.174
-			color: "0xffffffff"
-		}
-		{
-			sprite:
-			{
-				texture: "worldmap.doodads.00"
-				fps: 0.000
-				count: 0
-				size: [24, 24]
-				frame: [1, 0]
-			}
-			
-			position: [18.80169, -19.7366]
-			scale: [0.700, 0.625]
-			rotation: -0.100
-			z: 0.197
-			color: "0xffffffff"
-		}
-		{
-			sprite:
-			{
-				texture: "worldmap.doodads.00"
-				fps: 0.000
-				count: 0
-				size: [24, 24]
-				frame: [1, 0]
-			}
-			
-			position: [19.09385, -18.373]
-			scale: [-0.700, 0.625]
-			rotation: -0.280
-			z: 0.197
-			color: "0xffffffff"
-		}
-		{
-			sprite:
-			{
-				texture: "worldmap.doodads.00"
-				fps: 0.000
-				count: 0
-				size: [24, 24]
-				frame: [1, 0]
-			}
-			
-			position: [26.53414, -20.83558]
-			scale: [0.700, 0.625]
-			rotation: -0.100
-			z: 0.197
-			color: "0xffffffff"
-		}
-		{
-			sprite:
-			{
-				texture: "worldmap.doodads.00"
-				fps: 0.000
-				count: 0
-				size: [24, 24]
-				frame: [3, 0]
-			}
-			
-			position: [25.1754, -15.75044]
-			scale: [0.50235, 0.600]
-			rotation: 0.000
-			z: 0.174
-			color: "0xffffffff"
-		}
-		{
-			sprite:
-			{
-				texture: "worldmap.doodads.00"
-				fps: 0.000
-				count: 0
-				size: [24, 24]
-				frame: [3, 0]
-			}
-			
-			position: [23.65522, -16.68262]
-			scale: [0.50235, 0.600]
-			rotation: 0.000
-			z: 0.174
-			color: "0xffffffff"
-		}
-		{
-			sprite:
-			{
-				texture: "worldmap.doodads.00"
-				fps: 0.000
-				count: 0
-				size: [24, 24]
-				frame: [3, 0]
-			}
-			
-			position: [28.2958, -20.15046]
-			scale: [0.50235, 0.600]
-			rotation: 0.000
-			z: 0.174
-			color: "0xffffffff"
-		}
-		{
-			sprite:
-			{
-				texture: "worldmap.doodads.00"
-				fps: 0.000
-				count: 0
-				size: [24, 24]
-				frame: [1, 0]
-			}
-			
-			position: [16.57612, -14.72392]
-			scale: [0.700, 0.750]
-			rotation: 0.020
-			z: 0.197
-			color: "0xffffffff"
-		}
-		{
-			sprite:
-			{
-				texture: "worldmap.doodads.00"
-				fps: 0.000
-				count: 0
-				size: [24, 24]
-				frame: [3, 0]
-			}
-			
-			position: [16.5018, -15.76448]
-			scale: [-0.57735, 0.775]
-			rotation: -0.030
-			z: 0.273
-			color: "0xffffffff"
-		}
-		{
-			sprite:
-			{
-				texture: "worldmap.doodads.00"
-				fps: 0.000
-				count: 0
-				size: [24, 24]
-				frame: [1, 0]
-			}
-			
-			position: [17.69998, -16.98551]
-			scale: [0.825, 0.750]
-			rotation: 0.000
-			z: 0.197
-			color: "0xffffffff"
 		}
 		{
 			sprite:
@@ -981,7 +629,7 @@
 				frame: [0, 1]
 			}
 			
-			position: [15.65179, -12.41422]
+			position: [15.64035, -12.3934]
 			scale: [0.452103, 0.339352]
 			rotation: 0.090
 			z: 0.174
@@ -1269,11 +917,11 @@
 				frame: [0, 4]
 			}
 			
-			position: [14.33419, -13.25632]
-			scale: [-0.314518, 0.323487]
-			rotation: 0.300
-			z: -0.240
-			color: "0xffffffff"
+			position: [11.42842, -16.8692]
+			scale: [-0.589519, 0.373482]
+			rotation: 0.050
+			z: 0.000
+			color: "0xff9c7e3c"
 		}
 		{
 			sprite:
@@ -1289,6 +937,326 @@
 			scale: [-0.50267, 0.400395]
 			rotation: -0.030
 			z: 0.050
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [64, 24]
+				frame: [0, 4]
+			}
+			
+			position: [10.51929, -18.24043]
+			scale: [-0.814518, 0.223485]
+			rotation: 0.050
+			z: 0.000
+			color: "0xff9c7e3c"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [64, 24]
+				frame: [0, 4]
+			}
+			
+			position: [11.93516, -17.66905]
+			scale: [-0.414518, 0.423487]
+			rotation: 0.050
+			z: 0.000
+			color: "0xff9c7e3c"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [64, 24]
+				frame: [0, 4]
+			}
+			
+			position: [15.94771, -18.60933]
+			scale: [0.503556, -0.249574]
+			rotation: 3.180
+			z: 0.000
+			color: "0xff9c7e3c"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [64, 24]
+				frame: [0, 4]
+			}
+			
+			position: [13.23219, -17.59189]
+			scale: [-0.689939, -0.34886]
+			rotation: 3.180
+			z: 0.000
+			color: "0xff9c7e3c"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [64, 24]
+				frame: [0, 4]
+			}
+			
+			position: [13.87441, -17.11755]
+			scale: [-0.457197, -0.270979]
+			rotation: 3.090
+			z: 0.000
+			color: "0xff9c7e3c"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [64, 24]
+				frame: [0, 4]
+			}
+			
+			position: [15.18657, -17.90524]
+			scale: [-0.553556, -0.324574]
+			rotation: 3.280
+			z: 0.000
+			color: "0xff9c7e3c"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [64, 24]
+				frame: [0, 4]
+			}
+			
+			position: [15.51434, -16.48992]
+			scale: [-0.389936, 0.373309]
+			rotation: -0.140
+			z: 0.000
+			color: "0xff9c7e3c"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [64, 24]
+				frame: [0, 4]
+			}
+			
+			position: [13.74221, -16.39515]
+			scale: [-0.414939, -0.273865]
+			rotation: 3.230
+			z: 0.000
+			color: "0xff9c7e3c"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [64, 24]
+				frame: [0, 4]
+			}
+			
+			position: [17.56208, -18.08787]
+			scale: [-0.457197, -0.270979]
+			rotation: 3.090
+			z: 0.000
+			color: "0xff9c7e3c"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [0, 1]
+			}
+			
+			position: [14.61716, -17.44487]
+			scale: [0.502102, 0.364354]
+			rotation: 0.090
+			z: 0.174
+			color: "0xffaaaaaa"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [2, 1]
+			}
+			
+			position: [16.19647, -14.27459]
+			scale: [-0.502597, 0.525398]
+			rotation: -0.120
+			z: 0.050
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [3, 4]
+			}
+			
+			position: [14.3942, -17.89119]
+			scale: [0.574996, 0.375003]
+			rotation: 0.100
+			z: 0.223
+			color: "0xffaaaaaa"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [3, 4]
+			}
+			
+			position: [13.51116, -16.64658]
+			scale: [0.700756, 0.301186]
+			rotation: 0.090
+			z: 0.223
+			color: "0xffaaaaaa"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [3, 4]
+			}
+			
+			position: [15.37845, -16.60934]
+			scale: [-0.669543, 0.350]
+			rotation: 0.100
+			z: 0.223
+			color: "0xffaaaaaa"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [3, 4]
+			}
+			
+			position: [13.70648, -17.41693]
+			scale: [0.575, 0.400]
+			rotation: 0.100
+			z: 0.223
+			color: "0xffaaaaaa"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [3, 4]
+			}
+			
+			position: [15.65179, -18.18256]
+			scale: [0.700, 0.375]
+			rotation: 0.100
+			z: 0.223
+			color: "0xffaaaaaa"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [0, 1]
+			}
+			
+			position: [13.17169, -12.68298]
+			scale: [0.333097, 0.596213]
+			rotation: 0.050
+			z: -0.248
+			color: "0xffe3e3e3"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [0, 1]
+			}
+			
+			position: [12.89795, -12.1692]
+			scale: [0.452103, 0.339352]
+			rotation: 0.090
+			z: -0.190
+			color: "0xffaaaaaa"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [0, 1]
+			}
+			
+			position: [17.22614, -14.0445]
+			scale: [0.737109, 0.700162]
+			rotation: -0.170
+			z: -0.126
+			color: "0xffe3e3e3"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [0, 1]
+			}
+			
+			position: [17.1459, -13.6904]
+			scale: [0.402352, 0.224999]
+			rotation: -0.070
+			z: 0.455
 			color: "0xffcccccc"
 		}
 	]
