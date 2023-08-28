@@ -19,10 +19,8 @@ namespace TC2.Conquest
 
 		public static Dictionary<int2, ITransport.Road.Segment> road_segments = new(256);
 		public static Dictionary<int2, List<ITransport.Road.Segment>> road_segments_overlapped = new(256);
-		public static List<ITransport.Road.Intersection> road_intersection = new(64);
-
-		//public static Matrix3x2 mat_proj;
-		//public static Matrix3x2 mat_view;
+		public static List<ITransport.Road.Junction> road_junctions = new(64);
+		public static float road_junction_threshold = 0.250f;
 
 		public static float rotation;
 
@@ -82,127 +80,96 @@ namespace TC2.Conquest
 		{
 			road_segments.Clear();
 			road_segments_overlapped.Clear();
+			road_junctions.Clear();
 
-			var ts = Timestamp.Now();
-			foreach (var asset in IDistrict.Database.GetAssets())
 			{
-				if (asset.id == 0) continue;
-
-				var h_district = asset.GetHandle();
-
-				var roads_span = asset.data.roads.AsSpan();
-				for (var road_index = 0; road_index < roads_span.Length; road_index++)
+				var ts = Timestamp.Now();
+				foreach (var asset in IDistrict.Database.GetAssets())
 				{
-					ref var road = ref roads_span[road_index];
+					if (asset.id == 0) continue;
 
-					var points_span = road.points.AsSpan();
-					for (var point_index = 0; point_index < points_span.Length; point_index++)
+					var h_district = asset.GetHandle();
+
+					var roads_span = asset.data.roads.AsSpan();
+					for (var road_index = 0; road_index < roads_span.Length; road_index++)
 					{
-						ref var point = ref points_span[point_index];
+						ref var road = ref roads_span[road_index];
 
-						var pos_int = new int2((int)point.X, (int)point.Y);
-
-						var segment = new ITransport.Road.Segment(h_district, (byte)road_index, (byte)point_index);
-
-						//road_segments_overlapped
-
-						if (!road_segments.TryAdd(pos_int, segment))
+						var points_span = road.points.AsSpan();
+						for (var point_index = 0; point_index < points_span.Length; point_index++)
 						{
-							var segment_other = road_segments[pos_int];
-							//if (segment_other.chain == segment.chain) continue;
+							ref var point = ref points_span[point_index];
 
-							if (!road_segments_overlapped.TryGetValue(pos_int, out var segments_list))
+							var pos_int = new int2((int)point.X, (int)point.Y);
+
+							var segment = new ITransport.Road.Segment(h_district, (byte)road_index, (byte)point_index);
+
+							//road_segments_overlapped
+
+							if (!road_segments.TryAdd(pos_int, segment))
 							{
-								segments_list = road_segments_overlapped[pos_int] = new(4);
-								segments_list.Add(road_segments[pos_int]);
+								var segment_other = road_segments[pos_int];
+								//if (segment_other.chain == segment.chain) continue;
+
+								if (!road_segments_overlapped.TryGetValue(pos_int, out var segments_list))
+								{
+									segments_list = road_segments_overlapped[pos_int] = new(4);
+									segments_list.Add(road_segments[pos_int]);
+								}
+
+								segments_list.Add(segment);
 							}
-
-							segments_list.Add(segment);
 						}
-
-						//road_segments[pos_int] = new(h_district, (byte)road_index, (byte)point_index);
-
-						//var count = points.Length;
-
-						//var last_vert = default(Vector2);
-						//for (var i = 0; i < (count + 1); i++)
-						//{
-						//	if (!loop && i >= count) break;
-
-						//	var index = i % count;
-						//	ref var vert = ref points[index];
-						//	if (i > 0)
-						//	{
-						//		var a = last_vert;
-						//		var b = vert;
-
-						//		IScenario.WorldMap.Renderer.Add(new()
-						//		{
-						//			a = a,
-						//			b = b,
-						//			color = color,
-						//			h_texture = h_texture,
-						//			thickness = thickness,
-						//			uv_scale = Vector2.Distance(a, b) * 0.5f
-						//		});
-
-						//		//GUI.DrawLineTexturedCapped(ta, tb, h_texture, color: color, thickness: thickness * zoom * 2, cap_size: cap_size, layer: GUI.Layer.Window);
-						//	}
-						//	last_vert = vert;
-						//}
 					}
 				}
+
+				var ts_elapsed = ts.GetMilliseconds();
+				App.WriteLine($"Rasterized road lines in {ts_elapsed:0.0000} ms.");
 			}
 
-			//if (road_segments_overlapped.Count > 0)
-			//{
-			//	foreach (var pair in road_segments_overlapped)
-			//	{
-			//		var road_list = pair.Value;
-			//		var box = AABB.Simple(new Vector2(pair.Key.X, pair.Key.Y), new Vector2(1, -1));
+			{
+				var ts = Timestamp.Now();
+				if (road_segments_overlapped.Count > 0)
+				{
+					foreach (var pair in road_segments_overlapped)
+					{
+						var road_list = pair.Value;
 
-			//		foreach (var segment in road_list)
-			//		{
-			//			ref var road = ref segment.GetRoad();
-			//			var points_span = road.points.AsSpan();
+						//Span<int> indices = stackalloc int[road_list.Count];
 
-			//			var pos_intersection = Vector2.Zero;
-			//			var intersects = false;
+						while (road_list.Count > 0)
+						{
+							var junction = new ITransport.Road.Junction();
+							junction.pos = road_list[0].GetPosition();
+							junction.segments[junction.segments_count++] = road_list[0];
 
-			//			if (segment.index > 0)
-			//			{
-			//				var line = new Line(points_span[segment.index - 1], segment.GetPosition());
-			//				var dir = (line.b - line.a).GetNormalizedFast() * 0.20f;
+							road_list.RemoveAt(0); // TODO: replace this with a swapback
 
-			//				line.a -= dir;
-			//				line.b += dir;
+							for (var i = 0; i < road_list.Count;)
+							{
+								var road = road_list[i];
+								if (junction.pos.IsInDistance(road.GetPosition(), road_junction_threshold))
+								{
+									junction.segments[junction.segments_count++] = road;
+									junction.pos = Vector2.Lerp(junction.pos, road.GetPosition(), 0.50f);
+									road_list.RemoveAt(i); // TODO: replace this with a swapback
+								}
+								else
+								{
+									i++;
+								}
+							}
 
-			//				box.ClipLine(ref line.a, ref line.b);
-
-			//				//foreach (var segment_b in road_list)
-			//				//{
-
-			//				//	intersects = Line.TryGetIntersection()
-			//				//} 
-			//			}
-
-			//			if (segment.index < points_span.Length - 1)
-			//			{
-			//				var line = new Line(points_span[segment.index + 1], segment.GetPosition());
-			//				var dir = (line.b - line.a).GetNormalizedFast() * 0.20f;
-
-			//				line.a -= dir;
-			//				line.b += dir;
-
-			//				box.ClipLine(ref line.a, ref line.b);
-			//			}
-			//		}
-			//	}
-			//}
-
-
-			var ts_elapsed = ts.GetMilliseconds();
-			App.WriteLine($"Rasterized lines in {ts_elapsed:0.0000} ms.");
+							//if (junction.segments_count > 1)
+							{
+								road_junctions.Add(junction);
+							}
+						}
+					}
+				}
+				var ts_elapsed = ts.GetMilliseconds();
+				App.WriteLine($"Calculated road junctions in {ts_elapsed:0.0000} ms.");
+			}
 		}
 
 
@@ -400,92 +367,6 @@ namespace TC2.Conquest
 			}
 		}
 
-		//public static void DrawLineEditor(ref IAsset asset, IEnumerable<IAsset> assets, Vector2 mouse_local, in Matrix3x2 mat_l2c, float zoom, ref Keyboard.Data kb, ref Mouse.Data mouse, Func)
-		//{
-		//	//if (edit_asset != null) return;
-
-		//	//var selected_asset = default(IAsset);
-		//	var distance_sq = float.MaxValue;
-		//	var index = int.MaxValue;
-
-		//	if (asset == null)
-		//	{
-		//		var ts = Timestamp.Now();
-		//		foreach (var asset_tmp in IProvince.Database.GetAssets())
-		//		{
-		//			if (asset_tmp.id == 0) continue;
-		//			ref var asset_data = ref asset_tmp.GetData();
-
-		//			var points = asset_data.points.AsSpan();
-		//			if (!points.IsEmpty)
-		//			{
-		//				GetNearestIndex(mouse_local, points, out var nearest_index_tmp, out var nearest_distance_sq_tmp);
-
-		//				if (nearest_distance_sq_tmp < distance_sq)
-		//				{
-		//					asset = asset_tmp;
-		//					distance_sq = nearest_distance_sq_tmp;
-		//					index = nearest_index_tmp;
-		//				}
-		//			}
-		//		}
-		//		var ts_elapsed = ts.GetMilliseconds();
-		//	}
-
-		//	if (distance_sq <= 1.00f.Pow2() && asset != null)
-		//	{
-		//		//ref var asset_data = ref province_handle.GetData(out var asset);
-		//		//if (asset_data.IsNotNull())
-		//		{
-		//			var point = asset_data.points[index];
-		//			var point_t = Vector2.Transform((Vector2)point, mat_l2c);
-
-		//			var color = Color32BGRA.White.LumaBlend(asset_data.color_border, 0.50f);
-		//			GUI.DrawCircleFilled(point_t, 0.125f * zoom, color: color, segments: 4, layer: GUI.Layer.Foreground);
-		//			GUI.DrawTextCentered($"{ts_elapsed:0.0000} ms", point_t, layer: GUI.Layer.Foreground);
-
-		//			if (!edit_points_index.HasValue)
-		//			{
-		//				if (!kb.GetKey(Keyboard.Key.LeftAlt | Keyboard.Key.LeftControl))
-		//				{
-		//					if (mouse.GetKeyDown(Mouse.Key.Right))
-		//					{
-		//						if (kb.GetKey(Keyboard.Key.LeftShift))
-		//						{
-		//							//d_district.points = points.Insert(i, (int2)(points[i] + points[(i + 1) % points.Length]) / 2);
-		//							asset_data.points = asset_data.points.Insert(index, asset_data.points[index]);
-		//							//asset.Save();
-		//							edit_asset = asset;
-		//							hs_pending_asset_saves.Add(asset);
-		//						}
-		//						else
-		//						{
-		//							edit_points_index = index;
-		//							edit_points_s32 = asset_data.points;
-		//							edit_asset = asset;
-
-		//							//GUI.FocusAsset(asset.GetHandle());
-		//							hs_pending_asset_saves.Add(asset);
-		//							Sound.PlayGUI(GUI.sound_pop, 0.07f, pitch: 1.00f);
-		//						}
-		//					}
-		//					else if (kb.GetKeyDown(Keyboard.Key.Delete))
-		//					{
-		//						asset_data.points = asset_data.points.Remove(index);
-		//						//asset.Save();
-		//						hs_pending_asset_saves.Add(asset);
-		//					}
-		//				}
-
-		//				GUI.FocusableAsset(asset, rect: AABB.Centered(point_t, new(1.00f * zoom)));
-		//			}
-		//		}
-		//	}
-
-		//}
-
-		//public static StringBuilder sb = new StringBuilder();
-
 		public static void Rescale()
 		{
 			foreach (var asset in ILocation.Database.GetAssets())
@@ -547,24 +428,6 @@ namespace TC2.Conquest
 			}
 		}
 
-		public static void RecalculateRoadIntersections()
-		{
-			//foreach (var asset in IDistrict.Database.GetAssets())
-			//{
-			//	if (asset.id == 0) continue;
-			//	ref var asset_data = ref asset.GetData();
-
-			//	var roads_span = asset_data.roads.AsSpan();
-			//	foreach (ref var road in roads_span)
-			//	{
-			//		if (road.type == ITransport.Type.Road && !show_roads) continue;
-			//		if (road.type == ITransport.Type.Rail && !show_rails) continue;
-
-			//		DrawOutlineShader(road.points, road.color_border, road.scale, road.h_texture, loop: false);
-			//	}
-			//}
-		}
-
 		public static void Draw(Vector2 size)
 		{
 			ref var world = ref Client.GetWorld();
@@ -588,18 +451,10 @@ namespace TC2.Conquest
 			{
 				var rect = group_canvas.GetInnerRect();
 
-				//if (window.show)
-				//using (var button = GUI.CustomButton.New(id: "worldmap.button", size: GUI.Rm, set_cursor: false))
-				//GUI.ButtonBehavior("worldmap.button", rect: rect, out var hovered, out _);
-
 				using (GUI.ID.Push("worldmap"))
 				{
 					GUI.DrawWindowBackground(GUI.tex_window_character);
 					//sb.Clear();
-
-					//var hovered = true;
-					//var scale_canvas = GUI.GetWorldToCanvasScale();
-					//var hovered = button.hovered;
 
 					ref var scenario_data = ref h_world.GetData(out var scenario_asset);
 
@@ -871,19 +726,6 @@ namespace TC2.Conquest
 								}
 							}
 
-							if (enable_renderer)
-							{
-								//var roads_span = asset_data.roads.AsSpan();
-								//foreach (ref var road in roads_span)
-								//{
-								//	DrawOutlineShader(mat_l2c, zoom, road.points, road.color_border, road.scale, 0.25f, road.h_texture, loop: false);
-								//}
-							}
-							else
-							{
-								//DrawOutline(mat_l2c, zoom, points, asset_data.color_border, 0.125f * 0.75f, 4.00f, asset_data.h_texture_border);
-							}
-
 							if (show_locations) GUI.DrawSpriteCentered(asset_data.icon, rect_icon, layer: GUI.Layer.Window, 0.125f * MathF.Max(scale * zoom * asset_scale, 16), color: color);
 							//GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(((Vector2)asset_data.point) + new Vector2(0.00f, -0.625f * asset_scale) + asset_data.text_offset, mat_l2c), pivot: new(0.50f, 0.50f), color: GUI.font_color_title, font: GUI.Font.Superstar, size: 0.75f * MathF.Max(asset_scale * zoom * scale, 16), layer: GUI.Layer.Window, box_shadow: true);
 							if (show_locations) GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(((Vector2)asset_data.point) + asset_data.text_offset, mat_l2c), pivot: new(0.50f, 0.50f), color: GUI.font_color_title, font: GUI.Font.Superstar, size: 0.50f * MathF.Max(asset_scale * zoom * scale, 16), layer: GUI.Layer.Window, box_shadow: true);
@@ -900,100 +742,19 @@ namespace TC2.Conquest
 
 						if (editor_mode != EditorMode.None)
 						{
-							//if (road_segments.Count > 0)
-							//{
-							//	foreach (var road in road_segments)
-							//	{
-							//		var pos = Vector2.Transform(road.Value.GetPosition(), mat_l2c);
-
-							//		GUI.DrawRectFilled(AABB.Simple(Vector2.Transform(new Vector2(road.Key.X, road.Key.Y), mat_l2c), new(zoom, -zoom)), Color32BGRA.Green.WithAlphaMult(0.10f), GUI.Layer.Window);
-							//		GUI.DrawCircleFilled(pos, 0.125f * zoom, Color32BGRA.Green, 4, GUI.Layer.Window);
-							//	}
-							//}
-
-							var ts = Timestamp.Now();
-							if (road_segments_overlapped.Count > 0)
+							if (road_junctions.Count > 0)
 							{
-								foreach (var pair in road_segments_overlapped)
+								var ts = Timestamp.Now();
+								foreach (var junction in road_junctions)
 								{
-									var road_list = pair.Value;
-									//var pos = Vector2.Transform(pair.GetPosition(), mat_l2c);
+									var pos_c = Vector2.Transform(junction.pos, mat_l2c);
 
-									var box = AABB.Simple(new Vector2(pair.Key.X, pair.Key.Y), new Vector2(1, -1));
-									GUI.DrawRectFilled(AABB.Simple(Vector2.Transform(new Vector2(pair.Key.X, pair.Key.Y), mat_l2c), new(zoom, -zoom)), Color32BGRA.Green.WithAlphaMult(0.10f), GUI.Layer.Window);
-
-									var i = 0;
-
-									foreach (var segment in road_list)
-									{
-										//var line.r = new Line(Vector2.Transform(segment.GetPosition(), mat_l2c), Vector2.Transform(segment.GetPosition(), mat_l2c))
-
-										ref var road = ref segment.GetRoad();
-										var pos = Vector2.Transform(segment.GetPosition(), mat_l2c);
-										var points_span = road.points.AsSpan();
-
-										//var dir = Vector2.Zero;
-										//if (segment.index < points_span.Length - 1) dir = (segment.GetPosition() - points_span[segment.index + 1]).GetNormalized();
-										//if (segment.index > 0) dir = (segment.GetPosition() - points_span[segment.index - 1]).GetNormalized();
-
-										//var line = new Line(segment.GetPosition() - (dir * 8), segment.GetPosition() + (dir * 8));
-										//box.ClipLine(ref line.a, ref line.b);
-
-										//GUI.DrawLine(Vector2.Transform(line.a, mat_l2c), Vector2.Transform(line.b, mat_l2c), Color32BGRA.Yellow, layer: GUI.Layer.Foreground);
-
-										var color = Color32BGRA.FromHSV(i * 1.00f, 1, 1);
-
-										var pos_intersection = Vector2.Zero;
-										var intersects = false;
-
-										if (segment.index > 0)
-										{
-											var line = new Line(points_span[segment.index - 1], segment.GetPosition());
-											var dir = (line.b - line.a).GetNormalizedFast() * 0.125f;
-
-											//line.a -= dir;
-											if (segment.index == 1) line.b += dir;
-
-											box.ClipLine(ref line.a, ref line.b);
-											GUI.DrawLine(Vector2.Transform(line.a, mat_l2c), Vector2.Transform(line.b, mat_l2c), color, layer: GUI.Layer.Foreground);
-
-
-
-											//GUI.DrawLine(Vector2.Transform(points_span[segment.index - 1], mat_l2c), pos, Color32BGRA.Yellow, layer: GUI.Layer.Foreground);
-										}
-										
-										if (segment.index < points_span.Length - 1)
-										{
-											var line = new Line(points_span[segment.index + 1], segment.GetPosition());
-											var dir = (line.b - line.a).GetNormalizedFast() * 0.125f;
-
-											//line.a -= dir;
-											if (segment.index == points_span.Length - 2) line.b += dir;
-
-											box.ClipLine(ref line.a, ref line.b);
-											GUI.DrawLine(Vector2.Transform(line.a, mat_l2c), Vector2.Transform(line.b, mat_l2c), thickness: 8.00f, color: color.WithAlphaMult(0.250f), layer: GUI.Layer.Foreground);
-
-											//GUI.DrawLine(Vector2.Transform(points_span[segment.index + 1], mat_l2c), pos, Color32BGRA.Yellow, layer: GUI.Layer.Foreground);
-										}
-
-										//GUI.DrawCircleFilled(pos, 0.125f * zoom, Color32BGRA.Green, 4, GUI.Layer.Window);
-
-										i++;
-									}
-
-									GUI.DrawTextCentered($"{road_list.Count}", Vector2.Transform(new Vector2(pair.Key.X, pair.Key.Y), mat_l2c), layer: GUI.Layer.Foreground);
-
-									//GUI.DrawCircleFilled(pos, 0.125f * zoom, Color32BGRA.Green, 4, GUI.Layer.Window);
+									GUI.DrawCircleFilled(pos_c, 0.125f * zoom, junction.segments_count > 1 ? Color32BGRA.Green : Color32BGRA.Yellow.WithAlphaMult(0.250f), 4, GUI.Layer.Window);
+									GUI.DrawTextCentered($"{junction.segments_count}", pos_c, layer: GUI.Layer.Window);
 								}
+								var ts_elapsed = ts.GetMilliseconds();
+								GUI.DrawTextCentered($"{ts_elapsed:0.000} ms", GUI.CanvasSize * 0.75f, layer: GUI.Layer.Foreground);
 							}
-
-							if (road_intersection.Count > 0)
-							{
-
-							}
-							var ts_elapsed = ts.GetMilliseconds();
-
-							GUI.DrawTextCentered($"{ts_elapsed:0.000} ms", GUI.CanvasSize * 0.75f, layer: GUI.Layer.Foreground);
 						}
 
 						var hovered = GUI.IsHoveringRect(rect, allow_blocked: false, allow_overlapped: false, root_window: false, child_windows: false);
@@ -1066,7 +827,7 @@ namespace TC2.Conquest
 							ref var world_data = ref h_world.GetData();
 							if (world_data.IsNotNull())
 							{
-								if (world_data.doodads != null)
+								if (world_data.doodads != null && show_doodads)
 								{
 									IScenario.Doodad.Renderer.Add(world_data.doodads.AsSpan());
 								}
@@ -1550,8 +1311,8 @@ namespace TC2.Conquest
 										var road_new = road;
 										road_new.points = new Vector2[]
 										{
-														mouse_local + (road.points[Maths.Wrap(road_point_index - 1, 0, road.points.Length)] - mouse_local).GetNormalized().GetPerpendicular(true),
-														mouse_local,
+											mouse_local + (road.points[Maths.Wrap(road_point_index - 1, 0, road.points.Length)] - mouse_local).GetNormalized().GetPerpendicular(true),
+											mouse_local,
 										};
 
 										asset_data.roads = asset_data.roads.Add(road_new);
@@ -1802,71 +1563,6 @@ namespace TC2.Conquest
 					{
 						window.group.DrawBackground(GUI.tex_window_popup_l, color: GUI.col_default);
 
-						//if (selected_region_id != 0)
-						//{
-						//	ref var region_info = ref World.GetRegionInfo(selected_region_id);
-						//	if (region_info.IsNotNull() && region_info.IsValid())
-						//	{
-						//		ref var map_info = ref region_info.map_info.GetRefOrNull();
-						//		var map_asset = App.GetModContext().GetMap(region_info.map);
-
-						//		using (GUI.Group.New(size: GUI.Rm))
-						//		{
-						//			using (var group_title = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(8, 0)))
-						//			{
-						//				GUI.TitleCentered(map_info.name, size: 32, pivot: new(0.00f, 0.50f));
-						//			}
-
-						//			GUI.SeparatorThick();
-
-						//			using (var group_top = GUI.Group.New(size: new(GUI.RmX, 0), padding: new(4, 4)))
-						//			{
-						//				GUI.DrawMapThumbnail(map_asset.Identifier, size: new(GUI.RmX * 0.50f));
-
-						//				//using (var group_thumbnail = GUI.Group.New(size: new(GUI.RmX * 0.50f)))
-						//				//{
-						//				//	var tex_thumbnail = map_asset.GetThumbnail();
-						//				//	if (tex_thumbnail != null)
-						//				//	{
-						//				//		GUI.DrawTexture(tex_thumbnail.Identifier, group_thumbnail.GetInnerRect(), GUI.Layer.Window);
-						//				//	}
-						//				//	GUI.DrawBackground(GUI.tex_frame, group_thumbnail.GetOuterRect(), padding: new(4));
-						//				//}
-
-						//				GUI.SameLine();
-
-						//				using (var group_desc = GUI.Group.New(size: new(GUI.RmX, 0), padding: new(8, 8)))
-						//				{
-						//					using (GUI.Wrap.Push(GUI.RmX))
-						//					{
-						//						GUI.TextShaded(map_asset.Description);
-						//					}
-						//				}
-						//			}
-
-						//			GUI.SeparatorThick();
-
-						//			using (var group_info = GUI.Group.New(size: new(GUI.RmX, GUI.RmY - 40), padding: new(8, 8)))
-						//			{
-						//				GUI.TextShaded("- some info here");
-						//			}
-
-						//			if (true)
-						//			{
-						//				var color = GUI.col_button_ok;
-						//				var alpha = 1.00f;
-
-						//				if (GUI.DrawButton("Enter", size: new(GUI.RmX * 0.50f, 40), font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
-						//				{
-						//					Client.RequestSetActiveRegion(selected_region_id, delay_seconds: 0.75f);
-
-						//					//Client.TODO_LoadRegion(region_id);
-						//				}
-						//			}
-						//		}
-						//	}
-						//}
-
 						if (h_selected_location != 0)
 						{
 							ref var location_data = ref h_selected_location.GetData();
@@ -1910,16 +1606,6 @@ namespace TC2.Conquest
 													{
 														GUI.DrawMapThumbnail(region_info.map, size: new(GUI.RmX));
 
-														//using (var group_thumbnail = GUI.Group.New(size: new(GUI.RmX * 0.50f)))
-														//{
-														//	var tex_thumbnail = map_asset.GetThumbnail();
-														//	if (tex_thumbnail != null)
-														//	{
-														//		GUI.DrawTexture(tex_thumbnail.Identifier, group_thumbnail.GetInnerRect(), GUI.Layer.Window);
-														//	}
-														//	GUI.DrawBackground(GUI.tex_frame, group_thumbnail.GetOuterRect(), padding: new(4));
-														//}
-
 														if (true)
 														{
 															var color = GUI.col_button_ok;
@@ -1952,18 +1638,6 @@ namespace TC2.Conquest
 
 									using (var group_top = GUI.Group.New(size: new(GUI.RmX, 0), padding: new(4, 4)))
 									{
-										//using (var group_thumbnail = GUI.Group.New(size: new(GUI.RmX * 0.50f)))
-										//{
-										//	var tex_thumbnail = map_asset.GetThumbnail();
-										//	if (tex_thumbnail != null)
-										//	{
-										//		GUI.DrawTexture(tex_thumbnail.Identifier, group_thumbnail.GetInnerRect(), GUI.Layer.Window);
-										//	}
-										//	GUI.DrawBackground(GUI.tex_frame, group_thumbnail.GetOuterRect(), padding: new(4));
-										//}
-
-										//GUI.SameLine();
-
 										using (var group_desc = GUI.Group.New(size: new(GUI.RmX, 0), padding: new(8, 8)))
 										{
 											using (GUI.Wrap.Push(GUI.RmX))
@@ -2005,11 +1679,6 @@ namespace TC2.Conquest
 
 										//GUI.TextShaded("- some info here");
 									}
-
-									if (true)
-									{
-
-									}
 								}
 							}
 						}
@@ -2049,6 +1718,8 @@ namespace TC2.Conquest
 						GUI.Checkbox("Show Fill", ref show_fill, new(32, 32), show_text: false, show_tooltip: true);
 						GUI.SameLine();
 						GUI.Checkbox("Show Borders", ref show_borders, new(32, 32), show_text: false, show_tooltip: true);
+						GUI.SameLine();
+						GUI.Checkbox("Show Doodads", ref show_doodads, new(32, 32), show_text: false, show_tooltip: true);
 
 						if (GUI.DrawButton("Recalculate Roads", size: new Vector2(160, 40)))
 						{
