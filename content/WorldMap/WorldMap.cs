@@ -1658,7 +1658,7 @@ namespace TC2.Conquest
 
 		private static void DrawLeftWindow(ref AABB rect)
 		{
-			using (var window = GUI.Window.Standalone("worldmap.side.left", position: new Vector2(rect.a.X, rect.a.Y) + new Vector2(6, 12), size: new(244, MathF.Min(rect.GetHeight() - 8, 550)), pivot: new(0.00f, 0.00f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus | GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.Child))
+			using (var window = GUI.Window.Standalone("worldmap.side.left", position: new Vector2(rect.a.X, rect.a.Y) + new Vector2(6, 12), size: new(284, MathF.Min(rect.GetHeight() - 8, 550)), pivot: new(0.00f, 0.00f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus | GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.Child))
 			{
 				if (window.show)
 				{
@@ -1979,19 +1979,28 @@ namespace TC2.Conquest
 									{
 										using (var group_info_wide = GUI.Group.New2(size: new(GUI.RmX, 0), padding: new(2, 2, 12, 2)))
 										{
-											GUI.LabelShaded("Categories:", location_data.categories, font_a: GUI.Font.Superstar, size_a: 16);
+											using (GUI.Wrap.Push(GUI.RmX))
+											{
+												GUI.LabelShaded("Categories:", location_data.categories, font_a: GUI.Font.Superstar, size_a: 16);
+											}
 										}
 
 										using (var group_info_left = GUI.Group.New2(size: new(GUI.RmX * 0.50f, GUI.RmY), padding: new(2, 2, 12, 2)))
 										{
-											GUI.LabelShaded("Type:", location_data.type, font_a: GUI.Font.Superstar, size_a: 16);
+											using (GUI.Wrap.Push(GUI.RmX))
+											{
+												GUI.LabelShaded("Type:", location_data.type, font_a: GUI.Font.Superstar, size_a: 16);
+											}
 										}
 
 										GUI.SameLine();
 
 										using (var group_info_right = GUI.Group.New2(size: new(GUI.RmX, GUI.RmY), padding: new(12, 2, 2, 2)))
 										{
+											using (GUI.Wrap.Push(GUI.RmX))
+											{
 
+											}
 										}
 
 										//GUI.TextShaded("- some info here");
