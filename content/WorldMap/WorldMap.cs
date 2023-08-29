@@ -1,4 +1,5 @@
 ﻿
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace TC2.Conquest
@@ -17,15 +18,16 @@ namespace TC2.Conquest
 		public static Vector2 worldmap_window_size = new Vector2(1024, 1024);
 		public static Vector2 worldmap_window_offset = new Vector2(0, 0);
 
-		public static Dictionary<int2, Road.Segment> road_segments = new(256);
-		public static Dictionary<int2, List<Road.Segment>> road_segments_overlapped = new(256);
+		public static Dictionary<int, Road.Segment> road_segments = new(256);
+		public static Dictionary<int, List<Road.Segment>> road_segments_overlapped = new(256);
 		public static List<Road.Junction> road_junctions = new(64);
+		public static Dictionary<Road.Segment, int> road_segment_to_junction_index = new(256);
 		public static float road_junction_threshold = 0.250f;
 
 		public static float rotation;
 
 		public static int? edit_points_index;
-		public static int2[] edit_points_s32;
+		public static short2[] edit_points_s32;
 		public static Vector2[] edit_points_f32;
 
 		public static IScenario.Doodad? clipboard_doodad;
@@ -81,6 +83,7 @@ namespace TC2.Conquest
 			road_segments.Clear();
 			road_segments_overlapped.Clear();
 			road_junctions.Clear();
+			road_segment_to_junction_index.Clear();
 
 			{
 				var ts = Timestamp.Now();
@@ -100,21 +103,22 @@ namespace TC2.Conquest
 						{
 							ref var point = ref points_span[point_index];
 
-							var pos_int = new int2((int)point.X, (int)point.Y);
+							var pos_grid = new short2((short)point.X, (short)point.Y);
+							var pos_key = Unsafe.BitCast<short2, int>(pos_grid);
 
 							var segment = new Road.Segment(h_district, (byte)road_index, (byte)point_index);
 
 							//road_segments_overlapped
 
-							if (!road_segments.TryAdd(pos_int, segment))
+							if (!road_segments.TryAdd(pos_key, segment))
 							{
-								var segment_other = road_segments[pos_int];
+								var segment_other = road_segments[pos_key];
 								//if (segment_other.chain == segment.chain) continue;
 
-								if (!road_segments_overlapped.TryGetValue(pos_int, out var segments_list))
+								if (!road_segments_overlapped.TryGetValue(pos_key, out var segments_list))
 								{
-									segments_list = road_segments_overlapped[pos_int] = new(4);
-									segments_list.Add(road_segments[pos_int]);
+									segments_list = road_segments_overlapped[pos_key] = new(4);
+									segments_list.Add(road_segments[pos_key]);
 								}
 
 								segments_list.Add(segment);
@@ -137,26 +141,30 @@ namespace TC2.Conquest
 					{
 						var road_list = pair.Value;
 
+						//var road_list_count = road_list.Count;
+						Span<Road.Segment> road_list_span = stackalloc Road.Segment[road_list.Count];
+						road_list.CopyTo(road_list_span);
+
 						//Span<int> indices = stackalloc int[road_list.Count];
 
-						while (road_list.Count > 0)
+						while (road_list_span.Length > 0)
 						{
 							var junction = new Road.Junction();
-							junction.pos = road_list[0].GetPosition();
-							junction.segments[junction.segments_count++] = road_list[0];
+							junction.pos = road_list_span[0].GetPosition();
+							junction.segments[junction.segments_count++] = road_list_span[0];
 
-							road_list.RemoveAtSwapback(0); // TODO: replace this with a swapback
+							road_list_span.RemoveAtSwapback(0, resize: true);
 
-							for (var i = 0; i < road_list.Count;)
+							for (var i = 0; i < road_list_span.Length;)
 							{
-								var road = road_list[i];
+								ref var road = ref road_list_span[i];
 								var pos = road.GetPosition();
 
-								if (Vector2.Distance(junction.pos, pos) < road_junction_threshold_sq)
+								if (Vector2.DistanceSquared(junction.pos, pos) < road_junction_threshold_sq)
 								{
 									junction.segments[junction.segments_count++] = road;
 									junction.pos = Vector2.Lerp(junction.pos, pos, 0.50f);
-									road_list.RemoveAtSwapback(i); // TODO: replace this with a swapback
+									road_list_span.RemoveAtSwapback(i, resize: true);
 								}
 								else
 								{
@@ -164,9 +172,15 @@ namespace TC2.Conquest
 								}
 							}
 
-							//if (junction.segments_count > 1)
+							if (junction.segments_count > 1)
 							{
+								var junction_index = road_junctions.Count;
 								road_junctions.Add(junction);
+
+								for (var j = 0; j < junction.segments_count; j++)
+								{
+									road_segment_to_junction_index[junction.segments[j]] = junction_index;
+								}
 							}
 						}
 					}
@@ -187,6 +201,7 @@ namespace TC2.Conquest
 			Location,
 			Doodad,
 			Roads,
+			Junctions,
 
 			Max
 		}
@@ -241,7 +256,7 @@ namespace TC2.Conquest
 		}
 
 		//// TODO: implement a faster lookup, especially for this
-		//public static void GetNearestIndex(Vector2 position, Span<int2> span, out int index, out float distance_sq)
+		//public static void GetNearestIndex(Vector2 position, Span<short2> span, out int index, out float distance_sq)
 		//{
 		//	var nearest_index = int.MaxValue;
 		//	var nearest_distance_sq = float.MaxValue;
@@ -284,11 +299,11 @@ namespace TC2.Conquest
 		//	distance_sq = nearest_distance_sq;
 		//}
 
-		public static void DrawOutlineShader(Span<int2> points, Color32BGRA color, float thickness, Texture.Handle h_texture, bool loop = true)
+		public static void DrawOutlineShader(Span<short2> points, Color32BGRA color, float thickness, Texture.Handle h_texture, bool loop = true)
 		{
 			var count = points.Length;
 
-			var last_vert = default(int2);
+			var last_vert = default(short2);
 			for (var i = 0; i < (count + 1); i++)
 			{
 				if (!loop && i >= count) break;
@@ -348,11 +363,11 @@ namespace TC2.Conquest
 			}
 		}
 
-		public static void DrawOutline(Matrix3x2 mat_l2c, float zoom, Span<int2> points, Color32BGRA color, float thickness, float cap_size, Texture.Handle h_texture)
+		public static void DrawOutline(Matrix3x2 mat_l2c, float zoom, Span<short2> points, Color32BGRA color, float thickness, float cap_size, Texture.Handle h_texture)
 		{
 			var count = points.Length;
 
-			var last_vert = default(int2);
+			var last_vert = default(short2);
 			for (var i = 0; i < (count + 1); i++)
 			{
 				var index = i % count;
@@ -977,7 +992,7 @@ namespace TC2.Conquest
 									{
 										if (kb.GetKey(Keyboard.Key.LeftShift))
 										{
-											//d_district.points = points.Insert(i, (int2)(points[i] + points[(i + 1) % points.Length]) / 2);
+											//d_district.points = points.Insert(i, (short2)(points[i] + points[(i + 1) % points.Length]) / 2);
 											asset_data.points = asset_data.points.Insert(index, asset_data.points[index]);
 											//asset.Save();
 											edit_asset = asset;
@@ -1058,7 +1073,7 @@ namespace TC2.Conquest
 									{
 										if (kb.GetKey(Keyboard.Key.LeftShift))
 										{
-											//d_district.points = points.Insert(i, (int2)(points[i] + points[(i + 1) % points.Length]) / 2);
+											//d_district.points = points.Insert(i, (short2)(points[i] + points[(i + 1) % points.Length]) / 2);
 											asset_data.points = asset_data.points.Insert(index, asset_data.points[index]);
 											//asset.Save();
 											edit_asset = asset;
@@ -1120,7 +1135,7 @@ namespace TC2.Conquest
 								{
 									hs_pending_asset_saves.Add(asset);
 
-									asset_data.point = new int2((int)MathF.Round(point_tmp.X), (int)MathF.Round(point_tmp.Y));
+									asset_data.point = new short2((short)MathF.Round(point_tmp.X), (short)MathF.Round(point_tmp.Y));
 								}
 							}
 						}
@@ -1275,7 +1290,7 @@ namespace TC2.Conquest
 
 											if (kb.GetKey(Keyboard.Key.LeftShift))
 											{
-												//d_district.points = points.Insert(i, (int2)(points[i] + points[(i + 1) % points.Length]) / 2);
+												//d_district.points = points.Insert(i, (short2)(points[i] + points[(i + 1) % points.Length]) / 2);
 												road.points = road.points.Insert(road_point_index, road.points[road_point_index]);
 												//asset.Save();
 												edit_asset = asset;
@@ -1334,11 +1349,103 @@ namespace TC2.Conquest
 					}
 				}
 				break;
+
+				case EditorMode.Junctions:
+				{
+					var junctions_span = CollectionsMarshal.AsSpan(road_junctions);
+					junctions_span.GetNearestIndex(mouse_local, out var junction_index, out var junction_dist_sq, (ref Road.Junction junction) => ref junction.pos);
+
+					if (junction_dist_sq < 1.00f.Pow2())
+					{
+						ref var junction = ref junctions_span[junction_index];
+
+						var hs_visited = new HashSet<int>();
+						//hs_visited.Add(junction_index);
+
+						var iter_max = 6;
+
+						DrawJunction(hs_visited, junctions_span, ref junction.segments[0], ref mat_l2c, zoom, 0, iter_max);
+						static void DrawJunction(HashSet<int> hs_visited, Span<Road.Junction> junctions_span, ref Road.Segment segment_from, ref Matrix3x2 mat_l2c, float zoom, int depth, int iter_max)
+						{
+							if (depth >= iter_max) return;
+
+							var junction_index = road_segment_to_junction_index[segment_from];
+
+
+
+							var color = Color32BGRA.FromHSV(((float)depth / (float)iter_max) * 3.00f, 1.00f, 1.00f);
+
+							ref var junction = ref junctions_span[junction_index];
+							GUI.DrawCircle(Vector2.Transform(junction.pos, mat_l2c), 0.125f * zoom, color: color, segments: 12, layer: GUI.Layer.Window);
+
+							var segments_span = junction.segments.Slice(junction.segments_count);
+							foreach (ref var segment_base in segments_span)
+							{
+								if (hs_visited.Contains(segment_base.GetHashCode())) continue;
+								hs_visited.Add(segment_base.GetHashCode());
+
+								//if (segment_base == segment_from) continue;
+
+								//if (hs_visited.Contains(segment_base.GetHashCode())) continue;
+								//hs_visited.Add(segment_base.GetHashCode());
+
+								var pos = segment_base.GetPosition();
+
+								GUI.DrawCircleFilled(Vector2.Transform(pos, mat_l2c), 0.125f * zoom * 0.50f, color: color, segments: 4, layer: GUI.Layer.Window);
+
+								ref var road = ref segment_base.GetRoad();
+								var road_points_span = road.points.AsSpan();
+
+								//var depth_offset = Vector2.Zero;
+								var depth_offset = new Vector2(0, -4 * depth);
+
+								{
+									var pos_last = pos;
+									for (var i = segment_base.index + 1; i < road_points_span.Length; i++)
+									{
+										var segment = new Road.Segment(segment_base.chain, (byte)i);
+
+										if (hs_visited.Contains(segment.GetHashCode())) break;
+										hs_visited.Add(segment.GetHashCode());
+
+										GUI.DrawLine(Vector2.Transform(pos_last, mat_l2c) - depth_offset, Vector2.Transform(road_points_span[i], mat_l2c) - depth_offset, color, layer: GUI.Layer.Window);
+										pos_last = road_points_span[i];
+
+										if (road_segment_to_junction_index.TryGetValue(segment, out var junction_index_new))
+										{
+											DrawJunction(hs_visited, junctions_span, ref segment, ref mat_l2c, zoom, depth + 1, iter_max);
+										}
+									}
+								}
+
+								{
+									var pos_last = pos;
+									for (var i = segment_base.index - 1; i >= 0; i--)
+									{
+										var segment = new Road.Segment(segment_base.chain, (byte)i);
+
+										if (hs_visited.Contains(segment.GetHashCode())) break;
+										hs_visited.Add(segment.GetHashCode());
+
+										GUI.DrawLine(Vector2.Transform(pos_last, mat_l2c) - depth_offset, Vector2.Transform(road_points_span[i], mat_l2c) - depth_offset, color, layer: GUI.Layer.Window);
+										pos_last = road_points_span[i];
+
+										if (road_segment_to_junction_index.TryGetValue(segment, out var junction_index_new))
+										{
+											DrawJunction(hs_visited, junctions_span, ref segment, ref mat_l2c, zoom, depth + 1, iter_max);
+										}
+									}
+								}				
+							}
+						}
+					}
+				}
+				break;
 			}
 
 			if (edit_points_index.TryGetValue(out var v_edit_points_index))
 			{
-				if (edit_points_s32 != null) edit_points_s32[v_edit_points_index] = new int2((int)MathF.Round(mouse_local.X), (int)MathF.Round(mouse_local.Y));
+				if (edit_points_s32 != null) edit_points_s32[v_edit_points_index] = new short2((short)MathF.Round(mouse_local.X), (short)MathF.Round(mouse_local.Y));
 				if (edit_points_f32 != null) edit_points_f32[v_edit_points_index] = mouse_local;
 
 				if (mouse.GetKeyUp(Mouse.Key.Right))
@@ -1755,6 +1862,13 @@ namespace TC2.Conquest
 								case EditorMode.Roads:
 								{
 									//if ()
+								}
+								break;
+
+								case EditorMode.Junctions:
+								{
+									//var junctions_span = CollectionsMarshal.AsSpan(road_junctions);
+									//junctions_span.GetNearestIndex
 								}
 								break;
 
