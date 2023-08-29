@@ -1360,20 +1360,34 @@ namespace TC2.Conquest
 						ref var junction = ref junctions_span[junction_index];
 
 						var hs_visited = new HashSet<int>();
+						var queue = new Queue<int>();
 						//hs_visited.Add(junction_index);
 
-						var iter_max = 6;
+						var type = junction.segments[0].GetRoad().type;
 
-						DrawJunction(hs_visited, junctions_span, ref junction.segments[0], ref mat_l2c, zoom, 0, iter_max);
-						static void DrawJunction(HashSet<int> hs_visited, Span<Road.Junction> junctions_span, ref Road.Segment segment_from, ref Matrix3x2 mat_l2c, float zoom, int depth, int iter_max)
+						var iter_max = 10;
+
+						queue.Enqueue(junction_index);
+						for (var i = 0; i < iter_max; i++)
 						{
-							if (depth >= iter_max) return;
+							var count = queue.Count;
+							for (var j = 0; j < count; j++)
+							{
+								var junction_index_new = queue.Dequeue();
+								DrawJunction(hs_visited, queue, junctions_span, junction_index_new, ref mat_l2c, zoom, i, iter_max, type);
+							}
+						}
 
-							var junction_index = road_segment_to_junction_index[segment_from];
+						//DrawJunction(hs_visited, queue, junctions_span, ref junction.segments[0], ref mat_l2c, zoom, 0, iter_max);
+						static void DrawJunction(HashSet<int> hs_visited, Queue<int> queue, Span<Road.Junction> junctions_span, int junction_index, ref Matrix3x2 mat_l2c, float zoom, int depth, int iter_max, ITransport.Type type)
+						{
+							//if (depth >= iter_max) return;
+
+							//var junction_index = road_segment_to_junction_index[segment_from];
 
 
 
-							var color = Color32BGRA.FromHSV(((float)depth / (float)iter_max) * 3.00f, 1.00f, 1.00f);
+							var color = Color32BGRA.FromHSV((1.00f - ((float)depth / (float)iter_max)) * 2.00f, 1.00f, 1.00f);
 
 							ref var junction = ref junctions_span[junction_index];
 							GUI.DrawCircle(Vector2.Transform(junction.pos, mat_l2c), 0.125f * zoom, color: color, segments: 12, layer: GUI.Layer.Window);
@@ -1381,23 +1395,25 @@ namespace TC2.Conquest
 							var segments_span = junction.segments.Slice(junction.segments_count);
 							foreach (ref var segment_base in segments_span)
 							{
-								if (hs_visited.Contains(segment_base.GetHashCode())) continue;
-								hs_visited.Add(segment_base.GetHashCode());
+								//if (hs_visited.Contains(segment_base.GetHashCode())) continue;
+								//hs_visited.Add(segment_base.GetHashCode());
 
 								//if (segment_base == segment_from) continue;
 
 								//if (hs_visited.Contains(segment_base.GetHashCode())) continue;
 								//hs_visited.Add(segment_base.GetHashCode());
 
+							
+								ref var road = ref segment_base.GetRoad();
+								if (road.type != type) continue;
+
 								var pos = segment_base.GetPosition();
+								var road_points_span = road.points.AsSpan();
 
 								GUI.DrawCircleFilled(Vector2.Transform(pos, mat_l2c), 0.125f * zoom * 0.50f, color: color, segments: 4, layer: GUI.Layer.Window);
 
-								ref var road = ref segment_base.GetRoad();
-								var road_points_span = road.points.AsSpan();
-
-								//var depth_offset = Vector2.Zero;
-								var depth_offset = new Vector2(0, -4 * depth);
+								var depth_offset = Vector2.Zero;
+								//var depth_offset = new Vector2(0, -4 * depth);
 
 								{
 									var pos_last = pos;
@@ -1413,7 +1429,9 @@ namespace TC2.Conquest
 
 										if (road_segment_to_junction_index.TryGetValue(segment, out var junction_index_new))
 										{
-											DrawJunction(hs_visited, junctions_span, ref segment, ref mat_l2c, zoom, depth + 1, iter_max);
+											queue.Enqueue(junction_index_new);
+											break;
+											//DrawJunction(hs_visited, junctions_span, ref segment, ref mat_l2c, zoom, depth + 1, iter_max);
 										}
 									}
 								}
@@ -1432,10 +1450,16 @@ namespace TC2.Conquest
 
 										if (road_segment_to_junction_index.TryGetValue(segment, out var junction_index_new))
 										{
-											DrawJunction(hs_visited, junctions_span, ref segment, ref mat_l2c, zoom, depth + 1, iter_max);
+											queue.Enqueue(junction_index_new);
+											break;
+											//DrawJunction(hs_visited, junctions_span, ref segment, ref mat_l2c, zoom, depth + 1, iter_max);
 										}
 									}
-								}				
+								}
+
+								if (hs_visited.Contains(segment_base.GetHashCode())) continue;
+								hs_visited.Add(segment_base.GetHashCode());
+
 							}
 						}
 					}
