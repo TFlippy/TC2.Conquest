@@ -24,6 +24,9 @@ namespace TC2.Conquest
 		public static Dictionary<Road.Segment, int> road_segment_to_junction_index = new(256);
 		public static float road_junction_threshold = 0.250f;
 
+		public static HashSet<int> junctions_visited = new HashSet<int>();
+		public static Queue<int> junctions_queue = new Queue<int>();
+
 		public static float rotation;
 
 		public static int? edit_points_index;
@@ -75,8 +78,127 @@ namespace TC2.Conquest
 		public static bool show_fill = true;
 		public static bool show_doodads = true;
 
-		//public static BitField<ITransport.Type> filter_roads = new BitField<ITransport.Type>(ITransport.Type.Road, ITransport.Type.Rail, ITransport.Type.Marine, ITransport.Type.Air);
-		//public static BitField<ITransport.Type> filter_roads_mask = new BitField<ITransport.Type>(ITransport.Type.Road, ITransport.Type.Rail, ITransport.Type.Marine, ITransport.Type.Air);
+		//public static BitField<Road.Type> filter_roads = new BitField<Road.Type>(Road.Type.Road, Road.Type.Rail, Road.Type.Marine, Road.Type.Air);
+		//public static BitField<Road.Type> filter_roads_mask = new BitField<Road.Type>(Road.Type.Road, Road.Type.Rail, Road.Type.Marine, Road.Type.Air);
+
+		public static void DrawConnectedRoads(Road.Segment road_segment, ref Matrix3x2 mat_l2c, float zoom, int iter_max = 10)
+		{
+			//var thickness = road_segment.GetRoad().scale * 0.50f;
+			var alpha = 0.25f;
+
+			var junctions_span = CollectionsMarshal.AsSpan(road_junctions);
+			//junctions_span.GetNearestIndex(mouse, out var junction_index, out var junction_dist_sq, (ref Road.Junction junction) => ref junction.pos);
+
+			//if (junction_dist_sq < 1.00f.Pow2())
+			{
+				//ref var junction = ref junctions_span[junction_index];
+
+				junctions_queue.Clear();
+				junctions_visited.Clear();
+
+				//hs_visited.Add(junction_index);
+
+				//var type = junction.segments[0].GetRoad().type;
+
+				//var iter_max = 10;
+
+				//junctions_queue.Enqueue(junction_index);
+
+				ref var road = ref road_segment.GetRoad();
+				var type = road.type;
+
+				if (road_segment_to_junction_index.TryGetValue(road_segment, out var junction_index))
+				{
+					junctions_queue.Enqueue(junction_index);
+				}
+				else
+				{
+					DrawSegment(junctions_visited, junctions_queue, ref road_segment, ref mat_l2c, zoom, type, Color32BGRA.Green.WithAlphaMult(alpha));
+				}
+
+				for (var i = 0; i < iter_max; i++)
+				{
+					var count = junctions_queue.Count;
+					for (var j = 0; j < count; j++)
+					{
+						var junction_index_new = junctions_queue.Dequeue();
+						DrawJunction(junctions_visited, junctions_queue, junctions_span, junction_index_new, ref mat_l2c, zoom, i, iter_max, type, alpha);
+					}
+				}
+
+				//DrawJunction(hs_visited, queue, junctions_span, ref junction.segments[0], ref mat_l2c, zoom, 0, iter_max);
+				static void DrawJunction(HashSet<int> hs_visited, Queue<int> queue, Span<Road.Junction> junctions_span, int junction_index, ref Matrix3x2 mat_l2c, float zoom, int depth, int iter_max, Road.Type type, float alpha)
+				{
+					var color = Color32BGRA.FromHSV((1.00f - ((float)depth / (float)iter_max)) * 2.00f, 1.00f, 1.00f).WithAlphaMult(alpha);
+
+					ref var junction = ref junctions_span[junction_index];
+					//GUI.DrawCircle(Vector2.Transform(junction.pos, mat_l2c), 0.125f * zoom, color: color, segments: 12, layer: GUI.Layer.Window);
+
+					var segments_span = junction.segments.Slice(junction.segments_count);
+					foreach (ref var segment_base in segments_span)
+					{
+						DrawSegment(junctions_visited, junctions_queue, ref segment_base, ref mat_l2c, zoom, type, color);
+					}
+				}
+
+				static void DrawSegment(HashSet<int> hs_visited, Queue<int> queue, ref Road.Segment segment_base, ref Matrix3x2 mat_l2c, float zoom, Road.Type type, Color32BGRA color)
+				{
+					ref var road = ref segment_base.GetRoad();
+					if (road.type != type) return;
+
+					var thickness = road.scale * 0.50f;
+
+					var pos = segment_base.GetPosition();
+					var road_points_span = road.points.AsSpan();
+
+					//GUI.DrawCircleFilled(Vector2.Transform(pos, mat_l2c), 0.125f * zoom * 0.50f, color: color, segments: 4, layer: GUI.Layer.Window);
+					var depth_offset = Vector2.Zero;
+
+					{
+						var pos_last = pos;
+						for (var i = segment_base.index + 1; i < road_points_span.Length; i++)
+						{
+							var segment = new Road.Segment(segment_base.chain, (byte)i);
+
+							if (hs_visited.Contains(segment.GetHashCode())) break;
+							hs_visited.Add(segment.GetHashCode());
+
+							GUI.DrawLine(Vector2.Transform(pos_last, mat_l2c) - depth_offset, Vector2.Transform(road_points_span[i], mat_l2c) - depth_offset, color, thickness: thickness * zoom, layer: GUI.Layer.Window);
+							pos_last = road_points_span[i];
+
+							if (road_segment_to_junction_index.TryGetValue(segment, out var junction_index_new))
+							{
+								queue.Enqueue(junction_index_new);
+								break;
+							}
+						}
+					}
+
+					{
+						var pos_last = pos;
+						for (var i = segment_base.index - 1; i >= 0; i--)
+						{
+							var segment = new Road.Segment(segment_base.chain, (byte)i);
+
+							if (hs_visited.Contains(segment.GetHashCode())) break;
+							hs_visited.Add(segment.GetHashCode());
+
+							GUI.DrawLine(Vector2.Transform(pos_last, mat_l2c) - depth_offset, Vector2.Transform(road_points_span[i], mat_l2c) - depth_offset, color, thickness: thickness * zoom, layer: GUI.Layer.Window);
+							pos_last = road_points_span[i];
+
+							if (road_segment_to_junction_index.TryGetValue(segment, out var junction_index_new))
+							{
+								queue.Enqueue(junction_index_new);
+								break;
+							}
+						}
+					}
+
+					if (hs_visited.Contains(segment_base.GetHashCode())) return;
+					hs_visited.Add(segment_base.GetHashCode());
+				}
+			}
+		}
 
 		public static void RecalculateRoads()
 		{
@@ -253,6 +375,41 @@ namespace TC2.Conquest
 
 			if ((uint)index < span.Length) return ref span[nearest_index];
 			else return ref Unsafe.NullRef<IScenario.Doodad>();
+		}
+
+		// TODO: implement a faster lookup
+		public static Road.Segment GetNearestRoad(IDistrict.Handle h_district, Road.Type type, Vector2 position, out float distance_sq)
+		{
+			var road_points_distance_sq = float.MaxValue;
+			var road_point_index = int.MaxValue;
+			var road_index = int.MaxValue;
+
+			ref var district_data = ref h_district.GetData();
+			if (district_data.IsNotNull())
+			{
+				var span_roads = district_data.roads.AsSpan();
+				for (var i = 0; i < span_roads.Length; i++)
+				{
+					ref var road = ref span_roads[i];
+					if (road.type != type) continue;
+
+					var points = road.points.AsSpan();
+					if (!points.IsEmpty)
+					{
+						points.GetNearestIndex(position, out var road_nearest_index_tmp, out var road_nearest_distance_sq_tmp);
+
+						if (road_nearest_distance_sq_tmp < road_points_distance_sq)
+						{
+							road_points_distance_sq = road_nearest_distance_sq_tmp;
+							road_point_index = road_nearest_index_tmp;
+							road_index = i;
+						}
+					}
+				}
+			}
+
+			distance_sq = road_points_distance_sq;
+			return new Road.Segment(h_district, (byte)road_index, (byte)road_point_index);
 		}
 
 		//// TODO: implement a faster lookup, especially for this
@@ -466,6 +623,15 @@ namespace TC2.Conquest
 				IScenario.Doodad.Renderer.Clear();
 			}
 
+			var mouse = GUI.GetMouse();
+			var kb = GUI.GetKeyboard();
+
+			var zoom = MathF.Pow(2.00f, worldmap_zoom_current);
+			var zoom_inv = 1.00f / zoom;
+
+			var mat_l2c = Matrix3x2.Identity;
+			var mat_c2l = Matrix3x2.Identity;
+
 			using (var group_canvas = GUI.Group.New(size))
 			{
 				var rect = group_canvas.GetInnerRect();
@@ -476,10 +642,6 @@ namespace TC2.Conquest
 					//sb.Clear();
 
 					ref var scenario_data = ref h_world.GetData(out var scenario_asset);
-
-					var mouse = GUI.GetMouse();
-					var kb = GUI.GetKeyboard();
-
 					var disable_input = false;
 
 					if (is_loading)
@@ -506,9 +668,6 @@ namespace TC2.Conquest
 						edit_doodad_index = null;
 					}
 
-					var zoom = MathF.Pow(2.00f, worldmap_zoom_current);
-					var zoom_inv = 1.00f / zoom;
-
 					var rect_center = rect.GetPosition();
 
 					using (GUI.Clip.Push(rect))
@@ -516,8 +675,8 @@ namespace TC2.Conquest
 						var scale_b = IScenario.WorldMap.scale_b;
 						var snap_delta = (worldmap_offset_current_snapped - worldmap_offset_current) * 1.0f;
 
-						var mat_l2c = Maths.TRS3x2((worldmap_offset_current * -zoom) + rect.GetPosition(new(0.50f)) - snap_delta, rotation, new Vector2(zoom));
-						Matrix3x2.Invert(mat_l2c, out var mat_c2l);
+						mat_l2c = Maths.TRS3x2((worldmap_offset_current * -zoom) + rect.GetPosition(new(0.50f)) - snap_delta, rotation, new Vector2(zoom));
+						Matrix3x2.Invert(mat_l2c, out mat_c2l);
 
 						var mat_l2c2 = Maths.TRS3x2(rect.GetPosition(new Vector2(0.50f)), rotation, new Vector2(1));
 						Matrix3x2.Invert(mat_l2c2, out var mat_c2l2);
@@ -590,8 +749,8 @@ namespace TC2.Conquest
 											var roads_span = asset_data.roads.AsSpan();
 											foreach (ref var road in roads_span)
 											{
-												if (road.type == ITransport.Type.Road && !show_roads) continue;
-												if (road.type == ITransport.Type.Rail && !show_rails) continue;
+												if (road.type == Road.Type.Road && !show_roads) continue;
+												if (road.type == Road.Type.Rail && !show_rails) continue;
 
 												DrawOutlineShader(road.points, road.color_border, road.scale, road.h_texture, loop: false);
 											}
@@ -745,9 +904,40 @@ namespace TC2.Conquest
 								}
 							}
 
-							if (show_locations) GUI.DrawSpriteCentered(asset_data.icon, rect_icon, layer: GUI.Layer.Window, 0.125f * MathF.Max(scale * zoom * asset_scale, 16), color: color);
 							//GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(((Vector2)asset_data.point) + new Vector2(0.00f, -0.625f * asset_scale) + asset_data.text_offset, mat_l2c), pivot: new(0.50f, 0.50f), color: GUI.font_color_title, font: GUI.Font.Superstar, size: 0.75f * MathF.Max(asset_scale * zoom * scale, 16), layer: GUI.Layer.Window, box_shadow: true);
-							if (show_locations) GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(((Vector2)asset_data.point) + asset_data.text_offset, mat_l2c), pivot: new(0.50f, 0.50f), color: GUI.font_color_title, font: GUI.Font.Superstar, size: 0.50f * MathF.Max(asset_scale * zoom * scale, 16), layer: GUI.Layer.Window, box_shadow: true);
+
+							if (show_locations)
+							{
+								GUI.DrawSpriteCentered(asset_data.icon, rect_icon, layer: GUI.Layer.Window, 0.125f * MathF.Max(scale * zoom * asset_scale, 16), color: color);
+								GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(((Vector2)asset_data.point) + asset_data.text_offset, mat_l2c), pivot: new(0.50f, 0.50f), color: GUI.font_color_title, font: GUI.Font.Superstar, size: 0.50f * MathF.Max(asset_scale * zoom * scale, 16), layer: GUI.Layer.Window, box_shadow: true);
+
+								if (is_selected || is_hovered)
+								{
+									var ts = Timestamp.Now();
+									var nearest_road = GetNearestRoad(asset_data.h_district, Road.Type.Road, (Vector2)asset_data.point, out var nearest_road_dist_sq);
+									var nearest_rail = GetNearestRoad(asset_data.h_district, Road.Type.Rail, (Vector2)asset_data.point, out var nearest_rail_dist_sq);
+									var ts_elapsed = ts.GetMilliseconds();
+
+									if (nearest_road_dist_sq <= 2.00f.Pow2())
+									{
+										GUI.DrawCircleFilled(Vector2.Transform(nearest_road.GetPosition(), mat_l2c), 0.125f * zoom * 0.50f, Color32BGRA.Yellow, 8, GUI.Layer.Window);
+										if (Maths.IsInDistance(mouse_local, nearest_road.GetPosition(), 0.25f))
+										{
+											DrawConnectedRoads(nearest_road, ref mat_l2c, zoom, iter_max: 6);
+										}
+									}
+
+									if (nearest_rail_dist_sq <= 2.00f.Pow2())
+									{
+										GUI.DrawCircleFilled(Vector2.Transform(nearest_rail.GetPosition(), mat_l2c), 0.125f * zoom * 0.50f, Color32BGRA.Orange, 8, GUI.Layer.Window);
+										if (Maths.IsInDistance(mouse_local, nearest_rail.GetPosition(), 0.25f))
+										{
+											DrawConnectedRoads(nearest_rail, ref mat_l2c, zoom, iter_max: 20);
+										}
+									}
+									GUI.Text($"nearest in {ts_elapsed:0.0000} ms");
+								}
+							}
 
 							GUI.FocusableAsset(asset.GetHandle(), rect: rect_icon);
 						}
@@ -926,15 +1116,15 @@ namespace TC2.Conquest
 				}
 
 				#region Left
-				DrawLeftWindow(ref rect);
+				DrawLeftWindow(ref rect, zoom, ref mat_l2c);
 				#endregion
 
 				#region Right
-				DrawRightWindow(is_loading, ref rect);
+				DrawRightWindow(is_loading, ref rect, zoom, ref mat_l2c);
 				#endregion
 
 				#region Debug			
-				DrawDebugWindow(ref rect);
+				DrawDebugWindow(ref rect, zoom, ref mat_l2c);
 				#endregion
 			}
 		}
@@ -1359,27 +1549,28 @@ namespace TC2.Conquest
 					{
 						ref var junction = ref junctions_span[junction_index];
 
-						var hs_visited = new HashSet<int>();
-						var queue = new Queue<int>();
+						junctions_queue.Clear();
+						junctions_visited.Clear();
+
 						//hs_visited.Add(junction_index);
 
 						var type = junction.segments[0].GetRoad().type;
 
 						var iter_max = 10;
 
-						queue.Enqueue(junction_index);
+						junctions_queue.Enqueue(junction_index);
 						for (var i = 0; i < iter_max; i++)
 						{
-							var count = queue.Count;
+							var count = junctions_queue.Count;
 							for (var j = 0; j < count; j++)
 							{
-								var junction_index_new = queue.Dequeue();
-								DrawJunction(hs_visited, queue, junctions_span, junction_index_new, ref mat_l2c, zoom, i, iter_max, type);
+								var junction_index_new = junctions_queue.Dequeue();
+								DrawJunction(junctions_visited, junctions_queue, junctions_span, junction_index_new, ref mat_l2c, zoom, i, iter_max, type);
 							}
 						}
 
 						//DrawJunction(hs_visited, queue, junctions_span, ref junction.segments[0], ref mat_l2c, zoom, 0, iter_max);
-						static void DrawJunction(HashSet<int> hs_visited, Queue<int> queue, Span<Road.Junction> junctions_span, int junction_index, ref Matrix3x2 mat_l2c, float zoom, int depth, int iter_max, ITransport.Type type)
+						static void DrawJunction(HashSet<int> hs_visited, Queue<int> queue, Span<Road.Junction> junctions_span, int junction_index, ref Matrix3x2 mat_l2c, float zoom, int depth, int iter_max, Road.Type type)
 						{
 							//if (depth >= iter_max) return;
 
@@ -1403,7 +1594,7 @@ namespace TC2.Conquest
 								//if (hs_visited.Contains(segment_base.GetHashCode())) continue;
 								//hs_visited.Add(segment_base.GetHashCode());
 
-							
+
 								ref var road = ref segment_base.GetRoad();
 								if (road.type != type) continue;
 
@@ -1552,7 +1743,7 @@ namespace TC2.Conquest
 			}
 		}
 
-		private static void DrawLeftWindow(ref AABB rect)
+		private static void DrawLeftWindow(ref AABB rect, float zoom, ref Matrix3x2 mat_l2c)
 		{
 			using (var window = GUI.Window.Standalone("worldmap.side.left", position: new Vector2(rect.a.X, rect.a.Y) + new Vector2(6, 12), size: new(284, MathF.Min(rect.GetHeight() - 8, 550)), pivot: new(0.00f, 0.00f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus | GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.Child))
 			{
@@ -1688,7 +1879,7 @@ namespace TC2.Conquest
 			}
 		}
 
-		private static void DrawRightWindow(bool is_loading, ref AABB rect)
+		private static void DrawRightWindow(bool is_loading, ref AABB rect, float zoom, ref Matrix3x2 mat_l2c)
 		{
 			if (selected_region_id != 0 || h_selected_location != 0)
 			{
@@ -1808,7 +1999,21 @@ namespace TC2.Conquest
 										{
 											using (GUI.Wrap.Push(GUI.RmX))
 											{
+												//var ts = Timestamp.Now();
+												//var nearest_road = GetNearestRoad(location_data.h_district, Road.Type.Road, (Vector2)location_data.point, out var nearest_road_dist_sq);
+												//var nearest_rail = GetNearestRoad(location_data.h_district, Road.Type.Rail, (Vector2)location_data.point, out var nearest_rail_dist_sq);
+												//var ts_elapsed = ts.GetMilliseconds();
 
+												//if (nearest_road_dist_sq <= 4.00f.Pow2())
+												//{
+												//	GUI.DrawCircleFilled(Vector2.Transform(nearest_road.GetPosition(), mat_l2c), 0.125f * zoom, Color32BGRA.Yellow, 4, GUI.Layer.Foreground);
+												//}
+
+												//if (nearest_rail_dist_sq <= 4.00f.Pow2())
+												//{
+												//	GUI.DrawCircleFilled(Vector2.Transform(nearest_rail.GetPosition(), mat_l2c), 0.125f * zoom, Color32BGRA.Orange, 4, GUI.Layer.Foreground);
+												//}
+												//GUI.Text($"nearest in {ts_elapsed:0.0000} ms");
 											}
 										}
 
@@ -1822,7 +2027,7 @@ namespace TC2.Conquest
 			}
 		}
 
-		private static void DrawDebugWindow(ref AABB rect)
+		private static void DrawDebugWindow(ref AABB rect, float zoom, ref Matrix3x2 mat_l2c)
 		{
 			if (editor_mode != EditorMode.None) // App.debug_mode_gui)
 			{
