@@ -17,9 +17,9 @@ namespace TC2.Conquest
 		public static Vector2 worldmap_window_size = new Vector2(1024, 1024);
 		public static Vector2 worldmap_window_offset = new Vector2(0, 0);
 
-		public static Dictionary<int2, ITransport.Road.Segment> road_segments = new(256);
-		public static Dictionary<int2, List<ITransport.Road.Segment>> road_segments_overlapped = new(256);
-		public static List<ITransport.Road.Junction> road_junctions = new(64);
+		public static Dictionary<int2, Road.Segment> road_segments = new(256);
+		public static Dictionary<int2, List<Road.Segment>> road_segments_overlapped = new(256);
+		public static List<Road.Junction> road_junctions = new(64);
 		public static float road_junction_threshold = 0.250f;
 
 		public static float rotation;
@@ -33,7 +33,7 @@ namespace TC2.Conquest
 		public static IAsset.IDefinition edit_asset;
 		public static IScenario.Handle h_world = "krumpel";
 		public static ILocation.Handle h_selected_location;
-		//public static ITransport.Road.Handle road_ch;
+		//public static Road.Handle road_ch;
 		public static int? edit_doodad_index;
 		public static Vector2 edit_doodad_offset;
 
@@ -102,7 +102,7 @@ namespace TC2.Conquest
 
 							var pos_int = new int2((int)point.X, (int)point.Y);
 
-							var segment = new ITransport.Road.Segment(h_district, (byte)road_index, (byte)point_index);
+							var segment = new Road.Segment(h_district, (byte)road_index, (byte)point_index);
 
 							//road_segments_overlapped
 
@@ -131,6 +131,8 @@ namespace TC2.Conquest
 				var ts = Timestamp.Now();
 				if (road_segments_overlapped.Count > 0)
 				{
+					var road_junction_threshold_sq = road_junction_threshold * road_junction_threshold;
+
 					foreach (var pair in road_segments_overlapped)
 					{
 						var road_list = pair.Value;
@@ -139,20 +141,22 @@ namespace TC2.Conquest
 
 						while (road_list.Count > 0)
 						{
-							var junction = new ITransport.Road.Junction();
+							var junction = new Road.Junction();
 							junction.pos = road_list[0].GetPosition();
 							junction.segments[junction.segments_count++] = road_list[0];
 
-							road_list.RemoveAt(0); // TODO: replace this with a swapback
+							road_list.RemoveAtSwapback(0); // TODO: replace this with a swapback
 
 							for (var i = 0; i < road_list.Count;)
 							{
 								var road = road_list[i];
-								if (junction.pos.IsInDistance(road.GetPosition(), road_junction_threshold))
+								var pos = road.GetPosition();
+
+								if (Vector2.Distance(junction.pos, pos) < road_junction_threshold_sq)
 								{
 									junction.segments[junction.segments_count++] = road;
-									junction.pos = Vector2.Lerp(junction.pos, road.GetPosition(), 0.50f);
-									road_list.RemoveAt(i); // TODO: replace this with a swapback
+									junction.pos = Vector2.Lerp(junction.pos, pos, 0.50f);
+									road_list.RemoveAtSwapback(i); // TODO: replace this with a swapback
 								}
 								else
 								{
@@ -236,49 +240,49 @@ namespace TC2.Conquest
 			else return ref Unsafe.NullRef<IScenario.Doodad>();
 		}
 
-		// TODO: implement a faster lookup, especially for this
-		public static void GetNearestIndex(Vector2 position, Span<int2> span, out int index, out float distance_sq)
-		{
-			var nearest_index = int.MaxValue;
-			var nearest_distance_sq = float.MaxValue;
+		//// TODO: implement a faster lookup, especially for this
+		//public static void GetNearestIndex(Vector2 position, Span<int2> span, out int index, out float distance_sq)
+		//{
+		//	var nearest_index = int.MaxValue;
+		//	var nearest_distance_sq = float.MaxValue;
 
-			for (var i = 0; i < span.Length; i++)
-			{
-				var pos_tmp = (Vector2)span[i];
+		//	for (var i = 0; i < span.Length; i++)
+		//	{
+		//		var pos_tmp = (Vector2)span[i];
 
-				var distance_sq_tmp = Vector2.DistanceSquared(pos_tmp, position);
-				if (distance_sq_tmp < nearest_distance_sq)
-				{
-					nearest_index = i;
-					nearest_distance_sq = distance_sq_tmp;
-				}
-			}
+		//		var distance_sq_tmp = Vector2.DistanceSquared(pos_tmp, position);
+		//		if (distance_sq_tmp < nearest_distance_sq)
+		//		{
+		//			nearest_index = i;
+		//			nearest_distance_sq = distance_sq_tmp;
+		//		}
+		//	}
 
-			index = nearest_index;
-			distance_sq = nearest_distance_sq;
-		}
+		//	index = nearest_index;
+		//	distance_sq = nearest_distance_sq;
+		//}
 
-		// TODO: implement a faster lookup, especially for this
-		public static void GetNearestIndex(Vector2 position, Span<Vector2> span, out int index, out float distance_sq)
-		{
-			var nearest_index = int.MaxValue;
-			var nearest_distance_sq = float.MaxValue;
+		//// TODO: implement a faster lookup, especially for this
+		//public static void GetNearestIndex(Vector2 position, Span<Vector2> span, out int index, out float distance_sq)
+		//{
+		//	var nearest_index = int.MaxValue;
+		//	var nearest_distance_sq = float.MaxValue;
 
-			for (var i = 0; i < span.Length; i++)
-			{
-				var pos_tmp = span[i];
+		//	for (var i = 0; i < span.Length; i++)
+		//	{
+		//		var pos_tmp = span[i];
 
-				var distance_sq_tmp = Vector2.DistanceSquared(pos_tmp, position);
-				if (distance_sq_tmp < nearest_distance_sq)
-				{
-					nearest_index = i;
-					nearest_distance_sq = distance_sq_tmp;
-				}
-			}
+		//		var distance_sq_tmp = Vector2.DistanceSquared(pos_tmp, position);
+		//		if (distance_sq_tmp < nearest_distance_sq)
+		//		{
+		//			nearest_index = i;
+		//			nearest_distance_sq = distance_sq_tmp;
+		//		}
+		//	}
 
-			index = nearest_index;
-			distance_sq = nearest_distance_sq;
-		}
+		//	index = nearest_index;
+		//	distance_sq = nearest_distance_sq;
+		//}
 
 		public static void DrawOutlineShader(Span<int2> points, Color32BGRA color, float thickness, Texture.Handle h_texture, bool loop = true)
 		{
@@ -941,7 +945,7 @@ namespace TC2.Conquest
 						var points = asset_data.points.AsSpan();
 						if (!points.IsEmpty)
 						{
-							GetNearestIndex(mouse_local, points, out var nearest_index_tmp, out var nearest_distance_sq_tmp);
+							points.GetNearestIndex(mouse_local, out var nearest_index_tmp, out var nearest_distance_sq_tmp);
 
 							if (nearest_distance_sq_tmp < distance_sq)
 							{
@@ -1022,7 +1026,7 @@ namespace TC2.Conquest
 						var points = asset_data.points.AsSpan();
 						if (!points.IsEmpty)
 						{
-							GetNearestIndex(mouse_local, points, out var nearest_index_tmp, out var nearest_distance_sq_tmp);
+							points.GetNearestIndex(mouse_local, out var nearest_index_tmp, out var nearest_distance_sq_tmp);
 
 							if (nearest_distance_sq_tmp < distance_sq)
 							{
@@ -1230,7 +1234,7 @@ namespace TC2.Conquest
 								var points = road.points.AsSpan();
 								if (!points.IsEmpty)
 								{
-									GetNearestIndex(mouse_local, points, out var road_nearest_index_tmp, out var road_nearest_distance_sq_tmp);
+									points.GetNearestIndex(mouse_local, out var road_nearest_index_tmp, out var road_nearest_distance_sq_tmp);
 
 									if (road_nearest_distance_sq_tmp < road_points_distance_sq)
 									{

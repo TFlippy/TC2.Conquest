@@ -37,7 +37,7 @@
 				frame: [0, 1]
 			}
 			
-			position: [19.380, -12.248]
+			position: [19.51281, -12.21675]
 			scale: [0.402345, 0.349999]
 			rotation: -0.070
 			z: 0.455
@@ -53,8 +53,8 @@
 				frame: [0, 1]
 			}
 			
-			position: [20.39639, -12.97318]
-			scale: [-0.427345, 0.499996]
+			position: [20.33362, -12.98908]
+			scale: [0.427345, 0.499996]
 			rotation: -0.030
 			z: 0.231
 			color: "0xffc1c1c1"
@@ -101,9 +101,9 @@
 				frame: [0, 1]
 			}
 			
-			position: [18.32988, -13.23897]
+			position: [18.23195, -13.41523]
 			scale: [0.477103, 0.514352]
-			rotation: 0.090
+			rotation: 0.170
 			z: 0.174
 			color: "0xffaaaaaa"
 		}
@@ -117,10 +117,10 @@
 				frame: [2, 1]
 			}
 			
-			position: [19.7577, -13.89911]
+			position: [19.75393, -14.2057]
 			scale: [-0.375776, 0.599727]
 			rotation: -0.070
-			z: 0.050
+			z: 0.171
 			color: "0xffb3b3b3"
 		}
 		{
@@ -133,7 +133,7 @@
 				frame: [0, 1]
 			}
 			
-			position: [18.21147, -13.60273]
+			position: [18.06282, -13.64918]
 			scale: [0.550013, 0.525]
 			rotation: 0.070
 			z: -0.041
@@ -165,9 +165,9 @@
 				frame: [0, 1]
 			}
 			
-			position: [19.87732, -12.67529]
-			scale: [0.374598, 0.675162]
-			rotation: -0.070
+			position: [19.93201, -12.6831]
+			scale: [0.462158, 0.561375]
+			rotation: 0.170
 			z: 0.388
 			color: "0xffe3e3e3"
 		}
@@ -232,7 +232,7 @@
 			position: [10.22006, -12.00368]
 			scale: [-0.425162, 0.475]
 			rotation: -0.100
-			z: 0.197
+			z: -0.146
 			color: "0xffffffff"
 		}
 		{
@@ -325,7 +325,7 @@
 				frame: [0, 1]
 			}
 			
-			position: [11.5847, -10.82177]
+			position: [11.65888, -10.94255]
 			scale: [0.477103, 0.514352]
 			rotation: 0.090
 			z: 0.174
@@ -405,9 +405,9 @@
 				frame: [0, 1]
 			}
 			
-			position: [11.72547, -11.8185]
-			scale: [0.352345, 0.174999]
-			rotation: -0.070
+			position: [11.74109, -11.91206]
+			scale: [0.352345, 0.224999]
+			rotation: 0.030
 			z: 0.455
 			color: "0xffcccccc"
 		}
@@ -485,10 +485,10 @@
 				frame: [2, 1]
 			}
 			
-			position: [21.31991, -14.99327]
-			scale: [0.425757, 0.275]
-			rotation: -0.090
-			z: -0.149
+			position: [21.41281, -15.18838]
+			scale: [0.650752, 0.400]
+			rotation: 0.070
+			z: -0.073
 			color: "0xffcccccc"
 		}
 		{
@@ -597,10 +597,10 @@
 				frame: [2, 1]
 			}
 			
-			position: [14.16811, -11.63936]
-			scale: [-0.625718, 0.574727]
+			position: [14.31654, -11.5378]
+			scale: [-0.548695, 0.473967]
 			rotation: -0.070
-			z: 0.008
+			z: 0.171
 			color: "0xffcccccc"
 		}
 		{
@@ -645,9 +645,9 @@
 				frame: [0, 4]
 			}
 			
-			position: [14.09461, -10.75773]
+			position: [13.86107, -10.7104]
 			scale: [-0.399831, -0.400]
-			rotation: -3.050
+			rotation: -3.120
 			z: -0.017
 			color: "0xffffffff"
 		}
@@ -661,7 +661,7 @@
 				frame: [0, 1]
 			}
 			
-			position: [13.76329, -11.80649]
+			position: [13.56582, -11.72836]
 			scale: [-0.524598, 0.725162]
 			rotation: -0.070
 			z: 0.066
@@ -693,10 +693,10 @@
 				frame: [0, 1]
 			}
 			
-			position: [14.35737, -12.26777]
-			scale: [0.377239, 0.349997]
+			position: [14.59956, -12.49433]
+			scale: [0.502239, 0.499997]
 			rotation: -0.070
-			z: 0.455
+			z: -0.382
 			color: "0xffcccccc"
 		}
 		{
@@ -856,7 +856,7 @@
 			position: [20.61685, -14.85313]
 			scale: [0.699598, 0.775162]
 			rotation: -0.070
-			z: -0.126
+			z: 0.154
 			color: "0xffe3e3e3"
 		}
 		{
@@ -904,7 +904,7 @@
 			position: [20.80851, -14.45529]
 			scale: [0.550, 0.375037]
 			rotation: 0.070
-			z: 0.197
+			z: 0.163
 			color: "0xffffffff"
 		}
 		{
@@ -933,7 +933,7 @@
 				frame: [2, 1]
 			}
 			
-			position: [13.59943, -12.94163]
+			position: [13.81599, -12.11567]
 			scale: [-0.50267, 0.400395]
 			rotation: -0.030
 			z: 0.050
@@ -1095,7 +1095,7 @@
 			
 			position: [16.19647, -14.27459]
 			scale: [-0.502597, 0.525398]
-			rotation: -0.120
+			rotation: -0.100
 			z: 0.050
 			color: "0xffcccccc"
 		}
@@ -1189,8 +1189,8 @@
 				frame: [0, 1]
 			}
 			
-			position: [13.17169, -12.68298]
-			scale: [0.333097, 0.596213]
+			position: [13.91377, -12.42233]
+			scale: [0.458097, 0.696213]
 			rotation: 0.050
 			z: -0.248
 			color: "0xffe3e3e3"
@@ -1205,7 +1205,7 @@
 				frame: [0, 1]
 			}
 			
-			position: [12.89795, -12.1692]
+			position: [12.54639, -11.47389]
 			scale: [0.452103, 0.339352]
 			rotation: 0.090
 			z: -0.190
@@ -1304,7 +1304,7 @@
 			position: [28.50388, -16.18551]
 			scale: [0.574993, 0.450039]
 			rotation: 0.000
-			z: -0.215
+			z: -0.228
 			color: "0xffffffff"
 		}
 		{
@@ -1781,8 +1781,8 @@
 				frame: [2, 1]
 			}
 			
-			position: [19.32747, -17.71906]
-			scale: [0.725717, 0.474724]
+			position: [19.16024, -17.4775]
+			scale: [0.525717, 0.474724]
 			rotation: 0.000
 			z: 0.140
 			color: "0xffcccccc"
@@ -2234,6 +2234,214 @@
 			rotation: -3.050
 			z: -0.017
 			color: "0xffffffff"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [0, 1]
+			}
+			
+			position: [16.740, -16.42644]
+			scale: [-0.699598, 0.775162]
+			rotation: -0.070
+			z: 0.260
+			color: "0xffe3e3e3"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [2, 1]
+			}
+			
+			position: [16.16398, -15.88758]
+			scale: [0.550712, 0.474724]
+			rotation: 0.470
+			z: 0.341
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [0, 1]
+			}
+			
+			position: [17.32576, -16.04937]
+			scale: [0.402345, 0.349999]
+			rotation: 0.330
+			z: 0.455
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [64, 24]
+				frame: [0, 4]
+			}
+			
+			position: [18.99361, -16.37007]
+			scale: [0.507198, 0.195967]
+			rotation: 3.120
+			z: 0.423
+			color: "0xffb7c683"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [0, 1]
+			}
+			
+			position: [20.02416, -16.10489]
+			scale: [0.564518, 0.441416]
+			rotation: 0.050
+			z: 0.174
+			color: "0xff838383"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [0, 1]
+			}
+			
+			position: [20.49798, -16.67162]
+			scale: [0.699598, 0.700162]
+			rotation: 0.050
+			z: -0.126
+			color: "0xffe3e3e3"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [0, 1]
+			}
+			
+			position: [21.3713, -15.65894]
+			scale: [0.699598, 0.775162]
+			rotation: -0.070
+			z: -0.126
+			color: "0xffe3e3e3"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [0, 1]
+			}
+			
+			position: [20.45239, -15.14796]
+			scale: [0.402345, 0.349999]
+			rotation: -0.070
+			z: -0.049
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [0, 1]
+			}
+			
+			position: [21.22226, -15.84476]
+			scale: [0.402352, 0.224999]
+			rotation: -0.070
+			z: 0.455
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [64, 24]
+				frame: [0, 4]
+			}
+			
+			position: [17.90548, -16.4555]
+			scale: [0.507203, -0.270967]
+			rotation: 3.000
+			z: 0.398
+			color: "0xffb7c683"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [0, 1]
+			}
+			
+			position: [18.89055, -16.86618]
+			scale: [0.737109, 0.700162]
+			rotation: -0.050
+			z: 0.252
+			color: "0xffe3e3e3"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [0, 1]
+			}
+			
+			position: [18.97929, -16.05964]
+			scale: [0.402345, 0.349999]
+			rotation: -0.070
+			z: 0.455
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [2, 1]
+			}
+			
+			position: [19.5732, -16.87859]
+			scale: [-0.625718, 0.574727]
+			rotation: -0.070
+			z: 0.050
+			color: "0xffc3c3c3"
 		}
 	]
 }
