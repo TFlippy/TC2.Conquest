@@ -16,6 +16,11 @@ namespace TC2.Conquest
 		public static HashSet<ulong> segments_visited = new HashSet<ulong>(128);
 		public static Queue<int> junctions_queue = new Queue<int>(64);
 
+		public static void Init()
+		{
+			WorldMap.RecalculateRoads();
+		}
+
 #if CLIENT
 		public static Vector2 worldmap_offset_current_snapped;
 		public static Vector2 worldmap_offset_current;
@@ -33,7 +38,7 @@ namespace TC2.Conquest
 		public static Road.Chain edit_road;
 
 		public static int? edit_points_index;
-		public static short2[] edit_points_s32;
+		public static short2[] edit_points_s16;
 		public static Vector2[] edit_points_f32;
 
 		public static IScenario.Doodad? clipboard_doodad;
@@ -80,7 +85,6 @@ namespace TC2.Conquest
 		public static bool show_borders = true;
 		public static bool show_fill = true;
 		public static bool show_doodads = true;
-
 		//public static BitField<Road.Type> filter_roads = new BitField<Road.Type>(Road.Type.Road, Road.Type.Rail, Road.Type.Marine, Road.Type.Air);
 		//public static BitField<Road.Type> filter_roads_mask = new BitField<Road.Type>(Road.Type.Road, Road.Type.Rail, Road.Type.Marine, Road.Type.Air);
 #endif

@@ -12,6 +12,8 @@ namespace TC2.Conquest
 
 		protected override void OnInitialize(ModContext context)
 		{
+			WorldMap.Init();
+
 #if CLIENT
 			//GUI.worldmenu_widget_size_override 
 			GUI.func_worldmenu_override = static () =>

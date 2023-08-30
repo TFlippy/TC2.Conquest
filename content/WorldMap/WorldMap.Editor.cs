@@ -83,7 +83,7 @@ namespace TC2.Conquest
 										else
 										{
 											edit_points_index = index;
-											edit_points_s32 = asset_data.points;
+											edit_points_s16 = asset_data.points;
 											edit_asset = asset;
 
 											//GUI.FocusAsset(asset.GetHandle());
@@ -164,7 +164,7 @@ namespace TC2.Conquest
 										else
 										{
 											edit_points_index = index;
-											edit_points_s32 = asset_data.points;
+											edit_points_s16 = asset_data.points;
 											edit_asset = asset;
 
 											//GUI.FocusAsset(asset.GetHandle());
@@ -254,7 +254,7 @@ namespace TC2.Conquest
 						{
 							{
 								ref var point = ref doodad.position;
-								var point_t = Vector2.Transform(point, mat_l2c);
+								var point_t = point.Transform(in mat_l2c);
 
 								var selected = edit_doodad_index == index;
 								var color = Color32BGRA.White.LumaBlend(doodad.color, 0.50f);
@@ -328,7 +328,9 @@ namespace TC2.Conquest
 							for (var i = 0; i < span_roads.Length; i++)
 							{
 								ref var road = ref span_roads[i];
-								//if (road.bb.ContainsPoint(mouse_local))
+								var bb = road.bb.Grow(0.25f);
+
+								//if (bb.ContainsPoint(mouse_local))
 								{
 									var points = road.points.AsSpan();
 									if (!points.IsEmpty)
@@ -346,7 +348,8 @@ namespace TC2.Conquest
 								}
 
 								//road.UpdateBB();
-								//GUI.DrawRect(Vector2.Transform(road.bb.a, mat_l2c), Vector2.Transform(road.bb.b, mat_l2c), Color32BGRA.Green, layer: GUI.Layer.Window);
+								//GUI.DrawRectFilled(bb.Transform(in mat_l2c), Color32BGRA.Red.WithAlphaMult(0.05f), layer: GUI.Layer.Window);
+								//GUI.DrawRect(bb.Transform(in mat_l2c), Color32BGRA.Red.WithAlphaMult(0.25f), layer: GUI.Layer.Window);
 							}
 						}
 					}
@@ -564,7 +567,7 @@ namespace TC2.Conquest
 
 			if (edit_points_index.TryGetValue(out var v_edit_points_index))
 			{
-				if (edit_points_s32 != null) edit_points_s32[v_edit_points_index] = new short2((short)MathF.Round(mouse_local.X), (short)MathF.Round(mouse_local.Y));
+				if (edit_points_s16 != null) edit_points_s16[v_edit_points_index] = new short2((short)MathF.Round(mouse_local.X), (short)MathF.Round(mouse_local.Y));
 				if (edit_points_f32 != null) edit_points_f32[v_edit_points_index] = mouse_local;
 
 				if (mouse.GetKeyUp(Mouse.Key.Right))
@@ -572,7 +575,7 @@ namespace TC2.Conquest
 					//edit_asset.Save();
 
 					edit_points_index = null;
-					edit_points_s32 = null;
+					edit_points_s16 = null;
 					edit_points_f32 = null;
 					//edit_asset = null;
 
@@ -647,8 +650,6 @@ namespace TC2.Conquest
 			}
 		}
 
-
-
 		private static void DrawDebugWindow(ref AABB rect, float zoom, ref Matrix3x2 mat_l2c)
 		{
 			if (editor_mode != EditorMode.None) // App.debug_mode_gui)
@@ -717,15 +718,29 @@ namespace TC2.Conquest
 										ref var road = ref edit_road.GetRoad();
 										if (road.IsNotNull())
 										{
-											GUI.DrawStyledEditorForType(ref road, new Vector2(GUI.RmX, 32));
-
-											var road_points_span = road.points.AsSpan();
-
-											var pos_last = road_points_span[0];
-											for (var i = 0; i < road_points_span.Length; i++)
+											ref var district_data = ref edit_road.h_district.GetData();
+											if (district_data.IsNotNull())
 											{
-												GUI.DrawLine(Vector2.Transform(pos_last, mat_l2c), Vector2.Transform(road_points_span[i], mat_l2c), road.color_border, layer: GUI.Layer.Foreground);
-												pos_last = road_points_span[i];
+												var changed = GUI.DrawStyledEditorForType(ref road, new Vector2(GUI.RmX, 32));
+												if (changed)
+												{
+													hs_pending_asset_saves.Add(edit_road.h_district.GetDefinition());
+												}
+
+												var road_points_span = road.points.AsSpan();
+
+												var pos_last = Vector2.Zero;
+
+												for (var i = 0; i < road_points_span.Length; i++)
+												{
+													var pos = Vector2.Transform(road_points_span[i], mat_l2c);
+
+													if (i > 0) GUI.DrawLine(pos_last, pos, district_data.color_border, layer: GUI.Layer.Foreground);
+													GUI.DrawCircleFilled(pos, 0.125f * zoom * 0.75f, road.color_border.WithAlphaMult(0.75f), 3, GUI.Layer.Foreground);
+													GUI.DrawTextCentered($"[{i}]", pos, layer: GUI.Layer.Foreground);
+
+													pos_last = pos;
+												}
 											}
 										}
 									}
@@ -750,7 +765,12 @@ namespace TC2.Conquest
 											ref var doodad = ref scenario_data.doodads.AsSpan().GetRefAtIndexOrNull(index_doodad);
 											if (doodad.IsNotNull())
 											{
-												GUI.DrawStyledEditorForType(ref doodad, new Vector2(GUI.RmX, 32));
+												var changed = GUI.DrawStyledEditorForType(ref doodad, new Vector2(GUI.RmX, 32));
+												if (changed)
+												{
+													hs_pending_asset_saves.Add(scenario_asset);
+												}
+
 											}
 										}
 									}

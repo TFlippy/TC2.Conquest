@@ -134,7 +134,7 @@ namespace TC2.Conquest
 									{
 										var point = (Vector2)points[i];
 										pos_center += point;
-										var point_t = Vector2.Transform(point, mat_l2c);
+										var point_t = point.Transform(in mat_l2c);
 
 										points_t_span[i] = point_t;
 									}
@@ -324,7 +324,7 @@ namespace TC2.Conquest
 
 									if (nearest_road_dist_sq <= 1.50f.Pow2())
 									{
-										GUI.DrawCircleFilled(Vector2.Transform(nearest_road.GetPosition(), mat_l2c), 0.125f * zoom * 0.50f, Color32BGRA.Yellow, 8, GUI.Layer.Window);
+										GUI.DrawCircleFilled(nearest_road.GetPosition().Transform(in mat_l2c), 0.125f * zoom * 0.50f, Color32BGRA.Yellow, 8, GUI.Layer.Window);
 										if (Maths.IsInDistance(mouse_local, nearest_road.GetPosition(), 0.25f))
 										{
 											DrawConnectedRoads(nearest_road, ref mat_l2c, zoom, iter_max: 6);
@@ -333,7 +333,7 @@ namespace TC2.Conquest
 
 									if (nearest_rail_dist_sq <= 1.00f.Pow2())
 									{
-										GUI.DrawCircleFilled(Vector2.Transform(nearest_rail.GetPosition(), mat_l2c), 0.125f * zoom * 0.50f, Color32BGRA.Orange, 8, GUI.Layer.Window);
+										GUI.DrawCircleFilled(nearest_rail.GetPosition().Transform(in mat_l2c), 0.125f * zoom * 0.50f, Color32BGRA.Orange, 8, GUI.Layer.Window);
 										if (Maths.IsInDistance(mouse_local, nearest_rail.GetPosition(), 0.25f))
 										{
 											DrawConnectedRoads(nearest_rail, ref mat_l2c, zoom, iter_max: 12);

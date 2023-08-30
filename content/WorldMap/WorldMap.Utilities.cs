@@ -35,6 +35,8 @@ namespace TC2.Conquest
 					{
 						ref var road = ref roads_span[road_index];
 
+						road.UpdateBB();
+
 						var points_span = road.points.AsSpan();
 						for (var point_index = 0; point_index < points_span.Length; point_index++)
 						{
@@ -191,17 +193,19 @@ namespace TC2.Conquest
 				{
 					ref var road = ref span_roads[i];
 					if (road.type != type) continue;
-
-					var points = road.points.AsSpan();
-					if (!points.IsEmpty)
+					if (road.bb.Grow(1.00f).ContainsPoint(position))
 					{
-						points.GetNearestIndex(position, out var road_nearest_index_tmp, out var road_nearest_distance_sq_tmp);
-
-						if (road_nearest_distance_sq_tmp < road_points_distance_sq)
+						var points = road.points.AsSpan();
+						if (!points.IsEmpty)
 						{
-							road_points_distance_sq = road_nearest_distance_sq_tmp;
-							road_point_index = road_nearest_index_tmp;
-							road_index = i;
+							points.GetNearestIndex(position, out var road_nearest_index_tmp, out var road_nearest_distance_sq_tmp);
+
+							if (road_nearest_distance_sq_tmp < road_points_distance_sq)
+							{
+								road_points_distance_sq = road_nearest_distance_sq_tmp;
+								road_point_index = road_nearest_index_tmp;
+								road_index = i;
+							}
 						}
 					}
 				}
