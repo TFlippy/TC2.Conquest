@@ -728,19 +728,20 @@ namespace TC2.Conquest
 												}
 
 												var road_points_span = road.points.AsSpan();
+												GUI.DrawLines(road_points_span, in mat_l2c, district_data.color_border, layer: GUI.Layer.Foreground, draw_points: true, draw_indices: true);
 
-												var pos_last = Vector2.Zero;
+												//var pos_last = Vector2.Zero;
 
-												for (var i = 0; i < road_points_span.Length; i++)
-												{
-													var pos = Vector2.Transform(road_points_span[i], mat_l2c);
+												//for (var i = 0; i < road_points_span.Length; i++)
+												//{
+												//	var pos = Vector2.Transform(road_points_span[i], mat_l2c);
 
-													if (i > 0) GUI.DrawLine(pos_last, pos, district_data.color_border, layer: GUI.Layer.Foreground);
-													GUI.DrawCircleFilled(pos, 0.125f * zoom * 0.75f, road.color_border.WithAlphaMult(0.75f), 3, GUI.Layer.Foreground);
-													GUI.DrawTextCentered($"[{i}]", pos, layer: GUI.Layer.Foreground);
+												//	if (i > 0) GUI.DrawLine(pos_last, pos, district_data.color_border, layer: GUI.Layer.Foreground);
+												//	GUI.DrawCircleFilled(pos, 0.125f * zoom * 0.75f, road.color_border.WithAlphaMult(0.75f), 3, GUI.Layer.Foreground);
+												//	GUI.DrawTextCentered($"[{i}]", pos, layer: GUI.Layer.Foreground);
 
-													pos_last = pos;
-												}
+												//	pos_last = pos;
+												//}
 											}
 										}
 									}

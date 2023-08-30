@@ -12,9 +12,24 @@ namespace TC2.Conquest
 		public static List<Road.Junction> road_junctions = new(128);
 
 		public static float road_junction_threshold = 0.250f;
+		public const float km_per_unit = 2.00f;
 
-		public static HashSet<ulong> segments_visited = new HashSet<ulong>(128);
-		public static Queue<int> junctions_queue = new Queue<int>(64);
+		public struct RoadConnection
+		{
+			public int junction_index;
+			public float distance;
+			public float budget;
+
+			public RoadConnection(int junction_index, float distance, float score)
+			{
+				this.junction_index = junction_index;
+				this.distance = distance;
+				this.budget = score;
+			}
+		}
+
+		public static HashSet<ulong> segments_visited = new(128);
+		public static Queue<RoadConnection> junctions_queue = new(64);
 
 		public static void Init()
 		{

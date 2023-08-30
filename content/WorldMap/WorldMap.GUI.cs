@@ -327,7 +327,7 @@ namespace TC2.Conquest
 										GUI.DrawCircleFilled(nearest_road.GetPosition().Transform(in mat_l2c), 0.125f * zoom * 0.50f, Color32BGRA.Yellow, 8, GUI.Layer.Window);
 										if (Maths.IsInDistance(mouse_local, nearest_road.GetPosition(), 0.25f))
 										{
-											DrawConnectedRoads(nearest_road, ref mat_l2c, zoom, iter_max: 6);
+											DrawConnectedRoads(nearest_road, ref mat_l2c, zoom, iter_max: 50, budget: 30.00f);
 										}
 									}
 
@@ -336,7 +336,7 @@ namespace TC2.Conquest
 										GUI.DrawCircleFilled(nearest_rail.GetPosition().Transform(in mat_l2c), 0.125f * zoom * 0.50f, Color32BGRA.Orange, 8, GUI.Layer.Window);
 										if (Maths.IsInDistance(mouse_local, nearest_rail.GetPosition(), 0.25f))
 										{
-											DrawConnectedRoads(nearest_rail, ref mat_l2c, zoom, iter_max: 12);
+											DrawConnectedRoads(nearest_rail, ref mat_l2c, zoom, iter_max: 50, budget: 100.00f);
 										}
 									}
 									GUI.Text($"nearest in {ts_elapsed:0.0000} ms");

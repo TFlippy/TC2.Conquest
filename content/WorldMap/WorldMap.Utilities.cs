@@ -216,7 +216,7 @@ namespace TC2.Conquest
 		}
 
 #if CLIENT
-		public static void DrawConnectedRoads(Road.Segment road_segment, ref Matrix3x2 mat_l2c, float zoom, int iter_max = 10)
+		public static void DrawConnectedRoads(Road.Segment road_segment, ref Matrix3x2 mat_l2c, float zoom, int iter_max = 10, float budget = 1000.00f)
 		{
 			//var thickness = road_segment.GetRoad().scale * 0.50f;
 			var alpha = 0.25f;
@@ -244,11 +244,11 @@ namespace TC2.Conquest
 
 				if (road_segment_to_junction_index.TryGetValue(road_segment, out var junction_index))
 				{
-					junctions_queue.Enqueue(junction_index);
+					junctions_queue.Enqueue(new(junction_index, 0.00f, budget));
 				}
 				else
 				{
-					DrawSegment(segments_visited, junctions_queue, ref road_segment, ref mat_l2c, zoom, type, Color32BGRA.Green.WithAlphaMult(alpha));
+					DrawSegment(segments_visited, junctions_queue, new(0, 0.00f, budget), ref road_segment, ref mat_l2c, zoom, type, Color32BGRA.Green.WithAlphaMult(alpha), alpha, budget);
 				}
 
 				for (var i = 0; i < iter_max; i++)
@@ -256,27 +256,27 @@ namespace TC2.Conquest
 					var count = junctions_queue.Count;
 					for (var j = 0; j < count; j++)
 					{
-						var junction_index_new = junctions_queue.Dequeue();
-						DrawJunction(segments_visited, junctions_queue, junctions_span, junction_index_new, ref mat_l2c, zoom, i, iter_max, type, alpha);
+						var connection = junctions_queue.Dequeue();
+						DrawJunction(segments_visited, junctions_queue, junctions_span, in connection, ref mat_l2c, zoom, i, iter_max, type, alpha, budget);
 					}
 				}
 
 				//DrawJunction(hs_visited, queue, junctions_span, ref junction.segments[0], ref mat_l2c, zoom, 0, iter_max);
-				static void DrawJunction(HashSet<ulong> hs_visited, Queue<int> queue, Span<Road.Junction> junctions_span, int junction_index, ref Matrix3x2 mat_l2c, float zoom, int depth, int iter_max, Road.Type type, float alpha)
+				static void DrawJunction(HashSet<ulong> hs_visited, Queue<RoadConnection> queue, Span<Road.Junction> junctions_span, in RoadConnection connection, ref Matrix3x2 mat_l2c, float zoom, int depth, int iter_max, Road.Type type, float alpha, float budget)
 				{
 					var color = Color32BGRA.FromHSV((1.00f - ((float)depth / (float)iter_max)) * 2.00f, 1.00f, 1.00f).WithAlphaMult(alpha);
 
-					ref var junction = ref junctions_span[junction_index];
+					ref var junction = ref junctions_span[connection.junction_index];
 					//GUI.DrawCircle(Vector2.Transform(junction.pos, mat_l2c), 0.125f * zoom, color: color, segments: 12, layer: GUI.Layer.Window);
 
 					var segments_span = junction.segments.Slice(junction.segments_count);
 					foreach (ref var segment_base in segments_span)
 					{
-						DrawSegment(hs_visited, queue, ref segment_base, ref mat_l2c, zoom, type, color);
+						DrawSegment(hs_visited, queue, in connection, ref segment_base, ref mat_l2c, zoom, type, color, alpha, budget);
 					}
 				}
 
-				static void DrawSegment(HashSet<ulong> hs_visited, Queue<int> queue, ref Road.Segment segment_base, ref Matrix3x2 mat_l2c, float zoom, Road.Type type, Color32BGRA color)
+				static void DrawSegment(HashSet<ulong> hs_visited, Queue<RoadConnection> queue, in RoadConnection connection, ref Road.Segment segment_base, ref Matrix3x2 mat_l2c, float zoom, Road.Type type, Color32BGRA color, float alpha, float budget)
 				{
 					ref var road = ref segment_base.GetRoad();
 					if (road.type != type) return;
@@ -290,6 +290,8 @@ namespace TC2.Conquest
 					var depth_offset = Vector2.Zero;
 
 					{
+						var connection_copy = connection;
+
 						var pos_last = pos;
 						for (var i = segment_base.index + 1; i < road_points_span.Length; i++)
 						{
@@ -299,18 +301,30 @@ namespace TC2.Conquest
 							if (hs_visited.Contains(key)) break;
 							hs_visited.Add(key);
 
-							GUI.DrawLine(Vector2.Transform(pos_last, mat_l2c) - depth_offset, Vector2.Transform(road_points_span[i], mat_l2c) - depth_offset, color, thickness: thickness * zoom, layer: GUI.Layer.Window);
-							pos_last = road_points_span[i];
+							var distance = Vector2.Distance(pos_last, road_points_span[i]);
+							connection_copy.distance += distance;
+							connection_copy.budget -= (distance / (road.speed_mult * road.integrity));
+
+							GUI.DrawLine(Vector2.Transform(pos_last, mat_l2c) - depth_offset, Vector2.Transform(road_points_span[i], mat_l2c) - depth_offset, Color32BGRA.FromHSV((Maths.NormalizeClamp(connection_copy.budget, budget)) * 2.00f, 1.00f, 1.00f).WithAlphaMult(alpha), thickness: thickness * zoom, layer: GUI.Layer.Window);
+
+							if (connection_copy.budget <= 0.00f) break;
 
 							if (road_segment_to_junction_index.TryGetValue(segment, out var junction_index_new))
 							{
-								queue.Enqueue(junction_index_new);
+								GUI.DrawTextCentered($"{(connection_copy.distance * km_per_unit):0.0}km; {connection_copy.budget:0}/{budget:0}", pos_last.Transform(in mat_l2c), layer: GUI.Layer.Window, box_shadow: false);
+
+								connection_copy.junction_index = junction_index_new;
+								queue.Enqueue(connection_copy);
 								break;
 							}
+
+							pos_last = road_points_span[i];
 						}
 					}
 
 					{
+						var connection_copy = connection;
+
 						var pos_last = pos;
 						for (var i = segment_base.index - 1; i >= 0; i--)
 						{
@@ -320,14 +334,24 @@ namespace TC2.Conquest
 							if (hs_visited.Contains(key)) break;
 							hs_visited.Add(key);
 
-							GUI.DrawLine(Vector2.Transform(pos_last, mat_l2c) - depth_offset, Vector2.Transform(road_points_span[i], mat_l2c) - depth_offset, color, thickness: thickness * zoom, layer: GUI.Layer.Window);
-							pos_last = road_points_span[i];
+							var distance = Vector2.Distance(pos_last, road_points_span[i]);
+							connection_copy.distance += distance;
+							connection_copy.budget -= (distance / (road.speed_mult * road.integrity));
+
+							GUI.DrawLine(Vector2.Transform(pos_last, mat_l2c) - depth_offset, Vector2.Transform(road_points_span[i], mat_l2c) - depth_offset, Color32BGRA.FromHSV((Maths.NormalizeClamp(connection_copy.budget, budget)) * 2.00f, 1.00f, 1.00f).WithAlphaMult(alpha), thickness: thickness * zoom, layer: GUI.Layer.Window);
+
+							if (connection_copy.budget <= 0.00f) break;
 
 							if (road_segment_to_junction_index.TryGetValue(segment, out var junction_index_new))
 							{
-								queue.Enqueue(junction_index_new);
+								GUI.DrawTextCentered($"{(connection_copy.distance * km_per_unit):0.0}km; {connection_copy.budget:0}/{budget:0}", pos_last.Transform(in mat_l2c), layer: GUI.Layer.Window, box_shadow: false);
+
+								connection_copy.junction_index = junction_index_new;
+								queue.Enqueue(connection_copy);
 								break;
 							}
+
+							pos_last = road_points_span[i];
 						}
 					}
 
