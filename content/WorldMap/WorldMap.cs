@@ -14,6 +14,9 @@ namespace TC2.Conquest
 		public static float road_junction_threshold = 0.250f;
 		public const float km_per_unit = 2.00f;
 
+		public static Dictionary<ILocation.Handle, Road.Segment> location_to_road = new();
+		public static Dictionary<ILocation.Handle, Road.Segment> location_to_rail = new();
+
 		public struct RoadConnection
 		{
 			public int junction_index;

@@ -18,9 +18,12 @@ namespace TC2.Conquest
 		public static void RecalculateRoads()
 		{
 			road_segments.Clear();
-			road_segments_overlapped.Clear();
 			road_junctions.Clear();
+			road_segments_overlapped.Clear();
 			road_segment_to_junction_index.Clear();
+
+			location_to_road.Clear();
+			location_to_rail.Clear();
 
 			{
 				var ts = Timestamp.Now();
@@ -126,6 +129,31 @@ namespace TC2.Conquest
 				}
 				var ts_elapsed = ts.GetMilliseconds();
 				App.WriteLine($"Calculated road junctions in {ts_elapsed:0.0000} ms.");
+			}
+
+			{
+				foreach (var asset in ILocation.Database.GetAssets())
+				{
+					if (asset.id == 0) continue;
+					ref var asset_data = ref asset.GetData();
+
+
+					{
+						var nearest_segment = GetNearestRoad(asset_data.h_district, Road.Type.Road, (Vector2)asset_data.point, out var dist_sq);
+						if (dist_sq <= 1.50f.Pow2())
+						{
+							location_to_road[asset] = nearest_segment;
+						}
+					}
+
+					{
+						var nearest_segment = GetNearestRoad(asset_data.h_district, Road.Type.Rail, (Vector2)asset_data.point, out var dist_sq);
+						if (dist_sq <= 1.00f.Pow2())
+						{
+							location_to_rail[asset] = nearest_segment;
+						}
+					}
+				}
 			}
 		}
 

@@ -317,12 +317,14 @@ namespace TC2.Conquest
 
 								if (is_selected || is_hovered)
 								{
-									var ts = Timestamp.Now();
-									var nearest_road = GetNearestRoad(asset_data.h_district, Road.Type.Road, (Vector2)asset_data.point, out var nearest_road_dist_sq);
-									var nearest_rail = GetNearestRoad(asset_data.h_district, Road.Type.Rail, (Vector2)asset_data.point, out var nearest_rail_dist_sq);
-									var ts_elapsed = ts.GetMilliseconds();
+									//var ts = Timestamp.Now();
+									//var nearest_road = GetNearestRoad(asset_data.h_district, Road.Type.Road, (Vector2)asset_data.point, out var nearest_road_dist_sq);
+									//var nearest_rail = GetNearestRoad(asset_data.h_district, Road.Type.Rail, (Vector2)asset_data.point, out var nearest_rail_dist_sq);
+									//var ts_elapsed = ts.GetMilliseconds();
 
-									if (nearest_road_dist_sq <= 1.50f.Pow2())
+									//if (nearest_road_dist_sq <= 1.50f.Pow2())
+
+									if (location_to_road.TryGetValue(asset, out var nearest_road))
 									{
 										GUI.DrawCircleFilled(nearest_road.GetPosition().Transform(in mat_l2c), 0.125f * zoom * 0.50f, Color32BGRA.Yellow, 8, GUI.Layer.Window);
 										if (Maths.IsInDistance(mouse_local, nearest_road.GetPosition(), 0.25f))
@@ -331,7 +333,9 @@ namespace TC2.Conquest
 										}
 									}
 
-									if (nearest_rail_dist_sq <= 1.00f.Pow2())
+									//if (nearest_rail_dist_sq <= 1.00f.Pow2())
+
+									if (location_to_rail.TryGetValue(asset, out var nearest_rail))
 									{
 										GUI.DrawCircleFilled(nearest_rail.GetPosition().Transform(in mat_l2c), 0.125f * zoom * 0.50f, Color32BGRA.Orange, 8, GUI.Layer.Window);
 										if (Maths.IsInDistance(mouse_local, nearest_rail.GetPosition(), 0.25f))
@@ -339,7 +343,7 @@ namespace TC2.Conquest
 											DrawConnectedRoads(nearest_rail, ref mat_l2c, zoom, iter_max: 50, budget: 100.00f);
 										}
 									}
-									GUI.Text($"nearest in {ts_elapsed:0.0000} ms");
+									//GUI.Text($"nearest in {ts_elapsed:0.0000} ms");
 								}
 							}
 
