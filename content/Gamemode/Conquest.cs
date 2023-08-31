@@ -139,7 +139,7 @@ namespace TC2.Conquest
 
 					if (sync)
 					{
-						region.SyncGlobal(ref g_conquest);
+						region.SyncSingleton(ref g_conquest);
 					}
 				}
 			}
@@ -180,14 +180,14 @@ namespace TC2.Conquest
 #endif
 
 		//#if SERVER
-		//		[ISystem.AddFirst(ISystem.Mode.Single)]
+		//		[ISystem.AddFirst(ISystem.Mode.Single, ISystem.Scope.Region)]
 		//		public static void OnAdd(ISystem.Info info, ref Region.Data region, [Source.Owned] ref MapCycle.Global mapcycle)
 		//		{
 		//			mapcycle.AddMaps(ref region, "conquest");
 		//		}
 		//#endif
 
-		//		[ISystem.VeryLateUpdate(ISystem.Mode.Single)]
+		//		[ISystem.VeryLateUpdate(ISystem.Mode.Single, ISystem.Scope.Region)]
 		//		public static void OnUpdate(ISystem.Info info, [Source.Global] ref Conquest.Gamemode conquest, [Source.Global] in MapCycle.Global mapcycle, [Source.Global] ref MapCycle.Voting voting)
 		//		{
 		//			if (true)
@@ -200,7 +200,7 @@ namespace TC2.Conquest
 		//		}
 
 		//#if SERVER
-		//		[ISystem.LateUpdate(ISystem.Mode.Single, interval: 5.00f)]
+		//		[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Region, interval: 5.00f)]
 		//		public static void OnUpdate(ISystem.Info info, Entity entity, ref XorRandom random, [Source.Owned] in Player.Data player, [Source.Owned] ref Respawn.Data respawn)
 		//		{
 		//			ref var region = ref info.GetRegion();
@@ -451,8 +451,8 @@ namespace TC2.Conquest
 			}
 		}
 
-		[ISystem.EarlyGUI(ISystem.Mode.Single)]
-		public static void OnEarlyGUI(Entity entity, [Source.Owned] in Player.Data player, [Source.Global] in Conquest.Gamemode gamemode)
+		[ISystem.EarlyGUI(ISystem.Mode.Single, ISystem.Scope.Region)]
+		public static void OnEarlyGUI(Entity entity, [Source.Owned] in Player.Data player, [Source.Singleton] in Conquest.Gamemode gamemode)
 		{
 			if (player.IsLocal())
 			{
