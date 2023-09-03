@@ -524,7 +524,7 @@ namespace TC2.Conquest
 				}
 
 				#region Left
-				DrawLeftWindow(ref rect, zoom, ref mat_l2c);
+				DrawLeftWindow(is_loading, ref rect, zoom, ref mat_l2c);
 				#endregion
 
 				#region Right
@@ -537,7 +537,7 @@ namespace TC2.Conquest
 			}
 		}
 
-		private static void DrawLeftWindow(ref AABB rect, float zoom, ref Matrix3x2 mat_l2c)
+		private static void DrawLeftWindow(bool loading, ref AABB rect, float zoom, ref Matrix3x2 mat_l2c)
 		{
 			using (var window = GUI.Window.Standalone("worldmap.side.left", position: new Vector2(rect.a.X, rect.a.Y) + new Vector2(6, 12), size: new(284, MathF.Min(rect.GetHeight() - 8, 550)), pivot: new(0.00f, 0.00f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus | GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.Child))
 			{
@@ -677,6 +677,8 @@ namespace TC2.Conquest
 		{
 			if (selected_region_id != 0 || h_selected_location != 0)
 			{
+				//var draw_external = true;
+
 				using (var window = GUI.Window.Standalone("worldmap.side.right", position: new Vector2(rect.b.X, rect.a.Y) + new Vector2(-6, 12), size: new(322, MathF.Min(rect.GetHeight() - 8, 550)), pivot: new(1.00f, 0.00f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus | GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.Child))
 				{
 					if (window.show)
@@ -734,6 +736,9 @@ namespace TC2.Conquest
 															if (GUI.DrawButton("Enter", size: GUI.Rm, font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
 															{
 																Client.RequestSetActiveRegion(selected_region_id, delay_seconds: 0.75f);
+																
+																window.Close();
+																GUI.RegionMenu.ToggleWidget(false);
 
 																//Client.TODO_LoadRegion(region_id);
 															}
