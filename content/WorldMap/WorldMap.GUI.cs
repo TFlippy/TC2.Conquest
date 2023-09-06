@@ -15,6 +15,9 @@ namespace TC2.Conquest
 
 			//return;
 			var is_loading = Client.IsLoadingRegion();
+			ref var region = ref world.GetGlobalRegion();
+			if (region.IsNull()) return;
+
 			//var use_renderer = true;
 
 			//if (!Client.IsLoadingRegion())
@@ -84,6 +87,9 @@ namespace TC2.Conquest
 
 						var mat_l2c2 = Maths.TRS3x2(rect.GetPosition(new Vector2(0.50f)), rotation, new Vector2(1));
 						Matrix3x2.Invert(mat_l2c2, out var mat_c2l2);
+
+						region.GetWorldToCanvasMatrix() = mat_l2c;
+						region.GetCanvasToWorldMatrix() = mat_c2l;
 
 						var snap_delta_canvas = snap_delta * zoom;
 
@@ -687,9 +693,11 @@ namespace TC2.Conquest
 
 						if (h_selected_location != 0)
 						{
-							ref var location_data = ref h_selected_location.GetData();
+							ref var location_data = ref h_selected_location.GetData(out var location_asset);
 							if (location_data.IsNotNull())
 							{
+								var ent_asset = location_asset.GetEntity();
+
 								for (var i = 0; i < Region.max_count; i++)
 								{
 									ref var region_info = ref World.GetRegionInfo((byte)i);
@@ -736,7 +744,7 @@ namespace TC2.Conquest
 															if (GUI.DrawButton("Enter", size: GUI.Rm, font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
 															{
 																Client.RequestSetActiveRegion(selected_region_id, delay_seconds: 0.75f);
-																
+
 																window.Close();
 																GUI.RegionMenu.ToggleWidget(false);
 
@@ -798,6 +806,7 @@ namespace TC2.Conquest
 										{
 											using (GUI.Wrap.Push(GUI.RmX))
 											{
+												
 												//var ts = Timestamp.Now();
 												//var nearest_road = GetNearestRoad(location_data.h_district, Road.Type.Road, (Vector2)location_data.point, out var nearest_road_dist_sq);
 												//var nearest_rail = GetNearestRoad(location_data.h_district, Road.Type.Rail, (Vector2)location_data.point, out var nearest_rail_dist_sq);
@@ -816,8 +825,24 @@ namespace TC2.Conquest
 											}
 										}
 
+			
+
 										//GUI.TextShaded("- some info here");
 									}
+
+									if (GUI.DrawButton("Test", size: new(100, 32)))
+									{
+										var rpc = new Location.DEV_TestRPC()
+										{
+											val = 1337
+										};
+										rpc.Send(ent_asset);
+									}
+
+									GUI.SameLine();
+
+									GUI.Text(ent_asset.GetIdentifier());
+
 								}
 							}
 						}
