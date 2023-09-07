@@ -91,6 +91,9 @@ namespace TC2.Conquest
 						region.GetWorldToCanvasMatrix() = mat_l2c;
 						region.GetCanvasToWorldMatrix() = mat_c2l;
 
+						region.GetWorldToCanvasScale() = zoom * 0.50f;
+						region.GetCanvasToWorldScale() = 1.00f / region.GetWorldToCanvasScale();
+
 						var snap_delta_canvas = snap_delta * zoom;
 
 						var tex_scale = enable_renderer ? (IScenario.WorldMap.worldmap_size.X / scale_b) * zoom : 16.00f;
