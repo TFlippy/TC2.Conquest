@@ -9,6 +9,17 @@ namespace TC2.Conquest
 		[IComponent.Data(Net.SendType.Reliable)]
 		public partial struct Data: IComponent
 		{
+			[Flags]
+			public enum Flags: uint
+			{
+				None = 0u,
+			
+				Active = 1u << 0,
+				Stuck = 1u << 1,
+			}
+
+			public Train.Data.Flags flags;
+
 			public Road.Segment segment_a;
 			public Road.Segment segment_b;
 			public Road.Segment segment_c;
@@ -16,7 +27,7 @@ namespace TC2.Conquest
 			public Vector2 direction_old;
 			public Vector2 direction;
 
-			public float dot_current;
+			//public float dot_current;
 			public float dot_min = 0.70f;
 			public float dot_max = 1.00f;
 
@@ -53,132 +64,110 @@ namespace TC2.Conquest
 
 			if (!train.segment_a.IsValid()) return;
 			if (!train.segment_b.IsValid()) return;
+			if (!train.segment_c.IsValid()) return;
 
 #if SERVER
 return;
 #endif
 
 #if CLIENT
-			region.DrawDebugCircle(train.segment_a.GetPosition(), 0.125f, Color32BGRA.Yellow, filled: true);
-			region.DrawDebugCircle(train.segment_b.GetPosition(), 0.125f, Color32BGRA.Green, filled: true);
+			//region.DrawDebugRect(AABB.Centered(transform.position, new Vector2(0.125f)), Color32BGRA.Cyan);
+
+			region.DrawDebugCircle(train.segment_a.GetPosition(), 0.125f, Color32BGRA.Blue, filled: true);
+			region.DrawDebugCircle(train.segment_b.GetPosition(), 0.125f, Color32BGRA.Yellow, filled: true);
+			region.DrawDebugCircle(train.segment_c.GetPosition(), 0.125f, Color32BGRA.Red, filled: true);
+			region.DrawDebugCircle(transform.position, 0.175f, Color32BGRA.Cyan, filled: true);
 
 			region.DrawDebugDir(train.segment_a.GetPosition(), train.direction * Vector2.Distance(train.segment_a.GetPosition(), train.segment_b.GetPosition()), Color32BGRA.Yellow);
+			//region.DrawDebugDir(train.segment_b.GetPosition(), train.direction * Vector2.Distance(train.segment_a.GetPosition(), train.segment_b.GetPosition()), Color32BGRA.Yellow);
 			//region.DrawDebugDir(train.segment_b.GetPosition(), train.direction, Color32BGRA.Magenta);
 #endif
 
+			if (train.flags.HasAny(Data.Flags.Stuck))
+			{
+				train.road_distance_current = 0.00f;
+
+				return;
+			}
+			if (train.segment_b == train.segment_c) train.flags |= Data.Flags.Stuck;
+			if (train.flags.HasAny(Data.Flags.Stuck)) return;
+
 			//return;
+
+
 
 			if (train.road_distance_current >= train.road_distance_target)
 			{
-				var direction_cached = train.direction;
+				var segment_a_tmp = train.segment_a;
+				var segment_b_tmp = train.segment_b;
+				var segment_c_tmp = train.segment_c;
 
-				if (WorldMap.TryAdvance(ref train.segment_a, ref train.segment_b, ref train.direction, ref train.sign, out var junction_index, false))
+				train.segment_a = train.segment_b;
+				train.segment_b = train.segment_c;
+
+				var ok = false;
+
+				//var direction_cached = train.direction;
+
+				var sign_new = train.sign;
+				if (WorldMap.TryAdvance(train.segment_a, train.segment_b, out var segment_c_new, ref sign_new, out var junction_index, false))
 				{
+					ok = true;
+
+					train.segment_c = segment_c_new;
+					train.sign = sign_new;
+
 					//App.WriteLine("advanced road");
+				}
+				else
+				{
+					App.WriteLine("failed road");
+				}
 
-					if (junction_index != -1)
+		
+
+				if (junction_index != -1)
+				{
+					//App.WriteLine($"junction {junction_index} ({train.segment_a.chain.h_district}:{train.segment_a.chain.index}:{train.segment_a.index} to {train.segment_b.chain.h_district}:{train.segment_b.chain.index}:{train.segment_b.index}to {segment_c_new.chain.h_district}:{segment_c_new.chain.index}:{segment_c_new.index})");
+
+					if (WorldMap.TryAdvanceJunction(train.segment_a, train.segment_b, train.segment_c, junction_index, out var c_alt_segment, out var c_alt_sign, out var c_alt_dot, dot_min: train.dot_min, dot_max: train.dot_max, ignore_limits: !ok))
 					{
-						App.WriteLine($"optional junction {junction_index} ({train.segment_a.chain.h_district}:{train.segment_a.chain.index}:{train.segment_a.index} to {train.segment_b.chain.h_district}:{train.segment_b.chain.index}:{train.segment_b.index})");
+						//App.WriteLine($"advanced junction ({c_alt_dot} >= {train.dot_min} <= {train.dot_max}) ({train.segment_a.chain.h_district}:{train.segment_a.chain.index}:{train.segment_a.index} to {train.segment_b.chain.h_district}:{train.segment_b.chain.index}:{train.segment_b.index})");
 
-						if (WorldMap.TryAdvanceJunction(ref train.segment_a, ref train.segment_b, ref train.direction, ref train.sign, junction_index, Vector2.Dot(direction_cached, train.direction), out float dot_match, dot_min: train.dot_min, dot_max: train.dot_max))
-						{
-							App.WriteLine($"advanced optional junction ({dot_match} >= {train.dot_min} => {train.dot_current} <= {train.dot_max}) ({train.segment_a.chain.h_district}:{train.segment_a.chain.index}:{train.segment_a.index} to {train.segment_b.chain.h_district}:{train.segment_b.chain.index}:{train.segment_b.index})");
+						train.segment_c = c_alt_segment;
+						train.sign = c_alt_sign;
+						//train.dot_current = c_alt_dot;
 
-							//return;
-						}
-						else
-						{
-							App.WriteLine($"skip optional junction ({dot_match} >= {train.dot_min} => {train.dot_current} <= {train.dot_max})");
-						}
+						ok = true;
+
+						//return;
 					}
 					else
 					{
-
+						App.WriteLine($"skip junction ({c_alt_dot} >= {train.dot_min} <= {train.dot_max}; ({c_alt_segment.chain.h_district}:{c_alt_segment.chain.index}:{c_alt_segment.index})");
 					}
 				}
 				else
 				{
-					if (junction_index == -1)
-					{
-						App.WriteLine($"reversed direction a ({train.segment_a.chain.h_district}:{train.segment_a.chain.index}:{train.segment_a.index} to {train.segment_b.chain.h_district}:{train.segment_b.chain.index}:{train.segment_b.index})");
-
-						//train.sign = -train.sign;
-						//train.road_distance_current = 0.00f;
-						//train.direction *= -1.00f;
-
-						return;
-
-						//if (WorldMap.TryAdvance(ref train.segment_a, ref train.segment_b, ref train.direction, ref train.sign, out junction_index, false))
-						//{
-
-						//}
-
-						//(train.segment_a, train.segment_b) = (train.segment_b, train.segment_a);
-					}
-					else
-					{
-						//App.WriteLine("reversed direction b");
-
-						if (WorldMap.TryAdvanceJunction(ref train.segment_a, ref train.segment_b, ref train.direction, ref train.sign, junction_index, Vector2.Dot(direction_cached, train.direction), out float dot_match, dot_min: train.dot_min, dot_max: train.dot_max))
-						{
-							App.WriteLine($"advanced junction ({dot_match} >= {train.dot_min} => {train.dot_current} <= {train.dot_max}) ({train.segment_a.chain.h_district}:{train.segment_a.chain.index}:{train.segment_a.index} to {train.segment_b.chain.h_district}:{train.segment_b.chain.index}:{train.segment_b.index})");
-
-							//train.road_distance_current = 0.00f;
-							//train.road_distance_target = Vector2.Distance(train.segment_a.GetPosition(), train.segment_b.GetPosition());
-							//train.dot_current = dot_match;
-
-							//train.road_distance_current = 0.00f;
-							//train.road_distance_target = Vector2.Distance(train.segment_a.GetPosition(), train.segment_b.GetPosition());
-
-							//return;
-
-							//train.road_distance_current = 0.00f;
-							//train.road_distance_target = Vector2.Distance(train.segment_a.GetPosition(), train.segment_b.GetPosition());
-
-							//train.direction_old = direction_cached;
-							//train.dot_current = Vector2.Dot(train.direction_old, train.direction);
-						}
-						else
-						{
-							App.WriteLine($"reversed direction b ({train.segment_a.chain.h_district}:{train.segment_a.chain.index}:{train.segment_a.index} to {train.segment_b.chain.h_district}:{train.segment_b.chain.index}:{train.segment_b.index})");
-
-							//train.sign = -train.sign;
-							//train.road_distance_current = 0.00f;
-							//train.direction *= -1.00f;
-
-							return;
-
-
-							//if (WorldMap.TryAdvance(ref train.segment_a, ref train.segment_b, ref train.direction, ref train.sign, out junction_index, false))
-							//{
-
-							//}
-
-							//if (WorldMap.TryAdvance(ref train.segment_a, ref train.segment_b, ref train.direction, ref train.sign, out _, false))
-							//{
-							//	train.road_distance_current = 0.00f;
-							//	train.road_distance_target = Vector2.Distance(train.segment_a.GetPosition(), train.segment_b.GetPosition());
-
-
-							//	App.WriteLine("reversed direction");
-							//}
-							//else
-							//{
-							//	App.WriteLine("failed to advance junction");
-							//}
-						}
-					}
+					App.WriteLine($"no junction {junction_index}");
 				}
 
+				if (!ok)
+				{
+					(train.segment_a, train.segment_b, train.segment_c) = (segment_b_tmp, segment_c_tmp, segment_b_tmp);
+					train.sign = -train.sign;
+				}
 
-				train.road_distance_current = 0.00f;
-				train.road_distance_target = Vector2.Distance(train.segment_a.GetPosition(), train.segment_b.GetPosition());
+				train.direction_old = train.direction;
 
-				train.direction_old = direction_cached;
-				train.dot_current = Vector2.Dot(train.direction_old, train.direction);
+				train.road_distance_current -= train.road_distance_target;
+				train.direction = (train.segment_b.GetPosition() - train.segment_a.GetPosition()).GetNormalized(out train.road_distance_target);
+
+
+				//train.dot_current = Vector2.Dot(train.direction_old, train.direction);
 			}
 
-			if (train.segment_a != default && train.segment_b != default)
+			if (train.segment_a.IsValid() && train.segment_b.IsValid() && train.segment_c.IsValid())
 			{
 				//var dir = (train.segment_b.GetPosition() - train.segment_a.GetPosition()).GetNormalized(out var dist);
 				//train.road_distance_target = dist;
@@ -243,7 +232,7 @@ return;
 		public static Dictionary<ILocation.Handle, Road.Segment> location_to_road = new();
 		public static Dictionary<ILocation.Handle, Road.Segment> location_to_rail = new();
 
-		public static bool TryAdvance(ref Road.Segment a, ref Road.Segment b, ref Vector2 dir_cached, ref int dir_sign, out int junction_index, bool skip_inner_junctions = false)
+		public static bool TryAdvance(Road.Segment a, Road.Segment b, out Road.Segment c, ref int dir_sign, out int junction_index, bool skip_inner_junctions = false)
 		{
 			junction_index = -1;
 			var is_at_end = false;
@@ -254,8 +243,8 @@ return;
 				ref var road = ref b.GetRoad();
 				var points = road.points.AsSpan();
 
-				dir_sign = Maths.Sign(b.index - a.index);
-				if (dir_sign == 0) dir_sign = b.index > 0 ? -1 : 1;
+				//dir_sign = Maths.Sign(b.index - a.index);
+				//if (dir_sign == 0) dir_sign = b.index > 0 ? -1 : 1;
 
 				is_at_end = dir_sign == -1 ? b.index == 0 : b.index >= points.Length - 1;
 
@@ -271,18 +260,25 @@ return;
 
 				}
 
+				c = new Road.Segment(b.chain, (byte)Maths.Clamp(b.index + dir_sign, 0, points.Length - 1));
+
+				is_at_end = c == b;
+
+				//if (!is_at_junction && is_at_end)
+				//{
+				//	dir_sign = -dir_sign;
+				//}
 
 				//var pos_a = a.GetPosition();
 				//var pos_b = b.GetPosition();
 
-				a = b;
-				b = new Road.Segment(b.chain, (byte)Maths.Clamp(b.index + dir_sign, 0, points.Length - 1));
+				//a = b;
 
 
-				if (!is_at_end)
-				{
-					dir_cached = (points[b.index] - points[a.index]).GetNormalizedFast();
-				}
+				//if (!is_at_end)
+				//{
+				//	dir_cached = (points[b.index] - points[a.index]).GetNormalizedFast();
+				//}
 			}
 			else
 			{
@@ -293,15 +289,27 @@ return;
 				is_at_end = dir_sign == -1 ? b.index == 0 : b.index >= points.Length - 1;
 
 
-				a = b;
-				b = new Road.Segment(b.chain, (byte)Maths.Clamp(b.index + dir_sign, 0, points.Length - 1));
+				//a = b;
+				c = new Road.Segment(b.chain, (byte)Maths.Clamp(b.index + dir_sign, 0, points.Length - 1));
 
 
-				if (!is_at_end)
+				if ((is_at_end || !skip_inner_junctions) && road_segment_to_junction_index.TryGetValue(b, out var junction_index_tmp))
+				{
+					junction_index = junction_index_tmp;
+					is_at_junction = true;
+					//is_at_end = true;
+					//var junction = road_junctions[junction_index_v];
+				}
+				else
 				{
 
-					dir_cached = (points[b.index] - points[a.index]).GetNormalizedFast();
 				}
+
+				//if (!is_at_end)
+				//{
+
+				//	dir_cached = (points[b.index] - points[a.index]).GetNormalizedFast();
+				//}
 
 				//var dot_max = float.MaxValue;
 
@@ -311,10 +319,12 @@ return;
 			return !is_at_end; // && !is_at_junction;
 		}
 
-		public static bool TryAdvanceJunction(ref Road.Segment a, ref Road.Segment b, ref Vector2 dir_cached, ref int dir_sign, int junction_index, float dot_current, out float match_dot, float dot_min = 0.40f, float dot_max = 1.00f)
+		public static bool TryAdvanceJunction(Road.Segment a, Road.Segment b, Road.Segment c, int junction_index, out Road.Segment c_alt, out int c_alt_sign, out float c_alt_dot, float dot_min = 0.40f, float dot_max = 1.00f, bool ignore_limits = false)
 		{
 			var ok = false;
-			match_dot = -1.00f;
+			c_alt = default;
+			c_alt_dot = -1.00f;
+			c_alt_sign = default;
 
 			if ((uint)junction_index < road_junctions.Count)
 			{
@@ -323,21 +333,28 @@ return;
 
 				ref var road_a = ref a.GetRoad();
 				ref var road_b = ref b.GetRoad();
+				ref var road_c = ref b.GetRoad();
 
 				var points_a = road_a.points.AsSpan();
 				var points_b = road_b.points.AsSpan();
+				var points_c = road_b.points.AsSpan();
 
 				var type = road_a.type;
 
 				//var match_dot = dot_current;
-				var match_segment_a = default(Road.Segment);
-				var match_segment = default(Road.Segment);
+				//var match_segment_a = default(Road.Segment);
+				//var result_segment = default(Road.Segment);
 
-				var dir_sign_tmp = dir_sign;
-				var dir_tmp = dir_cached;
+				//var dir_sign_tmp = dir_sign;
+				//var match_dot_max = -1.00f;
 
+				var dir_ab = (points_b[b.index] - points_a[a.index]).GetNormalizedFast();
+				var dir_bc = (points_c[c.index] - points_b[b.index]).GetNormalizedFast();
 
-				var match_dot_max = -1.00f;
+				var dot = Vector2.Dot(dir_ab, dir_bc);
+				//ignore_limits |= junction.segments_count <= 2;
+
+				//App.WriteLine(dot);
 
 				////ref var road_a = ref a.GetRoad();
 				//ref var road = ref b.GetRoad();
@@ -357,62 +374,45 @@ return;
 				{
 					ref var j_segment = ref junction_segments[i];
 					if (j_segment == a) continue;
+					if (j_segment == b) continue;
+					if (j_segment == c) continue;
 
 					ref var j_road = ref j_segment.GetRoad();
 					if (j_road.IsNull() || j_road.type != type) continue;
 
 					var j_points = j_road.points.AsSpan();
+					var j_pos = j_points[j_segment.index];
 
 					if (j_segment.index < j_points.Length - 1)
 					{
-						var j_dir = (j_points[j_segment.index + 1] - points_a[a.index]).GetNormalizedFast();
-						var j_dot = Vector2.Dot(dir_cached, j_dir);
+						var dir_tmp = (j_points[j_segment.index + 1] - j_pos).GetNormalizedFast();
+						var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
 
-						match_dot_max = MathF.Max(j_dot, match_dot_max);
-
-						if (j_dot >= dot_min && j_dot > match_dot && j_dot <= dot_max)
+						if (dot_tmp > c_alt_dot && (ignore_limits || (dot_tmp >= dot_min && dot_tmp > dot && dot_tmp <= dot_max)))
 						{
-							match_dot = j_dot;
-							match_segment = new(j_segment.chain, (byte)(j_segment.index + 1));
-							match_segment_a = j_segment;
-							dir_tmp = j_dir;
-							dir_sign_tmp = 1;
+							c_alt = new(j_segment.chain, (byte)(j_segment.index + 1));
+							c_alt_dot = dot_tmp;
+							c_alt_sign = 1;
 						}
 					}
 
 					if (j_segment.index > 0)
 					{
-						var j_dir = (j_points[j_segment.index - 1] - points_a[a.index]).GetNormalizedFast();
-						var j_dot = Vector2.Dot(dir_cached, j_dir);
+						var dir_tmp = (j_points[j_segment.index - 1] - j_pos).GetNormalizedFast();
+						var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
 
-						match_dot_max = MathF.Max(j_dot, match_dot_max);
-
-						if (j_dot >= dot_min && j_dot > match_dot && j_dot <= dot_max)
+						if (dot_tmp > c_alt_dot && (ignore_limits || (dot_tmp >= dot_min && dot_tmp > dot && dot_tmp <= dot_max)))
 						{
-							match_dot = j_dot;
-							match_segment = new(j_segment.chain, (byte)(j_segment.index - 1));
-							match_segment_a = j_segment;
-							dir_tmp = j_dir;
-							dir_sign_tmp = -1;
+							c_alt = new(j_segment.chain, (byte)(j_segment.index - 1));
+							c_alt_dot = dot_tmp;
+							c_alt_sign = -1;
 						}
 					}
 				}
 
-				if (match_segment != default)
-				{
-					//a = b;
-					a = match_segment_a;
-					b = match_segment;
-					dir_cached = (b.GetPosition() - a.GetPosition()).GetNormalizedFast();
-					dir_sign = dir_sign_tmp;
+				//if (j_segment == a) continue;
 
-					ok = true;
-				}
-				else
-				{
-					match_dot = match_dot_max;
-				}
-
+				ok = c_alt.IsValid();
 
 
 
