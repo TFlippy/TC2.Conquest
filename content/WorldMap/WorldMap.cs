@@ -56,22 +56,31 @@ namespace TC2.Conquest
 			if (!train.segment_b.IsValid()) return;
 			if (!train.segment_c.IsValid()) return;
 
+			var show_debug = false;
+
 #if SERVER
-return;
+			return;
 #endif
 
+			if (show_debug)
+			{
 #if CLIENT
 			//region.DrawDebugRect(AABB.Centered(transform.position, new Vector2(0.125f)), Color32BGRA.Cyan);
 
 			region.DrawDebugCircle(train.segment_a.GetPosition(), 0.125f, Color32BGRA.Blue, filled: true);
 			region.DrawDebugCircle(train.segment_b.GetPosition(), 0.125f, Color32BGRA.Yellow, filled: true);
 			region.DrawDebugCircle(train.segment_c.GetPosition(), 0.125f, Color32BGRA.Red, filled: true);
-			region.DrawDebugCircle(transform.position, 0.175f, Color32BGRA.Cyan, filled: true);
 
 			region.DrawDebugDir(train.segment_a.GetPosition(), train.direction * Vector2.Distance(train.segment_a.GetPosition(), train.segment_b.GetPosition()), Color32BGRA.Yellow);
 			//region.DrawDebugDir(train.segment_b.GetPosition(), train.direction * Vector2.Distance(train.segment_a.GetPosition(), train.segment_b.GetPosition()), Color32BGRA.Yellow);
 			//region.DrawDebugDir(train.segment_b.GetPosition(), train.direction, Color32BGRA.Magenta);
 #endif
+			}
+
+#if CLIENT
+			region.DrawDebugCircle(transform.position, 0.175f, Color32BGRA.Cyan, filled: true);
+#endif
+
 
 			if (train.segment_b == train.segment_c) train.flags |= Data.Flags.Stuck;
 			if (train.flags.HasAny(Data.Flags.Stuck))
@@ -249,7 +258,7 @@ return;
 				var dir_ab = (points_b[b.index] - points_a[a.index]).GetNormalizedFast();
 				var dir_bc = (points_c[c.index] - points_b[b.index]).GetNormalizedFast();
 
-				var dot = Vector2.Dot(dir_ab, dir_bc);
+				var dot = MathF.Min(dot_max, Vector2.Dot(dir_ab, dir_bc));
 
 				for (var i = 0; i < junction_segments.Length; i++)
 				{
@@ -269,6 +278,8 @@ return;
 						var dir_tmp = (j_points[j_segment.index + 1] - j_pos).GetNormalizedFast();
 						var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
 
+						World.GetGlobalRegion().DrawDebugDir(j_pos, dir_tmp, Color32BGRA.Orange);
+
 						if (dot_tmp > c_alt_dot && (ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
 						{
 							c_alt = new(j_segment.chain, (byte)(j_segment.index + 1));
@@ -282,6 +293,8 @@ return;
 						var dir_tmp = (j_points[j_segment.index - 1] - j_pos).GetNormalizedFast();
 						var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
 
+						World.GetGlobalRegion().DrawDebugDir(j_pos, dir_tmp, Color32BGRA.Orange);
+
 						if (dot_tmp > c_alt_dot && (ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
 						{
 							c_alt = new(j_segment.chain, (byte)(j_segment.index - 1));
@@ -291,7 +304,7 @@ return;
 					}
 				}
 
-				ok = c_alt.IsValid() && (ignore_limits || c_alt_dot > dot);
+				ok = c_alt.IsValid(); // && (ignore_limits || c_alt_dot >= dot);
 			}
 
 			return ok;

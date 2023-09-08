@@ -51,22 +51,22 @@ namespace TC2.Conquest
 				overlay_alpha = Maths.Lerp(overlay_alpha, 0.00f, 0.10f); // App.fixed_update_interval_s * 2.00f);
 
 
-				{
-					ref var player = ref Client.GetPlayer();
-					if (player.IsNotNull())
-					{
-						ref var region = ref Client.GetRegion();
-						if (region.IsNotNull())
-						{
+				//{
+				//	ref var player = ref Client.GetPlayer();
+				//	if (player.IsNotNull())
+				//	{
+				//		ref var region = ref Client.GetRegion();
+				//		if (region.IsNotNull())
+				//		{
 
-							var pos_tmp = GUI.GetMouse().GetInterpolatedPosition();
-							GUI.DrawCircleFilled(region.WorldToCanvas(pos_tmp), 16.00f, color: Color32BGRA.Yellow, layer: GUI.Layer.Foreground);
-							GUI.DrawLine(GUI.CanvasSize * 0.50f, region.WorldToCanvas(pos_tmp), color: Color32BGRA.Yellow, layer: GUI.Layer.Foreground);
+				//			var pos_tmp = GUI.GetMouse().GetInterpolatedPosition();
+				//			GUI.DrawCircleFilled(region.WorldToCanvas(pos_tmp), 16.00f, color: Color32BGRA.Yellow, layer: GUI.Layer.Foreground);
+				//			GUI.DrawLine(GUI.CanvasSize * 0.50f, region.WorldToCanvas(pos_tmp), color: Color32BGRA.Yellow, layer: GUI.Layer.Foreground);
 
-							//GUI.DrawTextCentered($"{region.GetWorldToCanvasMatrix():0.0000}\n{region.WorldToCanvas(pos_tmp)}\n{GUI.WorldToCanvas(pos_tmp)}\n{pos_tmp}\n{Vulkan.v_lerp}", GUI.CanvasSize * 0.50f);
-						}
-					}
-				}
+				//			//GUI.DrawTextCentered($"{region.GetWorldToCanvasMatrix():0.0000}\n{region.WorldToCanvas(pos_tmp)}\n{GUI.WorldToCanvas(pos_tmp)}\n{pos_tmp}\n{Vulkan.v_lerp}", GUI.CanvasSize * 0.50f);
+				//		}
+				//	}
+				//}
 			}
 
 			if (overlay_alpha > 0.01f)
