@@ -32,6 +32,30 @@ namespace TC2.Conquest
 		//	App.WriteLine("Tick World End");
 		//}
 
+		[ISystem.PreRender(ISystem.Mode.Single, ISystem.Scope.Global)]
+		public static void OnPreRender(ISystem.Info.Global info, ref Region.Data.Global region, [Source.Owned] ref World.Global world)
+		{
+			IScenario.WorldMap.Renderer.Clear();
+			Doodad.Renderer.Clear();
+
+			//App.WriteLine("OnPreRender");
+		}
+
+		[ISystem.Render(ISystem.Mode.Single, ISystem.Scope.Global)]
+		public static void OnRender(ISystem.Info.Global info, ref Region.Data.Global region, [Source.Owned] ref World.Global world)
+		{
+			//App.WriteLine("OnRender");
+		}
+
+		[ISystem.PostRender(ISystem.Mode.Single, ISystem.Scope.Global)]
+		public static void OnPostRender(ISystem.Info.Global info, ref Region.Data.Global region, [Source.Owned] ref World.Global world)
+		{
+			IScenario.WorldMap.Renderer.Submit();
+			Doodad.Renderer.Submit();
+
+			//App.WriteLine("OnPostRender");
+		}
+
 		public static void Draw(Vector2 size)
 		{
 			ref var world = ref Client.GetWorld();
@@ -48,11 +72,11 @@ namespace TC2.Conquest
 
 			//if (!is_loading)
 
-			if (enable_renderer)
-			{
-				IScenario.WorldMap.Renderer.Clear();
-				IScenario.Doodad.Renderer.Clear();
-			}
+			//if (enable_renderer)
+			//{
+			//	IScenario.WorldMap.Renderer.Clear();
+			//	IScenario.Doodad.Renderer.Clear();
+			//}
 
 			var mouse = GUI.GetMouse();
 			var kb = GUI.GetKeyboard();
@@ -479,12 +503,12 @@ namespace TC2.Conquest
 							{
 								if (world_data.doodads != null && show_doodads)
 								{
-									IScenario.Doodad.Renderer.Add(world_data.doodads.AsSpan());
+									Doodad.Renderer.Add(world_data.doodads.AsSpan());
 								}
 							}
 
-							IScenario.WorldMap.Renderer.Submit();
-							IScenario.Doodad.Renderer.Submit();
+							//IScenario.WorldMap.Renderer.Submit();
+							//IScenario.Doodad.Renderer.Submit();
 						}
 
 						//if (!disable_input)

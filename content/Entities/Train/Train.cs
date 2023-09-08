@@ -13,6 +13,7 @@ namespace TC2.Conquest
 
 				Active = 1u << 0,
 				Stuck = 1u << 1,
+				Docked = 1u << 2,
 			}
 
 			public Train.Data.Flags flags;
@@ -20,6 +21,7 @@ namespace TC2.Conquest
 			public Road.Segment segment_a;
 			public Road.Segment segment_b;
 			public Road.Segment segment_c;
+			public Road.Segment segment_stop;
 
 			public Vector2 direction_old;
 			public Vector2 direction;
@@ -38,6 +40,7 @@ namespace TC2.Conquest
 			public float brake = 0.50f;
 			public float acceleration = 0.50f;
 
+			public float t_stop_departing;
 
 			public int sign;
 
@@ -144,6 +147,11 @@ namespace TC2.Conquest
 				train.direction_old = train.direction;
 				train.road_distance_current -= train.road_distance_target;
 				train.direction = (train.segment_b.GetPosition() - train.segment_a.GetPosition()).GetNormalized(out train.road_distance_target);
+
+				if (WorldMap.rail_to_location.TryGetValue(train.segment_a, out var h_location))
+				{
+					//App.WriteLine($"passed {h_location}");
+				}
 			}
 
 			if (train.segment_a.IsValid())
@@ -151,7 +159,7 @@ namespace TC2.Conquest
 				train.road_distance_current += info.DeltaTime * train.speed;
 				transform.position = train.segment_a.GetPosition() + (train.direction * train.road_distance_current);
 
-				transform.rotation = Maths.LerpAngle(Maths.NormalizeAngle(transform.rotation), train.direction.GetAngleRadians(), 0.10f);
+				transform.SetRotation(transform.rotation, Maths.LerpAngle(train.direction_old.GetAngleRadians(), train.direction.GetAngleRadians(), Maths.NormalizeClamp(train.road_distance_current, 0.350f)));
 			}
 		}
 
@@ -171,61 +179,81 @@ namespace TC2.Conquest
 
 				using (var window = GUI.Window.Standalone($"train.{ent_train}", rect.GetPosition(), size: rect.GetSize(), flags: GUI.Window.Flags.None, force_position: true))
 				{
-					//GUI.DrawCircle(region.WorldToCanvas(this.transform.GetInterpolatedPosition()),, Color32BGRA.Magenta, segments: 3, layer: GUI.Layer.Foreground);
-					var is_pressed = GUI.ButtonBehavior($"train.{ent_train}", rect, out var is_hovered, out var is_held);
-
-					var sprite = sprite_train;
-
-					var rot = transform.rotation;
-					var rot_snapped = Maths.Snap(rot, MathF.PI * 0.250f);
-					var rot_rem = Maths.DeltaAngle(rot, rot_snapped);
-
-					var rot_invlerp = Maths.InvLerp01(-MathF.PI, MathF.PI, rot_snapped);
-					sprite.frame.X = (uint)(rot_invlerp * 8);
-
-					// the sprites aren't 45°
-					switch (sprite.frame.X)
+					using (GUI.ID.Push("train"))
 					{
-						case 1:
-						{
-							rot_rem += MathF.PI * 0.100f;
-						}
-						break;
+						//GUI.DrawCircle(region.WorldToCanvas(this.transform.GetInterpolatedPosition()),, Color32BGRA.Magenta, segments: 3, layer: GUI.Layer.Foreground);
+						var is_pressed = GUI.ButtonBehavior("train", rect, out var is_hovered, out var is_held);
 
-						case 3:
-						{
-							rot_rem -= MathF.PI * 0.100f;
-						}
-						break;
+						var sprite = sprite_train;
 
-						case 5:
-						{
-							rot_rem += MathF.PI * 0.100f;
-						}
-						break;
+						var rot = transform.GetInterpolatedRotation();
+						var rot_snapped = Maths.Snap(rot, MathF.PI * 0.250f);
+						var rot_rem = Maths.DeltaAngle(rot, rot_snapped);
 
-						case 7:
+						var rot_invlerp = Maths.InvLerp01(-MathF.PI, MathF.PI, rot_snapped);
+						sprite.frame.X = (uint)(rot_invlerp * 8);
+
+						// the sprites aren't 45°
+						switch (sprite.frame.X)
 						{
-							rot_rem -= MathF.PI * 0.100f;
+							case 1:
+							{
+								rot_rem += MathF.PI * 0.100f;
+							}
+							break;
+
+							case 3:
+							{
+								rot_rem -= MathF.PI * 0.100f;
+							}
+							break;
+
+							case 5:
+							{
+								rot_rem += MathF.PI * 0.100f;
+							}
+							break;
+
+							case 7:
+							{
+								rot_rem -= MathF.PI * 0.100f;
+							}
+							break;
 						}
-						break;
+
+						var use_shader = false;
+						if (use_shader)
+						{
+							Doodad.Renderer.Add(new Doodad.Renderer.Data()
+							{
+								sprite = sprite,
+								position = Maths.Snap(transform.position, 1.00f / 32.00f),
+								rotation = -rot_rem,
+								z = 0.75f,
+								color = Color32BGRA.White,
+								scale = new Vector2(0.375f)
+							});
+						}
+						else
+						{
+							GUI.DrawSpriteCentered2(sprite, rect, GUI.Layer.Window, scale: (region.GetWorldToCanvasScale() / 32) * 1.25f, rotation: rot_rem, pivot: new(0.00f, 0.50f));
+						}
+
+						//GUI.DrawRect(rect, Color32BGRA.Yellow, layer: GUI.Layer.Window);
+						//GUI.DrawTextCentered($"{rot:0.000}\n{rot_rem:0.000}", rect.GetPosition(), layer: GUI.Layer.Window);
+
+
+						if (is_pressed)
+						{
+							App.WriteLine("press");
+						}
+
+						if (is_hovered)
+						{
+							GUI.SetCursor(App.CursorType.Hand, 1000);
+							//App.WriteLine("hover");
+						}
 					}
-
-					GUI.DrawSpriteCentered2(sprite, rect, GUI.Layer.Window, scale: region.GetWorldToCanvasScale() / 32, rotation: rot_rem);
-
-					//GUI.DrawRect(rect, Color32BGRA.Yellow, layer: GUI.Layer.Window);
-					//GUI.DrawTextCentered($"{rot:0.000}\n{rot_rem:0.000}", rect.GetPosition(), layer: GUI.Layer.Window);
-
-
-					if (is_pressed)
-					{
-						App.WriteLine("press");
-					}
-
-					//if (is_hovered)
-					//{
-					//	App.WriteLine("hover");
-					//}
 				}
 			}
 		}

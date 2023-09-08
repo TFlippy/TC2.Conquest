@@ -58,6 +58,9 @@ namespace TC2.Conquest
 		public static Dictionary<ILocation.Handle, Road.Segment> location_to_road = new();
 		public static Dictionary<ILocation.Handle, Road.Segment> location_to_rail = new();
 
+		public static Dictionary<Road.Segment, ILocation.Handle> road_to_location = new();
+		public static Dictionary<Road.Segment, ILocation.Handle> rail_to_location = new();
+
 		public static bool TryAdvance(Road.Segment a, Road.Segment b, out Road.Segment c, ref int dir_sign, out int junction_index, bool skip_inner_junctions = false)
 		{
 			junction_index = -1;
@@ -199,7 +202,7 @@ namespace TC2.Conquest
 		public static short2[] edit_points_s16;
 		public static Vector2[] edit_points_f32;
 
-		public static IScenario.Doodad? clipboard_doodad;
+		public static Doodad.Renderer.Data? clipboard_doodad;
 
 		public static IAsset.IDefinition edit_asset;
 		public static IScenario.Handle h_world = "krumpel";

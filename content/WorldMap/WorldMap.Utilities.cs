@@ -25,6 +25,9 @@ namespace TC2.Conquest
 			location_to_road.Clear();
 			location_to_rail.Clear();
 
+			road_to_location.Clear();
+			rail_to_location.Clear();
+
 			{
 				var ts = Timestamp.Now();
 				foreach (var asset in IDistrict.Database.GetAssets())
@@ -143,6 +146,12 @@ namespace TC2.Conquest
 						if (dist_sq <= 1.50f.Pow2())
 						{
 							location_to_road[asset] = nearest_segment;
+							road_to_location[nearest_segment] = asset;
+
+							if (road_segment_to_junction_index.ContainsKey(nearest_segment))
+							{
+								App.WriteLine($"Location \"{asset.identifier}\"'s nearest road is a junction - this may cause issues!", App.Color.Yellow);
+							}
 						}
 					}
 
@@ -151,6 +160,12 @@ namespace TC2.Conquest
 						if (dist_sq <= 1.00f.Pow2())
 						{
 							location_to_rail[asset] = nearest_segment;
+							rail_to_location[nearest_segment] = asset;
+
+							if (road_segment_to_junction_index.ContainsKey(nearest_segment))
+							{
+								App.WriteLine($"Location \"{asset.identifier}\"'s nearest rail is a junction - this may cause issues!", App.Color.Yellow);
+							}
 						}
 					}
 				}
@@ -182,7 +197,7 @@ namespace TC2.Conquest
 		}
 
 		// TODO: implement a faster lookup, especially for this
-		public static ref IScenario.Doodad GetNearestDoodad(Vector2 position, Span<IScenario.Doodad> span, out int index, out float distance_sq)
+		public static ref Doodad.Renderer.Data GetNearestDoodad(Vector2 position, Span<Doodad.Renderer.Data> span, out int index, out float distance_sq)
 		{
 			var nearest_index = int.MaxValue;
 			var nearest_distance_sq = float.MaxValue;
@@ -203,7 +218,7 @@ namespace TC2.Conquest
 			distance_sq = nearest_distance_sq;
 
 			if ((uint)index < span.Length) return ref span[nearest_index];
-			else return ref Unsafe.NullRef<IScenario.Doodad>();
+			else return ref Unsafe.NullRef<Doodad.Renderer.Data>();
 		}
 
 		// TODO: implement a faster lookup
