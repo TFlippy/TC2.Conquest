@@ -8,6 +8,30 @@ namespace TC2.Conquest
 	{
 
 #if CLIENT
+		//[ISystem.VeryEarlyGUI(ISystem.Mode.Single, ISystem.Scope.Global)]
+		//public static void OnGUIEarly(ISystem.Info.Global info, ref Region.Data.Global region, [Source.Owned] ref World.Global world)
+		//{
+		//	App.WriteLine("GUI World Begin");
+		//}
+
+		//[ISystem.VeryLateGUI(ISystem.Mode.Single, ISystem.Scope.Global)]
+		//public static void OnGUILate(ISystem.Info.Global info, ref Region.Data.Global region, [Source.Owned] ref World.Global world)
+		//{
+		//	App.WriteLine("GUI World End");
+		//}
+
+		//[ISystem.VeryEarlyUpdate(ISystem.Mode.Single, ISystem.Scope.Global)]
+		//public static void OnTickEarly(ISystem.Info.Global info, ref Region.Data.Global region, [Source.Owned] ref World.Global world)
+		//{
+		//	App.WriteLine("Tick World Begin");
+		//}
+
+		//[ISystem.VeryLateUpdate(ISystem.Mode.Single, ISystem.Scope.Global)]
+		//public static void OnTickLate(ISystem.Info.Global info, ref Region.Data.Global region, [Source.Owned] ref World.Global world)
+		//{
+		//	App.WriteLine("Tick World End");
+		//}
+
 		public static void Draw(Vector2 size)
 		{
 			ref var world = ref Client.GetWorld();
