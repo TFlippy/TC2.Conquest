@@ -63,6 +63,19 @@ namespace TC2.Conquest
 		public static Dictionary<Road.Segment, ILocation.Handle> road_to_location = new();
 		public static Dictionary<Road.Segment, ILocation.Handle> rail_to_location = new();
 
+		public static partial class Marker
+		{
+			[IComponent.Data(Net.SendType.Reliable)]
+			public partial struct Data: IComponent
+			{
+				public short2 point;
+				public float radius;
+				public float scale;
+
+				public Sprite icon;
+			}
+		}
+
 		public static bool TryAdvance(Road.Segment a, Road.Segment b, out Road.Segment c, ref int dir_sign, out int junction_index, bool skip_inner_junctions = false)
 		{
 			junction_index = -1;

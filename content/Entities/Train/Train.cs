@@ -29,6 +29,9 @@ namespace TC2.Conquest
 			public Vector2 direction_old;
 			public Vector2 direction;
 
+			public Vector2 dir_ab;
+			public Vector2 dir_bc;
+
 			//public float dot_current;
 			public float dot_min = 0.70f;
 			public float dot_max = 1.00f;
@@ -51,6 +54,39 @@ namespace TC2.Conquest
 			{
 			}
 		}
+
+#if SERVER
+		[ChatCommand.Global("train", "", creative: true)]
+		public static void TrainCommand(ref ChatCommand.Context context, string location)
+		{
+			ref var region = ref context.GetRegionGlobal();
+			var h_location = new ILocation.Handle(location);
+
+			ref var location_data = ref h_location.GetData(out var location_asset);
+			if (location_data.IsNotNull())
+			{
+				if (WorldMap.location_to_rail.TryGetValue(h_location, out var rail))
+				{
+					region.SpawnPrefab("train", rail.GetPosition()).ContinueWith(ent_train =>
+					{
+						ref var train = ref ent_train.GetComponent<Train.Data>();
+						if (train.IsNotNull())
+						{
+							train.sign = 1;
+
+							train.segment_a = rail with { index = (byte)(rail.index - 1) };
+							train.segment_b = rail with { index = rail.index };
+							train.segment_c = rail with { index = (byte)(rail.index + 1) };
+
+							train.Sync(ent_train, true);
+
+
+						}
+					});
+				}
+			}
+		}
+#endif
 
 		[ISystem.Update(ISystem.Mode.Single, ISystem.Scope.Global)]
 		public static void OnUpdate(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] ref Train.Data train, [Source.Owned] ref Transform.Data transform)
@@ -80,8 +116,14 @@ namespace TC2.Conquest
 			//#endif
 			//			}
 
+#if SERVER
+			//region.DrawDebugCircle(transform.position, 0.175f, Color32BGRA.Cyan, filled: true);
+#endif
+
 			//#if CLIENT
-			//			region.DrawDebugCircle(transform.position, 0.175f, Color32BGRA.Cyan, filled: true);
+			//			region.DrawDebugDir(train.segment_a.GetPosition(), train.dir_ab, Color32BGRA.Yellow);
+			//			region.DrawDebugDir(train.segment_b.GetPosition(), train.dir_bc, Color32BGRA.Yellow);
+			//			region.DrawDebugDir(train.segment_b.GetPosition(), train.direction, Color32BGRA.Magenta);
 			//#endif
 
 
@@ -178,6 +220,9 @@ namespace TC2.Conquest
 					train.road_distance_current -= train.road_distance_target;
 					train.direction = (train.segment_b.GetPosition() - train.segment_a.GetPosition()).GetNormalized(out train.road_distance_target);
 
+					train.dir_ab = (train.segment_b.GetPosition() - train.segment_a.GetPosition()).GetNormalized();
+					train.dir_bc = (train.segment_c.GetPosition() - train.segment_b.GetPosition()).GetNormalized();
+
 					if (WorldMap.rail_to_location.TryGetValue(train.segment_c, out var h_location))
 					{
 						ref var location_data = ref h_location.GetData();
@@ -196,9 +241,18 @@ namespace TC2.Conquest
 				if (train.segment_a.IsValid())
 				{
 					train.road_distance_current += train.speed_current * info.DeltaTime;
+
+					//transform.SetRotation(transform.rotation, Maths.LerpAngle(train.dir_ab.GetAngleRadians(), train.direction.GetAngleRadians(), Maths.NormalizeClamp(train.road_distance_current, 0.350f)));
+
+					//train.direction = Vector2.Lerp(train.dir_ab, train.dir_bc, (Maths.InvLerp01(0.00f, 0.50f, train.road_distance_current) + Maths.InvLerp01(train.road_distance_target - 0.50f, train.road_distance_target, train.road_distance_current)) * 0.50f);
+					//train.direction = train.dir_ab; // Vector2.Lerp(train.dir_ab, train.dir_bc, Maths.InvLerp01(train.road_distance_target - 0.50f, train.road_distance_target, train.road_distance_current)).GetNormalizedFast();
+
+					//transform.SetRotation(Vector2.Lerp(train.dir_ab, train.dir_bc, ((Maths.InvLerp01(0.00f, 0.50f, train.road_distance_current) * 0.75f) + (Maths.InvLerp01(train.road_distance_target - 0.50f, train.road_distance_target, train.road_distance_current)) * 0.25f)).GetAngleRadians());
 					transform.position = train.segment_a.GetPosition() + (train.direction * train.road_distance_current);
+					//transform.SetRotation(Vector2.Lerp(train.dir_ab, train.dir_bc, ((Maths.InvLerp01(0.00f, 0.50f, train.road_distance_current) * 0.75f) + (Maths.InvLerp01(train.road_distance_target - 0.50f, train.road_distance_target, train.road_distance_current)) * 0.25f)).GetAngleRadians());
 
 					transform.SetRotation(transform.rotation, Maths.LerpAngle(train.direction_old.GetAngleRadians(), train.direction.GetAngleRadians(), Maths.NormalizeClamp(train.road_distance_current, 0.350f)));
+
 				}
 			}
 		}
@@ -285,6 +339,9 @@ namespace TC2.Conquest
 
 						if (is_pressed)
 						{
+							if (WorldMap.selected_entity == ent_train) WorldMap.selected_entity = default;
+							else WorldMap.selected_entity = ent_train;
+
 							App.WriteLine("press");
 
 							GUI.SetDebugEntity(ent_train);

@@ -1,0 +1,40 @@
+$tags: []
+
+train:
+{
+	flags: none
+
+	mask_stop_buildings:
+	{
+		require: trainyard
+		include: trainyard
+		exclude: none
+	}
+	mask_stop_categories:
+	{
+		require: none
+		include: border
+		exclude: none
+	}
+
+	dot_min: 0.600
+	dot_max: 1.000
+
+	brake: 1.000
+	acceleration: 0.120
+}
+
+transform:
+{
+	scale: [1.000, 1.000]
+}
+
+sound.emitter:
+{
+	
+}
+
+interactable:
+{
+	window_size: [456.000, 336.000]
+}
