@@ -18,6 +18,9 @@ namespace TC2.Conquest
 
 			public Train.Data.Flags flags;
 
+			public Limit.Mask<ILocation.Buildings> mask_stop_buildings;
+			public Limit.Mask<ILocation.Categories> mask_stop_categories;
+
 			public Road.Segment segment_a;
 			public Road.Segment segment_b;
 			public Road.Segment segment_c;
@@ -89,77 +92,114 @@ namespace TC2.Conquest
 				return;
 			}
 
-			if (train.road_distance_current >= train.road_distance_target)
+			if (train.flags.HasAny(Data.Flags.Docked))
 			{
-				var segment_a_tmp = train.segment_a;
-				var segment_b_tmp = train.segment_b;
-				var segment_c_tmp = train.segment_c;
-
-				train.segment_a = train.segment_b;
-				train.segment_b = train.segment_c;
-
-				var ok = false;
-
-				if (WorldMap.TryAdvance(train.segment_a, train.segment_b, out train.segment_c, ref train.sign, out var junction_index, false))
+				if (info.WorldTime >= train.t_stop_departing)
 				{
-					ok = true;
-					//App.WriteLine("advanced road");
+					train.segment_stop = default;
+					train.flags.SetFlag(Data.Flags.Docked, false);
+				}
+			}
+			else
+			{
+				if (train.segment_a == train.segment_stop)
+				{
+					train.speed = 0.00f;
+
+					if (train.speed_current <= 0.01f)
+					{
+						train.flags.SetFlag(Data.Flags.Docked, true);
+						train.t_stop_departing = info.WorldTime + 15.00f;
+					}
 				}
 				else
 				{
-					//App.WriteLine("failed road");
+					train.speed = 1.00f;
 				}
 
+				train.speed_current = Maths.MoveTowards(train.speed_current, train.speed, (train.speed_current < train.speed ? train.acceleration : train.brake) * info.DeltaTime);
 
-
-				if (junction_index != -1)
+				if (train.road_distance_current >= train.road_distance_target)
 				{
-					//App.WriteLine($"junction {junction_index} ({train.segment_a.chain.h_district}:{train.segment_a.chain.index}:{train.segment_a.index} to {train.segment_b.chain.h_district}:{train.segment_b.chain.index}:{train.segment_b.index}to {segment_c_new.chain.h_district}:{segment_c_new.chain.index}:{segment_c_new.index})");
+					var segment_a_tmp = train.segment_a;
+					var segment_b_tmp = train.segment_b;
+					var segment_c_tmp = train.segment_c;
 
-					if (WorldMap.TryAdvanceJunction(train.segment_a, train.segment_b, train.segment_c, junction_index, out var c_alt_segment, out var c_alt_sign, out var c_alt_dot, dot_min: train.dot_min, dot_max: train.dot_max, ignore_limits: !ok))
+					train.segment_a = train.segment_b;
+					train.segment_b = train.segment_c;
+
+					var ok = false;
+
+					if (WorldMap.TryAdvance(train.segment_a, train.segment_b, out train.segment_c, ref train.sign, out var junction_index, false))
 					{
-						//App.WriteLine($"advanced junction ({c_alt_dot} >= {train.dot_min} <= {train.dot_max}) ({train.segment_a.chain.h_district}:{train.segment_a.chain.index}:{train.segment_a.index} to {train.segment_b.chain.h_district}:{train.segment_b.chain.index}:{train.segment_b.index})");
-
-						train.segment_c = c_alt_segment;
-						train.sign = c_alt_sign;
-						//train.dot_current = c_alt_dot;
-
 						ok = true;
-
-						//return;
+						//App.WriteLine("advanced road");
 					}
 					else
 					{
-						//App.WriteLine($"skip junction ({c_alt_dot} >= {train.dot_min} <= {train.dot_max}; ({c_alt_segment.chain.h_district}:{c_alt_segment.chain.index}:{c_alt_segment.index})");
+						//App.WriteLine("failed road");
+					}
+
+
+
+					if (junction_index != -1)
+					{
+						//App.WriteLine($"junction {junction_index} ({train.segment_a.chain.h_district}:{train.segment_a.chain.index}:{train.segment_a.index} to {train.segment_b.chain.h_district}:{train.segment_b.chain.index}:{train.segment_b.index}to {segment_c_new.chain.h_district}:{segment_c_new.chain.index}:{segment_c_new.index})");
+
+						if (WorldMap.TryAdvanceJunction(train.segment_a, train.segment_b, train.segment_c, junction_index, out var c_alt_segment, out var c_alt_sign, out var c_alt_dot, dot_min: train.dot_min, dot_max: train.dot_max, ignore_limits: !ok))
+						{
+							//App.WriteLine($"advanced junction ({c_alt_dot} >= {train.dot_min} <= {train.dot_max}) ({train.segment_a.chain.h_district}:{train.segment_a.chain.index}:{train.segment_a.index} to {train.segment_b.chain.h_district}:{train.segment_b.chain.index}:{train.segment_b.index})");
+
+							train.segment_c = c_alt_segment;
+							train.sign = c_alt_sign;
+							//train.dot_current = c_alt_dot;
+
+							ok = true;
+
+							//return;
+						}
+						else
+						{
+							//App.WriteLine($"skip junction ({c_alt_dot} >= {train.dot_min} <= {train.dot_max}; ({c_alt_segment.chain.h_district}:{c_alt_segment.chain.index}:{c_alt_segment.index})");
+						}
+					}
+					else
+					{
+						//App.WriteLine($"no junction {junction_index}");
+					}
+
+					if (!ok)
+					{
+						(train.segment_a, train.segment_b, train.segment_c) = (segment_b_tmp, segment_c_tmp, segment_b_tmp);
+						train.sign = -train.sign;
+					}
+
+					train.direction_old = train.direction;
+					train.road_distance_current -= train.road_distance_target;
+					train.direction = (train.segment_b.GetPosition() - train.segment_a.GetPosition()).GetNormalized(out train.road_distance_target);
+
+					if (WorldMap.rail_to_location.TryGetValue(train.segment_c, out var h_location))
+					{
+						ref var location_data = ref h_location.GetData();
+						if (location_data.IsNotNull())
+						{
+							if (train.mask_stop_buildings.Evaluate(location_data.buildings) && train.mask_stop_categories.Evaluate(location_data.categories))
+							{
+
+								train.segment_stop = train.segment_c;
+								//App.WriteLine($"passed {h_location}");
+							}
+						}
 					}
 				}
-				else
+
+				if (train.segment_a.IsValid())
 				{
-					//App.WriteLine($"no junction {junction_index}");
+					train.road_distance_current += train.speed_current * info.DeltaTime;
+					transform.position = train.segment_a.GetPosition() + (train.direction * train.road_distance_current);
+
+					transform.SetRotation(transform.rotation, Maths.LerpAngle(train.direction_old.GetAngleRadians(), train.direction.GetAngleRadians(), Maths.NormalizeClamp(train.road_distance_current, 0.350f)));
 				}
-
-				if (!ok)
-				{
-					(train.segment_a, train.segment_b, train.segment_c) = (segment_b_tmp, segment_c_tmp, segment_b_tmp);
-					train.sign = -train.sign;
-				}
-
-				train.direction_old = train.direction;
-				train.road_distance_current -= train.road_distance_target;
-				train.direction = (train.segment_b.GetPosition() - train.segment_a.GetPosition()).GetNormalized(out train.road_distance_target);
-
-				if (WorldMap.rail_to_location.TryGetValue(train.segment_a, out var h_location))
-				{
-					//App.WriteLine($"passed {h_location}");
-				}
-			}
-
-			if (train.segment_a.IsValid())
-			{
-				train.road_distance_current += info.DeltaTime * train.speed;
-				transform.position = train.segment_a.GetPosition() + (train.direction * train.road_distance_current);
-
-				transform.SetRotation(transform.rotation, Maths.LerpAngle(train.direction_old.GetAngleRadians(), train.direction.GetAngleRadians(), Maths.NormalizeClamp(train.road_distance_current, 0.350f)));
 			}
 		}
 
@@ -221,7 +261,7 @@ namespace TC2.Conquest
 							break;
 						}
 
-						var use_shader = false;
+						var use_shader = true;
 						if (use_shader)
 						{
 							Doodad.Renderer.Add(new Doodad.Renderer.Data()
@@ -246,6 +286,8 @@ namespace TC2.Conquest
 						if (is_pressed)
 						{
 							App.WriteLine("press");
+
+							GUI.SetDebugEntity(ent_train);
 						}
 
 						if (is_hovered)

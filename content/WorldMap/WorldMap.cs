@@ -52,8 +52,10 @@ namespace TC2.Conquest
 		public static Dictionary<Road.Segment, int> road_segment_to_junction_index = new(256);
 		public static List<Road.Junction> road_junctions = new(128);
 
-		public static float road_junction_threshold = 0.250f;
+		public static float road_junction_threshold = 0.1250f;
 		public const float km_per_unit = 2.00f;
+
+		public static Entity selected_entity;
 
 		public static Dictionary<ILocation.Handle, Road.Segment> location_to_road = new();
 		public static Dictionary<ILocation.Handle, Road.Segment> location_to_rail = new();
@@ -248,6 +250,14 @@ namespace TC2.Conquest
 		public static bool show_doodads = true;
 		//public static BitField<Road.Type> filter_roads = new BitField<Road.Type>(Road.Type.Road, Road.Type.Rail, Road.Type.Marine, Road.Type.Air);
 		//public static BitField<Road.Type> filter_roads_mask = new BitField<Road.Type>(Road.Type.Road, Road.Type.Rail, Road.Type.Marine, Road.Type.Air);
+
+		[ISystem.EarlyUpdate(ISystem.Mode.Single, ISystem.Scope.Global)]
+		public static void OnPreUpdate(Entity entity, [Source.Owned] ref Interactable.Data interactable) //, [Source.Owned] ref Body.Data body)
+		{
+			interactable.show = WorldMap.selected_entity == entity
+				&& !interactable.flags.HasAll(Interactable.Flags.No_Window)
+				&& interactable.window_size != default;
+		}
 #endif
 	}
 }

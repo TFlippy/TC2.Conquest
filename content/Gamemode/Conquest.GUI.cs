@@ -52,7 +52,7 @@ namespace TC2.Conquest
 					this.StoreCurrentWindowTypeID();
 					if (window.show)
 					{
-						ref var region = ref Client.GetRegion();
+						ref var region = ref ent_respawn.GetRegion();
 						ref var player = ref Client.GetPlayer();
 						var random = XorRandom.New(true);
 

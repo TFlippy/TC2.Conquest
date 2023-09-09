@@ -353,11 +353,13 @@ namespace TC2.Conquest
 
 									if (is_selected)
 									{
+										WorldMap.selected_entity = default;
 										h_selected_location = default;
 										Sound.PlayGUI(GUI.sound_select, volume: 0.09f, pitch: 0.80f);
 									}
 									else
 									{
+										WorldMap.selected_entity = asset.GetEntity();
 										h_selected_location = asset;
 										Sound.PlayGUI(GUI.sound_select, volume: 0.09f);
 									}
