@@ -56,6 +56,8 @@ namespace TC2.Conquest
 			//App.WriteLine("OnPostRender");
 		}
 
+		public static Timestamp ts_last_draw;
+
 		public static void Draw(Vector2 size)
 		{
 			ref var world = ref Client.GetWorld();
@@ -65,6 +67,8 @@ namespace TC2.Conquest
 			var is_loading = Client.IsLoadingRegion();
 			ref var region = ref world.GetGlobalRegion();
 			if (region.IsNull()) return;
+
+			ts_last_draw = Timestamp.Now();
 
 			//var use_renderer = true;
 
@@ -330,6 +334,7 @@ namespace TC2.Conquest
 							if (asset.id == 0) continue;
 
 							ref var asset_data = ref asset.GetData();
+							if (asset_data.flags.HasAny(ILocation.Flags.Hidden) || asset_data.h_location_parent.id != 0) continue;
 
 							var pos = (Vector2)asset_data.point;
 							var scale = 0.500f;
@@ -835,18 +840,22 @@ namespace TC2.Conquest
 
 									GUI.SeparatorThick();
 
-									using (var group_info = GUI.Group.New(size: new(GUI.RmX, GUI.RmY - 40), padding: new(8, 8)))
+									//using (var group_info = GUI.Group.New(size: new(GUI.RmX, GUI.RmY - 40), padding: new(8, 8)))
+									using (var group_info = GUI.Group.New(size: new(GUI.RmX, 144), padding: new(0, 0)))
 									{
-										using (var group_info_wide = GUI.Group.New2(size: new(GUI.RmX, 0), padding: new(2, 2, 12, 2)))
+										using (var group_info_wide = GUI.Group.New2(size: new(GUI.RmX, 0), padding: new(2, 2, 6, 2)))
 										{
-											using (GUI.Wrap.Push(GUI.RmX))
-											{
-												GUI.LabelShaded("Categories:", location_data.categories, font_a: GUI.Font.Superstar, size_a: 16);
-											}
+											//using (GUI.Wrap.Push(GUI.RmX))
+											//{
+											//	GUI.LabelShaded("Categories:", location_data.categories, font_a: GUI.Font.Superstar, size_a: 16);
+											//}
 										}
 
-										using (var group_info_left = GUI.Group.New2(size: new(GUI.RmX * 0.50f, GUI.RmY), padding: new(2, 2, 12, 2)))
+										using (var group_info_left = GUI.Group.New2(size: new(GUI.RmX - 76, GUI.RmY), padding: new(10, 8, 12, 8)))
 										{
+											//group_info_left.DrawBackground(GUI.tex_frame_white, color: GUI.col_button.WithAlphaMult(0.50f));
+											group_info_left.DrawBackground(GUI.tex_panel);
+
 											using (GUI.Wrap.Push(GUI.RmX))
 											{
 												GUI.LabelShaded("Type:", location_data.type, font_a: GUI.Font.Superstar, size_a: 16);
@@ -855,32 +864,77 @@ namespace TC2.Conquest
 
 										GUI.SameLine();
 
-										using (var group_info_right = GUI.Group.New2(size: new(GUI.RmX, GUI.RmY), padding: new(12, 2, 2, 2)))
+										using (var group_info_right = GUI.Group.New2(size: new(GUI.RmX, GUI.RmY), padding: new(0, 0, 0, 0)))
 										{
-											using (GUI.Wrap.Push(GUI.RmX))
+											Span<Entity> children_span = stackalloc Entity[8];
+											ent_asset.GetAllChildren(ref children_span, false);
+
+											foreach (var ent_child in children_span)
 											{
-												
-												//var ts = Timestamp.Now();
-												//var nearest_road = GetNearestRoad(location_data.h_district, Road.Type.Road, (Vector2)location_data.point, out var nearest_road_dist_sq);
-												//var nearest_rail = GetNearestRoad(location_data.h_district, Road.Type.Rail, (Vector2)location_data.point, out var nearest_rail_dist_sq);
-												//var ts_elapsed = ts.GetMilliseconds();
+												if (ILocation.TryGetAsset(ent_child, out var h_location_child))
+												{
+													ref var location_data_child = ref h_location_child.GetData(out var location_asset_child);
+													if (location_data_child.IsNotNull())
+													{
+														using (var group_child = GUI.Group.New(size: new(GUI.RmX)))
+														{
+															group_child.DrawBackground(GUI.tex_slot);
 
-												//if (nearest_road_dist_sq <= 4.00f.Pow2())
-												//{
-												//	GUI.DrawCircleFilled(Vector2.Transform(nearest_road.GetPosition(), mat_l2c), 0.125f * zoom, Color32BGRA.Yellow, 4, GUI.Layer.Foreground);
-												//}
-
-												//if (nearest_rail_dist_sq <= 4.00f.Pow2())
-												//{
-												//	GUI.DrawCircleFilled(Vector2.Transform(nearest_rail.GetPosition(), mat_l2c), 0.125f * zoom, Color32BGRA.Orange, 4, GUI.Layer.Foreground);
-												//}
-												//GUI.Text($"nearest in {ts_elapsed:0.0000} ms");
+															GUI.DrawSpriteCentered(location_data_child.icon, group_child.GetInnerRect(), GUI.Layer.Window, scale: 4.00f);
+	
+															if (GUI.Selectable3(ent_child.GetShortID(), group_child.GetInnerRect(), false))
+															{
+																WorldMap.selected_entity = ent_child;
+															}
+														}
+														GUI.FocusableAsset(h_location_child);
+													}
+												}
 											}
+
+											//using (GUI.Wrap.Push(GUI.RmX))
+											//{
+
+											//	//var ts = Timestamp.Now();
+											//	//var nearest_road = GetNearestRoad(location_data.h_district, Road.Type.Road, (Vector2)location_data.point, out var nearest_road_dist_sq);
+											//	//var nearest_rail = GetNearestRoad(location_data.h_district, Road.Type.Rail, (Vector2)location_data.point, out var nearest_rail_dist_sq);
+											//	//var ts_elapsed = ts.GetMilliseconds();
+
+											//	//if (nearest_road_dist_sq <= 4.00f.Pow2())
+											//	//{
+											//	//	GUI.DrawCircleFilled(Vector2.Transform(nearest_road.GetPosition(), mat_l2c), 0.125f * zoom, Color32BGRA.Yellow, 4, GUI.Layer.Foreground);
+											//	//}
+
+											//	//if (nearest_rail_dist_sq <= 4.00f.Pow2())
+											//	//{
+											//	//	GUI.DrawCircleFilled(Vector2.Transform(nearest_rail.GetPosition(), mat_l2c), 0.125f * zoom, Color32BGRA.Orange, 4, GUI.Layer.Foreground);
+											//	//}
+											//	//GUI.Text($"nearest in {ts_elapsed:0.0000} ms");
+											//}
 										}
 
-			
+
 
 										//GUI.TextShaded("- some info here");
+									}
+
+									using (var group_misc = GUI.Group.New(size: new(GUI.RmX, GUI.RmY - 40), padding: new(8, 8)))
+									{
+										//Span<Entity> children_span = stackalloc Entity[8];
+										//ent_asset.GetAllChildren(ref children_span, false);
+
+										//foreach (var ent_child in children_span)
+										//{
+										//	using (var group_child = GUI.Group.New(size: new(96, 96)))
+										//	{
+										//		group_child.DrawBackground(GUI.tex_frame);
+
+										//		if (GUI.Selectable3(ent_child.GetShortID(), group_child.GetInnerRect(), false))
+										//		{
+										//			WorldMap.selected_entity = ent_child;
+										//		}
+										//	}
+										//}
 									}
 
 									if (GUI.DrawButton("Test", size: new(100, 32)))

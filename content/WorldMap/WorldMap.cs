@@ -6,12 +6,13 @@ namespace TC2.Conquest
 {
 	public static partial class Location
 	{
-		[IComponent.Data(Net.SendType.Reliable)]
+		[IComponent.Data(Net.SendType.Reliable, sync_table_capacity: 128)]
 		public partial struct Data: IComponent
 		{
 			public ILocation.Handle h_location;
 		}
 
+#if SERVER
 		[ISystem.AddFirst(ISystem.Mode.Single, ISystem.Scope.Global)]
 		public static void OnAdd(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] ref Location.Data location, [Source.Owned] ref Transform.Data transform)
 		{
@@ -22,6 +23,18 @@ namespace TC2.Conquest
 				{
 					location.h_location = h_location;
 					transform.SetPosition(new(location_data.point.X, location_data.point.Y));
+
+					ref var location_parent_data = ref location_data.h_location_parent.GetData(out var location_parent_asset);
+					if (location_parent_data.IsNotNull())
+					{
+						var ent_parent = location_parent_asset.GetEntity();
+						if (ent_parent.IsAlive())
+						{
+							entity.AddRelation(ent_parent, Relation.Type.Child);
+						}
+					}
+
+					location.Sync(entity, true);
 				}
 			}
 			else
@@ -31,6 +44,8 @@ namespace TC2.Conquest
 
 			//App.WriteLine($"OnAdd: {h_location}; {entity}");
 		}
+#endif
+
 
 		public struct DEV_TestRPC: Net.IRPC<Location.Data>
 		{
@@ -267,7 +282,8 @@ namespace TC2.Conquest
 		[ISystem.EarlyUpdate(ISystem.Mode.Single, ISystem.Scope.Global)]
 		public static void OnPreUpdate(Entity entity, [Source.Owned] ref Interactable.Data interactable) //, [Source.Owned] ref Body.Data body)
 		{
-			interactable.show = WorldMap.selected_entity == entity
+			interactable.show = WorldMap.selected_entity == entity 
+				&& WorldMap.ts_last_draw.GetMilliseconds() <= 50 // TODO: shithack
 				&& !interactable.flags.HasAll(Interactable.Flags.No_Window)
 				&& interactable.window_size != default;
 		}

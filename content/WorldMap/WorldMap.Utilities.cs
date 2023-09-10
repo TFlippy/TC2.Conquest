@@ -139,8 +139,9 @@ namespace TC2.Conquest
 				{
 					if (asset.id == 0) continue;
 					ref var asset_data = ref asset.GetData();
+					if (asset_data.flags.HasAny(ILocation.Flags.Hidden) || asset_data.h_location_parent.id != 0) continue;
 
-
+					//if (asset_data.buildings.HasAny(ILocation.Buildings.Checkpoint))
 					{
 						var nearest_segment = GetNearestRoad(asset_data.h_district, Road.Type.Road, (Vector2)asset_data.point, out var dist_sq);
 						if (dist_sq <= 1.50f.Pow2())
@@ -155,6 +156,7 @@ namespace TC2.Conquest
 						}
 					}
 
+					if (asset_data.buildings.HasAny(ILocation.Buildings.Trainyard))
 					{
 						var nearest_segment = GetNearestRoad(asset_data.h_district, Road.Type.Rail, (Vector2)asset_data.point, out var dist_sq);
 						if (dist_sq <= 1.00f.Pow2())
