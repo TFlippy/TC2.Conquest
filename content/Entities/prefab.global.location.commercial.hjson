@@ -20,9 +20,9 @@ interactable:
     window_size: [456.000, 336.000]
 }
 
-worldmap.marker:
+company:
 {
-	
+
 }
 
 market:
