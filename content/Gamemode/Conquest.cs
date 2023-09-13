@@ -51,7 +51,7 @@ namespace TC2.Conquest
 				ref var region = ref connection.GetRegion();
 				Assert.NotNull(ref region, Assert.Level.Error);
 
-				var h_faction = player.faction_id;
+				var h_faction = player.h_faction;
 				ref var faction_data = ref h_faction.GetData(out IFaction.Definition s_faction);
 				Assert.NotNull(ref faction_data, Assert.Level.Error);
 				Assert.Check(faction_data.scout_count > 0, Assert.Level.Error);

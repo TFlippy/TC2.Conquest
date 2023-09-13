@@ -379,7 +379,7 @@ namespace TC2.Conquest
 								GUI.DrawSpriteCentered(asset_data.icon, rect_icon, layer: GUI.Layer.Window, 0.125f * MathF.Max(scale * zoom * asset_scale, 16), color: color);
 								GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(((Vector2)asset_data.point) + asset_data.text_offset, mat_l2c), pivot: new(0.50f, 0.50f), color: GUI.font_color_title, font: GUI.Font.Superstar, size: 0.50f * MathF.Max(asset_scale * zoom * scale, 16), layer: GUI.Layer.Window, box_shadow: true);
 
-								if (is_selected || is_hovered)
+								if ((is_selected || is_hovered) && editor_mode == EditorMode.Roads)
 								{
 									//var ts = Timestamp.Now();
 									//var nearest_road = GetNearestRoad(asset_data.h_district, Road.Type.Road, (Vector2)asset_data.point, out var nearest_road_dist_sq);
@@ -892,6 +892,7 @@ namespace TC2.Conquest
 																if (GUI.Selectable3(ent_child.GetShortID(), group_child.GetInnerRect(), selected: selected))
 																{
 																	WorldMap.selected_entity = selected ? default : ent_child;
+																	GUI.SetDebugEntity(ent_child);
 																}
 															}
 															if (GUI.IsItemHovered())
@@ -1012,46 +1013,50 @@ namespace TC2.Conquest
 
 									if (WorldMap.selected_entity.IsValid())
 									{
-										var sub_size = new Vector2(600, 400);
-										//using (var window_sub = window.BeginChildWindow("worldmap.side.right.sub", GUI.AlignX.Left, GUI.AlignY.Top, pivot: new(1.00f, 0.00f), size: sub_size + new Vector2(16, 16), padding: new(8, 8), open: WorldMap.selected_entity.IsValid(), tex_bg: GUI.tex_window_popup_b))
-										using (var window_sub = GUI.Window.Standalone("worldmap.side.right.sub", pivot: new(1.00f, 0.00f), size: sub_size + new Vector2(16, 16), padding: new(8, 8)))
+										ref var interactable = ref WorldMap.selected_entity.GetComponent<Interactable.Data>();
+										if (interactable.IsNotNull())
 										{
-											if (window_sub.show)
+											var sub_size = interactable.window_size;
+											//using (var window_sub = window.BeginChildWindow("worldmap.side.right.sub", GUI.AlignX.Left, GUI.AlignY.Top, pivot: new(1.00f, 0.00f), size: sub_size + new Vector2(16, 16), padding: new(8, 8), open: WorldMap.selected_entity.IsValid(), tex_bg: GUI.tex_window_popup_b))
+											using (var window_sub = GUI.Window.Standalone("worldmap.side.right.sub", pivot: new(0.50f, 0.00f), position: new(GUI.CanvasSize.X * 0.50f, 32), force_position: false, size: sub_size + new Vector2(16, 16), padding: new(8, 8)))
 											{
-												GUI.DrawWindowBackground(GUI.tex_window_popup_b, padding: new(4), color: GUI.col_default);
-
-												//if (GUI.DrawButton("A", size: new(100, 40)))
-												//{
-												//	dock.SetTab(0);
-												//}
-
-												//GUI.SameLine();
-
-												//if (GUI.DrawButton("B", size: new(100, 40)))
-												//{
-												//	dock.SetTab(1);
-												//}
-
-												using (var group_row = GUI.Group.New(size: new(GUI.RmX, 32)))
+												if (window_sub.show)
 												{
-													var count = dock.GetTabCount();
-													for (var i = 0u; i < count; i++)
+													GUI.DrawWindowBackground(GUI.tex_window_popup_b, padding: new(4), color: GUI.col_default);
+
+													//if (GUI.DrawButton("A", size: new(100, 40)))
+													//{
+													//	dock.SetTab(0);
+													//}
+
+													//GUI.SameLine();
+
+													//if (GUI.DrawButton("B", size: new(100, 40)))
+													//{
+													//	dock.SetTab(1);
+													//}
+
+													using (var group_row = GUI.Group.New(size: new(GUI.RmX, 40)))
 													{
-														if (i > 0) GUI.SameLine();
-														dock.DrawTab(i, new(0, group_row.size.Y));
+														var count = dock.GetTabCount();
+														for (var i = 0u; i < count; i++)
+														{
+															if (i > 0) GUI.SameLine();
+															dock.DrawTab(i, new(0, group_row.size.Y));
+														}
 													}
+
+													GUI.SeparatorThick();
+
+													//GUI.SameLine();
+
+													//GUI.Text($"{dock.GetTab()}");
+
+
+
+													dock.SetSpace(GUI.Rm);
+
 												}
-
-												GUI.SeparatorThick();
-
-												//GUI.SameLine();
-
-												//GUI.Text($"{dock.GetTab()}");
-
-
-
-												dock.SetSpace(GUI.Rm);
-
 											}
 										}
 									}

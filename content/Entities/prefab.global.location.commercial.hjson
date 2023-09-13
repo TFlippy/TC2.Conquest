@@ -17,12 +17,12 @@ transform:
 
 interactable:
 {
-    window_size: [456.000, 336.000]
+    window_size: [768.000, 552.000]
 }
 
 company:
 {
-
+  
 }
 
 market:

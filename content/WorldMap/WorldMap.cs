@@ -283,7 +283,7 @@ namespace TC2.Conquest
 		public static void OnPreUpdate(Entity entity, [Source.Owned] ref Interactable.Data interactable) //, [Source.Owned] ref Body.Data body)
 		{
 			interactable.show = WorldMap.selected_entity == entity 
-				&& WorldMap.ts_last_draw.GetMilliseconds() <= 50 // TODO: shithack
+				//&& WorldMap.ts_last_draw.GetMilliseconds() <= 50 // TODO: shithack
 				&& !interactable.flags.HasAll(Interactable.Flags.No_Window)
 				&& interactable.window_size != default;
 		}
