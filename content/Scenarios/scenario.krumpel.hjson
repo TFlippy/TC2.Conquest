@@ -2,7 +2,7 @@
 	name: "Krumpel Charter Crisis"
 	desc: ""
 	
-	provinces:
+	governorates:
 	[
 		"krumpelsutr"
 		"kapuca"

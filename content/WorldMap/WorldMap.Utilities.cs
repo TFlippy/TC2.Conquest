@@ -30,11 +30,11 @@ namespace TC2.Conquest
 
 			{
 				var ts = Timestamp.Now();
-				foreach (var asset in IDistrict.Database.GetAssets())
+				foreach (var asset in IPrefecture.Database.GetAssets())
 				{
 					if (asset.id == 0) continue;
 
-					var h_district = asset.GetHandle();
+					var h_prefecture = asset.GetHandle();
 
 					var roads_span = asset.data.roads.AsSpan();
 					for (var road_index = 0; road_index < roads_span.Length; road_index++)
@@ -51,7 +51,7 @@ namespace TC2.Conquest
 							var pos_grid = new short2((short)point.X, (short)point.Y);
 							var pos_key = Unsafe.BitCast<short2, int>(pos_grid);
 
-							var segment = new Road.Segment(h_district, (byte)road_index, (byte)point_index);
+							var segment = new Road.Segment(h_prefecture, (byte)road_index, (byte)point_index);
 
 							//road_segments_overlapped
 
@@ -143,7 +143,7 @@ namespace TC2.Conquest
 
 					//if (asset_data.buildings.HasAny(ILocation.Buildings.Checkpoint))
 					{
-						var nearest_segment = GetNearestRoad(asset_data.h_district, Road.Type.Road, (Vector2)asset_data.point, out var dist_sq);
+						var nearest_segment = GetNearestRoad(asset_data.h_prefecture, Road.Type.Road, (Vector2)asset_data.point, out var dist_sq);
 						if (dist_sq <= 1.50f.Pow2())
 						{
 							location_to_road[asset] = nearest_segment;
@@ -158,7 +158,7 @@ namespace TC2.Conquest
 
 					if (asset_data.buildings.HasAny(ILocation.Buildings.Trainyard))
 					{
-						var nearest_segment = GetNearestRoad(asset_data.h_district, Road.Type.Rail, (Vector2)asset_data.point, out var dist_sq);
+						var nearest_segment = GetNearestRoad(asset_data.h_prefecture, Road.Type.Rail, (Vector2)asset_data.point, out var dist_sq);
 						if (dist_sq <= 1.00f.Pow2())
 						{
 							location_to_rail[asset] = nearest_segment;
@@ -224,16 +224,16 @@ namespace TC2.Conquest
 		}
 
 		// TODO: implement a faster lookup
-		public static Road.Segment GetNearestRoad(IDistrict.Handle h_district, Road.Type type, Vector2 position, out float distance_sq)
+		public static Road.Segment GetNearestRoad(IPrefecture.Handle h_prefecture, Road.Type type, Vector2 position, out float distance_sq)
 		{
 			var road_points_distance_sq = float.MaxValue;
 			var road_point_index = int.MaxValue;
 			var road_index = int.MaxValue;
 
-			ref var district_data = ref h_district.GetData();
-			if (district_data.IsNotNull())
+			ref var prefecture_data = ref h_prefecture.GetData();
+			if (prefecture_data.IsNotNull())
 			{
-				var span_roads = district_data.roads.AsSpan();
+				var span_roads = prefecture_data.roads.AsSpan();
 				for (var i = 0; i < span_roads.Length; i++)
 				{
 					ref var road = ref span_roads[i];
@@ -257,7 +257,7 @@ namespace TC2.Conquest
 			}
 
 			distance_sq = road_points_distance_sq;
-			return new Road.Segment(h_district, (byte)road_index, (byte)road_point_index);
+			return new Road.Segment(h_prefecture, (byte)road_index, (byte)road_point_index);
 		}
 
 #if CLIENT
@@ -507,7 +507,7 @@ namespace TC2.Conquest
 				hs_pending_asset_saves.Add(asset);
 			}
 
-			foreach (var asset in IProvince.Database.GetAssets())
+			foreach (var asset in IGovernorate.Database.GetAssets())
 			{
 				if (asset.id == 0) continue;
 
@@ -520,7 +520,7 @@ namespace TC2.Conquest
 				hs_pending_asset_saves.Add(asset);
 			}
 
-			foreach (var asset in IDistrict.Database.GetAssets())
+			foreach (var asset in IPrefecture.Database.GetAssets())
 			{
 				if (asset.id == 0) continue;
 

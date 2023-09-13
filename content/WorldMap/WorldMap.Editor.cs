@@ -10,8 +10,8 @@ namespace TC2.Conquest
 		{
 			None = 0,
 
-			Province,
-			District,
+			Governorate,
+			Prefecture,
 			Location,
 			Doodad,
 			Roads,
@@ -25,16 +25,16 @@ namespace TC2.Conquest
 		{
 			switch (editor_mode)
 			{
-				case EditorMode.Province:
+				case EditorMode.Governorate:
 				{
 					if (!hovered && edit_asset == null) break;
 
-					var province_handle = default(IProvince.Handle);
+					var governorate_handle = default(IGovernorate.Handle);
 					var distance_sq = float.MaxValue;
 					var index = int.MaxValue;
 
 					var ts = Timestamp.Now();
-					foreach (var asset in IProvince.Database.GetAssets())
+					foreach (var asset in IGovernorate.Database.GetAssets())
 					{
 						if (asset.id == 0) continue;
 						ref var asset_data = ref asset.GetData();
@@ -46,7 +46,7 @@ namespace TC2.Conquest
 
 							if (nearest_distance_sq_tmp < distance_sq)
 							{
-								province_handle = asset;
+								governorate_handle = asset;
 								distance_sq = nearest_distance_sq_tmp;
 								index = nearest_index_tmp;
 							}
@@ -56,7 +56,7 @@ namespace TC2.Conquest
 
 					if (distance_sq <= 1.00f.Pow2())
 					{
-						ref var asset_data = ref province_handle.GetData(out var asset);
+						ref var asset_data = ref governorate_handle.GetData(out var asset);
 						if (asset_data.IsNotNull())
 						{
 							var point = asset_data.points[index];
@@ -74,7 +74,7 @@ namespace TC2.Conquest
 									{
 										if (kb.GetKey(Keyboard.Key.LeftShift))
 										{
-											//d_district.points = points.Insert(i, (short2)(points[i] + points[(i + 1) % points.Length]) / 2);
+											//d_prefecture.points = points.Insert(i, (short2)(points[i] + points[(i + 1) % points.Length]) / 2);
 											asset_data.points = asset_data.points.Insert(index, asset_data.points[index]);
 											//asset.Save();
 											edit_asset = asset;
@@ -106,16 +106,16 @@ namespace TC2.Conquest
 				}
 				break;
 
-				case EditorMode.District:
+				case EditorMode.Prefecture:
 				{
 					if (!hovered && edit_asset == null) break;
 
-					var district_handle = default(IDistrict.Handle);
+					var prefecture_handle = default(IPrefecture.Handle);
 					var distance_sq = float.MaxValue;
 					var index = int.MaxValue;
 
 					var ts = Timestamp.Now();
-					foreach (var asset in IDistrict.Database.GetAssets())
+					foreach (var asset in IPrefecture.Database.GetAssets())
 					{
 						if (asset.id == 0) continue;
 						ref var asset_data = ref asset.GetData();
@@ -127,7 +127,7 @@ namespace TC2.Conquest
 
 							if (nearest_distance_sq_tmp < distance_sq)
 							{
-								district_handle = asset;
+								prefecture_handle = asset;
 								distance_sq = nearest_distance_sq_tmp;
 								index = nearest_index_tmp;
 							}
@@ -137,7 +137,7 @@ namespace TC2.Conquest
 
 					if (distance_sq <= 1.00f.Pow2())
 					{
-						ref var asset_data = ref district_handle.GetData(out var asset);
+						ref var asset_data = ref prefecture_handle.GetData(out var asset);
 						if (asset_data.IsNotNull())
 						{
 							var point = asset_data.points[index];
@@ -155,7 +155,7 @@ namespace TC2.Conquest
 									{
 										if (kb.GetKey(Keyboard.Key.LeftShift))
 										{
-											//d_district.points = points.Insert(i, (short2)(points[i] + points[(i + 1) % points.Length]) / 2);
+											//d_prefecture.points = points.Insert(i, (short2)(points[i] + points[(i + 1) % points.Length]) / 2);
 											asset_data.points = asset_data.points.Insert(index, asset_data.points[index]);
 											//asset.Save();
 											edit_asset = asset;
@@ -308,7 +308,7 @@ namespace TC2.Conquest
 				{
 					if (!hovered && edit_asset == null) break;
 
-					var district_handle = default(IDistrict.Handle);
+					var prefecture_handle = default(IPrefecture.Handle);
 					//var distance_sq = float.MaxValue;
 					//var index = int.MaxValue;
 
@@ -319,7 +319,7 @@ namespace TC2.Conquest
 					var ts = Timestamp.Now();
 					//if (!edit_points_index.HasValue)
 					{
-						foreach (var asset in IDistrict.Database.GetAssets())
+						foreach (var asset in IPrefecture.Database.GetAssets())
 						{
 							if (asset.id == 0) continue;
 							ref var asset_data = ref asset.GetData();
@@ -342,7 +342,7 @@ namespace TC2.Conquest
 											road_points_distance_sq = road_nearest_distance_sq_tmp;
 											road_point_index = road_nearest_index_tmp;
 											road_index = i;
-											district_handle = asset;
+											prefecture_handle = asset;
 										}
 									}
 								}
@@ -359,7 +359,7 @@ namespace TC2.Conquest
 
 					if (road_points_distance_sq <= 1.00f.Pow2())
 					{
-						ref var asset_data = ref district_handle.GetData(out var asset);
+						ref var asset_data = ref prefecture_handle.GetData(out var asset);
 						if (asset_data.IsNotNull())
 						{
 							//var color = Color32BGRA.White.LumaBlend(asset_data.color_border, 0.50f);
@@ -379,11 +379,11 @@ namespace TC2.Conquest
 									{
 										if (mouse.GetKeyDown(Mouse.Key.Right))
 										{
-											GUI.FocusAsset(district_handle);
+											GUI.FocusAsset(prefecture_handle);
 
 											if (kb.GetKey(Keyboard.Key.LeftShift))
 											{
-												//d_district.points = points.Insert(i, (short2)(points[i] + points[(i + 1) % points.Length]) / 2);
+												//d_prefecture.points = points.Insert(i, (short2)(points[i] + points[(i + 1) % points.Length]) / 2);
 												road.points = road.points.Insert(road_point_index, road.points[road_point_index]);
 												//asset.Save();
 												edit_asset = asset;
@@ -402,7 +402,7 @@ namespace TC2.Conquest
 										}
 										else if (mouse.GetKeyDown(Mouse.Key.Left))
 										{
-											edit_road = new Road.Chain(district_handle, (byte)road_index);
+											edit_road = new Road.Chain(prefecture_handle, (byte)road_index);
 										}
 										else if (kb.GetKeyDown(Keyboard.Key.Delete))
 										{
@@ -666,9 +666,9 @@ namespace TC2.Conquest
 
 						GUI.Checkbox("Renderer", ref enable_renderer, new(32, 32), show_text: false, show_tooltip: true);
 
-						GUI.Checkbox("Show Provinces", ref show_provinces, new(32, 32), show_text: false, show_tooltip: true);
+						GUI.Checkbox("Show Governorates", ref show_governorates, new(32, 32), show_text: false, show_tooltip: true);
 						GUI.SameLine();
-						GUI.Checkbox("Show Districts", ref show_districts, new(32, 32), show_text: false, show_tooltip: true);
+						GUI.Checkbox("Show Prefectures", ref show_prefectures, new(32, 32), show_text: false, show_tooltip: true);
 						GUI.SameLine();
 						GUI.Checkbox("Show Regions", ref show_regions, new(32, 32), show_text: false, show_tooltip: true);
 						GUI.SameLine();
@@ -713,22 +713,22 @@ namespace TC2.Conquest
 							{
 								case EditorMode.Roads:
 								{
-									if (edit_road.h_district != 0)
+									if (edit_road.h_prefecture != 0)
 									{
 										ref var road = ref edit_road.GetRoad();
 										if (road.IsNotNull())
 										{
-											ref var district_data = ref edit_road.h_district.GetData();
-											if (district_data.IsNotNull())
+											ref var prefecture_data = ref edit_road.h_prefecture.GetData();
+											if (prefecture_data.IsNotNull())
 											{
 												var changed = GUI.DrawStyledEditorForType(ref road, new Vector2(GUI.RmX, 32));
 												if (changed)
 												{
-													hs_pending_asset_saves.Add(edit_road.h_district.GetDefinition());
+													hs_pending_asset_saves.Add(edit_road.h_prefecture.GetDefinition());
 												}
 
 												var road_points_span = road.points.AsSpan();
-												GUI.DrawLines(road_points_span, in mat_l2c, district_data.color_border, layer: GUI.Layer.Foreground, draw_points: true, draw_indices: true);
+												GUI.DrawLines(road_points_span, in mat_l2c, prefecture_data.color_border, layer: GUI.Layer.Foreground, draw_points: true, draw_indices: true);
 
 												//var pos_last = Vector2.Zero;
 
@@ -736,7 +736,7 @@ namespace TC2.Conquest
 												//{
 												//	var pos = Vector2.Transform(road_points_span[i], mat_l2c);
 
-												//	if (i > 0) GUI.DrawLine(pos_last, pos, district_data.color_border, layer: GUI.Layer.Foreground);
+												//	if (i > 0) GUI.DrawLine(pos_last, pos, prefecture_data.color_border, layer: GUI.Layer.Foreground);
 												//	GUI.DrawCircleFilled(pos, 0.125f * zoom * 0.75f, road.color_border.WithAlphaMult(0.75f), 3, GUI.Layer.Foreground);
 												//	GUI.DrawTextCentered($"[{i}]", pos, layer: GUI.Layer.Foreground);
 

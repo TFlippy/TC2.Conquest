@@ -174,13 +174,13 @@ namespace TC2.Conquest
 						var mouse_local_snapped = mouse_local;
 						mouse_local_snapped.Snap(1.00f / scale_b, out mouse_local_snapped);
 
-						var tex_line_district = h_texture_line_00;
-						var tex_line_province = h_texture_line_01;
+						var tex_line_prefecture = h_texture_line_00;
+						var tex_line_governorate = h_texture_line_01;
 
-						#region Districts
+						#region Prefectures
 						//if (editor_mode != EditorMode.Doodad)
 						{
-							foreach (var asset in IDistrict.Database.GetAssets())
+							foreach (var asset in IPrefecture.Database.GetAssets())
 							{
 								if (asset.id == 0) continue;
 								ref var asset_data = ref asset.GetData();
@@ -202,12 +202,12 @@ namespace TC2.Conquest
 									pos_center /= points.Length;
 									pos_center += asset_data.offset;
 
-									if (show_districts && show_fill) GUI.DrawPolygon(points_t_span, asset_data.color_fill with { a = 50 }, GUI.Layer.Window);
+									if (show_prefectures && show_fill) GUI.DrawPolygon(points_t_span, asset_data.color_fill with { a = 50 }, GUI.Layer.Window);
 
 									//DrawOutline(points, asset_data.color_border.WithAlphaMult(0.50f), 0.100f);
 									if (enable_renderer)
 									{
-										if (show_districts && show_borders) DrawOutline(mat_l2c, zoom, points, asset_data.color_border, asset_data.border_scale * 0.50f, 2.00f, asset_data.h_texture_border);
+										if (show_prefectures && show_borders) DrawOutline(mat_l2c, zoom, points, asset_data.color_border, asset_data.border_scale * 0.50f, 2.00f, asset_data.h_texture_border);
 
 										//if (show_roads)
 										{
@@ -223,18 +223,18 @@ namespace TC2.Conquest
 									}
 									else
 									{
-										if (show_districts && show_borders) DrawOutline(mat_l2c, zoom, points, asset_data.color_border, 0.125f * 0.75f, 4.00f, asset_data.h_texture_border);
+										if (show_prefectures && show_borders) DrawOutline(mat_l2c, zoom, points, asset_data.color_border, 0.125f * 0.75f, 4.00f, asset_data.h_texture_border);
 									}
 
 									//GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(pos_center, mat_l2c), pivot: new(0.50f, 0.50f), font: GUI.Font.Superstar, size: 1.00f * zoom, color: GUI.font_color_title.WithAlphaMult(1.00f), layer: GUI.Layer.Window);
-									if (show_districts) GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(pos_center, mat_l2c), pivot: new(0.50f, 0.50f), font: GUI.Font.Superstar, size: 0.75f * zoom * asset_data.size, color: asset_data.color_fill.WithColorMult(0.32f).WithAlphaMult(0.30f), layer: GUI.Layer.Window);
+									if (show_prefectures) GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(pos_center, mat_l2c), pivot: new(0.50f, 0.50f), font: GUI.Font.Superstar, size: 0.75f * zoom * asset_data.size, color: asset_data.color_fill.WithColorMult(0.32f).WithAlphaMult(0.30f), layer: GUI.Layer.Window);
 								}
 							}
 						}
 						#endregion
 
-						#region Provinces
-						foreach (var asset in IProvince.Database.GetAssets())
+						#region Governorates
+						foreach (var asset in IGovernorate.Database.GetAssets())
 						{
 							if (asset.id == 0) continue;
 							ref var asset_data = ref asset.GetData();
@@ -244,11 +244,11 @@ namespace TC2.Conquest
 							{
 								if (enable_renderer)
 								{
-									if (show_provinces && show_borders) DrawOutlineShader(points, asset_data.color_border, asset_data.border_scale, asset_data.h_texture_border);
+									if (show_governorates && show_borders) DrawOutlineShader(points, asset_data.color_border, asset_data.border_scale, asset_data.h_texture_border);
 								}
 								else
 								{
-									if (show_provinces && show_borders) DrawOutline(mat_l2c, zoom, points, asset_data.color_border, 0.125f, 0.25f, asset_data.h_texture_border);
+									if (show_governorates && show_borders) DrawOutline(mat_l2c, zoom, points, asset_data.color_border, 0.125f, 0.25f, asset_data.h_texture_border);
 								}
 
 								var pos_center = Vector2.Zero;
@@ -382,8 +382,8 @@ namespace TC2.Conquest
 								if ((is_selected || is_hovered) && editor_mode == EditorMode.Roads)
 								{
 									//var ts = Timestamp.Now();
-									//var nearest_road = GetNearestRoad(asset_data.h_district, Road.Type.Road, (Vector2)asset_data.point, out var nearest_road_dist_sq);
-									//var nearest_rail = GetNearestRoad(asset_data.h_district, Road.Type.Rail, (Vector2)asset_data.point, out var nearest_rail_dist_sq);
+									//var nearest_road = GetNearestRoad(asset_data.h_prefecture, Road.Type.Road, (Vector2)asset_data.point, out var nearest_road_dist_sq);
+									//var nearest_rail = GetNearestRoad(asset_data.h_prefecture, Road.Type.Rail, (Vector2)asset_data.point, out var nearest_rail_dist_sq);
 									//var ts_elapsed = ts.GetMilliseconds();
 
 									//if (nearest_road_dist_sq <= 1.50f.Pow2())

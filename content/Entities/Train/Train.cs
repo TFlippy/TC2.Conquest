@@ -186,11 +186,11 @@ namespace TC2.Conquest
 
 					if (junction_index != -1)
 					{
-						//App.WriteLine($"junction {junction_index} ({train.segment_a.chain.h_district}:{train.segment_a.chain.index}:{train.segment_a.index} to {train.segment_b.chain.h_district}:{train.segment_b.chain.index}:{train.segment_b.index}to {segment_c_new.chain.h_district}:{segment_c_new.chain.index}:{segment_c_new.index})");
+						//App.WriteLine($"junction {junction_index} ({train.segment_a.chain.h_prefecture}:{train.segment_a.chain.index}:{train.segment_a.index} to {train.segment_b.chain.h_prefecture}:{train.segment_b.chain.index}:{train.segment_b.index}to {segment_c_new.chain.h_prefecture}:{segment_c_new.chain.index}:{segment_c_new.index})");
 
 						if (WorldMap.TryAdvanceJunction(train.segment_a, train.segment_b, train.segment_c, junction_index, out var c_alt_segment, out var c_alt_sign, out var c_alt_dot, dot_min: train.dot_min, dot_max: train.dot_max, ignore_limits: !ok))
 						{
-							//App.WriteLine($"advanced junction ({c_alt_dot} >= {train.dot_min} <= {train.dot_max}) ({train.segment_a.chain.h_district}:{train.segment_a.chain.index}:{train.segment_a.index} to {train.segment_b.chain.h_district}:{train.segment_b.chain.index}:{train.segment_b.index})");
+							//App.WriteLine($"advanced junction ({c_alt_dot} >= {train.dot_min} <= {train.dot_max}) ({train.segment_a.chain.h_prefecture}:{train.segment_a.chain.index}:{train.segment_a.index} to {train.segment_b.chain.h_prefecture}:{train.segment_b.chain.index}:{train.segment_b.index})");
 
 							train.segment_c = c_alt_segment;
 							train.sign = c_alt_sign;
@@ -202,7 +202,7 @@ namespace TC2.Conquest
 						}
 						else
 						{
-							//App.WriteLine($"skip junction ({c_alt_dot} >= {train.dot_min} <= {train.dot_max}; ({c_alt_segment.chain.h_district}:{c_alt_segment.chain.index}:{c_alt_segment.index})");
+							//App.WriteLine($"skip junction ({c_alt_dot} >= {train.dot_min} <= {train.dot_max}; ({c_alt_segment.chain.h_prefecture}:{c_alt_segment.chain.index}:{c_alt_segment.index})");
 						}
 					}
 					else

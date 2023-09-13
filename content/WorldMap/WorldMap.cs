@@ -4,6 +4,16 @@ using System.Text;
 
 namespace TC2.Conquest
 {
+
+	public static partial class City
+	{
+		[IComponent.Data(Net.SendType.Reliable, sync_table_capacity: 64)]
+		public partial struct Data: IComponent
+		{
+			
+		}
+	}
+
 	public static partial class Location
 	{
 		[IComponent.Data(Net.SendType.Reliable, sync_table_capacity: 128)]
@@ -267,8 +277,8 @@ namespace TC2.Conquest
 		public static bool snap_camera = true;
 		public static bool dragging;
 
-		public static bool show_provinces = true;
-		public static bool show_districts = true;
+		public static bool show_governorates = true;
+		public static bool show_prefectures = true;
 		public static bool show_regions = true;
 		public static bool show_locations = true;
 		public static bool show_roads = true;
@@ -282,7 +292,7 @@ namespace TC2.Conquest
 		[ISystem.EarlyUpdate(ISystem.Mode.Single, ISystem.Scope.Global)]
 		public static void OnPreUpdate(Entity entity, [Source.Owned] ref Interactable.Data interactable) //, [Source.Owned] ref Body.Data body)
 		{
-			interactable.show = WorldMap.selected_entity == entity 
+			interactable.show = WorldMap.selected_entity == entity
 				//&& WorldMap.ts_last_draw.GetMilliseconds() <= 50 // TODO: shithack
 				&& !interactable.flags.HasAll(Interactable.Flags.No_Window)
 				&& interactable.window_size != default;
