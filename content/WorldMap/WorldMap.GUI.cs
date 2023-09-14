@@ -288,7 +288,7 @@ namespace TC2.Conquest
 											var color_frame = GUI.col_frame;
 											var color_thumbnail = GUI.col_white;
 
-											var map_pos = (Vector2)map_info.point;
+											var map_pos = Vector2.Zero;
 											ref var location_data = ref map_info.h_location.GetData();
 											if (location_data.IsNotNull())
 											{

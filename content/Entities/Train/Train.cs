@@ -16,6 +16,7 @@ namespace TC2.Conquest
 				Docked = 1u << 2,
 			}
 
+			public ITransport.Handle h_transport;
 			public Train.Data.Flags flags;
 
 			public Limit.Mask<ILocation.Buildings> mask_stop_buildings;

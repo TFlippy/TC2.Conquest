@@ -36,5 +36,27 @@ sound.emitter:
 
 interactable:
 {
-	window_size: [456.000, 336.000]
+	window_size: [696.000, 552.000]
+}
+
+company:
+{
+	h_company: "zeleznitzer"
+}
+
+faction:
+{
+	
+}
+
+stockpile:
+{
+	capacity_items: 16
+	capacity_shipments: 16
+	capacity_characters: 16
+}
+
+market:
+{
+	
 }
