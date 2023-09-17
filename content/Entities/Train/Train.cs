@@ -358,7 +358,7 @@ namespace TC2.Conquest
 			}
 		}
 
-		[ISystem.GUI(ISystem.Mode.Single, ISystem.Scope.Global)]
+		[ISystem.LateGUI(ISystem.Mode.Single, ISystem.Scope.Global)]
 		public static void OnGUI(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] ref Train.Data train, [Source.Owned] ref Transform.Data transform)
 		{
 			var gui = new Train.TrainGUI()
