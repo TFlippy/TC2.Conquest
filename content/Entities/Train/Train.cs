@@ -3,6 +3,43 @@ using System.Runtime.InteropServices;
 
 namespace TC2.Conquest
 {
+	public struct ResolvedJunction: IComparable<ResolvedJunction>, IEquatable<ResolvedJunction>
+	{
+		public ushort unused;
+		public byte segment_index;
+		public sbyte sign;
+
+		public float dot;
+
+		public ResolvedJunction(byte segment_index, sbyte sign, float dot)
+		{
+			this.unused = 0;
+			this.segment_index = segment_index;
+			this.sign = sign;
+			this.dot = dot;
+		}
+
+		public int CompareTo(ResolvedJunction other)
+		{
+			return other.dot.CompareTo(this.dot);
+		}
+
+		public bool Equals(ResolvedJunction other)
+		{
+			return Unsafe.As<ResolvedJunction, uint>(ref this) == Unsafe.As<ResolvedJunction, uint>(ref other);
+		}
+
+		public override int GetHashCode()
+		{
+			return Unsafe.As<ResolvedJunction, int>(ref this);
+		}
+
+		public static bool operator <(ResolvedJunction left, ResolvedJunction right) => left.CompareTo(right) < 0;
+		public static bool operator >(ResolvedJunction left, ResolvedJunction right) => left.CompareTo(right) > 0;
+		public static bool operator <=(ResolvedJunction left, ResolvedJunction right) => left.CompareTo(right) <= 0;
+		public static bool operator >=(ResolvedJunction left, ResolvedJunction right) => left.CompareTo(right) >= 0;
+	}
+
 	public static class RoadNav
 	{
 		public struct JunctionNode: IEquatable<JunctionNode>
@@ -111,7 +148,7 @@ namespace TC2.Conquest
 				OpenList.Enqueue(current, current.F);
 
 				var ignore_limits = false;
-				var dot_min = 0.80f;
+				var dot_min = 0.50f;
 				var dot_max = 1.00f;
 
 				var hash_end = new JunctionNode(end.junction_index, end.index, end.sign, -1.00f, 0.00f).GetHashCode();
@@ -139,46 +176,76 @@ namespace TC2.Conquest
 						//if (junction_a == -1) continue;
 
 						ref var junction = ref junctions_span[junction_a];
-						var adjacencies = junction.segments.Slice(junction.segments_count);
+						//var adjacencies = junction.segments.Slice(junction.segments_count);
 
 						try
 						{
 							var dir = (segment_c.GetPosition() - segment_b.GetPosition()).GetNormalizedFast();
 							App.WriteLine($"{junction.pos} {segment_b.index}; {segment_c.index}; {dir}");
 
-							for (var i = 0; i < adjacencies.Length; i++)
+							Span<ResolvedJunction> resolved_junctions = stackalloc ResolvedJunction[8];
+							Train.ResolveJunction2(dir, ref junction, ignore_limits, dot_min, dot_max, ref resolved_junctions);
+
+							for (var i = 0; i < resolved_junctions.Length; i++)
 							{
-								ref var segment = ref adjacencies[i];
+								ref var res = ref resolved_junctions[i];
+								var seg = junction.segments[res.segment_index];
+								var route = new Road.Junction.Route((ushort)junction_a, res.segment_index, (sbyte)res.sign);
+
+								var n = new JunctionNode(route.junction_index, route.index, route.sign, current.weight, current.distance);
+								if (!ClosedList.ContainsKey(n.GetHashCode()))
 								{
-									var sign = Train.GetSign(dir, ref segment, ignore_limits: ignore_limits, dot_min: dot_min, dot_max: dot_max);
-									//if (sign == 0) continue;
-
-									App.WriteLine($"[{i}] {junction.pos} {segment_b.index}; {segment_c.index} {sign}");
-
-									//if (WorldMap.TryGetNextJunction(segment, sign, out var junction_a, out var segment_b, out var segment_c))
+									bool isFound = false;
+									foreach (var oLNode in OpenList.UnorderedItems)
 									{
-										var n = new JunctionNode((ushort)junction_a, (byte)segment_c.index, sign, current.weight, current.distance);
-										if (!ClosedList.ContainsKey(n.GetHashCode()))
+										if (oLNode.Element == n)
 										{
-											bool isFound = false;
-											foreach (var oLNode in OpenList.UnorderedItems)
-											{
-												if (oLNode.Element == n)
-												{
-													isFound = true;
-												}
-											}
-											if (!isFound)
-											{
-												n.parent_hash = current.GetHashCode();
-												n.distance = Vector2.Distance(junctions_span[n.route.junction_index].pos, junctions_span[end.junction_index].pos); //  DistanceToTarget = Math.Abs(n.Position.X - end.Position.X) + Math.Abs(n.Position.Y - end.Position.Y);
-												n.cost = n.weight + current.cost;
-												OpenList.Enqueue(n, n.F);
-											}
+											isFound = true;
 										}
+									}
+									if (!isFound)
+									{
+										n.parent_hash = current.GetHashCode();
+										n.distance = Vector2.Distance(junctions_span[n.route.junction_index].pos, junctions_span[end.junction_index].pos); //  DistanceToTarget = Math.Abs(n.Position.X - end.Position.X) + Math.Abs(n.Position.Y - end.Position.Y);
+										n.cost = n.weight + current.cost;
+										OpenList.Enqueue(n, n.F);
 									}
 								}
 							}
+
+							//for (var i = 0; i < adjacencies.Length; i++)
+							//{
+							//	ref var segment = ref adjacencies[i];
+							//	{
+							//		var sign = Train.GetSign(dir, ref segment, ignore_limits: ignore_limits, dot_min: dot_min, dot_max: dot_max);
+							//		//if (sign == 0) continue;
+
+							//		App.WriteLine($"[{i}] {junction.pos} {segment_b.index}; {segment_c.index} {sign}");
+
+							//		//if (WorldMap.TryGetNextJunction(segment, sign, out var junction_a, out var segment_b, out var segment_c))
+							//		{
+							//			var n = new JunctionNode((ushort)junction_a, (byte)segment_c.index, sign, current.weight, current.distance);
+							//			if (!ClosedList.ContainsKey(n.GetHashCode()))
+							//			{
+							//				bool isFound = false;
+							//				foreach (var oLNode in OpenList.UnorderedItems)
+							//				{
+							//					if (oLNode.Element == n)
+							//					{
+							//						isFound = true;
+							//					}
+							//				}
+							//				if (!isFound)
+							//				{
+							//					n.parent_hash = current.GetHashCode();
+							//					n.distance = Vector2.Distance(junctions_span[n.route.junction_index].pos, junctions_span[end.junction_index].pos); //  DistanceToTarget = Math.Abs(n.Position.X - end.Position.X) + Math.Abs(n.Position.Y - end.Position.Y);
+							//					n.cost = n.weight + current.cost;
+							//					OpenList.Enqueue(n, n.F);
+							//				}
+							//			}
+							//		}
+							//	}
+							//}
 						}
 						catch (Exception e)
 						{
@@ -279,6 +346,147 @@ namespace TC2.Conquest
 
 	public static partial class Train
 	{
+		public static void ResolveJunction(Vector2 dir_ab, ref Road.Junction nearest_junction, bool ignore_limits, float dot_min, float dot_max, out int c_alt_sign, out int segment_index, out float c_alt_dot)
+		{
+			ref var region = ref World.GetGlobalRegion();
+			segment_index = -1;
+
+			var c_alt = default(Road.Segment);
+			c_alt_sign = 0;
+			c_alt_dot = -1.00f;
+
+			var segments = nearest_junction.segments.Slice(nearest_junction.segments_count);
+			for (var j = 0; j < segments.Length; j++)
+			{
+				ref var j_segment = ref segments[j];
+
+				ref var j_road = ref j_segment.GetRoad();
+				//if (j_road.IsNull() || j_road.type != type) continue;
+				if (j_road.IsNull()) continue;
+
+				var j_points = j_road.points.AsSpan();
+				var j_pos = j_points[j_segment.index];
+
+				if (j_segment.index < j_points.Length - 1)
+				{
+					var dir_tmp = (j_points[j_segment.index + 1] - j_pos).GetNormalizedFast();
+					var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
+
+					var draw = false;
+					if (dot_tmp > c_alt_dot && (ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
+					{
+						c_alt = new(j_segment.chain, (byte)(j_segment.index + 1));
+						c_alt_dot = dot_tmp;
+						c_alt_sign = 1;
+
+						segment_index = (byte)(j);
+
+						draw = true;
+						region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Green);
+					}
+					//if (draw || (j == routes[0].index && routes[0].sign == 1) || (j == routes[1].index && routes[1].sign == 1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == routes[0].index && routes[0].sign == 1) || (j == routes[1].index && routes[1].sign == 1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
+
+					//region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Red);
+				}
+
+				if (j_segment.index > 0)
+				{
+					var dir_tmp = (j_points[j_segment.index - 1] - j_pos).GetNormalizedFast();
+					var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
+
+					var draw = false;
+					if (dot_tmp > c_alt_dot && (ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
+					{
+						c_alt = new(j_segment.chain, (byte)(j_segment.index - 1));
+						c_alt_dot = dot_tmp;
+						c_alt_sign = -1;
+
+						segment_index = (byte)(j);
+						draw = true;
+						region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Green);
+					}
+					//if (draw || (j == routes[0].index && routes[0].sign == -1) || (j == routes[1].index && routes[1].sign == -1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == routes[0].index && routes[0].sign == -1) || (j == routes[1].index && routes[1].sign == -1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
+
+					//region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Red);
+				}
+			}
+		}
+
+		public static void ResolveJunction2(Vector2 dir_ab, ref Road.Junction nearest_junction, bool ignore_limits, float dot_min, float dot_max, ref Span<ResolvedJunction> out_indices)
+		{
+			ref var region = ref World.GetGlobalRegion();
+			//segment_index = -1;
+
+			//var c_alt = default(Road.Segment);
+			//c_alt_sign = 0;
+			//c_alt_dot = -1.00f;
+
+			var indices_count = 0;
+
+			var segments = nearest_junction.segments.Slice(nearest_junction.segments_count);
+			for (var j = 0; j < segments.Length; j++)
+			{
+				ref var j_segment = ref segments[j];
+
+				ref var j_road = ref j_segment.GetRoad();
+				//if (j_road.IsNull() || j_road.type != type) continue;
+				if (j_road.IsNull()) continue;
+
+				var j_points = j_road.points.AsSpan();
+				var j_pos = j_points[j_segment.index];
+
+				if (j_segment.index < j_points.Length - 1)
+				{
+					var dir_tmp = (j_points[j_segment.index + 1] - j_pos).GetNormalizedFast();
+					var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
+
+					var draw = false;
+					if ((ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
+					{
+						//c_alt = new(j_segment.chain, (byte)(j_segment.index + 1));
+						var c_alt_dot = dot_tmp;
+						var c_alt_sign = 1;
+
+						var segment_index = (byte)(j);
+
+						out_indices[indices_count++] = new((byte)j, (sbyte)c_alt_sign, c_alt_dot);
+						draw = true;
+						//region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Green);
+					}
+					//if (draw || (j == routes[0].index && routes[0].sign == 1) || (j == routes[1].index && routes[1].sign == 1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == routes[0].index && routes[0].sign == 1) || (j == routes[1].index && routes[1].sign == 1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
+
+					//region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Red);
+				}
+
+				if (j_segment.index > 0)
+				{
+					var dir_tmp = (j_points[j_segment.index - 1] - j_pos).GetNormalizedFast();
+					var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
+
+					var draw = false;
+					if ((ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
+					{
+						//c_alt = new(j_segment.chain, (byte)(j_segment.index - 1));
+						var c_alt_dot = dot_tmp;
+						var c_alt_sign = -1;
+
+						var segment_index = (byte)(j);
+
+						out_indices[indices_count++] = new((byte)j, (sbyte)c_alt_sign, c_alt_dot);
+						draw = true;
+						//region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Green);
+					}
+					//if (draw || (j == routes[0].index && routes[0].sign == -1) || (j == routes[1].index && routes[1].sign == -1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == routes[0].index && routes[0].sign == -1) || (j == routes[1].index && routes[1].sign == -1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
+
+					//region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Red);
+				}
+			}
+
+			out_indices = out_indices.Slice(0, indices_count);
+			out_indices.Sort();
+		}
+
+
 		public static sbyte GetSign(Vector2 dir_ab, ref Road.Segment j_segment, bool ignore_limits, float dot_min, float dot_max)
 		{
 			ref var region = ref World.GetGlobalRegion();

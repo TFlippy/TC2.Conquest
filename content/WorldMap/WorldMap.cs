@@ -139,7 +139,7 @@ namespace TC2.Conquest
 					b = c;
 					c = b with { index = (byte)Maths.Clamp(index, 0, points.Length - 1) };
 
-					World.GetGlobalRegion().DrawDebugCircle(c.GetPosition(), 0.25f, Color32BGRA.Cyan.WithAlphaMult(0.25f), filled: true);
+					//World.GetGlobalRegion().DrawDebugCircle(c.GetPosition(), 0.25f, Color32BGRA.Cyan.WithAlphaMult(0.25f), filled: true);
 
 					if (!skip_inner_junctions && road_segment_to_junction_index.TryGetValue(c, out junction_index))
 					{
@@ -160,7 +160,7 @@ namespace TC2.Conquest
 					b = c;
 					c = b with { index = (byte)Maths.Clamp(index, 0, points.Length - 1) };
 
-					World.GetGlobalRegion().DrawDebugCircle(c.GetPosition(), 0.125f, Color32BGRA.Magenta.WithAlphaMult(0.25f), filled: true);
+					//World.GetGlobalRegion().DrawDebugCircle(c.GetPosition(), 0.125f, Color32BGRA.Magenta.WithAlphaMult(0.25f), filled: true);
 
 					if (!skip_inner_junctions && road_segment_to_junction_index.TryGetValue(c, out junction_index))
 					{
