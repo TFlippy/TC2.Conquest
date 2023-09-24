@@ -4,7 +4,6 @@ using System.Text;
 
 namespace TC2.Conquest
 {
-
 	public static partial class City
 	{
 		[IComponent.Data(Net.SendType.Reliable, sync_table_capacity: 64)]
@@ -120,6 +119,74 @@ namespace TC2.Conquest
 			is_at_end = c == b;
 			return !is_at_end; // && !is_at_junction;
 		}
+
+		public static bool TryGetNextJunction(Road.Segment a, int dir_sign, out int junction_index, out Road.Segment b, out Road.Segment c, bool skip_inner_junctions = false)
+		{
+			junction_index = -1;
+			b = a;
+			c = b;
+
+			ref var road = ref a.GetRoad();
+			if (road.IsNull()) return false;
+
+			var points = road.points.AsSpan();
+
+			var index = (int)a.index; // + dir_sign;
+			if (dir_sign == -1)
+			{
+				while (--index >= 0)
+				{
+					b = c;
+					c = b with { index = (byte)Maths.Clamp(index, 0, points.Length - 1) };
+
+					World.GetGlobalRegion().DrawDebugCircle(c.GetPosition(), 0.25f, Color32BGRA.Cyan.WithAlphaMult(0.25f), filled: true);
+
+					if (!skip_inner_junctions && road_segment_to_junction_index.TryGetValue(c, out junction_index))
+					{
+						return true;
+					}
+				}
+
+				if (road_segment_to_junction_index.TryGetValue(c, out junction_index))
+				{
+					return true;
+				}
+			}
+			else if (dir_sign == 1)
+			{
+				//App.WriteLine(points.Length);
+				while (++index <= points.Length)
+				{
+					b = c;
+					c = b with { index = (byte)Maths.Clamp(index, 0, points.Length - 1) };
+
+					World.GetGlobalRegion().DrawDebugCircle(c.GetPosition(), 0.125f, Color32BGRA.Magenta.WithAlphaMult(0.25f), filled: true);
+
+					if (!skip_inner_junctions && road_segment_to_junction_index.TryGetValue(c, out junction_index))
+					{
+						return true;
+					}
+				}
+				
+				if (road_segment_to_junction_index.TryGetValue(c, out junction_index))
+				{
+					return true;
+				}
+			}
+
+			return false;
+
+			////is_at_end = dir_sign == -1 ? b_index <= 0 : b_index >= points.Length - 1;
+			//if ((is_at_end || !skip_inner_junctions) && road_segment_to_junction_index.TryGetValue(b, out var junction_index_tmp))
+			//{
+			//	junction_index = junction_index_tmp;
+			//}
+
+			//is_at_end = c == b;
+			//return !is_at_end; // && !is_at_junction;
+
+		}
+
 
 		public static bool TryAdvanceJunction(Road.Segment a, Road.Segment b, Road.Segment c, int junction_index, out Road.Segment c_alt, out int c_alt_sign, out float c_alt_dot, float dot_min = 0.40f, float dot_max = 1.00f, bool ignore_limits = false)
 		{
