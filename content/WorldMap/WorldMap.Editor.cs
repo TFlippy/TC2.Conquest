@@ -22,6 +22,10 @@ namespace TC2.Conquest
 		}
 
 #if CLIENT
+
+		public static Road.Junction.Route? edit_route_a;
+		public static Road.Junction.Route? edit_route_b;
+
 		private static void DrawEditor(ref AABB rect, ref IScenario.Data scenario_data, IAsset2<IScenario, IScenario.Data>.Definition scenario_asset, ref Mouse.Data mouse, ref Keyboard.Data kb, float zoom, ref Matrix3x2 mat_l2c, ref Vector2 mouse_local, bool hovered)
 		{
 			switch (editor_mode)
@@ -685,30 +689,39 @@ namespace TC2.Conquest
 								{
 									if (mouse.GetKeyDown(Mouse.Key.Left))
 									{
-										routes[0].junction_index = (ushort)junction_index;
-										routes[0].index = (byte)segment_index;
-										routes[0].sign = (sbyte)c_alt_sign;
+										ref var route = ref edit_route_a.GetRefOrDefault();
+										route = new Road.Junction.Route((ushort)junction_index, (byte)segment_index, (sbyte)c_alt_sign);
+
+										//routes[0].junction_index = (ushort)junction_index;
+										//routes[0].index = (byte)segment_index;
+										//routes[0].sign = (sbyte)c_alt_sign;
 									}
 									else if (mouse.GetKeyDown(Mouse.Key.Right))
 									{
-										routes[1].junction_index = (ushort)junction_index;
-										routes[1].index = (byte)segment_index;
-										routes[1].sign = (sbyte)c_alt_sign;
+										ref var route = ref edit_route_b.GetRefOrDefault();
+										route = new Road.Junction.Route((ushort)junction_index, (byte)segment_index, (sbyte)c_alt_sign);
+
+										//routes[1].junction_index = (ushort)junction_index;
+										//routes[1].index = (byte)segment_index;
+										//routes[1].sign = (sbyte)c_alt_sign;
+
 									}
 								}
 							}
 
-							DrawRoute(ref routes[0]);
-							DrawRoute(ref routes[1]);
+							DrawRoute(ref edit_route_a.GetRefOrNull());
+							DrawRoute(ref edit_route_b.GetRefOrNull());
+							//DrawRoute(ref routes[0]);
+							//DrawRoute(ref routes[1]);
 
-							if (RoadNav.Astar.Path.Count > 0)
-							{
-								foreach (var route in RoadNav.Astar.Path)
-								{
-									var route_copy = route;
-									DrawRoute(ref route_copy);
-								}
-							}
+							//if (RoadNav.Astar.Path.Count > 0)
+							//{
+							//	foreach (var route in RoadNav.Astar.Path)
+							//	{
+							//		var route_copy = route;
+							//		DrawRoute(ref route_copy);
+							//	}
+							//}
 
 							//if (RoadNav.Astar.ClosedList.Values.Count > 0)
 							//{
@@ -718,18 +731,14 @@ namespace TC2.Conquest
 							//		DrawRoute(ref route_copy);
 							//	}
 							//}
-							//foreach (ref var route in routes)
-							//{
-							//	//DrawRoute(ref route);
-							//	//var junc = road_junctions[route.junction_index];
-							//	//var seg_a = road_junctions[route.junction_index].segments[route.index];
-							//	//var seg_b = seg_a;
-							//	//seg_b.index = (byte)(seg_b.index + route.sign);
 
-							//	//region.DrawDebugCircle(road_junctions[route.junction_index].pos, 0.125f, Color32BGRA.Magenta, filled: true);
-							//	//region.DrawDebugLine(junc.pos, seg_b.GetPosition(), Color32BGRA.Cyan, 2.00f);
-
-							//}
+							if (routes != null)
+							{
+								foreach (ref var route in routes)
+								{
+									DrawRoute(ref route);
+								}
+							}
 
 							if (false)
 							{
@@ -949,13 +958,13 @@ namespace TC2.Conquest
 
 							static void DrawRoute(ref Road.Junction.Route route)
 							{
+								if (route.IsNull()) return;
+
 								var junc = road_junctions[route.junction_index];
 								var seg_a = junc.segments[route.index];
 								var seg_b = seg_a;
 								seg_b.index = (byte)(seg_b.index + route.sign);
 
-
-								//App.WriteLine(seg_a.index);
 
 								ref var region = ref World.GetGlobalRegion();
 								region.DrawDebugCircle(junc.pos, 0.125f, Color32BGRA.Magenta, filled: true);
@@ -1203,8 +1212,10 @@ namespace TC2.Conquest
 										{
 											if (GUI.DrawButton("Generate Path", size: new Vector2(160, 40)))
 											{
-												var result = RoadNav.Astar.FindPath(route_data.routes[0], route_data.routes[1]);
+												var result = RoadNav.Astar.FindPath(edit_route_a.Value, edit_route_b.Value);
 												App.WriteLine($"result: {result?.Count ?? 0}");
+
+												route_data.routes = result?.ToArray();
 											}
 
 											if (GUI.DrawStyledEditorForType(ref route_data, new Vector2(GUI.GetRemainingWidth(), 32), false))

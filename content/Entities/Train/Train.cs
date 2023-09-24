@@ -583,6 +583,9 @@ namespace TC2.Conquest
 
 			public int sign;
 
+			public ILocation.Handle h_location_target;
+			public FixedArray32<Road.Junction.Route> routes;
+
 			public Data()
 			{
 			}
@@ -725,10 +728,13 @@ namespace TC2.Conquest
 
 						if (junction_index == route_section.junction_index)
 						{
-
 							train.sign = route_section.sign;
-							train.segment_c = junction.segments[route_section.index];
-							train.segment_c.index = (byte)(train.segment_c.index + train.sign);
+
+							train.segment_b = junction.segments[route_section.index];
+							train.segment_c = junction.segments[route_section.index] with { index = (byte)(train.segment_b.index + train.sign) };
+
+							//train.segment_c = train.segment_b;
+							//train.segment_c.index = (byte)(train.segment_c.index + train.sign);
 
 							train.current_route_index++;
 							train.current_route_index %= route_data.routes.Length;
