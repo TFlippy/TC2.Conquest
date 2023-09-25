@@ -71,8 +71,6 @@ namespace TC2.Conquest
 
 	public static partial class WorldMap
 	{
-		public static Dictionary<int, Road.Segment> road_segments = new(256);
-		public static Dictionary<int, List<Road.Segment>> road_segments_overlapped = new(256);
 		public static Dictionary<Road.Segment, int> road_segment_to_junction_index = new(256);
 		public static List<Road.Junction> road_junctions = new(128);
 
@@ -177,12 +175,13 @@ namespace TC2.Conquest
 		}
 
 
-		public static bool TryAdvanceJunction(Road.Segment a, Road.Segment b, Road.Segment c, int junction_index, out Road.Segment c_alt, out int c_alt_sign, out float c_alt_dot, float dot_min = 0.40f, float dot_max = 1.00f, bool ignore_limits = false)
+		public static bool TryAdvanceJunction(Road.Segment a, Road.Segment b, Road.Segment c, int junction_index, out Road.Junction.Branch c_branch, out Road.Segment c_alt, out int c_alt_sign, out float c_alt_dot, float dot_min = 0.40f, float dot_max = 1.00f, bool ignore_limits = false)
 		{
 			var ok = false;
 			c_alt = default;
 			c_alt_dot = -1.00f;
 			c_alt_sign = default;
+			c_branch = default;
 
 			if ((uint)junction_index < road_junctions.Count)
 			{
@@ -231,6 +230,7 @@ namespace TC2.Conquest
 							c_alt = new(j_segment.chain, (byte)(j_segment.index + 1));
 							c_alt_dot = dot_tmp;
 							c_alt_sign = 1;
+							c_branch = new((ushort)junction_index, (byte)i, (sbyte)c_alt_sign);
 						}
 					}
 
@@ -246,6 +246,7 @@ namespace TC2.Conquest
 							c_alt = new(j_segment.chain, (byte)(j_segment.index - 1));
 							c_alt_dot = dot_tmp;
 							c_alt_sign = -1;
+							c_branch = new((ushort)junction_index, (byte)i, (sbyte)c_alt_sign);
 						}
 					}
 				}

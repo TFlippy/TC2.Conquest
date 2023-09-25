@@ -6,6 +6,14 @@ namespace TC2.Conquest
 {
 	public static partial class WorldMap
 	{
+		private static Dictionary<int, Road.Segment> road_segments_tmp = new(256);
+		private static Dictionary<int, List<Road.Segment>> road_segments_overlapped_tmp = new(256);
+
+		//public static void GetSegment(ref this Road.Junction.Branch branch, out Road.Segment segment)
+		//{
+		//	segment = new Road.Segment()
+		//}
+
 		public static ulong GetRoadPairKey(Road.Segment a, Road.Segment b)
 		{
 			var ret = (ulong)Unsafe.BitCast<Road.Segment, uint>(a);
@@ -17,9 +25,9 @@ namespace TC2.Conquest
 
 		public static void RecalculateRoads()
 		{
-			road_segments.Clear();
+			road_segments_tmp.Clear();
 			road_junctions.Clear();
-			road_segments_overlapped.Clear();
+			road_segments_overlapped_tmp.Clear();
 			road_segment_to_junction_index.Clear();
 
 			location_to_road.Clear();
@@ -55,15 +63,15 @@ namespace TC2.Conquest
 
 							//road_segments_overlapped
 
-							if (!road_segments.TryAdd(pos_key, segment))
+							if (!road_segments_tmp.TryAdd(pos_key, segment))
 							{
-								var segment_other = road_segments[pos_key];
+								var segment_other = road_segments_tmp[pos_key];
 								//if (segment_other.chain == segment.chain) continue;
 
-								if (!road_segments_overlapped.TryGetValue(pos_key, out var segments_list))
+								if (!road_segments_overlapped_tmp.TryGetValue(pos_key, out var segments_list))
 								{
-									segments_list = road_segments_overlapped[pos_key] = new(4);
-									segments_list.Add(road_segments[pos_key]);
+									segments_list = road_segments_overlapped_tmp[pos_key] = new(4);
+									segments_list.Add(road_segments_tmp[pos_key]);
 								}
 
 								segments_list.Add(segment);
@@ -78,11 +86,11 @@ namespace TC2.Conquest
 
 			{
 				var ts = Timestamp.Now();
-				if (road_segments_overlapped.Count > 0)
+				if (road_segments_overlapped_tmp.Count > 0)
 				{
 					var road_junction_threshold_sq = road_junction_threshold * road_junction_threshold;
 
-					foreach (var pair in road_segments_overlapped)
+					foreach (var pair in road_segments_overlapped_tmp)
 					{
 						var road_list = pair.Value;
 

@@ -23,8 +23,32 @@ namespace TC2.Conquest
 
 #if CLIENT
 
-		public static Road.Junction.Branch? edit_route_a;
-		public static Road.Junction.Branch? edit_route_b;
+		public static Road.Junction.Branch? edit_branch_a;
+		public static Road.Junction.Branch? edit_branch_b;
+
+		public static IRoute.Target? edit_route_target;
+
+		public static void DrawBranch(ref Road.Junction.Branch branch)
+		{
+			if (branch.IsNull()) return;
+
+			var junc = road_junctions[branch.junction_index];
+			var seg_a = junc.segments[branch.index];
+			var seg_b = seg_a;
+			seg_b.index = (byte)(seg_b.index + branch.sign);
+
+
+			ref var region = ref World.GetGlobalRegion();
+			region.DrawDebugCircle(junc.pos, 0.125f, Color32BGRA.Magenta, filled: true);
+			ref var pos = ref seg_b.GetPosition();
+			//if (pos.IsNotNull())
+			{
+				//region.DrawDebugLine(junc.pos, seg_a.GetPosition(), Color32BGRA.Cyan, 2.00f);
+				//region.DrawDebugLine(junc.pos, seg_b.GetPosition(), Color32BGRA.Cyan, 2.00f);
+				region.DrawDebugLine(junc.pos, pos, Color32BGRA.Yellow, 2.00f);
+				region.DrawDebugText(junc.pos - new Vector2(0.00f, 0.25f), $"[{branch.junction_index}] ({seg_a.index} to {seg_b.index}) {branch.sign}", Color32BGRA.White);
+			}
+		}
 
 		private static void DrawEditor(ref AABB rect, ref IScenario.Data scenario_data, IAsset2<IScenario, IScenario.Data>.Definition scenario_asset, ref Mouse.Data mouse, ref Keyboard.Data kb, float zoom, ref Matrix3x2 mat_l2c, ref Vector2 mouse_local, bool hovered)
 		{
@@ -576,407 +600,191 @@ namespace TC2.Conquest
 					if (edit_asset is IRoute.Definition route_asset)
 					{
 						ref var route_data = ref route_asset.GetData();
-						if (route_data.IsNotNull())
+						if (route_data.IsNotNull() && hovered)
 						{
 							var pos = mouse_local;
 
 							ref var region = ref World.GetGlobalRegion();
 
-							var branches = route_data.branches.AsSpan();
-							//ref var route_last = ref branches[branches.Length - 1];
-
-							//var nearest_junction = route_last.junction_index > 0 ? road_junctions[route_last.junction_index] : road_junctions.MinBy(x => Vector2.DistanceSquared(x.pos, pos));
-							//var junction_index = route_last.junction_index > 0 ? route_last.junction_index : road_junctions.IndexOf(nearest_junction);
-
+							//var branches = route_data.branches.AsSpan();
 
 							var ignore_limits = false;
 							var dot_min = 0.40f;
 							var dot_max = 1.00f;
 
-							var nearest_junction = road_junctions.MinBy(x => Vector2.DistanceSquared(x.pos, pos));
-							if (Vector2.DistanceSquared(nearest_junction.pos, pos) < 1.00f)
+							////var nearest_junction = road_junctions.MinBy(x => Vector2.DistanceSquared(x.pos, pos));
+
+							ref var target = ref edit_route_target.GetRefOrNull();
+							if (target.IsNotNull())
 							{
-								var junction_index = road_junctions.IndexOf(nearest_junction);
 
 
-								var dir_ab = (pos - nearest_junction.pos).GetNormalizedFast();
-
-								GUI.DrawCircle(Vector2.Transform(nearest_junction.pos, mat_l2c), 0.20f * zoom, color: Color32BGRA.White, segments: 8, layer: GUI.Layer.Foreground);
-
-								//ref var current_route = ref route_
-
-								var segment_index = -1;
-
-								var c_alt = default(Road.Segment);
-								var c_alt_sign = 0;
-								var c_alt_dot = -1.00f;
-
-								var segments = nearest_junction.segments.Slice(nearest_junction.segments_count);
-								//for (var i = 0; i < segments.Length; i++)
+								var nearest_junction = road_junctions.MinBy(x => Vector2.DistanceSquared(x.pos, pos));
+								if (Vector2.DistanceSquared(nearest_junction.pos, pos) < 1.00f)
 								{
-									//var segment = segments[i];
+									var junction_index = road_junctions.IndexOf(nearest_junction);
+									var dir_ab = (pos - nearest_junction.pos).GetNormalizedFast();
 
+									GUI.DrawCircle(Vector2.Transform(nearest_junction.pos, mat_l2c), 0.20f * zoom, color: Color32BGRA.White, segments: 8, layer: GUI.Layer.Foreground);
 
+									//ref var current_route = ref route_
 
+									var segment_index = -1;
 
-									//var dot = MathF.Min(dot_max, Vector2.Dot(dir_ab, dir_bc));
+									var c_alt = default(Road.Segment);
+									var c_alt_sign = 0;
+									var c_alt_dot = -1.00f;
 
-
-
-
-									for (var j = 0; j < segments.Length; j++)
+									var segments = nearest_junction.segments.Slice(nearest_junction.segments_count);
+									//for (var i = 0; i < segments.Length; i++)
 									{
-										ref var j_segment = ref segments[j];
-
-										ref var j_road = ref j_segment.GetRoad();
-										//if (j_road.IsNull() || j_road.type != type) continue;
-										if (j_road.IsNull()) continue;
-
-										var j_points = j_road.points.AsSpan();
-										var j_pos = j_points[j_segment.index];
-
-										if (j_segment.index < j_points.Length - 1)
+										for (var j = 0; j < segments.Length; j++)
 										{
-											var dir_tmp = (j_points[j_segment.index + 1] - j_pos).GetNormalizedFast();
-											var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
+											ref var j_segment = ref segments[j];
 
-											var draw = false;
-											if (dot_tmp > c_alt_dot && (ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
+											ref var j_road = ref j_segment.GetRoad();
+											//if (j_road.IsNull() || j_road.type != type) continue;
+											if (j_road.IsNull()) continue;
+
+											var j_points = j_road.points.AsSpan();
+											var j_pos = j_points[j_segment.index];
+
+											if (j_segment.index < j_points.Length - 1)
 											{
-												c_alt = new(j_segment.chain, (byte)(j_segment.index + 1));
-												c_alt_dot = dot_tmp;
-												c_alt_sign = 1;
+												var dir_tmp = (j_points[j_segment.index + 1] - j_pos).GetNormalizedFast();
+												var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
 
-												segment_index = (byte)(j);
+												var draw = false;
+												if (dot_tmp > c_alt_dot && (ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
+												{
+													c_alt = new(j_segment.chain, (byte)(j_segment.index + 1));
+													c_alt_dot = dot_tmp;
+													c_alt_sign = 1;
 
-												draw = true;
-												region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Green);
+													segment_index = (byte)(j);
+
+													draw = true;
+													region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Green);
+												}
+												//if (draw || (j == branches[0].index && branches[0].sign == 1) || (j == branches[1].index && branches[1].sign == 1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == branches[0].index && branches[0].sign == 1) || (j == branches[1].index && branches[1].sign == 1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
+												//region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Red);
 											}
-											//if (draw || (j == branches[0].index && branches[0].sign == 1) || (j == branches[1].index && branches[1].sign == 1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == branches[0].index && branches[0].sign == 1) || (j == branches[1].index && branches[1].sign == 1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
 
-											//region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Red);
-										}
-
-										if (j_segment.index > 0)
-										{
-											var dir_tmp = (j_points[j_segment.index - 1] - j_pos).GetNormalizedFast();
-											var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
-
-											var draw = false;
-											if (dot_tmp > c_alt_dot && (ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
+											if (j_segment.index > 0)
 											{
-												c_alt = new(j_segment.chain, (byte)(j_segment.index - 1));
-												c_alt_dot = dot_tmp;
-												c_alt_sign = -1;
+												var dir_tmp = (j_points[j_segment.index - 1] - j_pos).GetNormalizedFast();
+												var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
 
-												segment_index = (byte)(j);
-												draw = true;
-												region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Green);
+												var draw = false;
+												if (dot_tmp > c_alt_dot && (ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
+												{
+													c_alt = new(j_segment.chain, (byte)(j_segment.index - 1));
+													c_alt_dot = dot_tmp;
+													c_alt_sign = -1;
+
+													segment_index = (byte)(j);
+													draw = true;
+													region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Green);
+												}
+												//if (draw || (j == branches[0].index && branches[0].sign == -1) || (j == branches[1].index && branches[1].sign == -1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == branches[0].index && branches[0].sign == -1) || (j == branches[1].index && branches[1].sign == -1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
+												//region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Red);
 											}
-											//if (draw || (j == branches[0].index && branches[0].sign == -1) || (j == branches[1].index && branches[1].sign == -1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == branches[0].index && branches[0].sign == -1) || (j == branches[1].index && branches[1].sign == -1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
-
-											//region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Red);
 										}
+										//GUI.DrawLine(Vector2.Transform(nearest_junction.pos, mat_l2c), Vector2.Transform(nearest_junction.pos + ((nearest_junction.pos - segment.GetPosition()).GetNormalized() * 0.25f), mat_l2c), color: Color32BGRA.Magenta, 1.00F, layer: GUI.Layer.Foreground);
 									}
 
-
-
-
-									//GUI.DrawLine(Vector2.Transform(nearest_junction.pos, mat_l2c), Vector2.Transform(nearest_junction.pos + ((nearest_junction.pos - segment.GetPosition()).GetNormalized() * 0.25f), mat_l2c), color: Color32BGRA.Magenta, 1.00F, layer: GUI.Layer.Foreground);
-								}
-
-								if (hovered && segment_index != -1)
-								{
-									if (mouse.GetKeyDown(Mouse.Key.Left))
+									if (hovered && segment_index != -1)
 									{
-										ref var route = ref edit_route_a.GetRefOrDefault();
-										route = new Road.Junction.Branch((ushort)junction_index, (byte)segment_index, (sbyte)c_alt_sign);
-
-										//branches[0].junction_index = (ushort)junction_index;
-										//branches[0].index = (byte)segment_index;
-										//branches[0].sign = (sbyte)c_alt_sign;
-									}
-									else if (mouse.GetKeyDown(Mouse.Key.Right))
-									{
-										ref var route = ref edit_route_b.GetRefOrDefault();
-										route = new Road.Junction.Branch((ushort)junction_index, (byte)segment_index, (sbyte)c_alt_sign);
-
-										//branches[1].junction_index = (ushort)junction_index;
-										//branches[1].index = (byte)segment_index;
-										//branches[1].sign = (sbyte)c_alt_sign;
-
-									}
-								}
-							}
-
-							DrawRoute(ref edit_route_a.GetRefOrNull());
-							DrawRoute(ref edit_route_b.GetRefOrNull());
-							//DrawRoute(ref branches[0]);
-							//DrawRoute(ref branches[1]);
-
-							//if (RoadNav.Astar.Path.Count > 0)
-							//{
-							//	foreach (var route in RoadNav.Astar.Path)
-							//	{
-							//		var route_copy = route;
-							//		DrawRoute(ref route_copy);
-							//	}
-							//}
-
-							//if (RoadNav.Astar.ClosedList.Values.Count > 0)
-							//{
-							//	foreach (var route in RoadNav.Astar.ClosedList.Values)
-							//	{
-							//		var route_copy = route.route;
-							//		DrawRoute(ref route_copy);
-							//	}
-							//}
-
-							if (branches != null)
-							{
-								foreach (ref var route in branches)
-								{
-									DrawRoute(ref route);
-								}
-							}
-
-							if (false)
-							{
-								var junction_index_tmp = (int)branches[1].junction_index;
-								var sign_tmp = branches[1].sign;
-								var road_segment_tmp_b = road_junctions[junction_index_tmp].segments[branches[1].index];
-								var road_segment_tmp_c = road_junctions[junction_index_tmp].segments[branches[1].index];
-								road_segment_tmp_c.index = (byte)(road_segment_tmp_c.index + sign_tmp);
-
-								GUI.DrawLine(Vector2.Transform(road_segment_tmp_b.GetPosition(), mat_l2c), Vector2.Transform(road_segment_tmp_c.GetPosition(), mat_l2c), Color32BGRA.Green, layer: GUI.Layer.Foreground, thickness: 2.00f);
-
-								var random = XorRandom.New(true);
-
-								for (var i = 0; i < 8; i++)
-								{
-									//ref var route = ref 
-									if (TryGetNextJunction(road_segment_tmp_b, (int)sign_tmp, out junction_index_tmp, out road_segment_tmp_b, out road_segment_tmp_c))
-									{
-										if (junction_index_tmp != -1)
+										if (mouse.GetKeyDown(Mouse.Key.Left))
 										{
-											var jun = road_junctions[junction_index_tmp];
-											//region.DrawDebugCircle(jun.pos, 0.25f, Color32BGRA.Red, filled: false);
-
-
-											//var segment_prev = road_segment_tmp_b;
-
-											//segment_prev.index = (byte)(segment_prev.index - sign_tmp);
-											//App.WriteLine($"[{i}]: {road_segment_tmp.chain.index}; {road_segment_tmp.index} {segment_prev.index}");
-
-											//var seg = jun.segments[random.NextIntRange(0, jun.segments_count)];
-
-											var dir = (road_segment_tmp_c.GetPosition() - road_segment_tmp_b.GetPosition()).GetNormalizedFast();
-
-											//var seg = jun.segments[0];
-											//if (seg == road_segment_tmp_c) seg = jun.segments[1];
-
-											//TryAdvanceJunction(road_segment_tmp_b, road_segment_tmp_b, road_segment_tmp_c, junction_index_tmp, out var road_new, out var sign_new, out _);
-
-											Span<ResolvedJunction> resolved_junctions = stackalloc ResolvedJunction[8];
-
-											//ResolveJunction(dir, ref jun, ignore_limits, dot_min, dot_max, out var sign_new, out var seg_index, out var dot);
-											Train.ResolveJunction2(dir, ref jun, ignore_limits, dot_min, dot_max, ref resolved_junctions);
-											//var seg = jun.segments[seg_index];
-
-
-											//ref var res = ref resolved_junctions[resolved_junctions.Length - 1];
-											ref var res = ref resolved_junctions[0];
-											var seg = jun.segments[res.segment_index];
-
-
-											//var sign_new = Train.GetSign(dir, ref seg, ignore_limits, dot_min: dot_min, dot_max: dot_max);
-
-											//GUI.DrawLine(Vector2.Transform(road_segment_tmp_b.GetPosition(), mat_l2c), Vector2.Transform(road_segment_tmp_c.GetPosition(), mat_l2c), Color32BGRA.Orange, layer: GUI.Layer.Foreground, thickness: 2.00f * (1 + i));
-											//GUI.DrawLine(Vector2.Transform(jun.pos, mat_l2c), Vector2.Transform(jun.pos + (dir * 0.50f), mat_l2c), Color32BGRA.Green, layer: GUI.Layer.Foreground, thickness: 2.00f * (1 + i));
-											GUI.DrawTextCentered($"[{i}]: {sign_tmp}; {road_segment_tmp_b.index}; {road_segment_tmp_c.index}; {jun.segments_count}", Vector2.Transform(jun.pos, mat_l2c) + new Vector2(0, 32), size: 32, layer: GUI.Layer.Foreground);
-
-											road_segment_tmp_b = seg;
-											road_segment_tmp_c = seg;
-											road_segment_tmp_c.index = (byte)(road_segment_tmp_c.index + res.sign);
-
-											//road_segment_tmp_b = seg;
-											//road_segment_tmp_c = seg;
-											//road_segment_tmp_c.index = (byte)(road_segment_tmp_c.index + sign_new);
-
-											var route = new Road.Junction.Branch((ushort)junction_index_tmp, res.segment_index, (sbyte)res.sign);
-											DrawRoute(ref route);
-
-											sign_tmp = (sbyte)res.sign;
+											ref var branch = ref target.branch_entry;
+											branch = new Road.Junction.Branch((ushort)junction_index, (byte)segment_index, (sbyte)c_alt_sign);
 										}
-									}
-									else
-									{
-										GUI.DrawTextCentered("fail", Vector2.Transform(road_junctions[branches[1].junction_index].pos, mat_l2c), size: 64, layer: GUI.Layer.Foreground);
+
+										//if (mouse.GetKeyDown(Mouse.Key.Left))
+										//{
+										//	ref var route = ref edit_branch_a.GetRefOrDefault();
+										//	route = new Road.Junction.Branch((ushort)junction_index, (byte)segment_index, (sbyte)c_alt_sign);
+										//}
+										//else if (mouse.GetKeyDown(Mouse.Key.Right))
+										//{
+										//	ref var route = ref edit_branch_b.GetRefOrDefault();
+										//	route = new Road.Junction.Branch((ushort)junction_index, (byte)segment_index, (sbyte)c_alt_sign);
+										//}
 									}
 								}
+
+								DrawBranch(ref target.branch_entry);
 							}
 
-							//static void ResolveJunction(Vector2 dir_ab, ref Road.Junction nearest_junction, bool ignore_limits, float dot_min, float dot_max, out int c_alt_sign, out int segment_index, out float c_alt_dot)
+							//DrawBranch(ref edit_branch_a.GetRefOrNull());
+							//DrawBranch(ref edit_branch_b.GetRefOrNull());
+
+							//if (false && branches != null)
 							//{
-							//	ref var region = ref World.GetGlobalRegion();
-							//	segment_index = -1;
-
-							//	var c_alt = default(Road.Segment);
-							//	c_alt_sign = 0;
-							//	c_alt_dot = -1.00f;
-
-							//	var segments = nearest_junction.segments.Slice(nearest_junction.segments_count);
-							//	for (var j = 0; j < segments.Length; j++)
+							//	foreach (ref var branch in branches)
 							//	{
-							//		ref var j_segment = ref segments[j];
-
-							//		ref var j_road = ref j_segment.GetRoad();
-							//		//if (j_road.IsNull() || j_road.type != type) continue;
-							//		if (j_road.IsNull()) continue;
-
-							//		var j_points = j_road.points.AsSpan();
-							//		var j_pos = j_points[j_segment.index];
-
-							//		if (j_segment.index < j_points.Length - 1)
-							//		{
-							//			var dir_tmp = (j_points[j_segment.index + 1] - j_pos).GetNormalizedFast();
-							//			var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
-
-							//			var draw = false;
-							//			if (dot_tmp > c_alt_dot && (ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
-							//			{
-							//				c_alt = new(j_segment.chain, (byte)(j_segment.index + 1));
-							//				c_alt_dot = dot_tmp;
-							//				c_alt_sign = 1;
-
-							//				segment_index = (byte)(j);
-
-							//				draw = true;
-							//				region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Green);
-							//			}
-							//			//if (draw || (j == branches[0].index && branches[0].sign == 1) || (j == branches[1].index && branches[1].sign == 1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == branches[0].index && branches[0].sign == 1) || (j == branches[1].index && branches[1].sign == 1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
-
-							//			//region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Red);
-							//		}
-
-							//		if (j_segment.index > 0)
-							//		{
-							//			var dir_tmp = (j_points[j_segment.index - 1] - j_pos).GetNormalizedFast();
-							//			var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
-
-							//			var draw = false;
-							//			if (dot_tmp > c_alt_dot && (ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
-							//			{
-							//				c_alt = new(j_segment.chain, (byte)(j_segment.index - 1));
-							//				c_alt_dot = dot_tmp;
-							//				c_alt_sign = -1;
-
-							//				segment_index = (byte)(j);
-							//				draw = true;
-							//				region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Green);
-							//			}
-							//			//if (draw || (j == branches[0].index && branches[0].sign == -1) || (j == branches[1].index && branches[1].sign == -1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == branches[0].index && branches[0].sign == -1) || (j == branches[1].index && branches[1].sign == -1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
-
-							//			//region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Red);
-							//		}
+							//		DrawBranch(ref branch);
 							//	}
 							//}
 
-							//static void ResolveJunction2(Vector2 dir_ab, ref Road.Junction nearest_junction, bool ignore_limits, float dot_min, float dot_max, ref Span<ResolvedJunction> out_indices)
+							//if (false)
 							//{
-							//	ref var region = ref World.GetGlobalRegion();
-							//	//segment_index = -1;
+							//	var junction_index_tmp = (int)branches[1].junction_index;
+							//	var sign_tmp = branches[1].sign;
+							//	var road_segment_tmp_b = road_junctions[junction_index_tmp].segments[branches[1].index];
+							//	var road_segment_tmp_c = road_junctions[junction_index_tmp].segments[branches[1].index];
+							//	road_segment_tmp_c.index = (byte)(road_segment_tmp_c.index + sign_tmp);
 
-							//	//var c_alt = default(Road.Segment);
-							//	//c_alt_sign = 0;
-							//	//c_alt_dot = -1.00f;
+							//	GUI.DrawLine(Vector2.Transform(road_segment_tmp_b.GetPosition(), mat_l2c), Vector2.Transform(road_segment_tmp_c.GetPosition(), mat_l2c), Color32BGRA.Green, layer: GUI.Layer.Foreground, thickness: 2.00f);
 
-							//	var indices_count = 0;
+							//	var random = XorRandom.New(true);
 
-							//	var segments = nearest_junction.segments.Slice(nearest_junction.segments_count);
-							//	for (var j = 0; j < segments.Length; j++)
+							//	for (var i = 0; i < 8; i++)
 							//	{
-							//		ref var j_segment = ref segments[j];
-
-							//		ref var j_road = ref j_segment.GetRoad();
-							//		//if (j_road.IsNull() || j_road.type != type) continue;
-							//		if (j_road.IsNull()) continue;
-
-							//		var j_points = j_road.points.AsSpan();
-							//		var j_pos = j_points[j_segment.index];
-
-							//		if (j_segment.index < j_points.Length - 1)
+							//		//ref var route = ref 
+							//		if (TryGetNextJunction(road_segment_tmp_b, (int)sign_tmp, out junction_index_tmp, out road_segment_tmp_b, out road_segment_tmp_c))
 							//		{
-							//			var dir_tmp = (j_points[j_segment.index + 1] - j_pos).GetNormalizedFast();
-							//			var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
-
-							//			var draw = false;
-							//			if ((ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
+							//			if (junction_index_tmp != -1)
 							//			{
-							//				//c_alt = new(j_segment.chain, (byte)(j_segment.index + 1));
-							//				var c_alt_dot = dot_tmp;
-							//				var c_alt_sign = 1;
+							//				var jun = road_junctions[junction_index_tmp];
+							//				var dir = (road_segment_tmp_c.GetPosition() - road_segment_tmp_b.GetPosition()).GetNormalizedFast();
 
-							//				var segment_index = (byte)(j);
+							//				Span<ResolvedJunction> resolved_junctions = stackalloc ResolvedJunction[8];
 
-							//				out_indices[indices_count++] = new((byte)j, (sbyte)c_alt_sign, c_alt_dot);
-							//				draw = true;
-							//				region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Green);
+							//				//ResolveJunction(dir, ref jun, ignore_limits, dot_min, dot_max, out var sign_new, out var seg_index, out var dot);
+							//				Train.ResolveJunction2(dir, ref jun, ignore_limits, dot_min, dot_max, ref resolved_junctions);
+							//				//var seg = jun.segments[seg_index];
+
+
+							//				//ref var res = ref resolved_junctions[resolved_junctions.Length - 1];
+							//				ref var res = ref resolved_junctions[0];
+							//				var seg = jun.segments[res.segment_index];
+
+
+							//				//var sign_new = Train.GetSign(dir, ref seg, ignore_limits, dot_min: dot_min, dot_max: dot_max);
+
+							//				//GUI.DrawLine(Vector2.Transform(road_segment_tmp_b.GetPosition(), mat_l2c), Vector2.Transform(road_segment_tmp_c.GetPosition(), mat_l2c), Color32BGRA.Orange, layer: GUI.Layer.Foreground, thickness: 2.00f * (1 + i));
+							//				//GUI.DrawLine(Vector2.Transform(jun.pos, mat_l2c), Vector2.Transform(jun.pos + (dir * 0.50f), mat_l2c), Color32BGRA.Green, layer: GUI.Layer.Foreground, thickness: 2.00f * (1 + i));
+							//				GUI.DrawTextCentered($"[{i}]: {sign_tmp}; {road_segment_tmp_b.index}; {road_segment_tmp_c.index}; {jun.segments_count}", Vector2.Transform(jun.pos, mat_l2c) + new Vector2(0, 32), size: 32, layer: GUI.Layer.Foreground);
+
+							//				road_segment_tmp_b = seg;
+							//				road_segment_tmp_c = seg;
+							//				road_segment_tmp_c.index = (byte)(road_segment_tmp_c.index + res.sign);
+
+							//				var route = new Road.Junction.Branch((ushort)junction_index_tmp, res.segment_index, (sbyte)res.sign);
+							//				DrawBranch(ref route);
+
+							//				sign_tmp = (sbyte)res.sign;
 							//			}
-							//			//if (draw || (j == branches[0].index && branches[0].sign == 1) || (j == branches[1].index && branches[1].sign == 1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == branches[0].index && branches[0].sign == 1) || (j == branches[1].index && branches[1].sign == 1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
-
-							//			//region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Red);
 							//		}
-
-							//		if (j_segment.index > 0)
+							//		else
 							//		{
-							//			var dir_tmp = (j_points[j_segment.index - 1] - j_pos).GetNormalizedFast();
-							//			var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
-
-							//			var draw = false;
-							//			if ((ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
-							//			{
-							//				//c_alt = new(j_segment.chain, (byte)(j_segment.index - 1));
-							//				var c_alt_dot = dot_tmp;
-							//				var c_alt_sign = -1;
-
-							//				var segment_index = (byte)(j);
-
-							//				out_indices[indices_count++] = new((byte)j, (sbyte)c_alt_sign, c_alt_dot);
-							//				draw = true;
-							//				region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Green);
-							//			}
-							//			//if (draw || (j == branches[0].index && branches[0].sign == -1) || (j == branches[1].index && branches[1].sign == -1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == branches[0].index && branches[0].sign == -1) || (j == branches[1].index && branches[1].sign == -1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
-
-							//			//region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Red);
+							//			GUI.DrawTextCentered("fail", Vector2.Transform(road_junctions[branches[1].junction_index].pos, mat_l2c), size: 64, layer: GUI.Layer.Foreground);
 							//		}
 							//	}
-
-							//	out_indices = out_indices.Slice(0, indices_count);
-							//	out_indices.Sort();
 							//}
-
-							static void DrawRoute(ref Road.Junction.Branch route)
-							{
-								if (route.IsNull()) return;
-
-								var junc = road_junctions[route.junction_index];
-								var seg_a = junc.segments[route.index];
-								var seg_b = seg_a;
-								seg_b.index = (byte)(seg_b.index + route.sign);
-
-
-								ref var region = ref World.GetGlobalRegion();
-								region.DrawDebugCircle(junc.pos, 0.125f, Color32BGRA.Magenta, filled: true);
-								ref var pos = ref seg_b.GetPosition();
-								//if (pos.IsNotNull())
-								{
-									//region.DrawDebugLine(junc.pos, seg_a.GetPosition(), Color32BGRA.Cyan, 2.00f);
-									//region.DrawDebugLine(junc.pos, seg_b.GetPosition(), Color32BGRA.Cyan, 2.00f);
-									region.DrawDebugLine(junc.pos, pos, Color32BGRA.Yellow, 2.00f);
-									region.DrawDebugText(junc.pos - new Vector2(0.00f, 0.25f), $"[{route.junction_index}] ({seg_a.index} to {seg_b.index}) {route.sign}", Color32BGRA.White);
-								}
-							}
+						
 						}
 					}
 				}
@@ -1210,21 +1018,42 @@ namespace TC2.Conquest
 										ref var route_data = ref route.GetData();
 										if (route_data.IsNotNull())
 										{
-											if (GUI.DrawButton("Generate Path", size: new Vector2(160, 40)))
+											//App.WriteLine($"{edit_route_target.HasValue}");
+
+											if (GUI.DrawButton("Generate Path", size: new Vector2(128, 40)))
 											{
 												Span<Road.Junction.Branch> branches = stackalloc Road.Junction.Branch[32];
 
-												if (RoadNav.Astar.TryFindPath(edit_route_a.Value, edit_route_b.Value, ref branches))
+												if (RoadNav.Astar.TryFindPath(edit_branch_a.Value, edit_branch_b.Value, ref branches))
 												{
 													App.WriteLine($"result: {branches.Length}");
 
-													route_data.branches = branches.ToArray();
+													//route_data.branches = branches.ToArray();
 												}
 											}
 
-											if (GUI.DrawStyledEditorForType(ref route_data, new Vector2(GUI.GetRemainingWidth(), 32), false))
+											var changed = false;
+											if (changed = GUI.DrawStyledEditorForType(ref route_data, new Vector2(GUI.GetRemainingWidth(), 32), false))
 											{
 
+											}
+
+											if (h_selected_location.IsValid())
+											{
+												var targets = route_data.targets.AsSpan();
+												for (var i = 0; i < targets.Length; i++)
+												{
+													ref var target = ref targets[i];
+													if (target.h_location == h_selected_location)
+													{
+														ref var target_current = ref edit_route_target.GetRefOrNull();
+														if (target_current.IsNotNull() && target_current.h_location == h_selected_location)
+														{
+															if (!changed) target = target_current;
+														}
+														edit_route_target = target;
+													}
+												}
 											}
 
 											//ref var doodad = ref scenario_data.doodads.AsSpan().GetRefAtIndexOrNull(index_doodad);
