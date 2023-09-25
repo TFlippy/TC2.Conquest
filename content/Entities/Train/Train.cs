@@ -114,32 +114,34 @@ namespace TC2.Conquest
 			//	Grid = grid;
 			//}
 
-			public static PriorityQueue<JunctionNode, float> OpenList = new();
-			public static Dictionary<int, JunctionNode> ClosedList = new();
-			public static Stack<Road.Junction.Route> Path = new();
+			[ThreadStatic]
+			public static readonly PriorityQueue<JunctionNode, float> open_list = new(64);
+			[ThreadStatic]
+			public static readonly Dictionary<int, JunctionNode> closed_list = new(64);
+			//public static Stack<Road.Junction.Route> Path = new();
 
-			public static bool TryFindPath(Road.Junction.Route start, Road.Junction.Route end, ref Span<Road.Junction.Route> out_results)
+			public static bool TryFindPath(Road.Junction.Route a, Road.Junction.Route b, ref Span<Road.Junction.Route> out_results)
 			{
 				var junctions_span = CollectionsMarshal.AsSpan(WorldMap.road_junctions);
 
-				Path.Clear();
-				OpenList.Clear();
-				ClosedList.Clear();
+				//Path.Clear();
+				open_list.Clear();
+				closed_list.Clear();
 
-				var current = new JunctionNode(start.junction_index, start.index, start.sign, -1.00f, 0.00f);
+				var current = new JunctionNode(a.junction_index, a.index, a.sign, -1.00f, 0.00f);
 
-				OpenList.Enqueue(current, current.F);
+				open_list.Enqueue(current, current.F);
 
 				var ignore_limits = false;
 				var dot_min = 0.50f;
 				var dot_max = 1.00f;
 
-				var hash_end = new JunctionNode(end.junction_index, end.index, end.sign, -1.00f, 0.00f).GetHashCode();
+				var hash_end = new JunctionNode(b.junction_index, b.index, b.sign, 1.00f, 0.00f).GetHashCode();
 
-				while (OpenList.Count != 0 && !ClosedList.ContainsKey(hash_end))
+				while (open_list.Count != 0 && !closed_list.ContainsKey(hash_end))
 				{
-					current = OpenList.Dequeue();
-					ClosedList.Add(current.GetHashCode(), current);
+					current = open_list.Dequeue();
+					closed_list.Add(current.GetHashCode(), current);
 
 					var seg_a = junctions_span[current.route.junction_index].segments[current.route.index];
 					if (WorldMap.TryGetNextJunction(seg_a, current.route.sign, out var junction_a, out var segment_b, out var segment_c))
@@ -160,10 +162,10 @@ namespace TC2.Conquest
 								var route = new Road.Junction.Route((ushort)junction_a, res.segment_index, (sbyte)res.sign);
 
 								var n = new JunctionNode(route.junction_index, route.index, route.sign, current.weight, current.distance);
-								if (!ClosedList.ContainsKey(n.GetHashCode()))
+								if (!closed_list.ContainsKey(n.GetHashCode()))
 								{
 									bool isFound = false;
-									foreach (var oLNode in OpenList.UnorderedItems)
+									foreach (var oLNode in open_list.UnorderedItems)
 									{
 										if (oLNode.Element == n)
 										{
@@ -173,9 +175,9 @@ namespace TC2.Conquest
 									if (!isFound)
 									{
 										n.parent_hash = current.GetHashCode();
-										n.distance = Vector2.Distance(junctions_span[n.route.junction_index].pos, junctions_span[end.junction_index].pos); //  DistanceToTarget = Math.Abs(n.Position.X - end.Position.X) + Math.Abs(n.Position.Y - end.Position.Y);
+										n.distance = Vector2.Distance(junctions_span[n.route.junction_index].pos, junctions_span[b.junction_index].pos); //  DistanceToTarget = Math.Abs(n.Position.X - end.Position.X) + Math.Abs(n.Position.Y - end.Position.Y);
 										n.cost = n.weight + current.cost;
-										OpenList.Enqueue(n, n.F);
+										open_list.Enqueue(n, n.F);
 									}
 								}
 							}
@@ -187,28 +189,28 @@ namespace TC2.Conquest
 					}
 				}
 
-				var results_count = 0;
 
-				if (!ClosedList.ContainsKey(hash_end))
+				if (!closed_list.ContainsKey(hash_end))
 				{
 					//App.WriteLine(ClosedList.Count);
 					return false;
 				}
 
-				var temp = ClosedList[current.GetHashCode()];
+				var results_count = 0;
+				var temp = closed_list[current.GetHashCode()];
 				do
 				{
 					out_results[results_count++] = temp.route;
 					//Path.Push(temp.route);
-					temp = ClosedList[temp.parent_hash];
+					temp = closed_list[temp.parent_hash];
 				}
-				while (temp.route.junction_index != start.junction_index);
+				while (temp.route.junction_index != a.junction_index);
 
 				//foreach (var route in Path)
 				//{
 				//	out_results[results_count++] = route;
 				//}
-				out_results[results_count++] = start;
+				out_results[results_count++] = a;
 				out_results = out_results.Slice(0, results_count);
 				out_results.Reverse();
 
