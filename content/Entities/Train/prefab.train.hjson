@@ -3,7 +3,7 @@ $tags: []
 
 train:
 {
-	flags: none
+	flags: stuck
 
 	mask_stop_buildings:
 	{
@@ -13,10 +13,12 @@ train:
 	}
 	mask_stop_categories:
 	{
-		require: none
+		require: decrepit
 		include: border
 		exclude: none
 	}
+
+	h_route: "test.00"
 
 	dot_min: 0.600
 	dot_max: 1.000

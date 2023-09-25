@@ -1,0 +1,56 @@
+$name: "Trainyard"
+$tags: []
+
+location:
+{
+
+}
+
+faction:
+{
+
+}
+
+transform:
+{
+	
+}
+
+interactable:
+{
+    window_size: [768.000, 552.000]
+}
+
+office:
+{
+    
+}
+
+company:
+{
+	h_company: "zeleznitzer"
+}
+
+faction:
+{
+	
+}
+
+stockpile:
+{
+	capacity_items: 24
+	capacity_shipments: 16
+	capacity_characters: 8
+}
+
+market:
+{
+	
+}
+
+nameable:
+{
+	tags: market, industrial, factory
+	flags: randomize
+	type: location
+}

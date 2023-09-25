@@ -1,0 +1,39 @@
+﻿{
+	$prefab: ""
+	
+	name: "Test Route"
+	
+	targets:
+	[
+		{
+			h_location: "krachtel"
+			branch_entry:
+			{
+				junction_index: 0
+				index: 0
+				sign: 0
+			}
+			stop_time: 5.000
+		}
+		{
+			h_location: "null"
+			branch_entry:
+			{
+				junction_index: 0
+				index: 0
+				sign: 0
+			}
+			stop_time: 0.000
+		}
+		{
+			h_location: "null"
+			branch_entry:
+			{
+				junction_index: 0
+				index: 0
+				sign: 0
+			}
+			stop_time: 0.000
+		}
+	]
+}

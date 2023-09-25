@@ -631,13 +631,13 @@ namespace TC2.Conquest
 
 			if (train.branches_count > 0)
 			{
-				var i = 0;
 				var branches_span = train.branches.Slice(train.branches_count);
-				foreach (ref var branch in branches_span)
+				for (var i = train.current_branch_index; i < train.branches_count; i++)
 				{
+					ref var branch = ref branches_span[i];
 					if (branch.sign != 0)
 					{
-						WorldMap.DrawBranch(ref branch, index: i++);
+						WorldMap.DrawBranch(ref branch, index: i);
 					}
 				}
 			}
@@ -761,10 +761,11 @@ namespace TC2.Conquest
 								{
 									train.segment_c = c_alt_segment;
 									train.sign = c_alt_sign;
+									ok = true;
 								}
 									//train.dot_current = c_alt_dot;
 
-								ok = true;
+								
 
 								//return;
 							}
