@@ -154,7 +154,6 @@ namespace TC2.Conquest
 			}
 			else if (dir_sign == 1)
 			{
-				//App.WriteLine(points.Length);
 				while (++index <= points.Length)
 				{
 					b = c;
@@ -175,16 +174,6 @@ namespace TC2.Conquest
 			}
 
 			return false;
-
-			////is_at_end = dir_sign == -1 ? b_index <= 0 : b_index >= points.Length - 1;
-			//if ((is_at_end || !skip_inner_junctions) && road_segment_to_junction_index.TryGetValue(b, out var junction_index_tmp))
-			//{
-			//	junction_index = junction_index_tmp;
-			//}
-
-			//is_at_end = c == b;
-			//return !is_at_end; // && !is_at_junction;
-
 		}
 
 

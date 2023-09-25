@@ -974,14 +974,13 @@ namespace TC2.Conquest
 									//region.DrawDebugLine(junc.pos, seg_a.GetPosition(), Color32BGRA.Cyan, 2.00f);
 									//region.DrawDebugLine(junc.pos, seg_b.GetPosition(), Color32BGRA.Cyan, 2.00f);
 									region.DrawDebugLine(junc.pos, pos, Color32BGRA.Yellow, 2.00f);
-									region.DrawDebugText(junc.pos - new Vector2(0.00f, 0.25f), $"[{route.junction_index}] ({seg_a.index} to {seg_b.index}) {route.sign} ", Color32BGRA.White);
+									region.DrawDebugText(junc.pos - new Vector2(0.00f, 0.25f), $"[{route.junction_index}] ({seg_a.index} to {seg_b.index}) {route.sign}", Color32BGRA.White);
 								}
 							}
 						}
 					}
 				}
 				break;
-
 			}
 
 			if (edit_points_index.TryGetValue(out var v_edit_points_index))

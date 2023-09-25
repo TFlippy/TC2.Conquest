@@ -69,13 +69,10 @@ namespace TC2.Conquest
 			//	this.distance = distance;
 			//}
 
-			public float F
-			{
-				get
-				{
-					return this.distance + this.weight;
-				}
-			}
+			//public float GetDW()
+			//{
+			//	return this.distance + this.weight;
+			//}
 
 			public bool Equals(JunctionNode other)
 			{
@@ -89,9 +86,11 @@ namespace TC2.Conquest
 
 			public static bool operator ==(JunctionNode left, JunctionNode right) => left.Equals(right);
 			public static bool operator !=(JunctionNode left, JunctionNode right) => !(left == right);
+
+			public override bool Equals(object obj) => obj is JunctionNode node && this.Equals(node);
 		}
 
-		public class Astar
+		public static class Astar
 		{
 			//List<List<Node>> Grid;
 			//int GridRows
@@ -115,13 +114,20 @@ namespace TC2.Conquest
 			//}
 
 			[ThreadStatic]
-			public static readonly PriorityQueue<JunctionNode, float> open_list = new(64);
+			public static PriorityQueue<JunctionNode, float> tls_open_list;
 			[ThreadStatic]
-			public static readonly Dictionary<int, JunctionNode> closed_list = new(64);
+			public static Dictionary<int, JunctionNode> tls_closed_list;
 			//public static Stack<Road.Junction.Route> Path = new();
 
 			public static bool TryFindPath(Road.Junction.Route a, Road.Junction.Route b, ref Span<Road.Junction.Route> out_results)
 			{
+				ref var open_list = ref tls_open_list;
+				ref var closed_list = ref tls_closed_list;
+
+				open_list ??= new(64);
+				closed_list ??= new(64);
+
+				var ts = Timestamp.Now();
 				var junctions_span = CollectionsMarshal.AsSpan(WorldMap.road_junctions);
 
 				//Path.Clear();
@@ -130,13 +136,14 @@ namespace TC2.Conquest
 
 				var current = new JunctionNode(a.junction_index, a.index, a.sign, -1.00f, 0.00f);
 
-				open_list.Enqueue(current, current.F);
+				open_list.Enqueue(current, -1.00f);
 
 				var ignore_limits = false;
 				var dot_min = 0.50f;
 				var dot_max = 1.00f;
 
-				var hash_end = new JunctionNode(b.junction_index, b.index, b.sign, 1.00f, 0.00f).GetHashCode();
+				var hash_end = new JunctionNode(b.junction_index, b.index, b.sign, -1.00f, 0.00f).GetHashCode();
+				Span<ResolvedJunction> resolved_junctions_buffer = stackalloc ResolvedJunction[8];
 
 				while (open_list.Count != 0 && !closed_list.ContainsKey(hash_end))
 				{
@@ -152,7 +159,7 @@ namespace TC2.Conquest
 							var dir = (segment_c.GetPosition() - segment_b.GetPosition()).GetNormalizedFast();
 							//App.WriteLine($"{junction.pos} {segment_b.index}; {segment_c.index}; {dir}");
 
-							Span<ResolvedJunction> resolved_junctions = stackalloc ResolvedJunction[8];
+							var resolved_junctions = resolved_junctions_buffer;
 							Train.ResolveJunction2(dir, ref junction, ignore_limits, dot_min, dot_max, ref resolved_junctions);
 
 							for (var i = 0; i < resolved_junctions.Length; i++)
@@ -177,7 +184,7 @@ namespace TC2.Conquest
 										n.parent_hash = current.GetHashCode();
 										n.distance = Vector2.Distance(junctions_span[n.route.junction_index].pos, junctions_span[b.junction_index].pos); //  DistanceToTarget = Math.Abs(n.Position.X - end.Position.X) + Math.Abs(n.Position.Y - end.Position.Y);
 										n.cost = n.weight + current.cost;
-										open_list.Enqueue(n, n.F);
+										open_list.Enqueue(n, n.distance + n.cost);
 									}
 								}
 							}
@@ -188,7 +195,6 @@ namespace TC2.Conquest
 						}
 					}
 				}
-
 
 				if (!closed_list.ContainsKey(hash_end))
 				{
@@ -216,6 +222,8 @@ namespace TC2.Conquest
 
 				//Path.
 
+				var ts_elapsed = ts.GetMilliseconds();
+				App.WriteLine($"Calculated a path in {ts_elapsed:0.0000} ms. ({out_results.Length}/{closed_list.Count})", App.Color.Green);
 				return true;
 			}
 		}
@@ -291,12 +299,7 @@ namespace TC2.Conquest
 
 		public static void ResolveJunction2(Vector2 dir_ab, ref Road.Junction nearest_junction, bool ignore_limits, float dot_min, float dot_max, ref Span<ResolvedJunction> out_indices)
 		{
-			ref var region = ref World.GetGlobalRegion();
-			//segment_index = -1;
-
-			//var c_alt = default(Road.Segment);
-			//c_alt_sign = 0;
-			//c_alt_dot = -1.00f;
+			//ref var region = ref World.GetGlobalRegion();
 
 			var indices_count = 0;
 
@@ -317,17 +320,9 @@ namespace TC2.Conquest
 					var dir_tmp = (j_points[j_segment.index + 1] - j_pos).GetNormalizedFast();
 					var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
 
-					var draw = false;
 					if ((ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
 					{
-						//c_alt = new(j_segment.chain, (byte)(j_segment.index + 1));
-						var c_alt_dot = dot_tmp;
-						var c_alt_sign = 1;
-
-						var segment_index = (byte)(j);
-
-						out_indices[indices_count++] = new((byte)j, (sbyte)c_alt_sign, c_alt_dot);
-						draw = true;
+						out_indices[indices_count++] = new((byte)j, 1, dot_tmp);
 						//region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Green);
 					}
 					//if (draw || (j == routes[0].index && routes[0].sign == 1) || (j == routes[1].index && routes[1].sign == 1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == routes[0].index && routes[0].sign == 1) || (j == routes[1].index && routes[1].sign == 1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
@@ -340,17 +335,9 @@ namespace TC2.Conquest
 					var dir_tmp = (j_points[j_segment.index - 1] - j_pos).GetNormalizedFast();
 					var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
 
-					var draw = false;
 					if ((ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
 					{
-						//c_alt = new(j_segment.chain, (byte)(j_segment.index - 1));
-						var c_alt_dot = dot_tmp;
-						var c_alt_sign = -1;
-
-						var segment_index = (byte)(j);
-
-						out_indices[indices_count++] = new((byte)j, (sbyte)c_alt_sign, c_alt_dot);
-						draw = true;
+						out_indices[indices_count++] = new((byte)j, -1, dot_tmp);
 						//region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Green);
 					}
 					//if (draw || (j == routes[0].index && routes[0].sign == -1) || (j == routes[1].index && routes[1].sign == -1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == routes[0].index && routes[0].sign == -1) || (j == routes[1].index && routes[1].sign == -1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
@@ -768,7 +755,7 @@ namespace TC2.Conquest
 				ref var region = ref this.ent_train.GetRegionCommon();
 				var rect = region.WorldToCanvas(AABB.Circle(this.transform.position, 0.25f));
 
-				using (var window = GUI.Window.Standalone($"train.{ent_train}", rect.GetPosition(), size: rect.GetSize(), flags: GUI.Window.Flags.None, force_position: true))
+				using (var window = GUI.Window.Standalone($"train.{this.ent_train}", rect.GetPosition(), size: rect.GetSize(), flags: GUI.Window.Flags.None, force_position: true))
 				{
 					using (GUI.ID.Push("train"))
 					{
@@ -777,7 +764,7 @@ namespace TC2.Conquest
 
 						var sprite = sprite_train;
 
-						var rot = transform.GetInterpolatedRotation();
+						var rot = this.transform.GetInterpolatedRotation();
 						var rot_snapped = Maths.Snap(rot, MathF.PI * 0.250f);
 						var rot_rem = Maths.DeltaAngle(rot, rot_snapped);
 
@@ -818,7 +805,7 @@ namespace TC2.Conquest
 							Doodad.Renderer.Add(new Doodad.Renderer.Data()
 							{
 								sprite = sprite,
-								position = Maths.Snap(transform.position, 1.00f / 32.00f),
+								position = Maths.Snap(this.transform.position, 1.00f / 32.00f),
 								rotation = -rot_rem,
 								z = 0.75f,
 								color = Color32BGRA.White,
@@ -836,12 +823,12 @@ namespace TC2.Conquest
 
 						if (is_pressed)
 						{
-							if (WorldMap.selected_entity == ent_train) WorldMap.selected_entity = default;
-							else WorldMap.selected_entity = ent_train;
+							if (WorldMap.selected_entity == this.ent_train) WorldMap.selected_entity = default;
+							else WorldMap.selected_entity = this.ent_train;
 
 							App.WriteLine("press");
 
-							GUI.SetDebugEntity(ent_train);
+							GUI.SetDebugEntity(this.ent_train);
 						}
 
 						if (is_hovered)

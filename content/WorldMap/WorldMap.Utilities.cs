@@ -73,7 +73,7 @@ namespace TC2.Conquest
 				}
 
 				var ts_elapsed = ts.GetMilliseconds();
-				App.WriteLine($"Rasterized road lines in {ts_elapsed:0.0000} ms.");
+				App.WriteLine($"Calculated road segments in {ts_elapsed:0.0000} ms.");
 			}
 
 			{
