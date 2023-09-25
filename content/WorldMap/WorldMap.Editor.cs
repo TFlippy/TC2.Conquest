@@ -23,8 +23,8 @@ namespace TC2.Conquest
 
 #if CLIENT
 
-		public static Road.Junction.Route? edit_route_a;
-		public static Road.Junction.Route? edit_route_b;
+		public static Road.Junction.Branch? edit_route_a;
+		public static Road.Junction.Branch? edit_route_b;
 
 		private static void DrawEditor(ref AABB rect, ref IScenario.Data scenario_data, IAsset2<IScenario, IScenario.Data>.Definition scenario_asset, ref Mouse.Data mouse, ref Keyboard.Data kb, float zoom, ref Matrix3x2 mat_l2c, ref Vector2 mouse_local, bool hovered)
 		{
@@ -582,8 +582,8 @@ namespace TC2.Conquest
 
 							ref var region = ref World.GetGlobalRegion();
 
-							var routes = route_data.routes.AsSpan();
-							//ref var route_last = ref routes[routes.Length - 1];
+							var branches = route_data.branches.AsSpan();
+							//ref var route_last = ref branches[branches.Length - 1];
 
 							//var nearest_junction = route_last.junction_index > 0 ? road_junctions[route_last.junction_index] : road_junctions.MinBy(x => Vector2.DistanceSquared(x.pos, pos));
 							//var junction_index = route_last.junction_index > 0 ? route_last.junction_index : road_junctions.IndexOf(nearest_junction);
@@ -652,7 +652,7 @@ namespace TC2.Conquest
 												draw = true;
 												region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Green);
 											}
-											//if (draw || (j == routes[0].index && routes[0].sign == 1) || (j == routes[1].index && routes[1].sign == 1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == routes[0].index && routes[0].sign == 1) || (j == routes[1].index && routes[1].sign == 1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
+											//if (draw || (j == branches[0].index && branches[0].sign == 1) || (j == branches[1].index && branches[1].sign == 1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == branches[0].index && branches[0].sign == 1) || (j == branches[1].index && branches[1].sign == 1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
 
 											//region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Red);
 										}
@@ -673,7 +673,7 @@ namespace TC2.Conquest
 												draw = true;
 												region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Green);
 											}
-											//if (draw || (j == routes[0].index && routes[0].sign == -1) || (j == routes[1].index && routes[1].sign == -1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == routes[0].index && routes[0].sign == -1) || (j == routes[1].index && routes[1].sign == -1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
+											//if (draw || (j == branches[0].index && branches[0].sign == -1) || (j == branches[1].index && branches[1].sign == -1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == branches[0].index && branches[0].sign == -1) || (j == branches[1].index && branches[1].sign == -1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
 
 											//region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Red);
 										}
@@ -690,20 +690,20 @@ namespace TC2.Conquest
 									if (mouse.GetKeyDown(Mouse.Key.Left))
 									{
 										ref var route = ref edit_route_a.GetRefOrDefault();
-										route = new Road.Junction.Route((ushort)junction_index, (byte)segment_index, (sbyte)c_alt_sign);
+										route = new Road.Junction.Branch((ushort)junction_index, (byte)segment_index, (sbyte)c_alt_sign);
 
-										//routes[0].junction_index = (ushort)junction_index;
-										//routes[0].index = (byte)segment_index;
-										//routes[0].sign = (sbyte)c_alt_sign;
+										//branches[0].junction_index = (ushort)junction_index;
+										//branches[0].index = (byte)segment_index;
+										//branches[0].sign = (sbyte)c_alt_sign;
 									}
 									else if (mouse.GetKeyDown(Mouse.Key.Right))
 									{
 										ref var route = ref edit_route_b.GetRefOrDefault();
-										route = new Road.Junction.Route((ushort)junction_index, (byte)segment_index, (sbyte)c_alt_sign);
+										route = new Road.Junction.Branch((ushort)junction_index, (byte)segment_index, (sbyte)c_alt_sign);
 
-										//routes[1].junction_index = (ushort)junction_index;
-										//routes[1].index = (byte)segment_index;
-										//routes[1].sign = (sbyte)c_alt_sign;
+										//branches[1].junction_index = (ushort)junction_index;
+										//branches[1].index = (byte)segment_index;
+										//branches[1].sign = (sbyte)c_alt_sign;
 
 									}
 								}
@@ -711,8 +711,8 @@ namespace TC2.Conquest
 
 							DrawRoute(ref edit_route_a.GetRefOrNull());
 							DrawRoute(ref edit_route_b.GetRefOrNull());
-							//DrawRoute(ref routes[0]);
-							//DrawRoute(ref routes[1]);
+							//DrawRoute(ref branches[0]);
+							//DrawRoute(ref branches[1]);
 
 							//if (RoadNav.Astar.Path.Count > 0)
 							//{
@@ -732,9 +732,9 @@ namespace TC2.Conquest
 							//	}
 							//}
 
-							if (routes != null)
+							if (branches != null)
 							{
-								foreach (ref var route in routes)
+								foreach (ref var route in branches)
 								{
 									DrawRoute(ref route);
 								}
@@ -742,10 +742,10 @@ namespace TC2.Conquest
 
 							if (false)
 							{
-								var junction_index_tmp = (int)routes[1].junction_index;
-								var sign_tmp = routes[1].sign;
-								var road_segment_tmp_b = road_junctions[junction_index_tmp].segments[routes[1].index];
-								var road_segment_tmp_c = road_junctions[junction_index_tmp].segments[routes[1].index];
+								var junction_index_tmp = (int)branches[1].junction_index;
+								var sign_tmp = branches[1].sign;
+								var road_segment_tmp_b = road_junctions[junction_index_tmp].segments[branches[1].index];
+								var road_segment_tmp_c = road_junctions[junction_index_tmp].segments[branches[1].index];
 								road_segment_tmp_c.index = (byte)(road_segment_tmp_c.index + sign_tmp);
 
 								GUI.DrawLine(Vector2.Transform(road_segment_tmp_b.GetPosition(), mat_l2c), Vector2.Transform(road_segment_tmp_c.GetPosition(), mat_l2c), Color32BGRA.Green, layer: GUI.Layer.Foreground, thickness: 2.00f);
@@ -803,7 +803,7 @@ namespace TC2.Conquest
 											//road_segment_tmp_c = seg;
 											//road_segment_tmp_c.index = (byte)(road_segment_tmp_c.index + sign_new);
 
-											var route = new Road.Junction.Route((ushort)junction_index_tmp, res.segment_index, (sbyte)res.sign);
+											var route = new Road.Junction.Branch((ushort)junction_index_tmp, res.segment_index, (sbyte)res.sign);
 											DrawRoute(ref route);
 
 											sign_tmp = (sbyte)res.sign;
@@ -811,7 +811,7 @@ namespace TC2.Conquest
 									}
 									else
 									{
-										GUI.DrawTextCentered("fail", Vector2.Transform(road_junctions[routes[1].junction_index].pos, mat_l2c), size: 64, layer: GUI.Layer.Foreground);
+										GUI.DrawTextCentered("fail", Vector2.Transform(road_junctions[branches[1].junction_index].pos, mat_l2c), size: 64, layer: GUI.Layer.Foreground);
 									}
 								}
 							}
@@ -854,7 +854,7 @@ namespace TC2.Conquest
 							//				draw = true;
 							//				region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Green);
 							//			}
-							//			//if (draw || (j == routes[0].index && routes[0].sign == 1) || (j == routes[1].index && routes[1].sign == 1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == routes[0].index && routes[0].sign == 1) || (j == routes[1].index && routes[1].sign == 1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
+							//			//if (draw || (j == branches[0].index && branches[0].sign == 1) || (j == branches[1].index && branches[1].sign == 1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == branches[0].index && branches[0].sign == 1) || (j == branches[1].index && branches[1].sign == 1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
 
 							//			//region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Red);
 							//		}
@@ -875,7 +875,7 @@ namespace TC2.Conquest
 							//				draw = true;
 							//				region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Green);
 							//			}
-							//			//if (draw || (j == routes[0].index && routes[0].sign == -1) || (j == routes[1].index && routes[1].sign == -1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == routes[0].index && routes[0].sign == -1) || (j == routes[1].index && routes[1].sign == -1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
+							//			//if (draw || (j == branches[0].index && branches[0].sign == -1) || (j == branches[1].index && branches[1].sign == -1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == branches[0].index && branches[0].sign == -1) || (j == branches[1].index && branches[1].sign == -1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
 
 							//			//region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Red);
 							//		}
@@ -923,7 +923,7 @@ namespace TC2.Conquest
 							//				draw = true;
 							//				region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Green);
 							//			}
-							//			//if (draw || (j == routes[0].index && routes[0].sign == 1) || (j == routes[1].index && routes[1].sign == 1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == routes[0].index && routes[0].sign == 1) || (j == routes[1].index && routes[1].sign == 1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
+							//			//if (draw || (j == branches[0].index && branches[0].sign == 1) || (j == branches[1].index && branches[1].sign == 1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == branches[0].index && branches[0].sign == 1) || (j == branches[1].index && branches[1].sign == 1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
 
 							//			//region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Red);
 							//		}
@@ -946,7 +946,7 @@ namespace TC2.Conquest
 							//				draw = true;
 							//				region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Green);
 							//			}
-							//			//if (draw || (j == routes[0].index && routes[0].sign == -1) || (j == routes[1].index && routes[1].sign == -1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == routes[0].index && routes[0].sign == -1) || (j == routes[1].index && routes[1].sign == -1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
+							//			//if (draw || (j == branches[0].index && branches[0].sign == -1) || (j == branches[1].index && branches[1].sign == -1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == branches[0].index && branches[0].sign == -1) || (j == branches[1].index && branches[1].sign == -1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
 
 							//			//region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Red);
 							//		}
@@ -956,7 +956,7 @@ namespace TC2.Conquest
 							//	out_indices.Sort();
 							//}
 
-							static void DrawRoute(ref Road.Junction.Route route)
+							static void DrawRoute(ref Road.Junction.Branch route)
 							{
 								if (route.IsNull()) return;
 
@@ -1212,13 +1212,13 @@ namespace TC2.Conquest
 										{
 											if (GUI.DrawButton("Generate Path", size: new Vector2(160, 40)))
 											{
-												Span<Road.Junction.Route> routes = stackalloc Road.Junction.Route[32];
+												Span<Road.Junction.Branch> branches = stackalloc Road.Junction.Branch[32];
 
-												if (RoadNav.Astar.TryFindPath(edit_route_a.Value, edit_route_b.Value, ref routes))
+												if (RoadNav.Astar.TryFindPath(edit_route_a.Value, edit_route_b.Value, ref branches))
 												{
-													App.WriteLine($"result: {routes.Length}");
+													App.WriteLine($"result: {branches.Length}");
 
-													route_data.routes = routes.ToArray();
+													route_data.branches = branches.ToArray();
 												}
 											}
 
