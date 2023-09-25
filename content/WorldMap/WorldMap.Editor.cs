@@ -28,7 +28,7 @@ namespace TC2.Conquest
 
 		public static IRoute.Target? edit_route_target;
 
-		public static void DrawBranch(ref Road.Junction.Branch branch)
+		public static void DrawBranch(ref Road.Junction.Branch branch, float size = 0.125f, Color32BGRA? color = null, int? index = null)
 		{
 			if (branch.IsNull()) return;
 
@@ -39,14 +39,14 @@ namespace TC2.Conquest
 
 
 			ref var region = ref World.GetGlobalRegion();
-			region.DrawDebugCircle(junc.pos, 0.125f, Color32BGRA.Magenta, filled: true);
+			region.DrawDebugCircle(junc.pos, size, color ?? Color32BGRA.Magenta, filled: true);
 			ref var pos = ref seg_b.GetPosition();
 			//if (pos.IsNotNull())
 			{
 				//region.DrawDebugLine(junc.pos, seg_a.GetPosition(), Color32BGRA.Cyan, 2.00f);
 				//region.DrawDebugLine(junc.pos, seg_b.GetPosition(), Color32BGRA.Cyan, 2.00f);
 				region.DrawDebugLine(junc.pos, pos, Color32BGRA.Yellow, 2.00f);
-				region.DrawDebugText(junc.pos - new Vector2(0.00f, 0.25f), $"[{branch.junction_index}] ({seg_a.index} to {seg_b.index}) {branch.sign}", Color32BGRA.White);
+				region.DrawDebugText(junc.pos - new Vector2(0.00f, 0.25f), $"[{index}] #{branch.junction_index}; {seg_a.index} to {seg_b.index} (sign: {branch.sign})", Color32BGRA.White);
 			}
 		}
 

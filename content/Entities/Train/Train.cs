@@ -156,7 +156,7 @@ namespace TC2.Conquest
 			public static Dictionary<int, JunctionNode> tls_closed_list;
 			//public static Stack<Road.Junction.Branch> Path = new();
 
-			public static bool TryFindPath(Road.Junction.Branch a, Road.Junction.Branch b, ref Span<Road.Junction.Branch> out_results)
+			public static bool TryFindPath(Road.Junction.Branch a, Road.Junction.Branch b, ref Span<Road.Junction.Branch> out_results, float dot_min = 0.50f, float dot_max = 1.00f)
 			{
 				ref var open_list = ref tls_open_list;
 				ref var closed_list = ref tls_closed_list;
@@ -176,8 +176,8 @@ namespace TC2.Conquest
 				open_list.Enqueue(current, -1.00f);
 
 				var ignore_limits = false;
-				var dot_min = 0.50f;
-				var dot_max = 1.00f;
+				//var dot_min = 0.50f;
+				//var dot_max = 1.00f;
 
 				var hash_end = new JunctionNode(b.junction_index, b.index, b.sign, -1.00f, 0.00f).GetHashCode();
 				Span<ResolvedJunction> resolved_junctions_buffer = stackalloc ResolvedJunction[8];
@@ -247,13 +247,13 @@ namespace TC2.Conquest
 					//Path.Push(temp.route);
 					temp = closed_list[temp.parent_hash];
 				}
-				while (temp.branch.junction_index != a.junction_index);
+				while (temp.branch.junction_index != a.junction_index && results_count < out_results.Length - 1);
 
 				//foreach (var route in Path)
 				//{
 				//	out_results[results_count++] = route;
 				//}
-				out_results[results_count++] = a;
+				//out_results[results_count++] = a;
 				out_results = out_results.Slice(0, results_count);
 				out_results.Reverse();
 
@@ -448,8 +448,16 @@ namespace TC2.Conquest
 				Wants_Repath = 1u << 4,
 			}
 
-			public ITransport.Handle h_transport;
 			public Train.Data.Flags flags;
+
+			public IRoute.Handle h_route;
+			public int current_branch_index;
+			public Road.Junction.Branch last_branch;
+			public FixedArray64<Road.Junction.Branch> branches;
+			public int branches_count;
+
+			public ILocation.Handle h_location_target;
+			public ITransport.Handle h_transport;
 
 			public Limit.Mask<ILocation.Buildings> mask_stop_buildings;
 			public Limit.Mask<ILocation.Categories> mask_stop_categories;
@@ -459,8 +467,6 @@ namespace TC2.Conquest
 			public Road.Segment segment_c;
 			public Road.Segment segment_stop;
 
-			public IRoute.Handle h_route;
-			public int current_branch_index;
 
 			public Vector2 direction_old;
 			public Vector2 direction;
@@ -472,7 +478,6 @@ namespace TC2.Conquest
 			public float dot_min = 0.70f;
 			public float dot_max = 1.00f;
 
-			public Road.Junction.Branch last_branch;
 
 			//public Road.Chain current_road;
 			//public int current_road_index;
@@ -481,6 +486,7 @@ namespace TC2.Conquest
 
 			public float speed = 0.50f;
 			public float speed_current = 0.50f;
+			public float speed_max = 1.50f;
 			public float brake = 0.50f;
 			public float acceleration = 0.50f;
 
@@ -488,9 +494,7 @@ namespace TC2.Conquest
 
 			public int sign;
 
-			public ILocation.Handle h_location_target;
-			public FixedArray32<Road.Junction.Branch> branches;
-			public int branches_count;
+
 
 			public Data()
 			{
@@ -512,21 +516,27 @@ namespace TC2.Conquest
 						ref var target = ref targets[0];
 						var branch_dst = target.branch_entry;
 
-						RoadNav.Astar.TryFindPath(branch_src, branch_dst, ref branches_span);
-
-#if CLIENT
-						foreach (ref var branch in branches_span)
+						if (RoadNav.Astar.TryFindPath(branch_src, branch_dst, ref branches_span, dot_min: this.dot_min, dot_max: this.dot_max))
 						{
-							if (branch.sign != 0)
+#if CLIENT
+							foreach (ref var branch in branches_span)
 							{
-								WorldMap.DrawBranch(ref branch);
+								if (branch.sign != 0)
+								{
+									WorldMap.DrawBranch(ref branch);
+								}
 							}
-						}
 #endif
 
-						this.branches_count = branches_span.Length - 1;
-						this.current_branch_index = 1;
-						this.flags |= Flags.Active;
+							this.branches_count = branches_span.Length;
+							this.current_branch_index = 0;
+							//this.flags |= Flags.Active;
+						}
+						else
+						{
+							this.branches_count = 0;
+							this.current_branch_index = 0;
+						}
 					}
 				}
 
@@ -615,16 +625,19 @@ namespace TC2.Conquest
 			region.DrawDebugDir(train.segment_b.GetPosition(), train.dir_bc, Color32BGRA.Yellow);
 			region.DrawDebugDir(train.segment_b.GetPosition(), train.direction, Color32BGRA.Magenta);
 
-			WorldMap.DrawBranch(ref train.last_branch);
+			WorldMap.DrawBranch(ref train.last_branch, size: 0.25f, color: Color32BGRA.Green);
 
 			//if (train.flags.HasAny(Data.Flags.Pathing))
+
+			if (train.branches_count > 0)
 			{
+				var i = 0;
 				var branches_span = train.branches.Slice(train.branches_count);
 				foreach (ref var branch in branches_span)
 				{
 					if (branch.sign != 0)
 					{
-						WorldMap.DrawBranch(ref branch);
+						WorldMap.DrawBranch(ref branch, index: i++);
 					}
 				}
 			}
@@ -666,7 +679,7 @@ namespace TC2.Conquest
 				}
 				else
 				{
-					train.speed = 1.00f;
+					train.speed = train.speed_max;
 				}
 
 				train.speed_current = Maths.MoveTowards(train.speed_current, train.speed, (train.speed_current < train.speed ? train.acceleration : train.brake) * info.DeltaTime);
@@ -683,7 +696,7 @@ namespace TC2.Conquest
 					var ok = false;
 
 					ref var route_data = ref train.h_route.GetData();
-					if (route_data.IsNotNull() && train.branches_count > 0)
+					if (route_data.IsNotNull() && train.branches_count > 0 && train.current_branch_index < train.branches_count)
 					{
 						var branches = train.branches.Slice(train.branches_count);
 
@@ -695,12 +708,14 @@ namespace TC2.Conquest
 							ok = true;
 						}
 
-//#if CLIENT
-//						region.DrawDebugCircle(junction.pos, 0.125f, Color32BGRA.Yellow, filled: true);
-//#endif
+						//#if CLIENT
+						//						region.DrawDebugCircle(junction.pos, 0.125f, Color32BGRA.Yellow, filled: true);
+						//#endif
 
-						App.WriteLine($"junc {junction_index}");
-
+						if (junction_index != -1)
+						{
+							App.WriteLine($"junc {junction_index}");
+						}
 
 						ref var branch = ref branches[train.current_branch_index];
 						if (junction_index == branch.junction_index)
@@ -733,7 +748,7 @@ namespace TC2.Conquest
 
 							ok = true;
 						}
-						else if (junction_index != -1 && !train.flags.HasAny(Data.Flags.Pathing))
+						else if (junction_index != -1)
 						{
 							//App.WriteLine($"junction {junction_index} ({train.segment_a.chain.h_prefecture}:{train.segment_a.chain.index}:{train.segment_a.index} to {train.segment_b.chain.h_prefecture}:{train.segment_b.chain.index}:{train.segment_b.index}to {segment_c_new.chain.h_prefecture}:{segment_c_new.chain.index}:{segment_c_new.index})");
 
@@ -742,9 +757,12 @@ namespace TC2.Conquest
 								//App.WriteLine($"advanced junction ({c_alt_dot} >= {train.dot_min} <= {train.dot_max}) ({train.segment_a.chain.h_prefecture}:{train.segment_a.chain.index}:{train.segment_a.index} to {train.segment_b.chain.h_prefecture}:{train.segment_b.chain.index}:{train.segment_b.index})");
 
 								train.last_branch = c_branch;
-								train.segment_c = c_alt_segment;
-								train.sign = c_alt_sign;
-								//train.dot_current = c_alt_dot;
+								if (train.flags.HasAny(Data.Flags.Pathing))
+								{
+									train.segment_c = c_alt_segment;
+									train.sign = c_alt_sign;
+								}
+									//train.dot_current = c_alt_dot;
 
 								ok = true;
 
