@@ -118,33 +118,16 @@ namespace TC2.Conquest
 			public static Dictionary<int, JunctionNode> ClosedList = new();
 			public static Stack<Road.Junction.Route> Path = new();
 
-			public static Stack<Road.Junction.Route> FindPath(Road.Junction.Route start, Road.Junction.Route end)
+			public static bool TryFindPath(Road.Junction.Route start, Road.Junction.Route end, ref Span<Road.Junction.Route> out_results)
 			{
 				var junctions_span = CollectionsMarshal.AsSpan(WorldMap.road_junctions);
-
-				//Node start = new Node(new Vector2((int)(Start.X / Node.NODE_SIZE), (int)(Start.Y / Node.NODE_SIZE)), true);
-				//Node end = new Node(new Vector2((int)(End.X / Node.NODE_SIZE), (int)(End.Y / Node.NODE_SIZE)), true);
-
-				//Stack<Road.Junction.Route> Path = new Stack<Road.Junction.Route>();
 
 				Path.Clear();
 				OpenList.Clear();
 				ClosedList.Clear();
 
-				//PriorityQueue<JunctionNode, float> OpenList = new PriorityQueue<JunctionNode, float>();
-				//Dictionary<int, JunctionNode> ClosedList = new();
-				//List<Node> adjacencies;
-
-				//WorldMap.TryGetNextJunction(start, sign, out var current_junction_index, out var segment_a);
-				//WorldMap.TryGetNextJunction(end, -sign, out var current_junction_index_end, out var segment_b);
-
-				//var node_start = new JunctionNode((ushort)current_junction_index, 0, (sbyte)sign, -1.00f, 0.00f);
-				//var node_end = new JunctionNode((ushort)current_junction_index_end, 0, (sbyte)-sign, -1.00f, 0.00f);
-
-				//var current = new JunctionNode((short)current_junction_index, 0, -1.00f, 0.00f);
 				var current = new JunctionNode(start.junction_index, start.index, start.sign, -1.00f, 0.00f);
 
-				// add start node to Open List
 				OpenList.Enqueue(current, current.F);
 
 				var ignore_limits = false;
@@ -153,35 +136,19 @@ namespace TC2.Conquest
 
 				var hash_end = new JunctionNode(end.junction_index, end.index, end.sign, -1.00f, 0.00f).GetHashCode();
 
-				//while (OpenList.Count != 0 && !ClosedList.Exists(x => x.junction_index == current_junction_index_end))
 				while (OpenList.Count != 0 && !ClosedList.ContainsKey(hash_end))
 				{
 					current = OpenList.Dequeue();
 					ClosedList.Add(current.GetHashCode(), current);
 
-					//if (current.route.sign == 0) continue;
-
-					//ref var junction = ref junctions_span[current.route.junction_index];
-					//var adjacencies = junction.segments.Slice(junction.segments_count);
-
-					//var seg_a = junction.segments[current.route.index];
-					//var seg_b = seg_a;
-					//seg_b.index = (byte)(seg_b.index + current.route.sign);
-					//App.WriteLine($"{junction.pos} {seg_a.index}; {seg_b.index}; {current.route.sign}");
-
-
 					var seg_a = junctions_span[current.route.junction_index].segments[current.route.index];
 					if (WorldMap.TryGetNextJunction(seg_a, current.route.sign, out var junction_a, out var segment_b, out var segment_c))
 					{
-						//if (junction_a == -1) continue;
-
 						ref var junction = ref junctions_span[junction_a];
-						//var adjacencies = junction.segments.Slice(junction.segments_count);
-
 						try
 						{
 							var dir = (segment_c.GetPosition() - segment_b.GetPosition()).GetNormalizedFast();
-							App.WriteLine($"{junction.pos} {segment_b.index}; {segment_c.index}; {dir}");
+							//App.WriteLine($"{junction.pos} {segment_b.index}; {segment_c.index}; {dir}");
 
 							Span<ResolvedJunction> resolved_junctions = stackalloc ResolvedJunction[8];
 							Train.ResolveJunction2(dir, ref junction, ignore_limits, dot_min, dot_max, ref resolved_junctions);
@@ -212,136 +179,44 @@ namespace TC2.Conquest
 									}
 								}
 							}
-
-							//for (var i = 0; i < adjacencies.Length; i++)
-							//{
-							//	ref var segment = ref adjacencies[i];
-							//	{
-							//		var sign = Train.GetSign(dir, ref segment, ignore_limits: ignore_limits, dot_min: dot_min, dot_max: dot_max);
-							//		//if (sign == 0) continue;
-
-							//		App.WriteLine($"[{i}] {junction.pos} {segment_b.index}; {segment_c.index} {sign}");
-
-							//		//if (WorldMap.TryGetNextJunction(segment, sign, out var junction_a, out var segment_b, out var segment_c))
-							//		{
-							//			var n = new JunctionNode((ushort)junction_a, (byte)segment_c.index, sign, current.weight, current.distance);
-							//			if (!ClosedList.ContainsKey(n.GetHashCode()))
-							//			{
-							//				bool isFound = false;
-							//				foreach (var oLNode in OpenList.UnorderedItems)
-							//				{
-							//					if (oLNode.Element == n)
-							//					{
-							//						isFound = true;
-							//					}
-							//				}
-							//				if (!isFound)
-							//				{
-							//					n.parent_hash = current.GetHashCode();
-							//					n.distance = Vector2.Distance(junctions_span[n.route.junction_index].pos, junctions_span[end.junction_index].pos); //  DistanceToTarget = Math.Abs(n.Position.X - end.Position.X) + Math.Abs(n.Position.Y - end.Position.Y);
-							//					n.cost = n.weight + current.cost;
-							//					OpenList.Enqueue(n, n.F);
-							//				}
-							//			}
-							//		}
-							//	}
-							//}
 						}
 						catch (Exception e)
 						{
 							App.WriteException(e);
 						}
 					}
-
-					//for (var i = 0; i < adjacencies.Length; i++)
-					//{
-					//	ref var segment = ref adjacencies[i];
-					//	{
-
-					//		var sign = Train.GetSign(dir, ref segment, ignore_limits: ignore_limits, dot_min: dot_min, dot_max: dot_max);
-					//		if (sign == 0) continue;
-
-					//		App.WriteLine($"[{i}] {junction.pos} {seg_a.index}; {seg_b.index}; {segment.index} {sign}");
-
-					//		if (WorldMap.TryGetNextJunction(segment, sign, out var junction_a, out var segment_b, out var segment_c))
-					//		{
-					//			var n = new JunctionNode((ushort)junction_a, (byte)segment_c.index, sign, current.weight, current.distance);
-					//			if (!ClosedList.ContainsKey(n.GetHashCode()))
-					//			{
-					//				bool isFound = false;
-					//				foreach (var oLNode in OpenList.UnorderedItems)
-					//				{
-					//					if (oLNode.Element == n)
-					//					{
-					//						isFound = true;
-					//					}
-					//				}
-					//				if (!isFound)
-					//				{
-					//					n.parent_hash = current.GetHashCode();
-					//					n.distance = Vector2.Distance(junctions_span[n.route.junction_index].pos, junctions_span[end.junction_index].pos); //  DistanceToTarget = Math.Abs(n.Position.X - end.Position.X) + Math.Abs(n.Position.Y - end.Position.Y);
-					//					n.cost = n.weight + current.cost;
-					//					OpenList.Enqueue(n, n.F);
-					//				}
-					//			}
-					//		}
-					//	}
-					//}
 				}
 
-				//foreach (var node in ClosedList.Values)
-				//{
-				//	World.GetGlobalRegion().DrawDebugCircle(junctions_span[node.route.junction_index].pos, 0.25f, Color32BGRA.Magenta, filled: true);
-				//}
+				var results_count = 0;
 
-				// construct path, if end was not closed return null
 				if (!ClosedList.ContainsKey(hash_end))
 				{
 					//App.WriteLine(ClosedList.Count);
-					return null;
+					return false;
 				}
 
-				// if all good, return path
-				//var temp = ClosedList[ClosedList.IndexOf(current)];
 				var temp = ClosedList[current.GetHashCode()];
-				//if (temp. == null) return null;
 				do
 				{
-					Path.Push(temp.route);
+					out_results[results_count++] = temp.route;
+					//Path.Push(temp.route);
 					temp = ClosedList[temp.parent_hash];
 				}
 				while (temp.route.junction_index != start.junction_index);
-				return Path;
+
+				//foreach (var route in Path)
+				//{
+				//	out_results[results_count++] = route;
+				//}
+				out_results[results_count++] = start;
+				out_results = out_results.Slice(0, results_count);
+				out_results.Reverse();
+
+				//Path.
+
+				return true;
 			}
-
-			//private List<Node> GetAdjacentNodes(Node n)
-			//{
-			//	List<Node> temp = new List<Node>();
-
-			//	int row = (int)n.Position.Y;
-			//	int col = (int)n.Position.X;
-
-			//	if (row + 1 < GridRows)
-			//	{
-			//		temp.Add(Grid[col][row + 1]);
-			//	}
-			//	if (row - 1 >= 0)
-			//	{
-			//		temp.Add(Grid[col][row - 1]);
-			//	}
-			//	if (col - 1 >= 0)
-			//	{
-			//		temp.Add(Grid[col - 1][row]);
-			//	}
-			//	if (col + 1 < GridCols)
-			//	{
-			//		temp.Add(Grid[col + 1][row]);
-			//	}
-
-			//	return temp;
-			//}
 		}
-
 	}
 
 	public static partial class Train
@@ -543,6 +418,7 @@ namespace TC2.Conquest
 				Active = 1u << 0,
 				Stuck = 1u << 1,
 				Docked = 1u << 2,
+				Pathing = 1u << 3,
 			}
 
 			public ITransport.Handle h_transport;
@@ -588,6 +464,15 @@ namespace TC2.Conquest
 
 			public Data()
 			{
+			}
+
+			public void Repath()
+			{
+				//var routes_span = this.routes.AsSpan();
+				//WorldMap.TryGetNextJunction(this.segment_b, this.sign, out var junction_index, out var road_b, out var road_c);
+
+				//RoadNav.Astar.TryFindPath(new(junction_index, )
+
 			}
 		}
 
@@ -737,7 +622,45 @@ namespace TC2.Conquest
 							//train.segment_c.index = (byte)(train.segment_c.index + train.sign);
 
 							train.current_route_index++;
+							if (train.current_route_index >= route_data.routes.Length)
+							{
+								train.flags.SetFlag(Data.Flags.Pathing, false);
+							}
+							else
+							{
+								train.flags.SetFlag(Data.Flags.Pathing, true);
+							}
 							train.current_route_index %= route_data.routes.Length;
+						
+							//if (train.current_route_index > route_data.routes.Length)
+							//{
+							//	train.current_route_index =
+							//}
+						}
+						else if (junction_index != -1 && !train.flags.HasAny(Data.Flags.Pathing))
+						{
+							//App.WriteLine($"junction {junction_index} ({train.segment_a.chain.h_prefecture}:{train.segment_a.chain.index}:{train.segment_a.index} to {train.segment_b.chain.h_prefecture}:{train.segment_b.chain.index}:{train.segment_b.index}to {segment_c_new.chain.h_prefecture}:{segment_c_new.chain.index}:{segment_c_new.index})");
+
+							if (WorldMap.TryAdvanceJunction(train.segment_a, train.segment_b, train.segment_c, junction_index, out var c_alt_segment, out var c_alt_sign, out var c_alt_dot, dot_min: train.dot_min, dot_max: train.dot_max, ignore_limits: !ok))
+							{
+								//App.WriteLine($"advanced junction ({c_alt_dot} >= {train.dot_min} <= {train.dot_max}) ({train.segment_a.chain.h_prefecture}:{train.segment_a.chain.index}:{train.segment_a.index} to {train.segment_b.chain.h_prefecture}:{train.segment_b.chain.index}:{train.segment_b.index})");
+
+								train.segment_c = c_alt_segment;
+								train.sign = c_alt_sign;
+								//train.dot_current = c_alt_dot;
+
+								ok = true;
+
+								//return;
+							}
+							else
+							{
+								//App.WriteLine($"skip junction ({c_alt_dot} >= {train.dot_min} <= {train.dot_max}; ({c_alt_segment.chain.h_prefecture}:{c_alt_segment.chain.index}:{c_alt_segment.index})");
+							}
+						}
+						else
+						{
+							//App.WriteLine($"no junction {junction_index}");
 						}
 					}
 					else

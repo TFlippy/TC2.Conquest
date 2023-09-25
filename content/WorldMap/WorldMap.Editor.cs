@@ -974,6 +974,7 @@ namespace TC2.Conquest
 									//region.DrawDebugLine(junc.pos, seg_a.GetPosition(), Color32BGRA.Cyan, 2.00f);
 									//region.DrawDebugLine(junc.pos, seg_b.GetPosition(), Color32BGRA.Cyan, 2.00f);
 									region.DrawDebugLine(junc.pos, pos, Color32BGRA.Yellow, 2.00f);
+									region.DrawDebugText(junc.pos - new Vector2(0.00f, 0.25f), $"[{route.junction_index}] ({seg_a.index} to {seg_b.index}) {route.sign} ", Color32BGRA.White);
 								}
 							}
 						}
@@ -1212,10 +1213,14 @@ namespace TC2.Conquest
 										{
 											if (GUI.DrawButton("Generate Path", size: new Vector2(160, 40)))
 											{
-												var result = RoadNav.Astar.FindPath(edit_route_a.Value, edit_route_b.Value);
-												App.WriteLine($"result: {result?.Count ?? 0}");
+												Span<Road.Junction.Route> routes = stackalloc Road.Junction.Route[32];
 
-												route_data.routes = result?.ToArray();
+												if (RoadNav.Astar.TryFindPath(edit_route_a.Value, edit_route_b.Value, ref routes))
+												{
+													App.WriteLine($"result: {routes.Length}");
+
+													route_data.routes = routes.ToArray();
+												}
 											}
 
 											if (GUI.DrawStyledEditorForType(ref route_data, new Vector2(GUI.GetRemainingWidth(), 32), false))
