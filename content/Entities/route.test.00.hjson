@@ -9,29 +9,29 @@
 			h_location: "krachtel"
 			branch_entry:
 			{
-				junction_index: 0
-				index: 0
-				sign: 0
+				junction_index: 76
+				index: 1
+				sign: 1
 			}
 			stop_time: 5.000
 		}
 		{
-			h_location: "null"
+			h_location: "skumpus"
 			branch_entry:
 			{
-				junction_index: 0
+				junction_index: 51
 				index: 0
-				sign: 0
+				sign: -1
 			}
 			stop_time: 0.000
 		}
 		{
-			h_location: "null"
+			h_location: "kolomaz"
 			branch_entry:
 			{
-				junction_index: 0
-				index: 0
-				sign: 0
+				junction_index: 55
+				index: 2
+				sign: -1
 			}
 			stop_time: 0.000
 		}

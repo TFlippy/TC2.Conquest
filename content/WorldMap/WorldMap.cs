@@ -223,7 +223,7 @@ namespace TC2.Conquest
 						var dir_tmp = (j_points[j_segment.index + 1] - j_pos).GetNormalizedFast();
 						var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
 
-						World.GetGlobalRegion().DrawDebugDir(j_pos, dir_tmp, Color32BGRA.Orange);
+						//World.GetGlobalRegion().DrawDebugDir(j_pos, dir_tmp, Color32BGRA.Orange);
 
 						if (dot_tmp > c_alt_dot && (ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
 						{
@@ -239,7 +239,7 @@ namespace TC2.Conquest
 						var dir_tmp = (j_points[j_segment.index - 1] - j_pos).GetNormalizedFast();
 						var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
 
-						World.GetGlobalRegion().DrawDebugDir(j_pos, dir_tmp, Color32BGRA.Orange);
+						//World.GetGlobalRegion().DrawDebugDir(j_pos, dir_tmp, Color32BGRA.Orange);
 
 						if (dot_tmp > c_alt_dot && (ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
 						{

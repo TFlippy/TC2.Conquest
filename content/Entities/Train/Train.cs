@@ -294,7 +294,7 @@ namespace TC2.Conquest
 					var dir_tmp = (j_points[j_segment.index + 1] - j_pos).GetNormalizedFast();
 					var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
 
-					var draw = false;
+					//var draw = false;
 					if (dot_tmp > c_alt_dot && (ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
 					{
 						c_alt = new(j_segment.chain, (byte)(j_segment.index + 1));
@@ -303,8 +303,8 @@ namespace TC2.Conquest
 
 						segment_index = (byte)(j);
 
-						draw = true;
-						region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Green);
+						//draw = true;
+						//region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Green);
 					}
 					//if (draw || (j == routes[0].index && routes[0].sign == 1) || (j == routes[1].index && routes[1].sign == 1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == routes[0].index && routes[0].sign == 1) || (j == routes[1].index && routes[1].sign == 1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
 
@@ -316,7 +316,7 @@ namespace TC2.Conquest
 					var dir_tmp = (j_points[j_segment.index - 1] - j_pos).GetNormalizedFast();
 					var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
 
-					var draw = false;
+					//var draw = false;
 					if (dot_tmp > c_alt_dot && (ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
 					{
 						c_alt = new(j_segment.chain, (byte)(j_segment.index - 1));
@@ -324,8 +324,8 @@ namespace TC2.Conquest
 						c_alt_sign = -1;
 
 						segment_index = (byte)(j);
-						draw = true;
-						region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Green);
+						//draw = true;
+						//region.DrawDebugDir(j_pos, dir_tmp * 0.65f, Color32BGRA.Green);
 					}
 					//if (draw || (j == routes[0].index && routes[0].sign == -1) || (j == routes[1].index && routes[1].sign == -1)) region.DrawDebugDir(j_pos, dir_tmp * 0.50f, (j == routes[0].index && routes[0].sign == -1) || (j == routes[1].index && routes[1].sign == -1) ? Color32BGRA.Green : Color32BGRA.Yellow, thickness: 3.00f);
 
@@ -407,7 +407,7 @@ namespace TC2.Conquest
 				var dir_tmp = (j_points[j_segment.index + 1] - j_pos).GetNormalizedFast();
 				var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
 
-				var draw = false;
+				//var draw = false;
 				if (dot_tmp > c_alt_dot && (ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
 				{
 					c_alt = new(j_segment.chain, (byte)(j_segment.index + 1));
@@ -421,7 +421,7 @@ namespace TC2.Conquest
 				var dir_tmp = (j_points[j_segment.index - 1] - j_pos).GetNormalizedFast();
 				var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
 
-				var draw = false;
+				//var draw = false;
 				if (dot_tmp > c_alt_dot && (ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
 				{
 					c_alt = new(j_segment.chain, (byte)(j_segment.index - 1));
@@ -452,6 +452,7 @@ namespace TC2.Conquest
 
 			public IRoute.Handle h_route;
 			public int current_branch_index;
+			public int current_route_index;
 			public Road.Junction.Branch last_branch;
 			public FixedArray64<Road.Junction.Branch> branches;
 			public int branches_count;
@@ -519,13 +520,13 @@ namespace TC2.Conquest
 						if (RoadNav.Astar.TryFindPath(branch_src, branch_dst, ref branches_span, dot_min: this.dot_min, dot_max: this.dot_max))
 						{
 #if CLIENT
-							foreach (ref var branch in branches_span)
-							{
-								if (branch.sign != 0)
-								{
-									WorldMap.DrawBranch(ref branch);
-								}
-							}
+							//foreach (ref var branch in branches_span)
+							//{
+							//	if (branch.sign != 0)
+							//	{
+							//		WorldMap.DrawBranch(ref branch);
+							//	}
+							//}
 #endif
 
 							this.branches_count = branches_span.Length;
@@ -621,26 +622,26 @@ namespace TC2.Conquest
 			}
 
 #if CLIENT
-			region.DrawDebugDir(train.segment_a.GetPosition(), train.dir_ab, Color32BGRA.Yellow);
-			region.DrawDebugDir(train.segment_b.GetPosition(), train.dir_bc, Color32BGRA.Yellow);
-			region.DrawDebugDir(train.segment_b.GetPosition(), train.direction, Color32BGRA.Magenta);
+			//region.DrawDebugDir(train.segment_a.GetPosition(), train.dir_ab, Color32BGRA.Yellow);
+			//region.DrawDebugDir(train.segment_b.GetPosition(), train.dir_bc, Color32BGRA.Yellow);
+			//region.DrawDebugDir(train.segment_b.GetPosition(), train.direction, Color32BGRA.Magenta);
 
-			WorldMap.DrawBranch(ref train.last_branch, size: 0.25f, color: Color32BGRA.Green);
+			//WorldMap.DrawBranch(ref train.last_branch, size: 0.25f, color: Color32BGRA.Green);
 
 			//if (train.flags.HasAny(Data.Flags.Pathing))
 
-			if (train.branches_count > 0)
-			{
-				var branches_span = train.branches.Slice(train.branches_count);
-				for (var i = train.current_branch_index; i < train.branches_count; i++)
-				{
-					ref var branch = ref branches_span[i];
-					if (branch.sign != 0)
-					{
-						WorldMap.DrawBranch(ref branch, index: i);
-					}
-				}
-			}
+			//if (train.branches_count > 0)
+			//{
+			//	var branches_span = train.branches.Slice(train.branches_count);
+			//	for (var i = train.current_branch_index; i < train.branches_count; i++)
+			//	{
+			//		ref var branch = ref branches_span[i];
+			//		if (branch.sign != 0)
+			//		{
+			//			WorldMap.DrawBranch(ref branch, index: i);
+			//		}
+			//	}
+			//}
 #endif
 
 			//{
