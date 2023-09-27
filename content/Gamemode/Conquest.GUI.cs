@@ -412,7 +412,7 @@ namespace TC2.Conquest
 								//	is_empty = characters.GetFilledCount() == 0;
 								//}
 
-								Crafting.Context.New(ref region, ent_selected_spawn, ent_selected_spawn, out var crafting_context, inventory: h_inventory, shipment: oc_shipment, search_radius: 0.00f);
+								Crafting.Context.New(ref region, ent_selected_spawn, ent_selected_spawn, out var crafting_context, inventory: h_inventory, shipment: oc_shipment, search_radius: 0.00f, h_faction: faction_id);
 
 								//var context = GUI.ItemContext.Begin();
 

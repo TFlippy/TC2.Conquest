@@ -62,7 +62,7 @@ namespace TC2.Conquest
 				if (this.h_character.IsValid())
 				{
 					faction_data.scout_count--;
-					s_faction.Sync(false);
+					s_faction.Sync();
 
 					Spawner.TryGenerateKits(ref random, this.h_character);
 
@@ -174,7 +174,7 @@ namespace TC2.Conquest
 				faction_data.scout_count += count;
 				faction_data.scout_count.Min(0);
 
-				faction_asset.Sync(false);
+				faction_asset.Sync();
 			}
 		}
 #endif
