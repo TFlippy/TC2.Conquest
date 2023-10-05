@@ -50,13 +50,21 @@ namespace TC2.Conquest
 		[ISystem.PostRender(ISystem.Mode.Single, ISystem.Scope.Global)]
 		public static void OnPostRender(ISystem.Info.Global info, ref Region.Data.Global region, [Source.Owned] ref World.Global world)
 		{
-			IScenario.WorldMap.Renderer.Submit();
-			Doodad.Renderer.Submit();
+			////App.WriteLine($"{(App.CurrentFrame - WorldMap.last_open_frame) <= 1}");
+			//App.WriteLine($"{WorldMap.IsOpen}");
+			if (WorldMap.IsOpen)
+			{
+				IScenario.WorldMap.Renderer.Submit();
+				Doodad.Renderer.Submit();
+			}
 
 			//App.WriteLine("OnPostRender");
 		}
 
-		public static Timestamp ts_last_draw;
+		private static ulong last_open_frame;
+		public static bool IsOpen => (App.CurrentFrame - WorldMap.last_open_frame) <= 1;
+
+		//public static Timestamp ts_last_draw;
 
 		public static void Draw(Vector2 size)
 		{
@@ -68,7 +76,11 @@ namespace TC2.Conquest
 			ref var region = ref world.GetGlobalRegion();
 			if (region.IsNull()) return;
 
-			ts_last_draw = Timestamp.Now();
+			last_open_frame = App.CurrentFrame;
+			//App.WriteLine($"{App.CurrentFrame - WorldMap.last_open_frame}");
+
+
+			//ts_last_draw = Timestamp.Now();
 
 			//var use_renderer = true;
 

@@ -979,14 +979,16 @@ namespace TC2.Conquest
 		[ISystem.LateGUI(ISystem.Mode.Single, ISystem.Scope.Global)]
 		public static void OnGUI(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] ref Train.Data train, [Source.Owned] ref Transform.Data transform)
 		{
-			var gui = new Train.TrainGUI()
+			if (WorldMap.IsOpen)
 			{
-				ent_train = entity,
-				train = train,
-				transform = transform
-			};
-			gui.Submit();
-
+				var gui = new Train.TrainGUI()
+				{
+					ent_train = entity,
+					train = train,
+					transform = transform
+				};
+				gui.Submit();
+			}
 
 			//App.WriteLine("GUI");
 		}
