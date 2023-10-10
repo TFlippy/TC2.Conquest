@@ -40,8 +40,12 @@ namespace TC2.Conquest
 
 		protected override void OnGUI()
 		{
-			GUI.worldmenu_widget_size_override = Client.GetRegion().IsNull() ? new Vector2(1680, 980) : new Vector2(1200, 800);
+
+			var has_region = Client.GetWorld().IsNotNull() && Client.GetRegion().IsNotNull();
+			GUI.worldmenu_widget_size_override = has_region ? new Vector2(1200, 800) : new Vector2(1680, 980);
 			GUI.RegionMenu.enabled = false;
+
+			//if (!has_region) GUI.GameMenu.widget_toggle_open = true;
 
 			if (Client.IsLoadingRegion())
 			{
