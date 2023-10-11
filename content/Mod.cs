@@ -41,7 +41,7 @@ namespace TC2.Conquest
 		protected override void OnGUI()
 		{
 
-			var has_region = Client.HasRegion();
+			var has_region = Client.HasRegion() || Client.IsLoadingRegion();
 			GUI.worldmenu_widget_size_override = has_region ? new Vector2(1200, 800) : new Vector2(1680, 980);
 			GUI.RegionMenu.enabled = false;
 
@@ -139,7 +139,7 @@ namespace TC2.Conquest
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void UpdateWorldmap(ISystem.Info.Global info)
 		{
-			var has_region = Client.HasRegion();
+			var has_region = Client.HasRegion() || Client.IsLoadingRegion();
 			var flags = Sidebar.Widget.Flags.No_Front_On_Focus;
 			var override_pos = default(Vector2?);
 			var override_size = GUI.worldmenu_widget_size_override;
@@ -154,6 +154,10 @@ namespace TC2.Conquest
 
 				override_size = rect_window.GetSize();
 				override_pos = rect_window.GetPosition(new(0.50f, 0.00f));
+			}
+			else
+			{
+				flags |= Sidebar.Widget.Flags.Resizable;
 			}
 
 			using (var widget = Sidebar.Widget.New("menu.worldmap", "World Map", new Sprite(GUI.tex_icons_widget, 16, 16, 9, 1), size: override_size ?? new Vector2(600, 700), override_pos: override_pos, order: -10.00f, flags: flags))
@@ -172,7 +176,7 @@ namespace TC2.Conquest
 						widget.SetActive(true);
 					}
 
-					//GUI.GameMenu.widget_toggle_open = null;
+					GUI.GameMenu.widget_toggle_open = null;
 				}
 
 				if (!has_region)
@@ -210,49 +214,49 @@ namespace TC2.Conquest
 
 		protected override void OnDrawRegionMenu()
 		{
-			ref var world = ref Client.GetWorld();
-			if (world.IsNull()) return;
+			//ref var world = ref Client.GetWorld();
+			//if (world.IsNull()) return;
 
-			//return;
-			var is_loading = Client.IsLoadingRegion();
+			////return;
+			//var is_loading = Client.IsLoadingRegion();
 
-			//GUI.RegionMenu.enabled = false;
-			//GUI.Menu.enable_background = true;
+			////GUI.RegionMenu.enabled = false;
+			////GUI.Menu.enable_background = true;
 
-			if (overlay_alpha < 0.98f)
-			{
-				//var viewport_size = new Vector2(1200, 800);
-				var viewport_size = GUI.CanvasSize - new Vector2(64, 64);
-				//var viewport_size = WorldMap.worldmap_window_size; // GUI.CanvasSize - new Vector2(64, 64);
-				//var window_pos = new Vector2(GUI.CanvasSize.X * 0.50f, 48);
-				//var window_pos = (GUI.CanvasSize * 0.50f) + WorldMap.worldmap_window_offset;
-				var window_pos = (GUI.CanvasSize * 0.50f);
-				//var pivot = new Vector2(0.50f, 0.00f);
-				var pivot = new Vector2(0.50f, 0.50f);
-				//using (var window = GUI.Window.Standalone("region_menu", position: GUI.CanvasSize * 0.00f, size: new Vector2(600, 400), pivot: new(0, 0), padding: new(8), force_position: true))
-				//using (var window = GUI.Window.Standalone("region_menu", position: window_pos, size: viewport_size, pivot: pivot, padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus))
-				//{
-				//	if (window.show)
-				//	{
-				//		GUI.DrawWindowBackground(GUI.tex_window_character);
-				//		WorldMap.Draw(GUI.GetRemainingSpace());
-				//	}
-				//}
-			}
-			//else
+			//if (overlay_alpha < 0.98f)
 			//{
-			//	using (var window = GUI.Window.HUD("worldmap.loading", size: GUI.CanvasSize, position: GUI.CanvasSize * 0.50f))
-			//	{
-			//		if (window.show)
-			//		{
-			//			var rect = window.group.GetOuterRect();
-
-			//			GUI.DrawTexture("white", GUI.GetCanvasRect(), layer: GUI.Layer.Foreground, color: Color32BGRA.Black.WithAlphaMult(0.80f));
-			//			GUI.DrawTexture("vignette", GUI.GetCanvasRect(), layer: GUI.Layer.Foreground, color: Color32BGRA.Black.WithAlphaMult(0.50f));
-			//			GUI.DrawTextCentered("Loading...", position: rect.GetPosition(), pivot: new(0.50f, 0.50f), font: GUI.Font.Superstar, size: 32, layer: GUI.Layer.Foreground);
-			//		}
-			//	}
+			//	//var viewport_size = new Vector2(1200, 800);
+			//	var viewport_size = GUI.CanvasSize - new Vector2(64, 64);
+			//	//var viewport_size = WorldMap.worldmap_window_size; // GUI.CanvasSize - new Vector2(64, 64);
+			//	//var window_pos = new Vector2(GUI.CanvasSize.X * 0.50f, 48);
+			//	//var window_pos = (GUI.CanvasSize * 0.50f) + WorldMap.worldmap_window_offset;
+			//	var window_pos = (GUI.CanvasSize * 0.50f);
+			//	//var pivot = new Vector2(0.50f, 0.00f);
+			//	var pivot = new Vector2(0.50f, 0.50f);
+			//	//using (var window = GUI.Window.Standalone("region_menu", position: GUI.CanvasSize * 0.00f, size: new Vector2(600, 400), pivot: new(0, 0), padding: new(8), force_position: true))
+			//	//using (var window = GUI.Window.Standalone("region_menu", position: window_pos, size: viewport_size, pivot: pivot, padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus))
+			//	//{
+			//	//	if (window.show)
+			//	//	{
+			//	//		GUI.DrawWindowBackground(GUI.tex_window_character);
+			//	//		WorldMap.Draw(GUI.GetRemainingSpace());
+			//	//	}
+			//	//}
 			//}
+			////else
+			////{
+			////	using (var window = GUI.Window.HUD("worldmap.loading", size: GUI.CanvasSize, position: GUI.CanvasSize * 0.50f))
+			////	{
+			////		if (window.show)
+			////		{
+			////			var rect = window.group.GetOuterRect();
+
+			////			GUI.DrawTexture("white", GUI.GetCanvasRect(), layer: GUI.Layer.Foreground, color: Color32BGRA.Black.WithAlphaMult(0.80f));
+			////			GUI.DrawTexture("vignette", GUI.GetCanvasRect(), layer: GUI.Layer.Foreground, color: Color32BGRA.Black.WithAlphaMult(0.50f));
+			////			GUI.DrawTextCentered("Loading...", position: rect.GetPosition(), pivot: new(0.50f, 0.50f), font: GUI.Font.Superstar, size: 32, layer: GUI.Layer.Foreground);
+			////		}
+			////	}
+			////}
 		}
 #endif
 	}
