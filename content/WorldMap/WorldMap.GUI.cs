@@ -351,9 +351,13 @@ namespace TC2.Conquest
 							var pos = (Vector2)asset_data.point;
 							var scale = 0.500f;
 							var asset_scale = Maths.Clamp(asset_data.size, 0.50f, 1.00f);
+							var icon = asset_data.icon;
 
-							var rect_text = AABB.Centered(Vector2.Transform(pos + asset_data.text_offset, mat_l2c), new Vector2(scale * zoom * asset_scale * 1.50f));
-							var rect_icon = AABB.Centered(Vector2.Transform(pos + asset_data.icon_offset, mat_l2c), new Vector2(scale * zoom * asset_scale * 1.50f));
+							//var rect_text = AABB.Centered(Vector2.Transform(pos + asset_data.text_offset, mat_l2c), new Vector2(scale * zoom * asset_scale * 1.50f));
+							var rect_icon = AABB.Centered(Vector2.Transform(pos + asset_data.icon_offset, mat_l2c), ((Vector2)icon.size) * region.GetWorldToCanvasScale() * 0.125f * 0.625f);
+
+							//GUI.DrawRect(rect_icon, layer: GUI.Layer.Foreground);
+							//GUI.DrawRect(rect_text, layer: GUI.Layer.Foreground);
 
 							var is_selected = h_selected_location == asset;
 							var is_pressed = GUI.ButtonBehavior(asset_data.name, rect_icon, out var is_hovered, out var is_held);
@@ -600,58 +604,7 @@ namespace TC2.Conquest
 				}
 
 				#region Interactions
-				if (WorldMap.selected_entity.IsValid())
-				{
-					ref var interactable = ref WorldMap.selected_entity.GetComponent<Interactable.Data>();
-					if (interactable.IsNotNull())
-					{
-						var sub_size = interactable.window_size;
-						//using (var window_sub = window.BeginChildWindow("worldmap.side.right.sub", GUI.AlignX.Left, GUI.AlignY.Top, pivot: new(1.00f, 0.00f), size: sub_size + new Vector2(16, 16), padding: new(8, 8), open: WorldMap.selected_entity.IsValid(), tex_bg: GUI.tex_window_popup_b))
-						using (var window_sub = GUI.Window.Standalone("worldmap.interact", pivot: new(0.50f, 0.00f), position: new(GUI.CanvasSize.X * 0.50f, 32), force_position: false, size: sub_size + new Vector2(16, 16), padding: new(8, 8)))
-						{
-							if (window_sub.show)
-							{
-								using (var dock = GUI.Dock.New((uint)WorldMap.selected_entity.id))
-								{
-									GUI.DrawWindowBackground(GUI.tex_window_popup_b, padding: new(4), color: GUI.col_default);
-
-									//if (GUI.DrawButton("A", size: new(100, 40)))
-									//{
-									//	dock.SetTab(0);
-									//}
-
-									//GUI.SameLine();
-
-									//if (GUI.DrawButton("B", size: new(100, 40)))
-									//{
-									//	dock.SetTab(1);
-									//}
-
-									using (var group_row = GUI.Group.New(size: new(GUI.RmX, 40)))
-									{
-										var count = dock.GetTabCount();
-										for (var i = 0u; i < count; i++)
-										{
-											if (i > 0) GUI.SameLine();
-											dock.DrawTab(i, new(0, group_row.size.Y));
-										}
-									}
-
-									GUI.SeparatorThick();
-
-									//GUI.SameLine();
-
-									//GUI.Text($"{dock.GetTab()}");
-
-
-
-									dock.SetSpace(GUI.Rm);
-
-								}
-							}
-						}
-					}
-				}
+				DrawInteractionWindow();
 				#endregion
 
 				#region Left
@@ -666,6 +619,66 @@ namespace TC2.Conquest
 				DrawDebugWindow(ref rect, zoom, ref mat_l2c);
 				#endregion
 			}
+		}
+
+		public static void DrawInteractionWindow()
+		{
+			if (WorldMap.selected_entity.id != 0) WorldMap.selected_entity_cached = WorldMap.selected_entity;
+			if (WorldMap.selected_entity_cached.IsValid() && WorldMap.IsOpen)
+			{
+				ref var interactable = ref WorldMap.selected_entity_cached.GetComponent<Interactable.Data>();
+				if (interactable.IsNotNull())
+				{
+					using (var dock = GUI.Dock.New((uint)WorldMap.selected_entity_cached.id))
+					{
+						var sub_size = interactable.window_size;
+						//using (var window_sub = window.BeginChildWindow("worldmap.side.right.sub", GUI.AlignX.Left, GUI.AlignY.Top, pivot: new(1.00f, 0.00f), size: sub_size + new Vector2(16, 16), padding: new(8, 8), open: WorldMap.selected_entity.IsValid(), tex_bg: GUI.tex_window_popup_b))
+						using (var window = GUI.Window.Standalone("worldmap.interact", pivot: new(0.50f, 0.00f), position: new(GUI.CanvasSize.X * 0.50f, 32), force_position: false, size: sub_size + new Vector2(16, 16), padding: new(8, 8)))
+						{
+							if (window.show)
+							{
+
+								GUI.DrawWindowBackground(GUI.tex_window_popup_b, padding: new(4), color: GUI.col_default);
+
+								//if (GUI.DrawButton("A", size: new(100, 40)))
+								//{
+								//	dock.SetTab(0);
+								//}
+
+								//GUI.SameLine();
+
+								//if (GUI.DrawButton("B", size: new(100, 40)))
+								//{
+								//	dock.SetTab(1);
+								//}
+
+								using (var group_row = GUI.Group.New(size: new(GUI.RmX, 40)))
+								{
+									var count = dock.GetTabCount();
+									for (var i = 0u; i < count; i++)
+									{
+										if (i > 0) GUI.SameLine();
+										dock.DrawTab(i, new(0, group_row.size.Y));
+									}
+								}
+
+								GUI.SeparatorThick();
+
+								//GUI.SameLine();
+
+								//GUI.Text($"{dock.GetTab()}");
+
+
+
+								dock.SetSpace(GUI.Rm);
+
+							}
+
+						}
+					}
+				}
+			}
+			WorldMap.selected_entity_cached = WorldMap.selected_entity;
 		}
 
 		private static void DrawLeftWindow(bool loading, ref AABB rect, float zoom, ref Matrix3x2 mat_l2c)
@@ -843,6 +856,7 @@ namespace TC2.Conquest
 									{
 										GUI.TitleCentered(location_data.name, size: 32, pivot: new(0.00f, 0.50f));
 									}
+									GUI.FocusableAsset(location_asset.GetHandle());
 
 									GUI.SeparatorThick();
 
@@ -1058,18 +1072,18 @@ namespace TC2.Conquest
 										//}
 									}
 
-									if (GUI.DrawButton("Test", size: new(100, 32)))
-									{
-										var rpc = new Location.DEV_TestRPC()
-										{
-											val = 1337
-										};
-										rpc.Send(ent_asset);
-									}
+									//if (GUI.DrawButton("Test", size: new(100, 32)))
+									//{
+									//	var rpc = new Location.DEV_TestRPC()
+									//	{
+									//		val = 1337
+									//	};
+									//	rpc.Send(ent_asset);
+									//}
 
-									GUI.SameLine();
+									//GUI.SameLine();
 
-									GUI.Text(ent_asset.GetIdentifier());
+									//GUI.Text(ent_asset.GetIdentifier());
 
 								}
 

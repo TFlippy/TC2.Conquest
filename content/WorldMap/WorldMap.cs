@@ -13,6 +13,7 @@ namespace TC2.Conquest
 		public const float km_per_unit = 2.00f;
 
 		public static Entity selected_entity;
+		public static Entity selected_entity_cached;
 
 		public static Dictionary<ILocation.Handle, Road.Segment> location_to_road = new();
 		public static Dictionary<ILocation.Handle, Road.Segment> location_to_rail = new();

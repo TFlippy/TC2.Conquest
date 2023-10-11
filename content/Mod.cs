@@ -41,7 +41,7 @@ namespace TC2.Conquest
 		protected override void OnGUI()
 		{
 
-			var has_region = Client.GetWorld().IsNotNull() && Client.GetRegion().IsNotNull();
+			var has_region = Client.HasRegion();
 			GUI.worldmenu_widget_size_override = has_region ? new Vector2(1200, 800) : new Vector2(1680, 980);
 			GUI.RegionMenu.enabled = false;
 
@@ -139,7 +139,24 @@ namespace TC2.Conquest
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void UpdateWorldmap(ISystem.Info.Global info)
 		{
-			using (var widget = Sidebar.Widget.New("menu.worldmap", "World Map", new Sprite(GUI.tex_icons_widget, 16, 16, 9, 1), size: GUI.worldmenu_widget_size_override ?? new Vector2(600, 700), order: -10.00f, flags: Sidebar.Widget.Flags.No_Front_On_Focus))
+			var has_region = Client.HasRegion();
+			var flags = Sidebar.Widget.Flags.No_Front_On_Focus;
+			var override_pos = default(Vector2?);
+			var override_size = GUI.worldmenu_widget_size_override;
+
+			var rect_canvas = GUI.GetCanvasRect();
+			var rect_window = rect_canvas;
+
+			if (!has_region)
+			{
+				flags |= Sidebar.Widget.Flags.Force_Open;
+				rect_window = rect_window.Pad(120, 40, 120, 120);
+
+				override_size = rect_window.GetSize();
+				override_pos = rect_window.GetPosition(new(0.50f, 0.00f));
+			}
+
+			using (var widget = Sidebar.Widget.New("menu.worldmap", "World Map", new Sprite(GUI.tex_icons_widget, 16, 16, 9, 1), size: override_size ?? new Vector2(600, 700), override_pos: override_pos, order: -10.00f, flags: flags))
 			{
 				ref readonly var kb = ref Control.GetKeyboard();
 				if (kb.GetKeyDown(Keyboard.Key.M) || GUI.GameMenu.widget_toggle_open.HasValue)
@@ -155,10 +172,18 @@ namespace TC2.Conquest
 						widget.SetActive(true);
 					}
 
-					GUI.GameMenu.widget_toggle_open = null;
+					//GUI.GameMenu.widget_toggle_open = null;
+				}
+
+				if (!has_region)
+				{
+					widget.SetActive(true);
 				}
 
 				//App.WriteLine("hi");
+
+
+
 
 				if (widget.state_flags.HasAny(Sidebar.Widget.StateFlags.Show) && !Client.IsLoadingRegion())
 				{
