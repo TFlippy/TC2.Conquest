@@ -623,7 +623,11 @@ namespace TC2.Conquest
 
 		public static void DrawInteractionWindow()
 		{
-			if (WorldMap.selected_entity.id != 0) WorldMap.selected_entity_cached = WorldMap.selected_entity;
+			if (WorldMap.selected_entity.id != 0)
+			{
+				WorldMap.selected_entity_cached = WorldMap.selected_entity;
+			}
+		
 			if (WorldMap.selected_entity_cached.IsValid() && WorldMap.IsOpen)
 			{
 				ref var interactable = ref WorldMap.selected_entity_cached.GetComponent<Interactable.Data>();
@@ -633,24 +637,17 @@ namespace TC2.Conquest
 					{
 						var sub_size = interactable.window_size;
 						//using (var window_sub = window.BeginChildWindow("worldmap.side.right.sub", GUI.AlignX.Left, GUI.AlignY.Top, pivot: new(1.00f, 0.00f), size: sub_size + new Vector2(16, 16), padding: new(8, 8), open: WorldMap.selected_entity.IsValid(), tex_bg: GUI.tex_window_popup_b))
-						using (var window = GUI.Window.Standalone("worldmap.interact", pivot: new(0.50f, 0.00f), position: new(GUI.CanvasSize.X * 0.50f, 32), force_position: false, size: sub_size + new Vector2(16, 16), padding: new(8, 8)))
+						using (var window = GUI.Window.Standalone("worldmap.interact", pivot: new(0.50f, 0.00f), position: new(GUI.CanvasSize.X * 0.50f, 32), force_position: false, size: sub_size + new Vector2(16, 16), size_min: interactable.window_size_min, padding: new(8, 8), flags: GUI.Window.Flags.Resizable))
 						{
+							if (window.appearing)
+							{
+								//App.WriteLine("appearing");
+								Sound.PlayGUI(GUI.sound_window_open, volume: 0.30f);
+							}
+
 							if (window.show)
 							{
-
 								GUI.DrawWindowBackground(GUI.tex_window_popup_b, padding: new(4), color: GUI.col_default);
-
-								//if (GUI.DrawButton("A", size: new(100, 40)))
-								//{
-								//	dock.SetTab(0);
-								//}
-
-								//GUI.SameLine();
-
-								//if (GUI.DrawButton("B", size: new(100, 40)))
-								//{
-								//	dock.SetTab(1);
-								//}
 
 								using (var group_row = GUI.Group.New(size: new(GUI.RmX, 40)))
 								{
@@ -664,21 +661,28 @@ namespace TC2.Conquest
 
 								GUI.SeparatorThick();
 
-								//GUI.SameLine();
-
-								//GUI.Text($"{dock.GetTab()}");
-
-
-
 								dock.SetSpace(GUI.Rm);
 
-							}
+								if (GUI.GetKeyboard().GetKeyDown(Keyboard.Key.Escape) && window.Close())
+								{
+									WorldMap.selected_entity = default;
+									//Sound.PlayGUI(GUI.sound_window_open, volume: 0.40f);
 
+								}
+
+								if (WorldMap.selected_entity_cached != 0 && WorldMap.selected_entity == 0)
+								{
+									//App.WriteLine("close");
+									Sound.PlayGUI(GUI.sound_window_close, volume: 0.30f);
+								}
+							}
 						}
 					}
 				}
 			}
 			WorldMap.selected_entity_cached = WorldMap.selected_entity;
+
+
 		}
 
 		private static void DrawLeftWindow(bool loading, ref AABB rect, float zoom, ref Matrix3x2 mat_l2c)
@@ -1139,6 +1143,17 @@ namespace TC2.Conquest
 								//		}
 								//	}
 								//}
+							}
+
+							if (GUI.GetKeyboard().GetKeyDown(Keyboard.Key.Escape) && window.Close())
+							{
+								WorldMap.selected_region_id = 0;
+								WorldMap.h_selected_location = 0;
+							}
+
+							if (WorldMap.h_selected_location == 0 && WorldMap.selected_region_id == 0)
+							{
+								Sound.PlayGUI(GUI.sound_window_close, volume: 0.30f);
 							}
 						}
 					}

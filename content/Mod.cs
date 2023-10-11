@@ -163,12 +163,12 @@ namespace TC2.Conquest
 				{
 					if (widget.state_flags.HasAny(Sidebar.Widget.StateFlags.Show) && (!GUI.GameMenu.widget_toggle_open ?? true))
 					{
-						Sound.PlayGUI(GUI.sound_window_close, volume: 0.40f);
+						Sound.PlayGUI(GUI.sound_window_close, volume: 0.30f);
 						widget.SetActive(false);
 					}
 					else if (GUI.GameMenu.widget_toggle_open ?? true)
 					{
-						Sound.PlayGUI(GUI.sound_window_open, volume: 0.40f);
+						Sound.PlayGUI(GUI.sound_window_open, volume: 0.30f);
 						widget.SetActive(true);
 					}
 
