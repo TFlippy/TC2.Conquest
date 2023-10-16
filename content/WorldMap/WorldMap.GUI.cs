@@ -291,46 +291,48 @@ namespace TC2.Conquest
 										//ref var map_info = ref world_info.[i];
 
 										ref var region_info = ref World.GetRegionInfo((byte)i);
-
-										ref var map_info = ref region_info.map_info.GetRefOrNull();
-										if (region_info.IsValid() && map_info.IsNotNull())
+										if (region_info.IsNotNull())
 										{
-											var icon_size = 0.75f; // * (zoom_inv * 128);
-											var color = GUI.font_color_title;
-											var color_frame = GUI.col_frame;
-											var color_thumbnail = GUI.col_white;
-
-											var map_pos = Vector2.Zero;
-											ref var location_data = ref map_info.h_location.GetData();
-											if (location_data.IsNotNull())
+											ref var map_info = ref region_info.map_info.GetRefOrNull();
+											if (map_info.IsNotNull())
 											{
-												map_pos = (Vector2)location_data.point;
-											}
+												var icon_size = 0.75f; // * (zoom_inv * 128);
+												var color = GUI.font_color_title;
+												var color_frame = GUI.col_frame;
+												var color_thumbnail = GUI.col_white;
 
-											var rect_text = AABB.Centered(Vector2.Transform(map_pos + map_info.text_offset, mat_l2c), new Vector2(icon_size * zoom * 0.50f));
-											var rect_icon = AABB.Centered(Vector2.Transform(map_pos + map_info.icon_offset, mat_l2c), new Vector2(icon_size * zoom * 1.00f));
-											var is_selected = selected_region_id == i || (location_data.IsNotNull() && h_selected_location == map_info.h_location);
-
-											var alpha = 0.50f;
-											if (is_selected)
-											{
-												alpha = 1.00f;
-												color_frame = GUI.col_white;
-												selected_region_id = (byte)i;
-											}
-
-											if (show_regions)
-											{
-												var map_asset = mod_context.GetMap(region_info.map);
-												if (map_asset != null)
+												var map_pos = Vector2.Zero;
+												ref var location_data = ref map_info.h_location.GetData();
+												if (location_data.IsNotNull())
 												{
-													var tex_thumbnail = map_asset.GetThumbnail();
-													if (tex_thumbnail != null)
-													{
-														GUI.DrawTexture(tex_thumbnail.Identifier, rect_icon, GUI.Layer.Window, color: color_thumbnail.WithAlphaMult(alpha));
-													}
+													map_pos = (Vector2)location_data.point;
+												}
 
-													GUI.DrawBackground(GUI.tex_frame_white, rect_icon, padding: new(2), color: color_frame.WithAlphaMult(alpha));
+												var rect_text = AABB.Centered(Vector2.Transform(map_pos + map_info.text_offset, mat_l2c), new Vector2(icon_size * zoom * 0.50f));
+												var rect_icon = AABB.Centered(Vector2.Transform(map_pos + map_info.icon_offset, mat_l2c), new Vector2(icon_size * zoom * 1.00f));
+												var is_selected = selected_region_id == i || (location_data.IsNotNull() && h_selected_location == map_info.h_location);
+
+												var alpha = 0.50f;
+												if (is_selected)
+												{
+													alpha = 1.00f;
+													color_frame = GUI.col_white;
+													selected_region_id = (byte)i;
+												}
+
+												if (show_regions)
+												{
+													var map_asset = mod_context.GetMap(region_info.map);
+													if (map_asset != null)
+													{
+														var tex_thumbnail = map_asset.GetThumbnail();
+														if (tex_thumbnail != null)
+														{
+															GUI.DrawTexture(tex_thumbnail.Identifier, rect_icon, GUI.Layer.Window, color: color_thumbnail.WithAlphaMult(alpha));
+														}
+
+														GUI.DrawBackground(GUI.tex_frame_white, rect_icon, padding: new(2), color: color_frame.WithAlphaMult(alpha));
+													}
 												}
 											}
 										}
@@ -843,7 +845,7 @@ namespace TC2.Conquest
 								for (var i = 0; i < Region.max_count; i++)
 								{
 									ref var region_info = ref World.GetRegionInfo((byte)i);
-									if (region_info.IsNotNull() && region_info.map_info.HasValue)
+									if (region_info.IsNotNull())
 									{
 										ref var map_info = ref region_info.map_info.GetRefOrNull();
 										if (map_info.IsNotNull() && map_info.h_location == h_selected_location)
@@ -865,7 +867,7 @@ namespace TC2.Conquest
 									GUI.SeparatorThick();
 
 									ref var region_info = ref World.GetRegionInfo(selected_region_id);
-									if (region_info.IsNotNull() && region_info.IsValid())
+									if (region_info.IsNotNull())
 									{
 										ref var map_info = ref region_info.map_info.GetRefOrNull();
 										if (map_info.IsNotNull() && map_info.h_location == h_selected_location)
