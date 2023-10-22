@@ -629,7 +629,7 @@ namespace TC2.Conquest
 			{
 				WorldMap.selected_entity_cached = WorldMap.selected_entity;
 			}
-		
+
 			if (WorldMap.selected_entity_cached.IsValid() && WorldMap.IsOpen)
 			{
 				ref var interactable = ref WorldMap.selected_entity_cached.GetComponent<Interactable.Data>();
@@ -1160,6 +1160,132 @@ namespace TC2.Conquest
 						}
 					}
 				}
+			}
+		}
+
+
+		public partial struct LocationGUI: IGUICommand
+		{
+			public Entity ent_location;
+			public Location.Data location;
+
+			public void Draw()
+			{
+				using (var window = GUI.Window.Interaction("Location###location.gui", this.ent_location))
+				{
+					this.StoreCurrentWindowTypeID(order: -150);
+					if (window.show)
+					{
+						ref var player = ref Client.GetPlayer();
+						ref var region = ref this.ent_location.GetRegionCommon();
+						//ref var map_info = ref region.GetMapInfo();
+						ref var location_data = ref this.location.h_location.GetData(out var s_location);
+
+						using (GUI.Group.New(size: GUI.Rm, padding: new(0)))
+						{
+							if (location_data.IsNotNull())
+							{
+								using (GUI.Group.New(new(GUI.RmX, 40), new(0, 0)))
+								{
+									using (var group_header = GUI.Group.New(new(GUI.RmX, 40), new(8, 0)))
+									{
+									}
+								}
+
+								GUI.SeparatorThick(margin: new(4, 4));
+
+								using (var group_main = GUI.Group.New(size: new Vector2(GUI.RmX, GUI.RmY), padding: new(4)))
+								{
+									group_main.DrawBackground(GUI.tex_panel);
+
+									var materials_filtered = IMaterial.Database.GetAssets().Where(x => x.data.commodity?.flags.HasAny(IMaterial.Commodity.Flags.Marketable) ?? false).ToArray();
+									var materials_filtered_span = materials_filtered.AsSpan();
+
+									Span<float> weights_span = stackalloc float[materials_filtered_span.Length];
+
+									using (var scrollbox = GUI.Scrollbox.New("scroll.economy", size: GUI.Rm))
+									{
+										// BUY
+										using (var group_buy = GUI.Group.New(size: new Vector2(GUI.RmX * 0.50f, GUI.RmY), padding: new(4)))
+										{
+											for (var i = 0; i < materials_filtered_span.Length; i++)
+											{
+												var material_asset = materials_filtered_span[i];
+												weights_span[i] = Market.CalculateBuyWeights(material_asset, ref location_data);
+											}
+											weights_span.Sort(materials_filtered_span);
+
+											for (var i = materials_filtered_span.Length - 1; i >= 0; i--)
+											{
+												using (var group_row = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(8, 0)))
+												{
+													if (group_row.IsVisible())
+													{
+														group_row.DrawBackground(GUI.tex_panel);
+
+														var material_asset = materials_filtered_span[i];
+														ref var material_data = ref material_asset.GetData();
+
+														GUI.TitleCentered(material_data.name, pivot: new(0.00f, 0.50f));
+														GUI.TextCentered($"{weights_span[i]:0.00}", pivot: new(1.00f, 0.50f));
+														//App.WriteLine($"BUY [{i:00}]: {materials_filtered_span[i].data.name,-32}{weights_span[i]:0.00}");
+													}
+												}
+											}
+										}
+
+										GUI.SameLine();
+
+										using (var group_sell = GUI.Group.New(size: new Vector2(GUI.RmX, GUI.RmY), padding: new(4)))
+										{
+											for (var i = 0; i < materials_filtered_span.Length; i++)
+											{
+												var material_asset = materials_filtered_span[i];
+												weights_span[i] = Market.CalculateSellWeights(material_asset, ref location_data);
+											}
+											weights_span.Sort(materials_filtered_span);
+
+											for (var i = materials_filtered_span.Length - 1; i >= 0; i--)
+											{
+												using (var group_row = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(8, 0)))
+												{
+													if (group_row.IsVisible())
+													{
+														group_row.DrawBackground(GUI.tex_panel);
+
+														var material_asset = materials_filtered_span[i];
+														ref var material_data = ref material_asset.GetData();
+
+														GUI.TitleCentered(material_data.name, pivot: new(0.00f, 0.50f));
+														GUI.TextCentered($"{weights_span[i]:0.00}", pivot: new(1.00f, 0.50f));
+														//App.WriteLine($"BUY [{i:00}]: {materials_filtered_span[i].data.name,-32}{weights_span[i]:0.00}");
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+
+		[ISystem.EarlyGUI(ISystem.Mode.Single, ISystem.Scope.Global)]
+		public static void OnGUI(Entity entity,
+		[Source.Owned] in Location.Data location,
+		[Source.Owned] in Interactable.Data interactable)
+		{
+			if (interactable.show)
+			{
+				var gui = new LocationGUI()
+				{
+					ent_location = entity,
+					location = location,
+				};
+				gui.Submit();
 			}
 		}
 #endif

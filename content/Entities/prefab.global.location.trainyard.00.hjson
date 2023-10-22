@@ -39,8 +39,8 @@ faction:
 
 stockpile:
 {
-	capacity_items: 8
-	capacity_shipments: 16
+	capacity_items: 16
+	capacity_shipments: 14
 	capacity_characters: 8
 }
 
