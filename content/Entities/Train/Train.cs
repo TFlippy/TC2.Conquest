@@ -460,8 +460,8 @@ namespace TC2.Conquest
 			public ILocation.Handle h_location_target;
 			public ITransport.Handle h_transport;
 
-			public Limit.Mask<ILocation.Buildings> mask_stop_buildings;
-			public Limit.Mask<ILocation.Categories> mask_stop_categories;
+			public Filter.Mask<ILocation.Buildings> mask_stop_buildings;
+			public Filter.Mask<ILocation.Categories> mask_stop_categories;
 
 			public Road.Segment segment_a;
 			public Road.Segment segment_b;
