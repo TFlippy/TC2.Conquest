@@ -992,7 +992,7 @@ namespace TC2.Conquest
 											ref var doodad = ref scenario_data.doodads.AsSpan().GetRefAtIndexOrNull(index_doodad);
 											if (doodad.IsNotNull())
 											{
-												var changed = GUI.DrawStyledEditorForType(ref doodad, new Vector2(GUI.RmX, 32));
+												var changed = GUI.DrawStyledEditorForType(ref doodad, new Vector2(GUI.RmX, 32), show_label: true);
 												if (changed)
 												{
 													hs_pending_asset_saves.Add(scenario_asset);

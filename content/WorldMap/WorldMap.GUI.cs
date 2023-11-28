@@ -659,6 +659,18 @@ namespace TC2.Conquest
 										if (i > 0) GUI.SameLine();
 										dock.DrawTab(i, new(0, group_row.size.Y));
 									}
+
+									using (var group_close = group_row.Split(size: new Vector2(group_row.size.Y), align_x: GUI.AlignX.Right, align_y: GUI.AlignY.Center))
+									{
+										//group_close.DrawBackground(GUI.tex_window_sidebar_b);
+
+										if (GUI.DrawSpriteButton("close", new("ui_icons_window", 16, 16, 0, 0), size: GUI.Rm, color: GUI.font_color_red_b.WithColorMult(0.75f), color_hover: GUI.font_color_red_b.WithColorMult(1.00f), play_sound: false))
+										{
+											//window.Close();
+											WorldMap.selected_entity = default;
+										}
+										GUI.DrawHoverTooltip("Close");
+									}
 								}
 
 								GUI.SeparatorThick();
@@ -993,7 +1005,7 @@ namespace TC2.Conquest
 
 																GUI.SeparatorThick(new(-4, -4));
 
-																using (GUI.Group.New(padding: new(2)))
+																using (GUI.Group.New(size: new(GUI.RmX, 0.00f), padding: new(2)))
 																{
 																	using (GUI.Wrap.Push(GUI.RmX))
 																	{

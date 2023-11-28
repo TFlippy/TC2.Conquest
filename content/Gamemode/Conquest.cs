@@ -310,7 +310,7 @@ namespace TC2.Conquest
 
 							GUI.SeparatorThick();
 
-							using (GUI.Group.New(padding: new Vector2(4, 4)))
+							using (GUI.Group.New(size: new(GUI.RmX, 0.00f), padding: new Vector2(4, 4)))
 							{
 								using (GUI.Group.New(size: new(GUI.RmX * 0.50f, 0), padding: new Vector2(8, 4)))
 								{
