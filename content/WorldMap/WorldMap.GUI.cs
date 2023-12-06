@@ -623,6 +623,30 @@ namespace TC2.Conquest
 			}
 		}
 
+		public static void FocusLocation(ILocation.Handle h_location)
+		{
+			GUI.RegionMenu.ToggleWidget(true);
+			WorldMap.h_selected_location = h_location;
+
+			ref var location_data = ref h_location.GetData(out var location_asset);
+			if (location_data.IsNotNull())
+			{
+				ref var location_parent_data = ref location_data.h_location_parent.GetData(out var location_parent_asset);
+				if (location_parent_data.IsNotNull())
+				{
+					WorldMap.h_selected_location = location_parent_asset;
+					WorldMap.selected_entity = location_parent_asset.entity;
+					WorldMap.worldmap_offset_target = (Vector2)location_parent_data.point;
+				}
+				else
+				{
+					WorldMap.h_selected_location = location_asset;
+					WorldMap.selected_entity = location_asset.entity;
+					WorldMap.worldmap_offset_target = (Vector2)location_data.point;
+				}
+			}
+		}
+
 		public static void DrawInteractionWindow()
 		{
 			if (WorldMap.selected_entity.id != 0)
@@ -630,7 +654,7 @@ namespace TC2.Conquest
 				WorldMap.selected_entity_cached = WorldMap.selected_entity;
 			}
 
-			if (WorldMap.selected_entity_cached.IsValid() && WorldMap.IsOpen)
+			if (WorldMap.selected_entity_cached.IsAlive() && WorldMap.IsOpen)
 			{
 				ref var interactable = ref WorldMap.selected_entity_cached.GetComponent<Interactable.Data>();
 				if (interactable.IsNotNull())
@@ -898,14 +922,25 @@ namespace TC2.Conquest
 															var color = GUI.col_button_ok;
 															var alpha = 1.00f;
 
-															if (GUI.DrawButton("Enter", size: GUI.Rm, font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+															if (Client.GetRegionID() != selected_region_id)
 															{
-																Client.RequestSetActiveRegion(selected_region_id, delay_seconds: 0.75f);
+																if (GUI.DrawButton("Enter", size: GUI.Rm, font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+																{
+																	Client.RequestSetActiveRegion(selected_region_id, delay_seconds: 0.75f);
 
-																window.Close();
-																GUI.RegionMenu.ToggleWidget(false);
+																	window.Close();
+																	GUI.RegionMenu.ToggleWidget(false);
 
-																//Client.TODO_LoadRegion(region_id);
+																	//Client.TODO_LoadRegion(region_id);
+																}
+															}
+															else
+															{
+																color = GUI.col_button_error;
+																if (GUI.DrawButton("Exit", size: GUI.Rm, font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+																{
+																	Client.RequestSetActiveRegion(0, delay_seconds: 0.10f);
+																}
 															}
 														}
 													}
@@ -957,7 +992,7 @@ namespace TC2.Conquest
 
 											using (GUI.Wrap.Push(GUI.RmX))
 											{
-												GUI.LabelShaded("Type:", location_data.type, font_a: GUI.Font.Superstar, size_a: 20, font_b: GUI.Font.Superstar, size_b: 20);
+												GUI.LabelShaded("Type:", location_data.type.GetEnumName(), font_a: GUI.Font.Superstar, size_a: 20, font_b: GUI.Font.Superstar, size_b: 20);
 											}
 										}
 
