@@ -34,8 +34,7 @@ namespace TC2.Conquest
 
 						var reset = false;
 
-						ref var origin_data = ref h_selected_origin.GetData();
-
+						var character_flags = default(Character.Flags);
 						var sprite_head = default(Sprite);
 						var sprite_hair = default(Sprite);
 						var sprite_beard = default(Sprite);
@@ -52,6 +51,12 @@ namespace TC2.Conquest
 
 							hair_color = species_data.hair_colors.AsSpan().GetLerped(selected_hair_color_ratio);
 							hair_color.a = 255;
+						}
+
+						ref var origin_data = ref h_selected_origin.GetData();
+						if (origin_data.IsNotNull())
+						{
+							character_flags = origin_data.character_flags;
 						}
 
 						ref var hair_data = ref h_selected_hair.GetData();
@@ -85,7 +90,7 @@ namespace TC2.Conquest
 									{
 										group_b.DrawBackground(GUI.tex_window);
 
-										GUI.AssetInput2("edit.species", ref h_selected_species, size: new(128, GUI.RmY), show_label: false, tab_height: 24.00f,
+										GUI.AssetInput2("edit.species", ref h_selected_species, size: new(160, GUI.RmY), show_label: false, tab_height: 24.00f, close_on_select: true,
 										filter: (x) => x.data.flags.HasAll(ISpecies.Flags.Sapient),
 										draw: (asset, group, is_title) =>
 										{
@@ -101,7 +106,7 @@ namespace TC2.Conquest
 
 										GUI.SameLine();
 
-										GUI.AssetInput2("edit.origin", ref h_selected_origin, size: new(300, GUI.RmY), show_label: false, tab_height: 40.00f,
+										GUI.AssetInput2("edit.origin", ref h_selected_origin, size: new(GUI.RmX, GUI.RmY), show_label: false, tab_height: 40.00f, close_on_select: true,
 											filter: (x) => x.data.species == h_selected_species && x.data.flags.HasAll(IOrigin.Flags.Special),
 											draw: (asset, group, is_title) =>
 											{
@@ -134,8 +139,9 @@ namespace TC2.Conquest
 
 										GUI.SameLine();
 
-										GUI.AssetInput2("edit.hair", ref h_selected_hair, size: new(128, GUI.RmY), show_label: false, tab_height: 64.00f,
-											filter: (x) => x.data.species == h_selected_species && x.data.gender == selected_gender && x.data.flags.HasAll(IHair.Flags.Hair),
+										GUI.AssetInput2("edit.hair", ref h_selected_hair, size: new(160, GUI.RmY), show_label: false, tab_height: 64.00f, close_on_select: false,
+											filter: (x) => x.data.species == h_selected_species && x.data.gender == selected_gender && x.data.flags.HasAll(IHair.Flags.Hair)
+											&& (x.data.character_flags.IsEmpty() || character_flags.HasAny(x.data.character_flags)) && (x.data.character_flags_exclude.IsEmpty() || !character_flags.HasAny(x.data.character_flags_exclude)),
 											draw: (asset, group, is_title) =>
 											{
 												if (asset != null)
@@ -160,8 +166,9 @@ namespace TC2.Conquest
 
 										GUI.SameLine();
 
-										GUI.AssetInput2("edit.beard", ref h_selected_beard, size: new(128, GUI.RmY), show_label: false, tab_height: 64.00f,
-											filter: (x) => x.data.species == h_selected_species && x.data.gender == selected_gender && x.data.flags.HasAll(IHair.Flags.Beard),
+										GUI.AssetInput2("edit.beard", ref h_selected_beard, size: new(160, GUI.RmY), show_label: false, tab_height: 64.00f, close_on_select: false,
+											filter: (x) => x.data.species == h_selected_species && x.data.gender == selected_gender && x.data.flags.HasAll(IHair.Flags.Beard)
+											&& (x.data.character_flags.IsEmpty() || character_flags.HasAny(x.data.character_flags)) && (x.data.character_flags_exclude.IsEmpty() || !character_flags.HasAny(x.data.character_flags_exclude)),
 											draw: (asset, group, is_title) =>
 											{
 												if (asset != null)
@@ -183,6 +190,10 @@ namespace TC2.Conquest
 													GUI.TitleCentered($"Beard:\n<none>", pivot: new(0.00f, 0.50f), offset: new(8, 0), size: 16);
 												}
 											});
+
+										GUI.SameLine();
+
+										GUI.SliderFloat("Hair Color", ref selected_hair_color_ratio, 0.00f, 1.00f, size: GUI.Rm);
 									}
 								}
 							}
