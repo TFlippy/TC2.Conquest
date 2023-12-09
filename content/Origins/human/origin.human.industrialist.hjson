@@ -11,8 +11,20 @@
 	gender_ratio: 0.070
 	species: "human"
 	faction: "null"
-	flags: selectable, special
-	character_flags: educated, nobility, professional, civillian, commerce, engineer, rich, sedentary, politician, upper_class, elite_class
+	cost: 450.000
+	flags: special
+	
+	character_flags: educated, professional, civillian, commerce, engineer, rich, sedentary, upper_class, elite_class
+	character_flags_optional: bureaucrat, construction, scientist, criminal, military, medical, nobility, chemist, insane, alcoholic, naval, arcane, artist, brawler, outdoor, strong, junkie, evil, politician, terrorist
+	
+	industry_flags: none
+	industry_flags_optional: agricultural, mining, manufacturing, low_tech, high_tech, metallurgy, scrap, chemical, automotive, power, military, logging, hunting, arcane, construction, food, textile, fishing, slaves, munitions, pharmaceutical, railway, tobacco, literature, propaganda, engineering, weapons, beverage, aviation, naval, furniture, luxury, jewelry, penal, alcohol
+	
+	service_flags: none
+	service_flags_optional: none
+	
+	crime_flags: none
+	crime_flags_optional: embezzlement, slavery, trafficking, bribery, corruption, fraud, terrorism, forgery, extortion, espionage
 	
 	conditions:
 	{

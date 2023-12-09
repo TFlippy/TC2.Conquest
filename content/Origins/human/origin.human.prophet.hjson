@@ -5,14 +5,26 @@
 		TODO: Desc
 		'''
 	
-	money: 0.000
+	money: 3.000
 	age: [18.000, 25.000, 30.000, 40.000, 50.000, 68.000, 70.000, 100.000]
 	genders: male, female
-	gender_ratio: 0.080
+	gender_ratio: 0.310
 	species: "human"
 	faction: "null"
-	flags: selectable, special
-	character_flags: none
+	cost: 100.000
+	flags: special
+	
+	character_flags: social, lowlife, insane, nomad, pest, fanatic, lower_class
+	character_flags_optional: criminal, educated, nobility, engineer, culinary, alcoholic, nomad, arcane, entertainer, illiterate, artist, brawler, outdoor, strong, junkie, evil, thief, murderer, terrorist
+	
+	industry_flags: recruitment, training, education, media, propaganda
+	industry_flags_optional: entertainment, tourism, hospitality, kobolds, colonization, exploration, criminal, literature, alcohol
+	
+	service_flags: training, recruitment, propaganda, indoctrination
+	service_flags_optional: education, entertainment, advertising, relaxation, imprisonment, labor, extortion
+	
+	crime_flags: fraud
+	crime_flags_optional: theft, murder, drugs, slavery, prostitution, trafficking, vandalism, fraud, terrorism, smuggling, forgery, arson, extortion
 	
 	conditions:
 	{

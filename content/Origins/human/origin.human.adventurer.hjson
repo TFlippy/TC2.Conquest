@@ -13,8 +13,18 @@
 	faction: "null"
 	cost: 50.000
 	flags: selectable, special
+	
 	character_flags: armed, nomad, outdoor, strong
-	character_flags_optional: criminal, nobility, hunter, soldier, insane, alcoholic, naval, entertainer, junkie, evil, thief, murderer, terrorist, fanatic
+	character_flags_optional: criminal, educated, nobility, hunter, culinary, soldier, insane, alcoholic, naval, entertainer, artist, brawler, junkie, evil, thief, murderer, terrorist, fanatic
+	
+	industry_flags: exploration, mercenary
+	industry_flags_optional: hunting, entertainment, colonization, security, criminal, trading, commerce, aviation, naval, intel, alcohol
+	
+	service_flags: none
+	service_flags_optional: entertainment, recruitment, espionage, security, gambling, mercenary, advertising, extortion, sabotage
+	
+	crime_flags: none
+	crime_flags_optional: piracy, theft, murder, drugs, prostitution, vandalism, fraud, terrorism, smuggling, arson, extortion, raiding, pillaging, espionage
 	
 	conditions:
 	{
