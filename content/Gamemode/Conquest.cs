@@ -130,7 +130,7 @@ namespace TC2.Conquest
 			ref var region = ref context.GetRegion();
 			if (!region.IsNull())
 			{
-				ref var g_conquest = ref region.GetSingletonComponent<Conquest.Gamemode>();
+				ref var g_conquest = ref region.GetGlobalComponent<Conquest.Gamemode>();
 				if (!g_conquest.IsNull())
 				{
 					var sync = false;
@@ -139,7 +139,7 @@ namespace TC2.Conquest
 
 					if (sync)
 					{
-						region.SyncSingleton(ref g_conquest);
+						region.SyncGlobal(ref g_conquest);
 					}
 				}
 			}

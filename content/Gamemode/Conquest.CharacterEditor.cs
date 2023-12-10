@@ -1,8 +1,70 @@
 ﻿
+using TC2.Base.Components;
+
 namespace TC2.Conquest
 {
 	public static partial class Conquest
 	{
+		public struct CreateCharacterRPC: Net.IGRPC<Conquest.Gamemode>
+		{
+			public CustomCharacter.Vars vars;
+
+#if SERVER
+			public void Invoke(ref NetConnection connection, ref Conquest.Gamemode data)
+			{
+				ref var player = ref connection.GetPlayer(out var player_asset);
+				Assert.NotNull(ref player, Assert.Level.Error);
+
+				ref var region = ref connection.GetRegionCommon();
+				Assert.NotNull(ref region, Assert.Level.Error);
+
+				var random = XorRandom.New(true);
+
+				var props = new CustomCharacter.Props();
+
+				CustomCharacter.Apply(ref this.vars, ref props);
+
+				var character = new ICharacter.Data();
+				character.origin = this.vars.h_origin;
+				character.h_location_current = this.vars.h_location;
+				character.faction = player.h_faction;
+				character.species = this.vars.h_species;
+
+				character.gender = this.vars.gender;
+				character.prefab = props.h_prefab;
+				character.players = [connection.GetPlayerHandle()];
+
+				character.money = props.money;
+				character.age = props.age;
+				character.flags = this.vars.character_flags;
+				character.experience = props.experience;
+
+				character.hair_color = props.hair_color;
+				character.hair = this.vars.gender == Organic.Gender.Female ? this.vars.h_hair_female : this.vars.h_hair_male;
+				character.beard = this.vars.gender == Organic.Gender.Female ? this.vars.h_beard_female : this.vars.h_beard_male;
+				character.sprite_head = props.sprite_head;
+
+				var name = Spawner.GenerateName(ref random, props.species_flags, character.flags, character.gender);
+				character.name = name;
+
+				var identifier = Asset.GenerateRandomIdentifier();
+				//App.WriteLine(identifier);
+
+				var asset = ICharacter.Database.RegisterOrUpdate(identifier,
+					index: null,
+					scope: Asset.Scope.World,
+					flags: Asset.Flags.None,
+					region_id: 0,
+					data: ref character);
+				
+				asset.Sync(true);
+
+				player.h_character_main = asset;
+				player_asset.Sync();
+			}
+#endif
+		}
+
 		public sealed class CustomCharacter
 		{
 			public struct Vars
@@ -24,6 +86,8 @@ namespace TC2.Conquest
 
 				public float hair_color_ratio;
 				public float age_ratio;
+
+				public uint name_seed;
 
 				public Organic.Gender gender = Organic.Gender.Male;
 
@@ -88,6 +152,8 @@ namespace TC2.Conquest
 				public Sprite sprite_beard;
 				public Color32BGRA hair_color;
 
+				public Prefab.Handle h_prefab;
+
 				public Experience.Levels experience;
 
 				public int age_min = 0;
@@ -98,6 +164,8 @@ namespace TC2.Conquest
 
 				public float money = 0.00f;
 				public float cost = 0.00f;
+
+				public ISpecies.Flags species_flags;
 
 				public Character.Flags character_flags_default;
 				public Character.Flags character_flags_optional;
@@ -115,6 +183,79 @@ namespace TC2.Conquest
 				public Props()
 				{
 				}
+			}
+
+			public static void Apply(ref Vars vars, ref Props props)
+			{
+				ref var species_data = ref vars.h_species.GetData();
+				ref var origin_data = ref vars.h_origin.GetData();
+
+				ref var h_selected_hair = ref (vars.gender == Organic.Gender.Female ? ref vars.h_hair_female : ref vars.h_hair_male);
+				ref var h_selected_beard = ref (vars.gender == Organic.Gender.Female ? ref vars.h_beard_female : ref vars.h_beard_male);
+
+				ref var hair_data = ref h_selected_hair.GetData();
+				ref var beard_data = ref h_selected_beard.GetData();
+
+				if (species_data.IsNotNull())
+				{
+					props.sprite_head = vars.gender == Organic.Gender.Female ? species_data.sprite_head_female : species_data.sprite_head_male;
+					props.hair_color = species_data.hair_colors.AsSpan().GetLerped(vars.hair_color_ratio);
+					props.h_prefab = vars.gender == Organic.Gender.Female ? species_data.prefab_female : species_data.prefab_male;
+					props.species_flags = species_data.flags;
+				}
+
+				if (origin_data.IsNotNull())
+				{
+					props.character_flags_default = origin_data.character_flags;
+					props.character_flags_optional = origin_data.character_flags_optional;
+
+					props.industry_flags_default = origin_data.industry_flags;
+					props.industry_flags_optional = origin_data.industry_flags_optional;
+
+					props.service_flags_default = origin_data.service_flags;
+					props.service_flags_optional = origin_data.service_flags_optional;
+
+					props.crime_flags_default = origin_data.crime_flags;
+					props.crime_flags_optional = origin_data.crime_flags_optional;
+
+					props.age_min = (int)origin_data.age.GetValue(0.00f);
+					props.age_max = (int)origin_data.age.GetValue(1.00f);
+					props.age = Maths.LerpInt(props.age_min, props.age_max, vars.age_ratio);
+
+					props.cost = origin_data.cost;
+					props.money = origin_data.money;
+
+					props.experience = origin_data.experience;
+				}
+
+				vars.character_flags &= props.character_flags_optional;
+				vars.industry_flags &= props.industry_flags_optional;
+				vars.service_flags &= props.service_flags_optional;
+				vars.crime_flags &= props.crime_flags_optional;
+
+				vars.character_flags |= props.character_flags_default;
+				vars.industry_flags |= props.industry_flags_default;
+				vars.service_flags |= props.service_flags_default;
+				vars.crime_flags |= props.crime_flags_default;
+
+				if (hair_data.IsNotNull())
+				{
+					props.sprite_hair = hair_data.sprite;
+				}
+
+				if (beard_data.IsNotNull())
+				{
+					props.sprite_beard = beard_data.sprite;
+				}
+
+				ICharacterModifier.Apply(ref props, in vars, (x, flags) => x.args.character_flags.HasAny(flags));
+
+				if (species_data.IsNotNull())
+				{
+					//hair_color = Color32BGRA.Saturate(hair_color, 1.00f - Maths.InvLerp01(species_data.lifecycle.age_mature, species_data.lifecycle.age_elder, age));
+					props.hair_color = Color32BGRA.Lerp(props.hair_color, Color32BGRA.White, Maths.InvLerp01(Maths.Lerp(species_data.lifecycle.age_mature, species_data.lifecycle.age_elder, 0.70f), species_data.lifecycle.age_elder * 1.40f, props.age * props.visual_age_mult));
+				}
+				props.hair_color.a = 255;
 			}
 
 			public CustomCharacter.Vars vars = new();
@@ -151,29 +292,28 @@ namespace TC2.Conquest
 			public static ICharacterModifier.Function modifier_brawler =
 			[ICharacterModifier.Info(Character.Flags.Brawler, order: 5)] static (x) =>
 			{
-				var t = 10;
-
 				x.value.experience[Experience.Type.Intellect].AddS(-3); // brain damage
-				x.value.experience[Experience.Type.Strength].AddS(9);
-				x.value.experience[Experience.Type.Endurance].AddS(2 + t);
+				x.value.experience[Experience.Type.Strength].AddS(3);
+				x.value.experience[Experience.Type.Endurance].AddS(2);
 				x.value.experience[Experience.Type.Endurance].MulS(1.21f);
 				x.value.experience[Experience.Type.Charisma].MulS(0.87f); // beaten up and missing some teeth
-
 			};
 
-			public static void Derp()
-			{
-				static int Foof()
-				{
-					var b = 2;
-					return b;
-				}
+			//public static ICharacterModifier.Function modifier_test = static x => x.value.age = 4;
 
-				var t = Foof();
-				var meth = Foof;
+			//public static void Derp()
+			//{
+			//	static int Foof()
+			//	{
+			//		var b = 2;
+			//		return b;
+			//	}
 
-				App.WriteLine(meth.Method.DeclaringType);
-			}
+			//	var t = Foof();
+			//	var meth = Foof;
+
+			//	App.WriteLine(meth.Method.DeclaringType);
+			//}
 		}
 
 #if CLIENT
@@ -217,301 +357,77 @@ namespace TC2.Conquest
 
 						var reset = false;
 
-						//selected_hash = HashCode.Combine(h_selected_species, h_selected_origin, selected_gender);
-
-						//var selected_info = hash_to_info.GetOrAdd(selected_hash);
-
-						//var character_flags = default(Character.Flags);
-						//var sprite_head = default(Sprite);
-						//var sprite_hair = default(Sprite);
-						//var sprite_beard = default(Sprite);
-
-						//var experience = default(Experience.Levels);
-
-						//var age_min = 0;
-						//var age_max = 1;
-						//var age = 0;
-
-						//var visual_age_mult = 1.00f;
-
-						//var money = 0.00f;
-						//var cost = 0.00;
-
-						//var character_flags_default = default(Character.Flags);
-						//var character_flags_optional = default(Character.Flags);
-
-						//var industry_flags_default = default(IMap.Industry);
-						//var industry_flags_optional = default(IMap.Industry);
-
-						//var service_flags_default = default(IMap.Services);
-						//var service_flags_optional = default(IMap.Services);
-
-						//var crime_flags_default = default(IMap.Crime);
-						//var crime_flags_optional = default(IMap.Crime);
-
-						//var hair_color = Color32BGRA.White;
-
-
 						ref var vars = ref custom_character.vars;
 						ref var props = ref custom_character.props;
 
 						ref var h_selected_hair = ref (vars.gender == Organic.Gender.Female ? ref vars.h_hair_female : ref vars.h_hair_male);
 						ref var h_selected_beard = ref (vars.gender == Organic.Gender.Female ? ref vars.h_beard_female : ref vars.h_beard_male);
 
-						ref var species_data = ref vars.h_species.GetData();
-						if (species_data.IsNotNull())
-						{
-							props.sprite_head = vars.gender == Organic.Gender.Female ? species_data.sprite_head_female : species_data.sprite_head_male;
-							props.hair_color = species_data.hair_colors.AsSpan().GetLerped(vars.hair_color_ratio);
-						}
+						CustomCharacter.Apply(ref vars, ref props);
 
-						ref var origin_data = ref vars.h_origin.GetData();
-						if (origin_data.IsNotNull())
-						{
-							props.character_flags_default = origin_data.character_flags;
-							props.character_flags_optional = origin_data.character_flags_optional;
+						//ref var species_data = ref vars.h_species.GetData();
+						//ref var origin_data = ref vars.h_origin.GetData();
+						//ref var hair_data = ref h_selected_hair.GetData();
+						//ref var beard_data = ref h_selected_beard.GetData();
 
-							props.industry_flags_default = origin_data.industry_flags;
-							props.industry_flags_optional = origin_data.industry_flags_optional;
-
-							props.service_flags_default = origin_data.service_flags;
-							props.service_flags_optional = origin_data.service_flags_optional;
-
-							props.crime_flags_default = origin_data.crime_flags;
-							props.crime_flags_optional = origin_data.crime_flags_optional;
-
-							props.age_min = (int)origin_data.age.GetValue(0.00f);
-							props.age_max = (int)origin_data.age.GetValue(1.00f);
-							props.age = Maths.LerpInt(props.age_min, props.age_max, vars.age_ratio);
-
-							props.cost = origin_data.cost;
-							props.money = origin_data.money;
-
-							props.experience = origin_data.experience;
-						}
-
-						vars.character_flags &= props.character_flags_optional;
-						vars.industry_flags &= props.industry_flags_optional;
-						vars.service_flags &= props.service_flags_optional;
-						vars.crime_flags &= props.crime_flags_optional;
-
-						vars.character_flags |= props.character_flags_default;
-						vars.industry_flags |= props.industry_flags_default;
-						vars.service_flags |= props.service_flags_default;
-						vars.crime_flags |= props.crime_flags_default;
-
-						ref var hair_data = ref h_selected_hair.GetData();
-						if (hair_data.IsNotNull())
-						{
-							props.sprite_hair = hair_data.sprite;
-						}
-
-						ref var beard_data = ref h_selected_beard.GetData();
-						if (beard_data.IsNotNull())
-						{
-							props.sprite_beard = beard_data.sprite;
-						}
-
+						//if (species_data.IsNotNull())
 						//{
-						//	if (edit_info.character_flags.HasAny(Character.Flags.Alcoholic))
-						//	{
-						//		//mult_health *= 0.92f; // liver doesn't like booze
-						//		//mult_loser += 0.21f; // sleeps in a ditch
-						//		//mult_fancy *= 0.91f; // smells like piss
-						//		//mult_sanity *= 0.90f; // hangover
-						//		//mult_wealth *= 0.88f; // spends money on booze
-						//		//mult_dumbass *= 1.11f; // drunkard
-
-						//		bias_health -= 0.32f; // liver doesn't like booze
-						//		bias_loser += 0.21f; // sleeps in a ditch
-						//		bias_fancy -= 0.25f; // smells like piss
-						//		bias_sanity -= 0.15f; // hangover
-						//		mult_wealth *= 0.88f; // spends money on booze
-
-						//		visual_age_mult += 0.11f;
-						//	}
-
-						//	if (edit_info.character_flags.HasAny(Character.Flags.Junkie))
-						//	{
-						//		bias_health -= 0.17f; // screwed up metabolism
-						//		bias_loser += 0.35f; // doesn't work and shower
-						//		mult_fancy *= 0.79f; // scary eyes
-						//		bias_sanity -= 0.26f; // withdrawals
-						//		mult_wealth *= 0.52f; // spends money on drugs and doesn't work
-
-						//		visual_age_mult += 0.35f; // too much drug abuse turns you into a raisin
-						//	}
-
-						//	if (edit_info.character_flags.HasAny(Character.Flags.Strong))
-						//	{
-						//		experience[Experience.Type.Strength].MulS(1.14f);
-						//		experience[Experience.Type.Strength].AddS(3);
-						//		experience[Experience.Type.Endurance].AddS(2);
-						//	}
-
-						//	if (edit_info.character_flags.HasAny(Character.Flags.Brawler))
-						//	{
-						//		experience[Experience.Type.Intellect].AddS(-3); // brain damage
-						//		experience[Experience.Type.Strength].AddS(2);
-						//		experience[Experience.Type.Endurance].AddS(2);
-						//		experience[Experience.Type.Endurance].MulS(1.21f);
-						//		experience[Experience.Type.Charisma].MulS(0.87f); // beaten up and missing some teeth
-						//	}
-
-						//	if (edit_info.character_flags.HasAny(Character.Flags.Educated))
-						//	{
-						//		experience[Experience.Type.Intellect].MulS(1.23f);
-
-						//		experience[Experience.Type.Charisma].AddS(2);
-						//		experience[Experience.Type.Leadership].AddS(2);
-
-						//		visual_age_mult += 0.07f; // exam stress
-						//	}
-
-						//	if (edit_info.character_flags.HasAny(Character.Flags.Insane))
-						//	{
-						//		mult_sanity *= 1.65f;
-						//		bias_sanity -= 0.50f;
-						//		mult_stress += 0.40f;
-						//		mult_fancy *= 0.80f;
-						//		mult_social *= 0.77f; // weird
-						//		mult_smart *= mult_smart; // brain amplified
-						//	}
-
-						//	if (edit_info.character_flags.HasAny(Character.Flags.Evil))
-						//	{
-						//		visual_age_mult *= 1.20f; // evil makes you bald
-						//	}
-
-						//	if (edit_info.character_flags.HasAny(Character.Flags.Entertainer | Character.Flags.Social))
-						//	{
-						//		visual_age_mult *= 0.81f; // needs to look good
-						//	}
-
-						//	if (edit_info.character_flags.HasAny(Character.Flags.Sedentary))
-						//	{
-						//		visual_age_mult *= 1.08f; // doesn't touch grass
-						//	}
-
-						//	if (edit_info.character_flags.HasAny(Character.Flags.Professional))
-						//	{
-						//		visual_age_mult *= 1.14f; // work stress
-						//	}
-
-						//	if (edit_info.character_flags.HasAny(Character.Flags.Nomad))
-						//	{
-						//		visual_age_mult *= 0.96f; // travels more
-						//	}
-
-						//	if (edit_info.character_flags.HasAny(Character.Flags.Medical))
-						//	{
-						//		visual_age_mult *= 1.16f; // medical school and annoying patients
-						//	}
-
-						//	if (edit_info.character_flags.HasAny(Character.Flags.Outdoor))
-						//	{
-						//		visual_age_mult *= 0.91f; // fresh air and touches grass
-						//	}
-
-						//	if (edit_info.character_flags.HasAny(Character.Flags.Rich))
-						//	{
-						//		visual_age_mult *= 0.95f; // eats good stuff
-						//	}
-
-						//	if (edit_info.character_flags.HasAny(Character.Flags.Poor))
-						//	{
-						//		visual_age_mult *= 1.06f; // eats crap stuff
-						//	}
-
-						//	if (edit_info.character_flags.HasAny(Character.Flags.Farmer))
-						//	{
-						//		visual_age_mult *= 0.93f; // touches grass
-						//	}
-
-						//	if (edit_info.character_flags.HasAny(Character.Flags.Unskilled))
-						//	{
-						//		experience[Experience.Type.Intellect].MulS(0.84f);
-
-						//		experience[Experience.Type.Arcanology].MulS(0.14f);
-						//		experience[Experience.Type.Chemistry].MulS(0.35f);
-						//		experience[Experience.Type.Commerce].MulS(0.40f);
-						//		experience[Experience.Type.Engineering].MulS(0.42f);
-						//		experience[Experience.Type.Geology].MulS(0.64f);
-						//		experience[Experience.Type.Medicine].MulS(0.35f);
-						//		experience[Experience.Type.Law].MulS(0.39f);
-						//		experience[Experience.Type.Charisma].MulS(0.84f);
-						//		experience[Experience.Type.Metallurgy].MulS(0.65f);
-						//		experience[Experience.Type.Construction].MulS(0.78f);
-						//		experience[Experience.Type.Masonry].MulS(0.87f);
-						//	}
-
-						//	if (edit_info.character_flags.HasAny(Character.Flags.Illiterate))
-						//	{
-						//		visual_age_mult *= 0.85f; // can't read newspaper
-
-						//		experience[Experience.Type.Intellect].MulS(0.82f);
-
-						//		experience[Experience.Type.Arcanology].MulS(0.10f);
-						//		experience[Experience.Type.Chemistry].MulS(0.05f);
-						//		experience[Experience.Type.Commerce].MulS(0.02f);
-						//		experience[Experience.Type.Engineering].MulS(0.72f);
-						//		experience[Experience.Type.Medicine].MulS(0.35f);
-						//		experience[Experience.Type.Law].MulS(0.03f);
-						//		experience[Experience.Type.Charisma].MulS(0.64f);
-						//		experience[Experience.Type.Metallurgy].MulS(0.85f);
-						//	}
-
-
-
-
-
-
-						//	if (edit_info.industry_flags.HasAny(IMap.Industry.Education))
-						//	{
-						//	}
-
-
-
-
-						//	if (edit_info.gender == Organic.Gender.Male)
-						//	{
-						//		visual_age_mult *= 1.08f; // turns into a bald potato faster
-						//	}
-
-						//	if (edit_info.gender == Organic.Gender.Female)
-						//	{
-
-						//	}
-
-						//	//experience[Experience.Type.Intellect].MulS();
-						//	//experience[Experience.Type.Arcanology].MulS((mult_academic * mult_industrial * mult_urban * mult_industrial) / (MathF.Max(1.00f, mult_rural * mult_dumbass) * mult_sanity));
-						//	//experience[Experience.Type.Endurance].MulS((mult_health * mult_rural * mult_laborer * mult_dumbass));
-						//	//experience[Experience.Type.Strength].MulS(mult_fighter * mult_rural * mult_laborer * mult_dumbass);
-						//	//experience[Experience.Type.Charisma].MulS((mult_fancy * mult_nobility * mult_social * mult_smart * mult_health) / (MathF.Max(1.00f, mult_loser) * mult_dumbass));
-						//	//experience[Experience.Type.Engineering].MulS(mult_smart * mult_urban * mult_tech * mult_expert * mult_builder);
-						//	//experience[Experience.Type.Leadership].MulS(mult_smart * mult_social * mult_fancy * mult_fighter * mult_evil * mult_nobility);
-						//	//experience[Experience.Type.Commerce].MulS(mult_wealth * mult_urban * mult_social * mult_academic * mult_fancy);
-
-
-						//	//experience[Experience.Type.Intellect].MulS(((mult_smart * Maths.Avg(mult_tech * mult_expert, mult_academic)) / (MathF.Max(1.00f, mult_dumbass) * mult_loser)));
-						//	//experience[Experience.Type.Arcanology].MulS((mult_academic * mult_industrial * mult_urban * mult_industrial) / (MathF.Max(1.00f, mult_rural * mult_dumbass) * mult_sanity));
-						//	//experience[Experience.Type.Endurance].MulS((mult_health * mult_rural * mult_laborer * mult_dumbass));
-						//	//experience[Experience.Type.Strength].MulS(mult_fighter * mult_rural * mult_laborer * mult_dumbass);
-						//	//experience[Experience.Type.Charisma].MulS((mult_fancy * mult_nobility * mult_social * mult_smart * mult_health) / (MathF.Max(1.00f, mult_loser) * mult_dumbass));
-						//	//experience[Experience.Type.Engineering].MulS(mult_smart * mult_urban * mult_tech * mult_expert * mult_builder);
-						//	//experience[Experience.Type.Leadership].MulS(mult_smart * mult_social * mult_fancy * mult_fighter * mult_evil * mult_nobility);
-						//	//experience[Experience.Type.Commerce].MulS(mult_wealth * mult_urban * mult_social * mult_academic * mult_fancy);
-
+						//	props.sprite_head = vars.gender == Organic.Gender.Female ? species_data.sprite_head_female : species_data.sprite_head_male;
+						//	props.hair_color = species_data.hair_colors.AsSpan().GetLerped(vars.hair_color_ratio);
 						//}
 
-						ICharacterModifier.Apply(ref props, in vars, (x, flags) => x.args.character_flags.HasAny(flags));
+						//if (origin_data.IsNotNull())
+						//{
+						//	props.character_flags_default = origin_data.character_flags;
+						//	props.character_flags_optional = origin_data.character_flags_optional;
 
-						if (species_data.IsNotNull())
-						{
-							//hair_color = Color32BGRA.Saturate(hair_color, 1.00f - Maths.InvLerp01(species_data.lifecycle.age_mature, species_data.lifecycle.age_elder, age));
-							props.hair_color = Color32BGRA.Lerp(props.hair_color, Color32BGRA.White, Maths.InvLerp01(Maths.Lerp(species_data.lifecycle.age_mature, species_data.lifecycle.age_elder, 0.70f), species_data.lifecycle.age_elder * 1.40f, props.age * props.visual_age_mult));
-						}
-						props.hair_color.a = 255;
+						//	props.industry_flags_default = origin_data.industry_flags;
+						//	props.industry_flags_optional = origin_data.industry_flags_optional;
+
+						//	props.service_flags_default = origin_data.service_flags;
+						//	props.service_flags_optional = origin_data.service_flags_optional;
+
+						//	props.crime_flags_default = origin_data.crime_flags;
+						//	props.crime_flags_optional = origin_data.crime_flags_optional;
+
+						//	props.age_min = (int)origin_data.age.GetValue(0.00f);
+						//	props.age_max = (int)origin_data.age.GetValue(1.00f);
+						//	props.age = Maths.LerpInt(props.age_min, props.age_max, vars.age_ratio);
+
+						//	props.cost = origin_data.cost;
+						//	props.money = origin_data.money;
+
+						//	props.experience = origin_data.experience;
+						//}
+
+						//vars.character_flags &= props.character_flags_optional;
+						//vars.industry_flags &= props.industry_flags_optional;
+						//vars.service_flags &= props.service_flags_optional;
+						//vars.crime_flags &= props.crime_flags_optional;
+
+						//vars.character_flags |= props.character_flags_default;
+						//vars.industry_flags |= props.industry_flags_default;
+						//vars.service_flags |= props.service_flags_default;
+						//vars.crime_flags |= props.crime_flags_default;
+
+						//if (hair_data.IsNotNull())
+						//{
+						//	props.sprite_hair = hair_data.sprite;
+						//}
+
+						//if (beard_data.IsNotNull())
+						//{
+						//	props.sprite_beard = beard_data.sprite;
+						//}
+
+						//ICharacterModifier.Apply(ref props, in vars, (x, flags) => x.args.character_flags.HasAny(flags));
+
+						//if (species_data.IsNotNull())
+						//{
+						//	//hair_color = Color32BGRA.Saturate(hair_color, 1.00f - Maths.InvLerp01(species_data.lifecycle.age_mature, species_data.lifecycle.age_elder, age));
+						//	props.hair_color = Color32BGRA.Lerp(props.hair_color, Color32BGRA.White, Maths.InvLerp01(Maths.Lerp(species_data.lifecycle.age_mature, species_data.lifecycle.age_elder, 0.70f), species_data.lifecycle.age_elder * 1.40f, props.age * props.visual_age_mult));
+						//}
+						//props.hair_color.a = 255;
 
 						using (var group_left = GUI.Group.New(size: new(GUI.RmX - 244, GUI.RmY)))
 						{
@@ -695,16 +611,26 @@ namespace TC2.Conquest
 
 						GUI.SameLine();
 
-						using (var group_right = GUI.Group.New(size: GUI.Rm, padding: new(4)))
+						using (var group_right = GUI.Group.New(size: GUI.Rm))
 						{
-							group_right.DrawBackground(GUI.tex_window);
-
-							using (var scrollbox = GUI.Scrollbox.New("scroll.experience", size: new(GUI.RmX, GUI.RmY - 244)))
+							using (var group_top = GUI.Group.New(size: new(GUI.RmX, GUI.RmY - 48), padding: new(4)))
 							{
-								Experience.DrawTableSmall2(ref props.experience);
+								group_top.DrawBackground(GUI.tex_window);
+
+								using (var scrollbox = GUI.Scrollbox.New("scroll.experience", size: new(GUI.RmX, GUI.RmY - 244)))
+								{
+									Experience.DrawTableSmall2(ref props.experience);
+								}
+
+								GUI.SeparatorThick();
 							}
 
-							GUI.SeparatorThick();
+							if (GUI.DrawConfirmButton("character.create", "Create Character", "Do you want to create\n    this character?", size: GUI.Rm, font_size: 24, color: GUI.col_button_ok))
+							{
+								var rpc = new Conquest.CreateCharacterRPC();
+								rpc.vars = vars;
+								rpc.Send();
+							}
 						}
 
 						if (reset)
@@ -721,15 +647,6 @@ namespace TC2.Conquest
 
 							vars.h_hair_female = default;
 							vars.h_beard_female = default;
-
-
-							//species_data = ref h_selected_species.GetData();
-							//if (species_data.IsNotNull())
-							//{
-							//	selected_gender = Organic.Gender.Male;
-							//	h_selec
-
-							//}
 						}
 					}
 				}
