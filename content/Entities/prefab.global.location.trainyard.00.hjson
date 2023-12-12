@@ -51,7 +51,8 @@ market:
 
 nameable:
 {
+	name: "Stanitz-H.Lopatnik"
 	tags: market, industrial, factory
-	flags: randomize
+	flags: no_rename
 	type: location
 }

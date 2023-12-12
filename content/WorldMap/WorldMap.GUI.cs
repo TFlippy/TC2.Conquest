@@ -1216,6 +1216,8 @@ namespace TC2.Conquest
 			public Entity ent_location;
 			public Location.Data location;
 
+			public static int selected_tab;
+
 			public void Draw()
 			{
 				using (var window = GUI.Window.Interaction("Location###location.gui", this.ent_location))
@@ -1273,11 +1275,17 @@ namespace TC2.Conquest
 														var material_asset = materials_filtered_span[i];
 														ref var material_data = ref material_asset.GetData();
 
+														GUI.DrawMaterialSmall(material_asset, new(GUI.RmY));
+
+														GUI.SameLine(8);
+
 														GUI.TitleCentered(material_data.name, pivot: new(0.00f, 0.50f));
 														GUI.TextCentered($"{weights_span[i]:0.00}", pivot: new(1.00f, 0.50f));
 														//App.WriteLine($"BUY [{i:00}]: {materials_filtered_span[i].data.name,-32}{weights_span[i]:0.00}");
 													}
 												}
+
+												GUI.NewLine(4);
 											}
 										}
 
@@ -1289,6 +1297,7 @@ namespace TC2.Conquest
 											{
 												var material_asset = materials_filtered_span[i];
 												weights_span[i] = Market.CalculateSellWeights(material_asset, ref location_data);
+												//weights_span[i] = Market.CalculateProduceWeights(material_asset, ref location_data);
 											}
 											weights_span.Sort(materials_filtered_span);
 
@@ -1303,11 +1312,17 @@ namespace TC2.Conquest
 														var material_asset = materials_filtered_span[i];
 														ref var material_data = ref material_asset.GetData();
 
+														GUI.DrawMaterialSmall(material_asset, new(GUI.RmY));
+
+														GUI.SameLine(8);
+
 														GUI.TitleCentered(material_data.name, pivot: new(0.00f, 0.50f));
 														GUI.TextCentered($"{weights_span[i]:0.00}", pivot: new(1.00f, 0.50f));
 														//App.WriteLine($"BUY [{i:00}]: {materials_filtered_span[i].data.name,-32}{weights_span[i]:0.00}");
 													}
 												}
+
+												GUI.NewLine(4);
 											}
 										}
 									}
