@@ -305,7 +305,7 @@ namespace TC2.Conquest
 							{
 								GUI.Title($"{game_info.name}", size: 32);
 								//GUI.SameLine();
-								//GUI.TitleCentered($"Next map in: {GUI.FormatTime(MathF.Max(0.00f, this.gamemode.match_duration - this.gamemode.elapsed))}", size: 24, pivot: new Vector2(1, 1));
+								//GUI.TitleCentered($"Next map in: {GUI.FormatTime(Maths.Max(0.00f, this.gamemode.match_duration - this.gamemode.elapsed))}", size: 24, pivot: new Vector2(1, 1));
 							}
 
 							GUI.SeparatorThick();

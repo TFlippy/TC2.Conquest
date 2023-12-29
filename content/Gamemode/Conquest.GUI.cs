@@ -29,7 +29,7 @@ namespace TC2.Conquest
 
 			public void Draw()
 			{
-				//var rem_height = MathF.Max(GUI.CanvasSize.Y - total_height, 0.00f);
+				//var rem_height = Maths.Max(GUI.CanvasSize.Y - total_height, 0.00f);
 
 				//var rem_height = GUI.CanvasSize.Y - RespawnGUI.window_offset.Y
 

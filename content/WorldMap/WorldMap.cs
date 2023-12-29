@@ -139,7 +139,7 @@ namespace TC2.Conquest
 				var dir_ab = (points_b[b.index] - points_a[a.index]).GetNormalizedFast();
 				var dir_bc = (points_c[c.index] - points_b[b.index]).GetNormalizedFast();
 
-				var dot = MathF.Min(dot_max, Vector2.Dot(dir_ab, dir_bc));
+				var dot = Maths.Min(dot_max, Vector2.Dot(dir_ab, dir_bc));
 
 				for (var i = 0; i < junction_segments.Length; i++)
 				{
