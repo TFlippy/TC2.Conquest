@@ -56,3 +56,8 @@ nameable:
 	flags: no_rename
 	type: location
 }
+
+station:
+{
+	
+}

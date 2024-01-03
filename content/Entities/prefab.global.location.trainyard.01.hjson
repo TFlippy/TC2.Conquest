@@ -54,3 +54,8 @@ nameable:
 	flags: randomize
 	type: location
 }
+
+station:
+{
+	
+}

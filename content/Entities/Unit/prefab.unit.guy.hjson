@@ -1,0 +1,51 @@
+$name: "Guy"
+$tags: []
+
+unit:
+{
+
+}
+
+transform:
+{
+	scale: [1.000, 1.000]
+}
+
+sound.emitter:
+{
+	
+}
+
+interactable:
+{
+	window_size: [400.000, 256.000]
+}
+
+faction:
+{
+	
+}
+
+worldmap.marker:
+{
+	flags: none
+	radius: 1.000
+	scale: 1.000
+	color: "0xffffffff"
+	text_offset: [0.000, 0.375]
+	icon_offset: [0.000, 0.000]
+	icon:
+	{
+		texture: "human.male.head"
+		mask: "missing"
+		fps: 0.000
+		count: 0
+		size: [16, 16]
+		frame: [0, 0]
+	}
+}
+
+nameable:
+{
+
+}

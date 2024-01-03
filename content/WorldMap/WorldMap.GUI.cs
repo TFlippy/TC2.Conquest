@@ -368,6 +368,15 @@ namespace TC2.Conquest
 								{
 									GUI.SetCursor(App.CursorType.Hand, 1000);
 
+									var location_asset = default(ILocation.Definition);
+
+									if (entity.TryGetAsset(out var asset))
+									{
+										GUI.FocusableAsset(asset, rect: rect_icon);
+
+										location_asset = asset as ILocation.Definition; // TODO: shithack
+									}
+
 									if (is_pressed)
 									{
 										selected_region_id = 0;
@@ -376,12 +385,14 @@ namespace TC2.Conquest
 										{
 											WorldMap.selected_entity = default;
 											GUI.selected_entity = default;
+											if (location_asset != null) WorldMap.h_selected_location = default;
 											Sound.PlayGUI(GUI.sound_select, volume: 0.09f, pitch: 0.80f);
 										}
 										else
 										{
 											WorldMap.selected_entity = entity;
 											GUI.selected_entity = entity;
+											if (location_asset != null) WorldMap.h_selected_location = location_asset;
 											Sound.PlayGUI(GUI.sound_select, volume: 0.09f);
 										}
 										// Client.RequestSetActiveRegion((byte)i);
@@ -396,6 +407,16 @@ namespace TC2.Conquest
 										GUI.DrawTextCentered(nameable.name, Vector2.Transform(transform.position + marker.text_offset, mat_l2c), pivot: new(0.50f, 0.50f), color: GUI.font_color_title, font: GUI.Font.Superstar, size: 0.50f * Maths.Max(marker.scale * zoom * scale, 16), layer: GUI.Layer.Window, box_shadow: true);
 									}
 								}
+
+								//if (entity.TryGetAsset(out var asset))
+								//{
+								//	if (asset is ILocation.Definition asset_location)
+								//	{
+								//		WorldMap.sele
+								//	}
+
+								//	GUI.FocusableAsset(asset, rect: rect_icon);
+								//}
 							});
 						}
 						#endregion
@@ -798,6 +819,60 @@ namespace TC2.Conquest
 
 					using (GUI.Group.New(size: GUI.Rm))
 					{
+						var h_character = Client.GetCharacterHandle();
+						ref var character_data = ref h_character.GetData(out var character_asset);
+						if (character_data.IsNotNull())
+						{
+							using (GUI.Group.New(size: new(GUI.RmX, 48)))
+							{
+								GUI.DrawCharacterHead(h_character, frame_size: new Vector2(GUI.RmY), scale: 3.00f);
+
+								GUI.SameLine();
+								GUI.TitleCentered(character_data.name, size: 24, pivot: new(0.00f, 0.00f), offset: new(4, 4));
+								GUI.FocusableAsset(h_character);
+
+								GUI.TitleCentered(character_data.origin.GetName(), size: 16, pivot: new(1.00f, 0.00f), offset: new(-4, 8));
+								GUI.FocusableAsset(character_data.origin);
+
+
+								//GUI.TitleCentered(character_data.origin.GetName(), size: 16, pivot: new(0.00f, 1.00f), offset: new(4, -4));
+								GUI.TitleCentered(character_data.h_location_current.GetName(), size: 16, pivot: new(0.00f, 1.00f), offset: new(4, -4));
+								if (GUI.Selectable3(character_data.h_location_current.id, GUI.GetLastItemRect(), selected: WorldMap.h_selected_location == character_data.h_location_current))
+								{
+									WorldMap.h_selected_location.Toggle(character_data.h_location_current);
+									if (WorldMap.h_selected_location != default) WorldMap.FocusLocation(character_data.h_location_current);
+								}
+								GUI.FocusableAsset(character_data.h_location_current);
+
+							}
+							GUI.SeparatorThick();
+
+							using (GUI.Group.New(size: new(GUI.RmX, 0)))
+							{
+								GUI.DrawMoney(character_data.money, new(48, 48));
+
+								var ent_character = h_character.AsEntity(0);
+								if (ent_character.IsAlive())
+								{
+									if (GUI.DrawButton("Select", size: new(64, 40)))
+									{
+										WorldMap.selected_entity.Toggle(ent_character);
+									}
+								}
+								else
+								{
+									if (GUI.DrawButton("Exit", size: new(64, 40)))
+									{
+										var rpc = new Unit.TestRPC()
+										{
+											h_character = h_character
+										};
+										rpc.Send();
+									}
+								}
+							}
+						}
+
 						//GUI.Checkbox("DEV: Renderer", ref use_renderer, new(GUI.RmX, 32));
 						//GUI.SliderFloat("DEV: Scale A", ref IScenario.WorldMap.scale, 1.00f, 256.00f, new(GUI.RmX, 32));
 						//GUI.SliderFloat("DEV: Scale B", ref IScenario.WorldMap.scale_b, 1.00f, 256.00f, new(GUI.RmX, 32));
