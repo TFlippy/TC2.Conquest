@@ -876,7 +876,7 @@ namespace TC2.Conquest
 			}
 		}
 
-		private static void DrawDebugWindow(ref AABB rect, float zoom, ref Matrix3x2 mat_l2c)
+		private static void DrawDebugWindow(ref AABB rect)
 		{
 			if (editor_mode != EditorMode.None) // App.debug_mode_gui)
 			{
@@ -884,6 +884,8 @@ namespace TC2.Conquest
 				{
 					if (window.show)
 					{
+						var mat_l2c = World.GetGlobalRegion().GetWorldToCanvasMatrix();
+
 						GUI.DrawWindowBackground();
 
 						GUI.Title("Worldmap Debug");

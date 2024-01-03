@@ -1,6 +1,6 @@
 ﻿
-using System.Runtime.InteropServices;
-using System.Text;
+using TC2.Base;
+using TC2.Base.Components;
 
 namespace TC2.Conquest
 {
@@ -23,15 +23,109 @@ namespace TC2.Conquest
 
 		public static partial class Marker
 		{
-			[IComponent.Data(Net.SendType.Reliable)]
+			[IComponent.Data(Net.SendType.Reliable, sync_table_capacity: 128)]
 			public partial struct Data: IComponent
 			{
-				public short2 point;
-				public float radius;
-				public float scale;
+				[Flags]
+				public enum Flags: uint
+				{
+					None = 0u,
+					 
+					Hidden = 1u << 0
+				}
 
+				public WorldMap.Marker.Data.Flags flags;
+
+				public float radius = 1.00f;
+				public float scale = 1.00f;
+
+				public Color32BGRA color;
+
+				public Vector2 text_offset;
+
+				public Vector2 icon_offset;
 				public Sprite icon;
+
+				public Data()
+				{
+				}
 			}
+
+			[Query(ISystem.Scope.Global)]
+			public delegate void GetAllMarkersQuery(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] in WorldMap.Marker.Data marker, [Source.Owned] in Transform.Data transform, [Source.Owned, Optional(true)] ref Nameable.Data nameable);
+
+#if SERVER
+			[ISystem.Modified(ISystem.Mode.Single, ISystem.Scope.Global)]
+			[ISystem.Add(ISystem.Mode.Single, ISystem.Scope.Global)]
+			public static void OnLocationModified(ISystem.Info.Common info, Entity entity, [Source.Owned] ref Location.Data location, [Source.Owned] ref WorldMap.Marker.Data marker, [Source.Owned, Optional(true)] ref Nameable.Data nameable)
+			{
+				if (ILocation.TryGetAsset(entity, out var h_location))
+				{
+					ref var location_data = ref h_location.GetData();
+					if (location_data.IsNotNull())
+					{
+						marker.icon = location_data.icon;
+						marker.icon_offset = location_data.icon_offset;
+						marker.text_offset = location_data.text_offset;
+						marker.color = location_data.color;
+						marker.scale = location_data.size;
+
+						marker.flags.SetFlag(Data.Flags.Hidden, location_data.flags.HasAny(ILocation.Flags.Hidden));
+						marker.Sync(entity, true);
+
+						if (nameable.IsNotNull())
+						{
+							nameable.name = location_data.name_short;
+							nameable.type = Nameable.Kind.Location;
+							nameable.flags = Nameable.Flags.No_Export | Nameable.Flags.No_Rename;
+							nameable.Sync(entity, true);
+						}
+					}
+				}
+			}
+#endif
+
+#if CLIENT
+
+
+
+
+			//[ISystem.EarlyGUI(ISystem.Mode.Single, ISystem.Scope.Global)]
+			//public static void OnGUI(Entity entity,
+			//[Source.Owned] in Location.Data location,
+			//[Source.Owned] in Interactable.Data interactable)
+			//{
+			//	if (interactable.show)
+			//	{
+			//		var gui = new LocationGUI()
+			//		{
+			//			ent_location = entity,
+			//			location = location,
+			//		};
+			//		gui.Submit();
+			//	}
+			//}
+
+			//public partial struct MarkerGUI: IGUICommand
+			//{
+			//	public Entity ent_location;
+			//	public Location.Data location;
+
+			//	public static int selected_tab;
+
+			//	public void Draw()
+			//	{
+			//		using (var window = GUI.Window.Standalone("Location###location.gui"))
+			//		{
+			//			this.StoreCurrentWindowTypeID(order: -150);
+			//			if (window.show)
+			//			{
+
+			//			}
+			//		}
+			//	}
+			//}
+#endif
 		}
 
 		public static bool TryAdvance(Road.Segment a, Road.Segment b, out Road.Segment c, ref int dir_sign, out int junction_index, bool skip_inner_junctions = false)
@@ -100,7 +194,7 @@ namespace TC2.Conquest
 						return true;
 					}
 				}
-				
+
 				if (road_segment_to_junction_index.TryGetValue(c, out junction_index))
 				{
 					return true;
