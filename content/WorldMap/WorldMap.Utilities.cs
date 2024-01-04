@@ -132,6 +132,7 @@ namespace TC2.Conquest
 							if (junction.segments_count > 1)
 							{
 								var junction_index = road_junctions.Count;
+								junction.index = (ushort)junction_index;
 								road_junctions.Add(junction);
 
 								for (var j = 0; j < junction.segments_count; j++)

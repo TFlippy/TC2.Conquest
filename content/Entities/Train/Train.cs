@@ -156,7 +156,7 @@ namespace TC2.Conquest
 			public static Dictionary<int, JunctionNode> tls_closed_list;
 			//public static Stack<Road.Junction.Branch> Path = new();
 
-			public static bool TryFindPath(Road.Junction.Branch a, Road.Junction.Branch b, ref Span<Road.Junction.Branch> out_results, float dot_min = 0.50f, float dot_max = 1.00f)
+			public static bool TryFindPath(Road.Junction.Branch a, Road.Junction.Branch b, ref Span<Road.Junction.Branch> out_results, bool ignore_limits = false, float dot_min = 0.50f, float dot_max = 1.00f)
 			{
 				ref var open_list = ref tls_open_list;
 				ref var closed_list = ref tls_closed_list;
@@ -175,7 +175,7 @@ namespace TC2.Conquest
 
 				open_list.Enqueue(current, -1.00f);
 
-				var ignore_limits = false;
+				//var ignore_limits = true;
 				//var dot_min = 0.50f;
 				//var dot_max = 1.00f;
 
@@ -186,6 +186,13 @@ namespace TC2.Conquest
 				{
 					current = open_list.Dequeue();
 					closed_list.Add(current.GetHashCode(), current);
+
+					//if (current.branch.junction_index >= junctions_span.Length) continue;
+					//var junc = junctions_span[current.branch.junction_index];
+
+					//if (current.branch.index >= junc.segments.Length) continue;
+					//var seg_a = junc.segments[current.branch.index % junc.segments.Length];
+					//var seg_a = junc.segments[current.branch.index];
 
 					var seg_a = junctions_span[current.branch.junction_index].segments[current.branch.index];
 					if (WorldMap.TryGetNextJunction(seg_a, current.branch.sign, out var junction_a, out var segment_b, out var segment_c))
@@ -219,8 +226,8 @@ namespace TC2.Conquest
 									if (!isFound)
 									{
 										n.parent_hash = current.GetHashCode();
-										n.distance = Vector2.Distance(junctions_span[n.branch.junction_index].pos, junctions_span[b.junction_index].pos); //  DistanceToTarget = Math.Abs(n.Position.X - end.Position.X) + Math.Abs(n.Position.Y - end.Position.Y);
-										n.cost = n.weight + current.cost;
+										n.distance = Vector2.DistanceSquared(junctions_span[n.branch.junction_index].pos, junctions_span[b.junction_index].pos); //  DistanceToTarget = Math.Abs(n.Position.X - end.Position.X) + Math.Abs(n.Position.Y - end.Position.Y);
+										n.cost = (-n.weight + current.cost);
 										open_list.Enqueue(n, n.distance + n.cost);
 									}
 								}
@@ -260,7 +267,7 @@ namespace TC2.Conquest
 				//Path.
 
 				var ts_elapsed = ts.GetMilliseconds();
-				App.WriteLine($"Calculated a path in {ts_elapsed:0.0000} ms. ({out_results.Length}/{closed_list.Count})", App.Color.Green);
+				//App.WriteLine($"Calculated a path in {ts_elapsed:0.0000} ms. ({out_results.Length}/{closed_list.Count})", App.Color.Green);
 				return true;
 			}
 		}
@@ -388,7 +395,7 @@ namespace TC2.Conquest
 		}
 
 
-		public static sbyte GetSign(Vector2 dir_ab, ref Road.Segment j_segment, bool ignore_limits, float dot_min, float dot_max)
+		public static sbyte GetSign(Vector2 dir_ab, Road.Segment j_segment, bool ignore_limits, float dot_min, float dot_max)
 		{
 			ref var region = ref World.GetGlobalRegion();
 			ref var j_road = ref j_segment.GetRoad();

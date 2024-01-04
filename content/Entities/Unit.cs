@@ -385,12 +385,14 @@ namespace TC2.Conquest
 								var pos_w = region.CanvasToWorld(pos);
 								pos_w.Snap(1.00f / 32.00f, out var pos_w_snapped);
 
+								//var road = WorldMap.GetNearestRoad(Road.Type.Road, pos_w, out var road_dist_sq);
+
 								var pos_c_hover = region.WorldToCanvas(pos_w_snapped);
 
 								var pos_c_current = region.WorldToCanvas(this.transform.GetInterpolatedPosition());
 								var pos_c_target = region.WorldToCanvas(this.unit.pos_target);
 
-								var dist = Vector2.Distance(pos_w, this.transform.GetInterpolatedPosition());
+								var dir = (pos_w - this.transform.GetInterpolatedPosition()).GetNormalized(out var dist);
 
 								//GUI.Text($"{ent_unit}; {pos:0.00} {pos_w:0.00}; {pos_c:0.00}");
 
@@ -437,6 +439,7 @@ namespace TC2.Conquest
 										mouse_drag_a = pos_w_snapped;
 									}
 
+									GUI.DrawLine(pos_c_current, pos_c_current + (dir * 100), layer: GUI.Layer.Foreground);
 									GUI.DrawLine(pos_c_current, pos_c_hover, Color32BGRA.Yellow.WithAlphaMult(0.25f), thickness: 0.125f * scale * 0.25f, GUI.Layer.Foreground);
 
 									//GUI.DrawTextCentered($"{dist * WorldMap.km_per_unit:0.00} km", (pos_c_current + pos_c_hover) * 0.50f, layer: GUI.Layer.Foreground, box_shadow: true);
@@ -445,7 +448,81 @@ namespace TC2.Conquest
 
 									GUI.DrawTextCentered($"{dist * WorldMap.km_per_unit:0.00} km", pos_c_hover - ((pos_c_hover - pos_c_current).GetNormalized() * 0.50f * scale), layer: GUI.Layer.Foreground, box_shadow: true);
 
+									var road_a = WorldMap.GetNearestRoad(Road.Type.Road, transform.position, out var road_a_dist_sq);
+									var road_b = WorldMap.GetNearestRoad(Road.Type.Road, pos_w_snapped, out var road_b_dist_sq);
 
+
+									if (road_a.IsValid() && road_b.IsValid())
+									{
+										var sign_a = Train.GetSign(dir, road_a, true, 0.00f, 1.00f);
+										var sign_b = Train.GetSign(-dir, road_b, true, 0.00f, 1.00f);
+
+										//var ok_a = WorldMap.TryGetNextJunction(road_a, sign_a, out var junction_index_a, out var segment_a_b, out var segment_a_c);
+										//var ok_b = WorldMap.TryGetNextJunction(road_b, sign_b, out var junction_index_b, out var segment_b_b, out var segment_b_c);
+
+
+										var ok_a = WorldMap.TryGetNearestJunction(road_a, out var junction_index_a, out _);
+										var ok_b = WorldMap.TryGetNearestJunction(road_b, out var junction_index_b, out _);
+										//var ok_b = WorldMap.TryGetNextJunction(road_b, sign_b, out var junction_index_b, out var segment_b_b, out var segment_b_c);
+
+										GUI.DrawCircleFilled(region.WorldToCanvas(road_a.GetPosition()), 0.125f * scale * 0.50f, Color32BGRA.Magenta.WithAlphaMult(0.50f), segments: 4, layer: GUI.Layer.Foreground);
+										GUI.DrawCircleFilled(region.WorldToCanvas(road_b.GetPosition()), 0.125f * scale * 0.50f, Color32BGRA.Magenta.WithAlphaMult(0.50f), segments: 4, layer: GUI.Layer.Foreground);
+
+
+										GUI.LabelShaded("a:", $"{ok_a}; {junction_index_a}");
+										GUI.LabelShaded("b:", $"{ok_b}; {junction_index_b}");
+
+										if (ok_a)
+										{
+											GUI.DrawCircleFilled(region.WorldToCanvas(road_a.GetPosition()), 0.25f * scale * 0.50f, Color32BGRA.Yellow, segments: 4, layer: GUI.Layer.Foreground);
+											//GUI.DrawCircleFilled(region.WorldToCanvas(segment_a_b.GetPosition()), 0.25f * scale * 0.50f, Color32BGRA.Yellow, segments: 4, layer: GUI.Layer.Foreground);
+											//GUI.DrawCircleFilled(region.WorldToCanvas(segment_a_c.GetPosition()), 0.25f * scale * 0.50f, Color32BGRA.Yellow, segments: 4, layer: GUI.Layer.Foreground);
+											//GUI.DrawCircleFilled(region.WorldToCanvas(WorldMap.road_junctions[junction_index_a].pos), 0.725f * scale * 0.50f, Color32BGRA.Red, segments: 4, layer: GUI.Layer.Foreground);
+										}
+
+										//if (ok_b)
+										//{
+										//	GUI.DrawCircleFilled(region.WorldToCanvas(WorldMap.road_junctions[junction_index_b].pos), 0.725f * scale * 0.50f, Color32BGRA.Green, segments: 4, layer: GUI.Layer.Foreground);
+										//}
+
+										if (ok_a && ok_b)
+										{
+
+											Span<Road.Junction.Branch> branches_span = stackalloc Road.Junction.Branch[32];
+
+											//var branch_src = new Road.Junction.Branch((ushort)junction_index_a, 0, Train.GetSign((WorldMap.road_junctions[junction_index_a].pos - road_b.GetPosition()).GetNormalized(), road_b, true, 0, 1));
+											//var branch_dst = new Road.Junction.Branch((ushort)junction_index_b, 0, Train.GetSign((WorldMap.road_junctions[junction_index_b].pos - road_b.GetPosition()).GetNormalized(), road_b, true, 0, 1));
+
+											//TryAdvanceJunction(road_a, segment_a_b, segment_a_c, junction_index_a, out var branch_src, out _, out _, out _, dot_min: 0.01f, dot_max: 0.90f, ignore_limits: false);
+											//TryAdvanceJunction(road_b, segment_b_b, segment_b_c, junction_index_b, out var branch_dst, out _, out _, out _, dot_min: 0.01f, dot_max: 0.90f, ignore_limits: false);
+
+											var junction_a = WorldMap.road_junctions[junction_index_a];
+											var junction_b = WorldMap.road_junctions[junction_index_b];
+
+											TryResolveBranch(junction_a, (pos_w_snapped - junction_a.pos).GetNormalizedFast(), out var branch_src);
+											TryResolveBranch(junction_b, dir, out var branch_dst);
+
+
+											WorldMap.DrawBranch(ref branch_src);
+											WorldMap.DrawBranch(ref branch_dst);
+
+
+											if (RoadNav.Astar.TryFindPath(branch_src, branch_dst, ref branches_span, ignore_limits: true, dot_min: 0.00f, dot_max: 1.00f))
+											{
+												//App.WriteLine("yes");
+
+												foreach (ref var branch in branches_span)
+												{
+													if (branch.sign != 0)
+													{
+														WorldMap.DrawBranch(ref branch);
+													}
+												}
+
+												GUI.TextShaded("ok");
+											}
+										}
+									}
 									//var nearest_location_a = WorldMap.GetNearestLocation(transform.position, out var distance_sq_a);
 									//var nearest_location_b = WorldMap.GetNearestLocation(pos_w_snapped, out var distance_sq_b);
 

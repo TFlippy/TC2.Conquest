@@ -179,6 +179,64 @@ namespace TC2.Conquest
 			return !is_at_end; // && !is_at_junction;
 		}
 
+		//public static bool TryResolveJunction(Road.Segment a, Vector2 dir, out int junction_index, out Road.Segment b, out Road.Segment c, bool skip_inner_junctions = false)
+		//{
+
+		//}
+
+		public static bool TryGetNearestJunction(Road.Segment segment, out int junction_index, out float dist_sq)
+		{
+			junction_index = -1;
+			dist_sq = float.MaxValue;
+
+			if (road_segment_to_junction_index.TryGetValue(segment, out junction_index))
+			{
+				dist_sq = 0.00f;
+				return true;
+			}
+
+			ref var road = ref segment.GetRoad();
+			if (road.IsNull()) return false;
+
+			var points = road.points.AsSpan();
+
+			var index = (int)segment.index; // + dir_sign;
+			var pos = points[index];
+
+			var junction_index_a = -1;
+			var junction_index_b = -1;
+
+			var a = segment;
+			while (--a.index >= 0)
+			{
+				if (road_segment_to_junction_index.TryGetValue(a, out junction_index_a))
+				{
+					break;
+				}
+			}
+
+			var b = segment;
+			while (++b.index <= points.Length)
+			{
+				if (road_segment_to_junction_index.TryGetValue(b, out junction_index_b))
+				{
+					break;
+				}
+			}
+
+			if ((uint)junction_index_a < road_junctions.Count && Maths.TrySetMin(ref dist_sq, Vector2.DistanceSquared(pos, road_junctions[junction_index_a].pos)))
+			{
+				junction_index = junction_index_a;
+			}
+
+			if ((uint)junction_index_b < road_junctions.Count && Maths.TrySetMin(ref dist_sq, Vector2.DistanceSquared(pos, road_junctions[junction_index_b].pos)))
+			{
+				junction_index = junction_index_b;
+			}
+
+			return junction_index != -1;
+		}
+
 		public static bool TryGetNextJunction(Road.Segment a, int dir_sign, out int junction_index, out Road.Segment b, out Road.Segment c, bool skip_inner_junctions = false)
 		{
 			junction_index = -1;
@@ -235,6 +293,74 @@ namespace TC2.Conquest
 			return false;
 		}
 
+		public static bool TryResolveBranch(Road.Junction junction, Vector2 dir, out Road.Junction.Branch branch)
+		{
+			var ok = false;
+			branch = default;
+			//c_alt = default;
+			//c_alt_dot = -1.00f;
+			//c_alt_sign = default;
+			//c_branch = default;
+
+			//if ((uint)junction_index < road_junctions.Count)
+			if (junction.IsValid())
+			{
+				//var junction = road_junctions[junction_index];
+				var junction_segments = junction.segments.Slice(junction.segments_count);
+
+				//var points_a = road_a.points.AsSpan();
+				//var points_b = road_b.points.AsSpan();
+				//var points_c = road_c.points.AsSpan();
+
+				var dot = -1.00f;
+
+				for (var i = 0; i < junction_segments.Length; i++)
+				{
+					ref var j_segment = ref junction_segments[i];
+					//if (j_segment == a) continue;
+					//if (j_segment == b) continue;
+					//if (j_segment == c) continue;
+
+					ref var j_road = ref j_segment.GetRoad();
+					//if (j_road.IsNull() || j_road.type != type) continue;
+
+					var j_points = j_road.points.AsSpan();
+					var j_pos = j_points[j_segment.index];
+
+					if (j_segment.index < j_points.Length - 1)
+					{
+						var dir_tmp = (j_points[j_segment.index + 1] - j_pos).GetNormalizedFast();
+						var dot_tmp = Vector2.Dot(dir, dir_tmp);
+
+						//World.GetGlobalRegion().DrawDebugDir(j_pos, dir_tmp, Color32BGRA.Orange);
+
+						if (dot_tmp > dot)
+						{
+							dot = dot_tmp;
+							branch = new((ushort)junction.index, (byte)i, (sbyte)1);
+							ok = true;
+						}
+					}
+
+					if (j_segment.index > 0)
+					{
+						var dir_tmp = (j_points[j_segment.index - 1] - j_pos).GetNormalizedFast();
+						var dot_tmp = Vector2.Dot(dir, dir_tmp);
+
+						//World.GetGlobalRegion().DrawDebugDir(j_pos, dir_tmp, Color32BGRA.Orange);
+
+						if (dot_tmp > dot)
+						{
+							dot = dot_tmp;
+							branch = new((ushort)junction.index, (byte)i, (sbyte)-1);
+							ok = true;
+						}
+					}
+				}
+			}
+
+			return ok;
+		}
 
 		public static bool TryAdvanceJunction(Road.Segment a, Road.Segment b, Road.Segment c, int junction_index, out Road.Junction.Branch c_branch, out Road.Segment c_alt, out int c_alt_sign, out float c_alt_dot, float dot_min = 0.40f, float dot_max = 1.00f, bool ignore_limits = false)
 		{
