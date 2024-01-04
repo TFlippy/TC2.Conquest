@@ -364,15 +364,21 @@ namespace TC2.Conquest
 								var pos_w = region.CanvasToWorld(pos);
 								pos_w.Snap(1.00f / 32.00f, out var pos_w_snapped);
 
-								var pos_c = region.WorldToCanvas(pos_w_snapped);
+								var pos_c_hover = region.WorldToCanvas(pos_w_snapped);
 
 								var pos_c_current = region.WorldToCanvas(this.transform.GetInterpolatedPosition());
 								var pos_c_target = region.WorldToCanvas(this.unit.pos_target);
 
+								var dist = Vector2.Distance(pos_w, this.transform.GetInterpolatedPosition());
+
 								//GUI.Text($"{ent_unit}; {pos:0.00} {pos_w:0.00}; {pos_c:0.00}");
 
-								GUI.DrawCircle(pos_c_current, 0.750f * region.GetWorldToCanvasScale(), Color32BGRA.Yellow, segments: 16, layer: GUI.Layer.Foreground);
-								GUI.DrawCircleFilled(pos_c_target, 0.1250f * region.GetWorldToCanvasScale(), Color32BGRA.Yellow.WithAlphaMult(0.50f), segments: 4, layer: GUI.Layer.Foreground);
+								GUI.DrawLine(pos_c_current, pos_c_target, Color32BGRA.Green.WithAlphaMult(0.25f), thickness: 0.125f * scale * 0.25f, GUI.Layer.Foreground);
+
+								GUI.DrawCircle(pos_c_current, 0.750f * scale, Color32BGRA.Green, segments: 16, layer: GUI.Layer.Foreground);
+								GUI.DrawCircleFilled(pos_c_target, 0.1250f * scale, Color32BGRA.Green.WithAlphaMult(0.50f), segments: 4, layer: GUI.Layer.Foreground);
+
+
 
 								var is_mouse_dragging_cached = is_mouse_dragging;
 								is_mouse_dragging = mouse.GetKeyNow(Mouse.Key.Left);
@@ -401,6 +407,8 @@ namespace TC2.Conquest
 									GUI.DrawRect(rect_c, color: Color32BGRA.Yellow, layer: GUI.Layer.Foreground);
 								}
 
+
+
 								if (WorldMap.IsHovered())
 								{
 									if (mouse.GetKeyDown(Mouse.Key.Left))
@@ -410,7 +418,13 @@ namespace TC2.Conquest
 										mouse_drag_a = pos_w_snapped;
 									}
 
-									GUI.DrawCircle(pos_c, 0.250f * region.GetWorldToCanvasScale(), Color32BGRA.Green, segments: 4, layer: GUI.Layer.Foreground);
+									GUI.DrawLine(pos_c_current, pos_c_hover, Color32BGRA.Yellow.WithAlphaMult(0.25f), thickness: 0.125f * scale * 0.25f, GUI.Layer.Foreground);
+
+									//GUI.DrawTextCentered($"{dist * WorldMap.km_per_unit:0.00} km", (pos_c_current + pos_c_hover) * 0.50f, layer: GUI.Layer.Foreground, box_shadow: true);
+
+									GUI.DrawCircleFilled(pos_c_hover, 0.125f * scale * 0.50f, Color32BGRA.Yellow.WithAlphaMult(0.50f), segments: 4, layer: GUI.Layer.Foreground);
+
+									GUI.DrawTextCentered($"{dist * WorldMap.km_per_unit:0.00} km", pos_c_hover - ((pos_c_hover - pos_c_current).GetNormalized() * 0.50f * scale), layer: GUI.Layer.Foreground, box_shadow: true);
 
 
 									//var nearest_location_a = WorldMap.GetNearestLocation(transform.position, out var distance_sq_a);

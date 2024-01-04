@@ -354,13 +354,14 @@ namespace TC2.Conquest
 								var asset_scale = Maths.Clamp(marker.scale, 0.50f, 1.00f);
 
 								//var rect_text = AABB.Centered(Vector2.Transform(pos + asset_data.text_offset, mat_l2c), new Vector2(scale * zoom * asset_scale * 1.50f));
-								var rect_icon = AABB.Centered(Vector2.Transform(pos + marker.icon_offset, mat_l2c), ((Vector2)marker.icon.size) * region.GetWorldToCanvasScale() * 0.125f * 0.625f);
+								var rect_icon = AABB.Centered(Vector2.Transform(pos + marker.icon_offset, mat_l2c), ((Vector2)marker.icon.size) * region.GetWorldToCanvasScale() * 0.125f);
+								var rect_button = AABB.Circle(Vector2.Transform(pos + marker.icon_offset, mat_l2c), marker.radius * region.GetWorldToCanvasScale());
 
 								//GUI.DrawRect(rect_icon, layer: GUI.Layer.Foreground);
 								//GUI.DrawRect(rect_text, layer: GUI.Layer.Foreground);
 
 								var is_selected = WorldMap.selected_entity == entity;
-								var is_pressed = GUI.ButtonBehavior(entity, rect_icon, out var is_hovered, out var is_held);
+								var is_pressed = GUI.ButtonBehavior(entity, rect_button, out var is_hovered, out var is_held);
 
 								var color = (is_selected || is_hovered) ? Color32BGRA.White : marker.color;
 
@@ -372,7 +373,7 @@ namespace TC2.Conquest
 
 									if (entity.TryGetAsset(out var asset))
 									{
-										GUI.FocusableAsset(asset, rect: rect_icon);
+										GUI.FocusableAsset(asset, rect: rect_button);
 
 										location_asset = asset as ILocation.Definition; // TODO: shithack
 

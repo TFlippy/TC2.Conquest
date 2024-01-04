@@ -15,7 +15,7 @@ worldmap.unit:
 worldmap.marker:
 {
 	flags: none
-	radius: 1.000
+	radius: 0.375
 	scale: 0.500
 	color: "0xffffffff"
 	text_offset: [0.000, 0.200]
@@ -33,7 +33,7 @@ worldmap.marker:
 
 interactable:
 {
-	window_size: [400.000, 256.000]
+	window_size: [192.000, 232.000]
 }
 
 faction:
