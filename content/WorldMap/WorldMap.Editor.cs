@@ -41,7 +41,7 @@ namespace TC2.Conquest
 			ref var region = ref World.GetGlobalRegion();
 			region.DrawDebugCircle(junc.pos, size, color ?? Color32BGRA.Magenta, filled: true);
 			ref var pos = ref seg_b.GetPosition();
-			//if (pos.IsNotNull())
+			if (pos.IsNotNull())
 			{
 				//region.DrawDebugLine(junc.pos, seg_a.GetPosition(), Color32BGRA.Cyan, 2.00f);
 				//region.DrawDebugLine(junc.pos, seg_b.GetPosition(), Color32BGRA.Cyan, 2.00f);

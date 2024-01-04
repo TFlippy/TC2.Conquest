@@ -375,6 +375,40 @@ namespace TC2.Conquest
 										GUI.FocusableAsset(asset, rect: rect_icon);
 
 										location_asset = asset as ILocation.Definition; // TODO: shithack
+
+										if (show_locations && location_asset != null)
+										{
+											if ((is_selected || is_hovered) && editor_mode == EditorMode.Roads)
+											{
+												//var ts = Timestamp.Now();
+												//var nearest_road = GetNearestRoad(asset_data.h_prefecture, Road.Type.Road, (Vector2)asset_data.point, out var nearest_road_dist_sq);
+												//var nearest_rail = GetNearestRoad(asset_data.h_prefecture, Road.Type.Rail, (Vector2)asset_data.point, out var nearest_rail_dist_sq);
+												//var ts_elapsed = ts.GetMilliseconds();
+
+												//if (nearest_road_dist_sq <= 1.50f.Pow2())
+
+												if (location_to_road.TryGetValue(location_asset, out var nearest_road))
+												{
+													GUI.DrawCircleFilled(nearest_road.GetPosition().Transform(in mat_l2c), 0.125f * zoom * 0.50f, Color32BGRA.Yellow, 8, GUI.Layer.Window);
+													if (Maths.IsInDistance(mouse_local, nearest_road.GetPosition(), 0.25f))
+													{
+														DrawConnectedRoads(nearest_road, ref mat_l2c, zoom, iter_max: 50, budget: 30.00f);
+													}
+												}
+
+												//if (nearest_rail_dist_sq <= 1.00f.Pow2())
+
+												if (location_to_rail.TryGetValue(location_asset, out var nearest_rail))
+												{
+													GUI.DrawCircleFilled(nearest_rail.GetPosition().Transform(in mat_l2c), 0.125f * zoom * 0.50f, Color32BGRA.Orange, 8, GUI.Layer.Window);
+													if (Maths.IsInDistance(mouse_local, nearest_rail.GetPosition(), 0.25f))
+													{
+														DrawConnectedRoads(nearest_rail, ref mat_l2c, zoom, iter_max: 50, budget: 100.00f);
+													}
+												}
+												//GUI.Text($"nearest in {ts_elapsed:0.0000} ms");
+											}
+										}
 									}
 
 									if (is_pressed)
@@ -538,7 +572,7 @@ namespace TC2.Conquest
 							}
 						}
 
-						var hovered = GUI.IsHoveringRect(rect, allow_blocked: false, allow_overlapped: false, root_window: false, child_windows: false);
+						var hovered = is_worldmap_hovered = GUI.IsHoveringRect(rect, allow_blocked: false, allow_overlapped: false, root_window: false, child_windows: false);
 
 						#region Editor
 						DrawEditor(ref rect, ref scenario_data, scenario_asset, ref mouse, ref kb, zoom, ref mat_l2c, ref mouse_local, hovered);
@@ -552,7 +586,7 @@ namespace TC2.Conquest
 						if (hovered)
 						{
 							//if (mouse.GetKey(Mouse.Key.Left) || mouse.GetKeyDown(Mouse.Key.Left))
-							if (mouse.GetKeyDown(Mouse.Key.Left))
+							if (mouse.GetKeyDown(Mouse.Key.Middle))
 							{
 								//worldmap_offset += mouse.GetDelta() * scale_canvas / zoom;
 
@@ -561,11 +595,16 @@ namespace TC2.Conquest
 
 								dragging = true;
 							}
+
+							if (GUI.IsMouseDoubleClicked())
+							{
+								WorldMap.selected_entity = default;
+							}
 						}
 
 						mouse_delta = mouse_pos_old - mouse_pos_new;
 
-						if (mouse.GetKeyUp(Mouse.Key.Left))
+						if (mouse.GetKeyUp(Mouse.Key.Middle))
 						{
 							dragging = false;
 						}
@@ -704,6 +743,9 @@ namespace TC2.Conquest
 				#endregion
 			}
 		}
+
+		internal static bool is_worldmap_hovered;
+		public static bool IsHovered() => is_worldmap_hovered;
 
 		public static void FocusLocation(ILocation.Handle h_location)
 		{

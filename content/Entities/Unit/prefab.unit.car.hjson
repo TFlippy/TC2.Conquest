@@ -1,9 +1,9 @@
-$name: "Guy"
+$name: "Car"
 $tags: []
 
 unit:
 {
-	speed: 6.000
+	speed: 60.000
 }
 
 transform:
@@ -11,10 +11,10 @@ transform:
 	scale: [1.000, 1.000]
 }
 
-sound.emitter:
-{
+// sound.emitter:
+// {
 	
-}
+// }
 
 interactable:
 {
@@ -36,11 +36,11 @@ worldmap_marker:
 	icon_offset: [0.000, 0.000]
 	icon:
 	{
-		texture: "human.male.head"
+		texture: "worldmap.unit.car.00"
 		mask: "missing"
 		fps: 0.000
 		count: 0
-		size: [16, 16]
+		size: [24, 24]
 		frame: [0, 0]
 	}
 }

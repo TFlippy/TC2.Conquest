@@ -520,13 +520,13 @@ namespace TC2.Conquest
 						if (RoadNav.Astar.TryFindPath(branch_src, branch_dst, ref branches_span, dot_min: this.dot_min, dot_max: this.dot_max))
 						{
 #if CLIENT
-							//foreach (ref var branch in branches_span)
-							//{
-							//	if (branch.sign != 0)
-							//	{
-							//		WorldMap.DrawBranch(ref branch);
-							//	}
-							//}
+							foreach (ref var branch in branches_span)
+							{
+								if (branch.sign != 0)
+								{
+									WorldMap.DrawBranch(ref branch);
+								}
+							}
 #endif
 
 							this.branches_count = branches_span.Length;
@@ -675,7 +675,7 @@ namespace TC2.Conquest
 					if (train.speed_current <= 0.01f)
 					{
 						train.flags.SetFlag(Data.Flags.Docked, true);
-						train.t_stop_departing = info.WorldTime + 15.00f;
+						train.t_stop_departing = info.WorldTime + 5.00f;
 					}
 				}
 				else

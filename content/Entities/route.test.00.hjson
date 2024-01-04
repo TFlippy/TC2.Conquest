@@ -1,6 +1,4 @@
 ﻿{
-	$prefab: ""
-	
 	name: "Test Route"
 	
 	targets:
@@ -9,11 +7,11 @@
 			h_location: "krachtel"
 			branch_entry:
 			{
-				junction_index: 76
-				index: 1
-				sign: 1
+				junction_index: 70
+				index: 0
+				sign: -1
 			}
-			stop_time: 5.000
+			stop_time: 1.000
 		}
 		{
 			h_location: "skumpus"
@@ -21,19 +19,19 @@
 			{
 				junction_index: 51
 				index: 0
-				sign: -1
+				sign: 1
 			}
-			stop_time: 0.000
+			stop_time: 1.000
 		}
 		{
 			h_location: "kolomaz"
 			branch_entry:
 			{
-				junction_index: 55
-				index: 2
+				junction_index: 75
+				index: 0
 				sign: -1
 			}
-			stop_time: 0.000
+			stop_time: 1.000
 		}
 	]
 }
