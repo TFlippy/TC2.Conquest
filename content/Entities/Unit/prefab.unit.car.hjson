@@ -1,32 +1,23 @@
 $name: "Car"
 $tags: []
 
-unit:
-{
-	speed: 60.000
-}
-
 transform:
 {
 	scale: [1.000, 1.000]
 }
 
-// sound.emitter:
-// {
-	
-// }
-
-interactable:
+worldmap.unit:
 {
-	window_size: [400.000, 256.000]
+	speed: 60.000
+	acc: 60.000
 }
 
-faction:
+worldmap.enterable:
 {
-	
+
 }
 
-worldmap_marker:
+worldmap.marker:
 {
 	flags: none
 	radius: 1.000
@@ -43,6 +34,21 @@ worldmap_marker:
 		size: [24, 24]
 		frame: [0, 0]
 	}
+}
+
+// sound.emitter:
+// {
+	
+// }
+
+interactable:
+{
+	window_size: [400.000, 256.000]
+}
+
+faction:
+{
+	
 }
 
 nameable:

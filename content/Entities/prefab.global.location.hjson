@@ -20,6 +20,11 @@ transform:
 	
 }
 
+worldmap.enterable:
+{
+    
+}
+
 // interactable:
 // {
 //     window_size: [456.000, 336.000]
