@@ -772,6 +772,27 @@ namespace TC2.Conquest
 			}
 		}
 
+		public static void FocusPosition(Vector2 pos)
+		{
+			GUI.RegionMenu.ToggleWidget(true);
+			WorldMap.worldmap_offset_target = pos;
+		}
+
+		public static void FocusEntity(Entity entity)
+		{
+			if (entity.IsValid() && entity.GetRegionID() == 0)
+			{
+				GUI.RegionMenu.ToggleWidget(true);
+
+				WorldMap.selected_entity = entity;
+				ref var transform = ref entity.GetComponent<Transform.Data>();
+				if (transform.IsNotNull())
+				{
+					WorldMap.worldmap_offset_target = transform.position;
+				}
+			}
+		}
+
 		public static void DrawInteractionWindow()
 		{
 			if (WorldMap.selected_entity.id != 0)
@@ -868,10 +889,19 @@ namespace TC2.Conquest
 						if (character_data.IsNotNull())
 						{
 							var ent_character = h_character.AsEntity(0);
-							var is_entity_alive = ent_character.IsAlive();
+							var ent_inside = character_data.ent_inside;
+
+							var is_ent_character_alive = ent_character.IsAlive();
+							var is_ent_inside_alive = ent_inside.IsAlive();
+
+							var h_location_inside = default(ILocation.Handle);
+							if (is_ent_inside_alive && ent_inside.TryGetAssetHandle(out h_location_inside))
+							{
+
+							}
 
 							scoped ref var transform = ref Unsafe.NullRef<Transform.Data>();
-							if (is_entity_alive)
+							if (is_ent_character_alive)
 							{
 								transform = ref ent_character.GetComponent<Transform.Data>();
 							}
@@ -882,6 +912,14 @@ namespace TC2.Conquest
 
 								GUI.SameLine();
 								GUI.TitleCentered(character_data.name, size: 24, pivot: new(0.00f, 0.00f), offset: new(4, 4));
+								if (GUI.Selectable3("character", GUI.GetLastItemRect(), selected: is_ent_character_alive && WorldMap.selected_entity == ent_character))
+								{
+									if (is_ent_character_alive)
+									{
+										WorldMap.selected_entity.Toggle(ent_character);
+										if (WorldMap.selected_entity == ent_character) WorldMap.FocusEntity(ent_character);
+									}
+								}
 								GUI.FocusableAsset(h_character);
 
 								GUI.TitleCentered(character_data.origin.GetName(), size: 16, pivot: new(1.00f, 0.00f), offset: new(-4, 8));
@@ -891,47 +929,52 @@ namespace TC2.Conquest
 								//GUI.TitleCentered(character_data.origin.GetName(), size: 16, pivot: new(0.00f, 1.00f), offset: new(4, -4));
 
 
-								if (is_entity_alive && transform.IsNotNull())
+								if (is_ent_character_alive && transform.IsNotNull())
 								{
 									//var h_location_nearest = WorldMap.GetNearestLocation(transform.position, out var distance_sq);
 									var ent_enterable = WorldMap.Enterable.GetNearest(transform.position, out var distance_sq);
-									var can_enter = distance_sq <= 0.950f.Pow2();
-
-									GUI.TitleCentered(ent_enterable.GetName(), size: 16, pivot: new(0.00f, 1.00f), offset: new(4, -4), color: GUI.font_color_disabled);
-									//if (GUI.Selectable3(ent_enterable, GUI.GetLastItemRect(), selected: WorldMap.h_selected_location == h_location_nearest))
-									if (GUI.Selectable3("enterable.current", GUI.GetLastItemRect(), selected: WorldMap.selected_entity == ent_enterable))
+									ref var enterable = ref ent_enterable.GetComponent<Enterable.Data>();
+									if (enterable.IsNotNull())
 									{
-										//WorldMap.h_selected_location.Toggle(h_location_nearest);
-										//if (WorldMap.h_selected_location != default) WorldMap.FocusLocation(h_location_nearest);
+										var can_enter = distance_sq <= enterable.radius.Pow2();
 
-										WorldMap.selected_entity.Toggle(ent_enterable);
-										//if (WorldMap.h_selected_location != default) WorldMap.FocusLocation(h_location_nearest);
-									}
-									//GUI.FocusableAsset(h_location_nearest);
+										ent_enterable.TryGetAssetHandle(out ILocation.Handle h_location_enterable);
 
-									if (can_enter)
-									{								
-										GUI.TitleCentered("[Enter]", size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: Color32BGRA.Green);
-										if (GUI.Selectable3("enter", GUI.GetLastItemRect(), selected: false))
+										GUI.TitleCentered(ent_enterable.GetName(), size: 16, pivot: new(0.00f, 1.00f), offset: new(4, -4), color: GUI.font_color_disabled);
+										//if (GUI.Selectable3(ent_enterable, GUI.GetLastItemRect(), selected: WorldMap.h_selected_location == h_location_nearest))
+										if (GUI.Selectable3("enterable.current", GUI.GetLastItemRect(), selected: WorldMap.selected_entity == ent_enterable))
 										{
-											var rpc = new Enterable.EnterRPC()
-											{
-												h_character = h_character,
-												//h_location = h_location_nearest
-											};
-											rpc.Send(ent_enterable);
+											//WorldMap.h_selected_location.Toggle(h_location_nearest);
+											//if (WorldMap.h_selected_location != default) WorldMap.FocusLocation(h_location_nearest);
+
+											WorldMap.selected_entity.Toggle(ent_enterable);
+											if (h_location_enterable.IsValid()) WorldMap.h_selected_location.Toggle(h_location_enterable);
+											if (WorldMap.selected_entity == ent_enterable) WorldMap.FocusEntity(ent_enterable);
 										}
-									}
-									else
-									{
-										GUI.TitleCentered($"{distance_sq.Sqrt() * WorldMap.km_per_unit:0.00} km", size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: GUI.font_color_disabled);
-										//GUI.TitleCentered("Wilderness", size: 16, pivot: new(0.00f, 1.00f), offset: new(4, -4), color: GUI.font_color_green_b.WithAlphaMult(0.50f));
+										//GUI.FocusableAsset(h_location_nearest);
+
+										if (can_enter)
+										{
+											GUI.TitleCentered("[Enter]", size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: Color32BGRA.Green);
+											if (GUI.Selectable3("enter", GUI.GetLastItemRect(), selected: false))
+											{
+												var rpc = new Enterable.EnterRPC()
+												{
+													h_character = h_character,
+													//h_location = h_location_nearest
+												};
+												rpc.Send(ent_enterable);
+											}
+										}
+										else
+										{
+											GUI.TitleCentered($"{distance_sq.Sqrt() * WorldMap.km_per_unit:0.00} km", size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: GUI.font_color_disabled);
+											//GUI.TitleCentered("Wilderness", size: 16, pivot: new(0.00f, 1.00f), offset: new(4, -4), color: GUI.font_color_green_b.WithAlphaMult(0.50f));
+										}
 									}
 								}
 								else
 								{
-									var ent_inside = character_data.ent_inside;
-
 									//GUI.TitleCentered(character_data.h_location_current.GetName(), size: 16, pivot: new(0.00f, 1.00f), offset: new(4, -4));
 									//if (GUI.Selectable3(character_data.h_location_current.id, GUI.GetLastItemRect(), selected: WorldMap.h_selected_location == character_data.h_location_current))
 									//{
@@ -945,6 +988,8 @@ namespace TC2.Conquest
 									if (GUI.Selectable3((uint)ent_inside.id, GUI.GetLastItemRect(), selected: WorldMap.selected_entity == ent_inside))
 									{
 										WorldMap.selected_entity.Toggle(ent_inside);
+										if (h_location_inside.IsValid()) WorldMap.h_selected_location.Toggle(h_location_inside);
+										if (WorldMap.selected_entity == ent_inside) WorldMap.FocusEntity(ent_inside);
 
 										//WorldMap.h_selected_location.Toggle(character_data.h_location_current);
 										//if (WorldMap.h_selected_location != default) WorldMap.FocusLocation(character_data.h_location_current);
@@ -968,19 +1013,19 @@ namespace TC2.Conquest
 							{
 								GUI.DrawMoney(character_data.money, new(48, 48));
 
-								
-								if (is_entity_alive)
+
+								if (is_ent_character_alive)
 								{
-								
-									if (transform.IsNotNull())
-									{
 
-									}
+									//if (transform.IsNotNull())
+									//{
 
-									if (GUI.DrawButton("Select", size: new(64, 40)))
-									{
-										WorldMap.selected_entity.Toggle(ent_character);
-									}
+									//}
+
+									//if (GUI.DrawButton("Select", size: new(64, 40)))
+									//{
+									//	WorldMap.selected_entity.Toggle(ent_character);
+									//}
 								}
 								else
 								{

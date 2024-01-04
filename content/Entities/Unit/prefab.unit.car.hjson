@@ -14,7 +14,7 @@ worldmap.unit:
 
 worldmap.enterable:
 {
-
+	radius: 0.250
 }
 
 worldmap.marker:

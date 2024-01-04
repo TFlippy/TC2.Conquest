@@ -22,7 +22,7 @@ transform:
 
 worldmap.enterable:
 {
-    
+    radius: 1.000
 }
 
 // interactable:

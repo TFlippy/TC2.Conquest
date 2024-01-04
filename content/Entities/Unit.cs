@@ -30,6 +30,8 @@ namespace TC2.Conquest
 
 				public BitField<Unit.Data.Type> mask_units;
 
+				public float radius = 0.50f;
+
 				public Data()
 				{
 				}
@@ -47,7 +49,7 @@ namespace TC2.Conquest
 					{
 						if (h_faction.id == 0 || h_faction == faction.id)
 						{
-							var dist_sq_tmp = Vector2.DistanceSquared(pos, transform.position);
+							var dist_sq_tmp = Vector2.DistanceSquared(pos, transform.position); // - enterable.radius.Pow2();
 							if (dist_sq_tmp < dist_sq_current)
 							{
 								dist_sq_current = dist_sq_tmp;
@@ -120,6 +122,18 @@ namespace TC2.Conquest
 					//if (pos == default) pos = (Vector2)location_data.point + random.NextUnitVector2Range(0.25f, 0.50f);
 
 					var pos = transform.position;
+
+					var h_location = default(ILocation.Handle);
+					if (entity.TryGetAssetHandle(out h_location) && WorldMap.location_to_road.TryGetValue(h_location, out var road))
+					{
+						pos = road.GetPosition();
+
+						//ref var location_data = ref h_location.GetData();
+						//if (location_data.IsNotNull())
+						//{
+						//	WorldMap.
+						//}
+					}
 
 					character_data.ent_inside = default;
 					character_asset.Sync();
@@ -207,83 +221,83 @@ namespace TC2.Conquest
 				return ent_nearest;
 			}
 
-//			// TODO: add validation
-//			public struct EnterRPC: Net.IGRPC<World.Global>
-//			{
-//				public ICharacter.Handle h_character;
-//				public ILocation.Handle h_location;
+			//			// TODO: add validation
+			//			public struct EnterRPC: Net.IGRPC<World.Global>
+			//			{
+			//				public ICharacter.Handle h_character;
+			//				public ILocation.Handle h_location;
 
-//#if SERVER
-//				public void Invoke(ref NetConnection connection, ref World.Global data)
-//				{
-//					ref var character_data = ref this.h_character.GetData(out var character_asset);
-//					Assert.NotNull(ref character_data);
+			//#if SERVER
+			//				public void Invoke(ref NetConnection connection, ref World.Global data)
+			//				{
+			//					ref var character_data = ref this.h_character.GetData(out var character_asset);
+			//					Assert.NotNull(ref character_data);
 
-//					ref var location_data = ref this.h_location.GetData(out var location_asset);
-//					Assert.NotNull(ref location_data);
+			//					ref var location_data = ref this.h_location.GetData(out var location_asset);
+			//					Assert.NotNull(ref location_data);
 
-//					ref var region = ref World.GetGlobalRegion();
-//					var ent_asset = this.h_character.AsEntity(0);
+			//					ref var region = ref World.GetGlobalRegion();
+			//					var ent_asset = this.h_character.AsEntity(0);
 
-//					if (ent_asset.IsAlive())
-//					{
-//						ent_asset.Delete();
-//					}
+			//					if (ent_asset.IsAlive())
+			//					{
+			//						ent_asset.Delete();
+			//					}
 
-//					character_data.h_location_current = this.h_location;
-//					character_asset.Sync();
+			//					character_data.h_location_current = this.h_location;
+			//					character_asset.Sync();
 
 
-//				}
-//#endif
-//			}
+			//				}
+			//#endif
+			//			}
 
-//			// TODO: add validation
-//			public struct ExitRPC: Net.IGRPC<World.Global>
-//			{
-//				public ICharacter.Handle h_character;
+			//			// TODO: add validation
+			//			public struct ExitRPC: Net.IGRPC<World.Global>
+			//			{
+			//				public ICharacter.Handle h_character;
 
-//#if SERVER
-//				public void Invoke(ref NetConnection connection, ref World.Global data)
-//				{
-//					ref var character_data = ref this.h_character.GetData(out var character_asset);
-//					Assert.NotNull(ref character_data);
+			//#if SERVER
+			//				public void Invoke(ref NetConnection connection, ref World.Global data)
+			//				{
+			//					ref var character_data = ref this.h_character.GetData(out var character_asset);
+			//					Assert.NotNull(ref character_data);
 
-//					var h_location = character_data.h_location_current;
+			//					var h_location = character_data.h_location_current;
 
-//					ref var location_data = ref h_location.GetData(out var location_asset);
-//					Assert.NotNull(ref location_data);
+			//					ref var location_data = ref h_location.GetData(out var location_asset);
+			//					Assert.NotNull(ref location_data);
 
-//					ref var region = ref World.GetGlobalRegion();
-//					var ent_asset = this.h_character.AsEntity(0);
+			//					ref var region = ref World.GetGlobalRegion();
+			//					var ent_asset = this.h_character.AsEntity(0);
 
-//					var road = WorldMap.GetNearestRoad(location_data.h_prefecture, Road.Type.Road, (Vector2)location_data.point, out var dist_sq);
-//					var pos = road.GetPosition().GetRefValueOrDefault();
+			//					var road = WorldMap.GetNearestRoad(location_data.h_prefecture, Road.Type.Road, (Vector2)location_data.point, out var dist_sq);
+			//					var pos = road.GetPosition().GetRefValueOrDefault();
 
-//					var random = XorRandom.New(true);
-//					if (pos == default) pos = (Vector2)location_data.point + random.NextUnitVector2Range(0.25f, 0.50f);
+			//					var random = XorRandom.New(true);
+			//					if (pos == default) pos = (Vector2)location_data.point + random.NextUnitVector2Range(0.25f, 0.50f);
 
-//					character_data.h_location_current = default;
-//					character_asset.Sync();
+			//					character_data.h_location_current = default;
+			//					character_asset.Sync();
 
-//					region.SpawnPrefab("unit.car", position: pos, faction_id: character_data.faction, entity: ent_asset).ContinueWith((ent) =>
-//					{
-//						ref var unit = ref ent.GetComponent<Unit.Data>();
-//						if (unit.IsNotNull())
-//						{
-//							unit.pos_target = pos;
-//							unit.h_location = default;
-//						}
+			//					region.SpawnPrefab("unit.car", position: pos, faction_id: character_data.faction, entity: ent_asset).ContinueWith((ent) =>
+			//					{
+			//						ref var unit = ref ent.GetComponent<Unit.Data>();
+			//						if (unit.IsNotNull())
+			//						{
+			//							unit.pos_target = pos;
+			//							unit.h_location = default;
+			//						}
 
-//						ref var nameable = ref ent.GetComponent<Nameable.Data>();
-//						if (nameable.IsNotNull())
-//						{
-//							nameable.name = character_asset.GetName();
-//						}
-//					});
-//				}
-//#endif
-//			}
+			//						ref var nameable = ref ent.GetComponent<Nameable.Data>();
+			//						if (nameable.IsNotNull())
+			//						{
+			//							nameable.name = character_asset.GetName();
+			//						}
+			//					});
+			//				}
+			//#endif
+			//			}
 
 			public struct MoveRPC: Net.IRPC<Unit.Data>
 			{
@@ -346,9 +360,16 @@ namespace TC2.Conquest
 					{
 						if (window.show)
 						{
+							//if (window.appearing)
+							//{
+							//	is_mouse_dragging = false;
+							//	mouse_drag_rect = null;
+							//	mouse_drag_a = null;
+							//	mouse_drag_b = null;
+							//}
+
 							using (GUI.Group.New(GUI.Rm, padding: new(4)))
 							{
-
 								var mouse = GUI.GetMouse();
 
 								ref var world_global = ref region.GetGlobalComponent<World.Global>();
@@ -394,20 +415,18 @@ namespace TC2.Conquest
 									mouse_drag_rect = null;
 								}
 
-								if (mouse_drag_a.HasValue && mouse_drag_b.HasValue)
+								if (is_mouse_dragging && mouse_drag_a.HasValue && mouse_drag_b.HasValue)
 								{
 									mouse_drag_rect = new AABB(mouse_drag_a.Value, mouse_drag_b.Value);
+
+									if (mouse_drag_rect.TryGetValue(out var rect))
+									{
+										var rect_c = region.WorldToCanvas(rect);
+
+										GUI.DrawRectFilled(rect_c, color: Color32BGRA.Yellow.WithAlphaMult(0.10f), layer: GUI.Layer.Foreground);
+										GUI.DrawRect(rect_c, color: Color32BGRA.Yellow, layer: GUI.Layer.Foreground);
+									}
 								}
-
-								if (mouse_drag_rect.TryGetValue(out var rect))
-								{
-									var rect_c = region.WorldToCanvas(rect);
-
-									GUI.DrawRectFilled(rect_c, color: Color32BGRA.Yellow.WithAlphaMult(0.10f), layer: GUI.Layer.Foreground);
-									GUI.DrawRect(rect_c, color: Color32BGRA.Yellow, layer: GUI.Layer.Foreground);
-								}
-
-
 
 								if (WorldMap.IsHovered())
 								{
@@ -476,6 +495,13 @@ namespace TC2.Conquest
 								}
 							}
 						}
+						else
+						{
+							is_mouse_dragging = false;
+							mouse_drag_rect = null;
+							mouse_drag_a = null;
+							mouse_drag_b = null;
+						}
 					}
 				}
 			}
@@ -483,7 +509,7 @@ namespace TC2.Conquest
 			[ISystem.LateGUI(ISystem.Mode.Single, ISystem.Scope.Global)]
 			public static void OnGUI(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] ref Unit.Data unit, [Source.Owned] ref Transform.Data transform)
 			{
-				if (WorldMap.IsOpen)
+				if (WorldMap.IsOpen && WorldMap.selected_entity == entity)
 				{
 					var gui = new Unit.UnitGUI()
 					{

@@ -143,6 +143,19 @@ namespace TC2.Conquest
 					var distance_sq = float.MaxValue;
 					var index = int.MaxValue;
 
+					foreach (var pair in pos_hash_to_prefecture)
+					{
+						ref var prefecture_data = ref pair.Value.GetData();
+						if (prefecture_data.IsNotNull())
+						{
+							var point = Unsafe.BitCast<int, short2>(pair.Key);
+							var point_t = Vector2.Transform((Vector2)point, mat_l2c);
+
+							var color = prefecture_data.color_fill;
+							GUI.DrawRectFilled(AABB.Simple(point_t, new Vector2(zoom, -zoom)), color: color.WithAlphaMult(0.25f), layer: GUI.Layer.Window);
+						}
+					}
+
 					var ts = Timestamp.Now();
 					foreach (var asset in IPrefecture.Database.GetAssets())
 					{
@@ -784,7 +797,7 @@ namespace TC2.Conquest
 							//		}
 							//	}
 							//}
-						
+
 						}
 					}
 				}

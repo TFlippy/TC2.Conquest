@@ -30,6 +30,8 @@ namespace TC2.Conquest
 			road_segments_overlapped_tmp.Clear();
 			road_segment_to_junction_index.Clear();
 
+			pos_hash_to_prefecture.Clear();
+
 			location_to_road.Clear();
 			location_to_rail.Clear();
 
@@ -58,6 +60,8 @@ namespace TC2.Conquest
 
 							var pos_grid = new short2((short)point.X, (short)point.Y);
 							var pos_key = Unsafe.BitCast<short2, int>(pos_grid);
+
+							pos_hash_to_prefecture[pos_key] = h_prefecture;
 
 							var segment = new Road.Segment(h_prefecture, (byte)road_index, (byte)point_index);
 
@@ -149,6 +153,11 @@ namespace TC2.Conquest
 					ref var asset_data = ref asset.GetData();
 					if (asset_data.flags.HasAny(ILocation.Flags.Hidden) || asset_data.h_location_parent.id != 0) continue;
 
+					var pos_grid = new short2((short)asset_data.point.X, (short)asset_data.point.Y);
+					var pos_key = Unsafe.BitCast<short2, int>(pos_grid);
+
+					pos_hash_to_prefecture[pos_key] = asset_data.h_prefecture;
+
 					//if (asset_data.buildings.HasAny(ILocation.Buildings.Checkpoint))
 					{
 						var nearest_segment = GetNearestRoad(asset_data.h_prefecture, Road.Type.Road, (Vector2)asset_data.point, out var dist_sq);
@@ -229,6 +238,13 @@ namespace TC2.Conquest
 
 			if ((uint)index < span.Length) return ref span[nearest_index];
 			else return ref Unsafe.NullRef<Doodad.Renderer.Data>();
+		}
+
+		// TODO: this is dumb
+		public static Road.Segment GetNearestRoad(Road.Type type, Vector2 position, out float distance_sq)
+		{
+			var h_prefecture = WorldMap.GetPrefectureAtPosition(position);
+			return GetNearestRoad(h_prefecture: h_prefecture, type: type, position: position, distance_sq: out distance_sq);
 		}
 
 		// TODO: implement a faster lookup

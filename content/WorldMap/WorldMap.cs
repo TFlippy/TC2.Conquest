@@ -21,6 +21,37 @@ namespace TC2.Conquest
 		public static Dictionary<Road.Segment, ILocation.Handle> road_to_location = new();
 		public static Dictionary<Road.Segment, ILocation.Handle> rail_to_location = new();
 
+		public static Dictionary<int, IPrefecture.Handle> pos_hash_to_prefecture = new();
+
+		public static bool TryGetRoad(this ILocation.Handle h_location, out Road.Segment road)
+		{
+			return location_to_road.TryGetValue(h_location, out road);
+		}
+
+		public static bool TryGetRail(this ILocation.Handle h_location, out Road.Segment rail)
+		{
+			return location_to_rail.TryGetValue(h_location, out rail);
+		}
+
+		public static IPrefecture.Handle GetPrefectureAtPosition(Vector2 pos)
+		{
+			var pos_grid = new short2((short)pos.X, (short)pos.Y);
+			var pos_key = Unsafe.BitCast<short2, int>(pos_grid);
+
+			pos_hash_to_prefecture.TryGetValue(pos_key, out var h_prefecture);
+			return h_prefecture;
+		}
+
+		public static IPrefecture.Handle GetPrefectureAtPoint(short2 pos)
+		{
+			var pos_key = Unsafe.BitCast<short2, int>(pos);
+
+			pos_hash_to_prefecture.TryGetValue(pos_key, out var h_prefecture);
+			return h_prefecture;
+		}
+
+
+
 		public static partial class Marker
 		{
 			[IComponent.Data(Net.SendType.Reliable, sync_table_capacity: 128)]
@@ -30,7 +61,7 @@ namespace TC2.Conquest
 				public enum Flags: uint
 				{
 					None = 0u,
-					 
+
 					Hidden = 1u << 0
 				}
 
