@@ -241,6 +241,23 @@ namespace TC2.Conquest
 			else return ref Unsafe.NullRef<Doodad.Renderer.Data>();
 		}
 
+		public static Road.Segment GetSegment(this Road.Junction.Branch branch)
+		{
+			return road_junctions[branch.junction_index].segments[branch.index];
+		}
+
+		public static Road.Segment GetSegment(this Road.Chain road_chain, int index)
+		{
+			return new Road.Segment(road_chain, (byte)Maths.Clamp(index, 0, road_chain.GetSpan().Length - 1));
+		}
+
+		public static Road.Segment GetNearestSegment(this Road.Chain road_chain, Vector2 pos)
+		{
+			var span = road_chain.GetSpan();
+			span.GetNearestIndex(pos, out var index, out var dist_sq);
+			return new Road.Segment(road_chain, (byte)index);
+		}
+
 		// TODO: this is dumb
 		public static Road.Segment GetNearestRoad(Road.Type type, Vector2 position, out float distance_sq)
 		{

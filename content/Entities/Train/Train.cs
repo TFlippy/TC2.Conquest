@@ -158,6 +158,8 @@ namespace TC2.Conquest
 
 			public static bool TryFindPath(Road.Junction.Branch a, Road.Junction.Branch b, ref Span<Road.Junction.Branch> out_results, bool ignore_limits = false, float dot_min = 0.50f, float dot_max = 1.00f)
 			{
+				if (a.GetHashCode() == b.GetHashCode()) return false;
+
 				ref var open_list = ref tls_open_list;
 				ref var closed_list = ref tls_closed_list;
 
@@ -255,6 +257,8 @@ namespace TC2.Conquest
 					temp = closed_list[temp.parent_hash];
 				}
 				while (temp.branch.junction_index != a.junction_index && results_count < out_results.Length - 1);
+				
+				out_results[results_count++] = a;
 
 				//foreach (var route in Path)
 				//{

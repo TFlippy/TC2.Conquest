@@ -189,18 +189,18 @@ namespace TC2.Conquest
 			junction_index = -1;
 			dist_sq = float.MaxValue;
 
+			ref var road = ref segment.GetRoad();
+			if (road.IsNull()) return false;
+
 			if (road_segment_to_junction_index.TryGetValue(segment, out junction_index))
 			{
 				dist_sq = 0.00f;
 				return true;
 			}
 
-			ref var road = ref segment.GetRoad();
-			if (road.IsNull()) return false;
-
 			var points = road.points.AsSpan();
 
-			var index = (int)segment.index; // + dir_sign;
+			var index = (int)segment.index;
 			var pos = points[index];
 
 			var junction_index_a = -1;

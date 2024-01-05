@@ -15,6 +15,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -31,6 +32,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -47,6 +49,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -63,6 +66,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -79,6 +83,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -95,6 +100,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -111,6 +117,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -127,6 +134,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -143,6 +151,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -159,6 +168,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -175,6 +185,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -191,6 +202,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -207,6 +219,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -223,6 +236,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -239,6 +253,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -255,6 +270,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -271,6 +287,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -287,6 +304,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -303,6 +321,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -319,6 +338,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -335,6 +355,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -351,6 +372,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -367,6 +389,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -383,6 +406,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -399,6 +423,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -415,6 +440,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -431,6 +457,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -447,6 +474,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -463,6 +491,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -479,6 +508,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -495,6 +525,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -511,6 +542,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -527,6 +559,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -543,6 +576,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -559,6 +593,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -575,6 +610,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -591,6 +627,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -607,6 +644,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -623,6 +661,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -639,6 +678,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -655,6 +695,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -671,6 +712,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -687,6 +729,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -703,6 +746,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -719,6 +763,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -735,6 +780,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -751,6 +797,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -767,6 +814,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -783,6 +831,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -799,6 +848,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -815,6 +865,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -831,6 +882,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -847,6 +899,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -863,6 +916,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -879,6 +933,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -895,6 +950,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -911,6 +967,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -927,6 +984,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -943,6 +1001,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -959,6 +1018,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -975,6 +1035,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -991,6 +1052,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -1007,6 +1069,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -1023,6 +1086,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -1039,6 +1103,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -1055,6 +1120,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -1071,6 +1137,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -1087,6 +1154,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -1103,6 +1171,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -1119,6 +1188,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -1135,6 +1205,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -1151,6 +1222,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -1167,6 +1239,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -1183,6 +1256,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -1199,6 +1273,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -1215,6 +1290,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -1231,6 +1307,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -1247,6 +1324,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -1263,6 +1341,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -1279,6 +1358,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -1295,6 +1375,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -1311,6 +1392,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -1327,6 +1409,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -1343,6 +1426,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -1359,6 +1443,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -1375,6 +1460,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -1391,6 +1477,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -1407,6 +1494,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -1423,6 +1511,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -1439,6 +1528,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -1455,6 +1545,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -1471,6 +1562,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -1487,6 +1579,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -1503,6 +1596,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -1519,6 +1613,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -1535,6 +1630,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -1551,6 +1647,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -1567,6 +1664,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -1583,6 +1681,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -1599,6 +1698,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -1615,6 +1715,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -1631,6 +1732,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -1647,6 +1749,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -1663,6 +1766,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -1679,6 +1783,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -1695,6 +1800,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -1711,6 +1817,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -1727,6 +1834,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -1743,6 +1851,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -1759,6 +1868,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -1775,6 +1885,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -1791,6 +1902,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -1807,6 +1919,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -1823,6 +1936,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -1839,6 +1953,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -1855,6 +1970,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -1871,6 +1987,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -1887,6 +2004,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -1903,6 +2021,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -1919,6 +2038,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -1935,6 +2055,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -1951,6 +2072,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -1967,6 +2089,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -1983,6 +2106,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -1999,6 +2123,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -2015,6 +2140,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -2031,6 +2157,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -2047,6 +2174,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -2063,6 +2191,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -2079,6 +2208,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -2095,6 +2225,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -2111,6 +2242,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2127,6 +2259,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2143,6 +2276,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2159,6 +2293,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2175,6 +2310,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2191,6 +2327,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2207,6 +2344,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -2223,6 +2361,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -2239,6 +2378,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2255,6 +2395,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2271,6 +2412,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -2287,6 +2429,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2303,6 +2446,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -2319,6 +2463,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -2335,6 +2480,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2351,6 +2497,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2367,6 +2514,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -2383,6 +2531,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -2399,6 +2548,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2415,6 +2565,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2431,6 +2582,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -2447,6 +2599,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2463,6 +2616,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2479,6 +2633,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -2495,6 +2650,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2511,6 +2667,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -2527,6 +2684,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2543,6 +2701,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -2559,6 +2718,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2575,6 +2735,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -2591,6 +2752,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2607,6 +2769,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -2623,6 +2786,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -2639,6 +2803,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -2655,6 +2820,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2671,6 +2837,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -2687,6 +2854,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -2703,6 +2871,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -2719,6 +2888,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2735,6 +2905,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2751,6 +2922,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -2767,6 +2939,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -2783,6 +2956,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2799,6 +2973,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2815,6 +2990,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2831,6 +3007,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2847,6 +3024,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2863,6 +3041,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -2879,6 +3058,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -2895,6 +3075,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -2911,6 +3092,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -2927,6 +3109,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -2943,6 +3126,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -2959,13 +3143,14 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
 				frame: [0, 4]
 			}
 			
-			position: [20.10261, -14.14709]
+			position: [20.22086, -14.17994]
 			scale: [0.450, 0.325037]
 			rotation: 0.070
 			z: 0.163
@@ -2975,13 +3160,14 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
 				frame: [0, 4]
 			}
 			
-			position: [19.74107, -13.86566]
+			position: [19.93158, -13.83281]
 			scale: [-0.300, 0.425037]
 			rotation: 0.070
 			z: 0.163
@@ -2991,6 +3177,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -3007,6 +3194,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -3023,6 +3211,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -3039,6 +3228,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -3055,6 +3245,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3071,6 +3262,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3087,6 +3279,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -3097,12 +3290,13 @@
 			scale: [0.575751, 0.600]
 			rotation: 0.100
 			z: 0.268
-			color: "0xffcccccc"
+			color: "0xffc7b244"
 		}
 		{
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -3119,6 +3313,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -3135,6 +3330,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -3151,6 +3347,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -3167,6 +3364,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -3183,6 +3381,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -3199,14 +3398,15 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
 				frame: [0, 4]
 			}
 			
-			position: [31.37971, -11.14007]
-			scale: [0.465925, -0.470998]
+			position: [31.31342, -11.24503]
+			scale: [0.440928, -0.646001]
 			rotation: 3.020
 			z: -0.390
 			color: "0xffedc391"
@@ -3215,6 +3415,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -3231,6 +3432,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -3247,6 +3449,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 48]
@@ -3263,6 +3466,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -3279,6 +3483,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -3295,6 +3500,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -3311,6 +3517,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3321,12 +3528,13 @@
 			scale: [-0.800, 0.474317]
 			rotation: -0.190
 			z: -0.561
-			color: "0xfffffefe"
+			color: "0xffc7b244"
 		}
 		{
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -3343,6 +3551,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -3359,6 +3568,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [48, 24]
@@ -3375,6 +3585,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3391,6 +3602,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3407,6 +3619,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3423,6 +3636,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3439,6 +3653,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3455,6 +3670,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3471,6 +3687,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3487,6 +3704,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3503,6 +3721,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3519,6 +3738,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3535,6 +3755,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3551,6 +3772,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3567,6 +3789,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3583,6 +3806,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3599,6 +3823,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3615,6 +3840,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3631,6 +3857,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3647,6 +3874,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3663,6 +3891,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3679,6 +3908,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3695,6 +3925,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3711,6 +3942,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3727,6 +3959,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -3743,6 +3976,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [64, 24]
@@ -3759,6 +3993,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3775,6 +4010,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3791,6 +4027,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3807,6 +4044,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3823,6 +4061,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3839,6 +4078,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3855,6 +4095,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3871,6 +4112,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3887,6 +4129,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3903,6 +4146,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3919,6 +4163,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3935,6 +4180,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3951,6 +4197,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3967,6 +4214,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3983,6 +4231,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -3999,6 +4248,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -4015,6 +4265,7 @@
 			sprite:
 			{
 				texture: "worldmap.doodads.00"
+				mask: "missing"
 				fps: 0.000
 				count: 0
 				size: [24, 24]
@@ -4026,6 +4277,159 @@
 			rotation: 0.000
 			z: 0.223
 			color: "0xffffffff"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [1, 6]
+			}
+			
+			position: [32.10948, -13.49153]
+			scale: [0.500, 0.500]
+			rotation: 0.000
+			z: 0.223
+			color: "0xfffffefe"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [3, 7]
+			}
+			
+			position: [32.44909, -13.12739]
+			scale: [0.500, 0.500]
+			rotation: 0.000
+			z: 0.223
+			color: "0xffffffff"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [3, 4]
+			}
+			
+			position: [34.959, -12.97677]
+			scale: [-0.404383, 0.499223]
+			rotation: 0.000
+			z: 0.285
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [3, 4]
+			}
+			
+			position: [33.68714, -14.26764]
+			scale: [-0.479375, 0.374223]
+			rotation: 0.090
+			z: 0.285
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [4, 4]
+			}
+			
+			position: [34.69605, -14.4267]
+			scale: [0.625, 0.500]
+			rotation: 0.000
+			z: -0.561
+			color: "0xffc7b244"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [4, 4]
+			}
+			
+			position: [33.65122, -11.9848]
+			scale: [0.525016, 0.500002]
+			rotation: -0.010
+			z: -0.561
+			color: "0xffc7b244"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [2, 1]
+			}
+			
+			position: [33.94298, -14.84822]
+			scale: [0.534772, 0.402606]
+			rotation: 0.100
+			z: 0.268
+			color: "0xffc7b244"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [3, 4]
+			}
+			
+			position: [33.11278, -11.18497]
+			scale: [-0.304376, 0.574223]
+			rotation: 0.090
+			z: 0.239
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [3, 4]
+			}
+			
+			position: [30.21284, -11.81444]
+			scale: [-0.504375, 0.449223]
+			rotation: 0.090
+			z: -0.487
+			color: "0xffcccccc"
 		}
 	]
 }

@@ -178,17 +178,26 @@ namespace TC2.Conquest
 				public enum Flags: uint
 				{
 					None = 0u,
+
+					Wants_Repath = 1u << 0
 				}
 
 				public Unit.Data.Flags flags;
 
 				public ILocation.Handle h_location;
+				public Vector2 pos_next;
 				public Vector2 pos_target;
 
 				// speed in km/h
 				public float speed = 6.00f;
 				public float speed_current;
 				public float acc = 3.00f;
+
+				[Net.Ignore, Save.Ignore] public Road.Segment next_segment;
+				[Net.Ignore, Save.Ignore] public Road.Segment end_segment;
+				[Net.Ignore, Save.Ignore] public int current_branch_index;
+				[Net.Ignore, Save.Ignore] public FixedArray32<Road.Junction.Branch> branches;
+				[Net.Ignore, Save.Ignore] public int branches_count;
 
 				public Data()
 				{
@@ -221,84 +230,6 @@ namespace TC2.Conquest
 				return ent_nearest;
 			}
 
-			//			// TODO: add validation
-			//			public struct EnterRPC: Net.IGRPC<World.Global>
-			//			{
-			//				public ICharacter.Handle h_character;
-			//				public ILocation.Handle h_location;
-
-			//#if SERVER
-			//				public void Invoke(ref NetConnection connection, ref World.Global data)
-			//				{
-			//					ref var character_data = ref this.h_character.GetData(out var character_asset);
-			//					Assert.NotNull(ref character_data);
-
-			//					ref var location_data = ref this.h_location.GetData(out var location_asset);
-			//					Assert.NotNull(ref location_data);
-
-			//					ref var region = ref World.GetGlobalRegion();
-			//					var ent_asset = this.h_character.AsEntity(0);
-
-			//					if (ent_asset.IsAlive())
-			//					{
-			//						ent_asset.Delete();
-			//					}
-
-			//					character_data.h_location_current = this.h_location;
-			//					character_asset.Sync();
-
-
-			//				}
-			//#endif
-			//			}
-
-			//			// TODO: add validation
-			//			public struct ExitRPC: Net.IGRPC<World.Global>
-			//			{
-			//				public ICharacter.Handle h_character;
-
-			//#if SERVER
-			//				public void Invoke(ref NetConnection connection, ref World.Global data)
-			//				{
-			//					ref var character_data = ref this.h_character.GetData(out var character_asset);
-			//					Assert.NotNull(ref character_data);
-
-			//					var h_location = character_data.h_location_current;
-
-			//					ref var location_data = ref h_location.GetData(out var location_asset);
-			//					Assert.NotNull(ref location_data);
-
-			//					ref var region = ref World.GetGlobalRegion();
-			//					var ent_asset = this.h_character.AsEntity(0);
-
-			//					var road = WorldMap.GetNearestRoad(location_data.h_prefecture, Road.Type.Road, (Vector2)location_data.point, out var dist_sq);
-			//					var pos = road.GetPosition().GetRefValueOrDefault();
-
-			//					var random = XorRandom.New(true);
-			//					if (pos == default) pos = (Vector2)location_data.point + random.NextUnitVector2Range(0.25f, 0.50f);
-
-			//					character_data.h_location_current = default;
-			//					character_asset.Sync();
-
-			//					region.SpawnPrefab("unit.car", position: pos, faction_id: character_data.faction, entity: ent_asset).ContinueWith((ent) =>
-			//					{
-			//						ref var unit = ref ent.GetComponent<Unit.Data>();
-			//						if (unit.IsNotNull())
-			//						{
-			//							unit.pos_target = pos;
-			//							unit.h_location = default;
-			//						}
-
-			//						ref var nameable = ref ent.GetComponent<Nameable.Data>();
-			//						if (nameable.IsNotNull())
-			//						{
-			//							nameable.name = character_asset.GetName();
-			//						}
-			//					});
-			//				}
-			//#endif
-			//			}
-
 			public struct MoveRPC: Net.IRPC<Unit.Data>
 			{
 				public Vector2 pos_target;
@@ -307,6 +238,7 @@ namespace TC2.Conquest
 				public void Invoke(ref NetConnection connection, Entity entity, ref Unit.Data data)
 				{
 					data.pos_target = this.pos_target;
+					data.flags.SetFlag(Data.Flags.Wants_Repath, true);
 
 					data.Sync(entity, true);
 				}
@@ -320,24 +252,140 @@ namespace TC2.Conquest
 			}
 
 			[ISystem.Update(ISystem.Mode.Single, ISystem.Scope.Global)]
-			public static void OnUpdateGlobal(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] ref Unit.Data unit, [Source.Owned] ref Transform.Data transform)
+			public static void OnUpdateGlobal(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Global] ref World.Global world_global, [Source.Owned] ref Unit.Data unit, [Source.Owned] ref Transform.Data transform)
 			{
-				const float s_to_h = 1.00f / 60.00f;
+				if (unit.flags.TrySetFlag(Data.Flags.Wants_Repath, false))
+				{
+					unit.current_branch_index = 0;
+					unit.branches_count = 0;
 
-				ref var world_global = ref region.GetGlobalComponent<World.Global>();
+					var branches_span = unit.branches.AsSpan();
+					if (Repath(transform.position, unit.pos_target, ref unit.next_segment, ref unit.end_segment, ref branches_span))
+					{
+						var branch = branches_span[0];
+
+						unit.branches_count = branches_span.Length;
+						unit.pos_next = unit.next_segment.GetPosition();
+					}
+					else
+					{
+						unit.pos_next = unit.pos_target;
+					}
+				}
+
+				const float s_to_h = 1.00f / 60.00f;
 				var time_scale = world_global.speed;
 
-				var dir = (unit.pos_target - transform.position).GetNormalized(out var dist);
-				if (dist > unit.acc * info.DeltaTime * 0.50f)
+				if (unit.next_segment.IsValid())
 				{
-					unit.speed_current.MoveTowards(unit.speed, unit.acc * info.DeltaTime);
+					static void GetNextSegment(Vector2 pos_current, ref Road.Segment segment, ref Road.Segment end_segment, ref int current_branch_index, Span<Road.Junction.Branch> branches)
+					{
+						//var dist_sq = Vector2.DistanceSquared(pos_current, segment.GetPosition());
+						if (Maths.IsInDistance(pos_current, segment.GetPosition(), 0.10f))
+						{
+							if (segment == end_segment && end_segment.IsValid())
+							{
+								segment = default;
+								App.WriteLine("done");
+							}
+							else if (current_branch_index < branches.Length)
+							{
+								//if (current_branch_index < branches.Length - 1 && WorldMap.road_segment_to_junction_index.TryGetValue(segment, out var junction_index) && junction_index == branches[current_branch_index + 1].junction_index)
+								if (current_branch_index < branches.Length - 1 && Maths.IsInDistance(pos_current, WorldMap.road_junctions[branches[current_branch_index + 1].junction_index].pos, 0.25f))
+								{
+									current_branch_index++;
+									segment = branches[current_branch_index].GetSegment();
+									//segment.index = (byte)(segment.index + branches[current_branch_index].sign);
+									App.WriteLine(branches[current_branch_index].sign);
+								}
+								else
+								{
+									segment.index = (byte)(segment.index + branches[current_branch_index].sign);
+								}
+							}
+						}
+					}
+
+					GetNextSegment(transform.position, ref unit.next_segment, ref unit.end_segment, ref unit.current_branch_index, unit.branches.Slice(unit.branches_count));
+					
+					if (!unit.next_segment.IsValid())
+					{
+						unit.pos_next = unit.pos_target;
+					}
+					else
+					{
+						unit.pos_next = unit.next_segment.GetPosition();
+					}
 				}
 				else
 				{
-					unit.speed_current.MoveTowards(Maths.Min(dist * 50 * 5, unit.speed), unit.acc * info.DeltaTime);
+					unit.pos_next = unit.pos_target;
 				}
 
+				var pos_target = unit.pos_next;
+				var dir = (pos_target - transform.position).GetNormalized(out var dist);
+				unit.speed_current = unit.speed;
+
+
+				//if (dist > unit.acc * info.DeltaTime * 0.50f)
+				//{
+				//	unit.speed_current.MoveTowards(unit.speed, unit.acc * info.DeltaTime);
+				//}
+				//else
+				//{
+				//	unit.speed_current.MoveTowards(Maths.Min(dist * 50 * 5, unit.speed), unit.acc * info.DeltaTime);
+				//}
+
 				transform.position += (dir * Maths.Min(dist, ((unit.speed_current * info.DeltaTime * s_to_h) * time_scale)) / WorldMap.km_per_unit);
+			}
+
+			public static bool Repath(Vector2 pos_a, Vector2 pos_b, ref Road.Segment segment_start, ref Road.Segment segment_end, ref Span<Road.Junction.Branch> branches_span)
+			{
+				var dir = (pos_b - pos_a).GetNormalizedFast();
+
+				segment_start = default;
+				segment_end = default;
+
+				var road_a = WorldMap.GetNearestRoad(Road.Type.Road, pos_a, out var road_a_dist_sq);
+				var road_b = WorldMap.GetNearestRoad(Road.Type.Road, pos_b, out var road_b_dist_sq);
+
+				if (road_a.IsValid() && road_b.IsValid() && road_a != road_b && road_a_dist_sq < 2.00f.Pow2() && road_b_dist_sq < 2.00f.Pow2())
+				{
+					var sign_a = Train.GetSign(dir, road_a, true, 0.00f, 1.00f);
+					var sign_b = Train.GetSign(-dir, road_b, true, 0.00f, 1.00f);
+
+					var ok_a = WorldMap.TryGetNearestJunction(road_a, out var junction_index_a, out _);
+					var ok_b = WorldMap.TryGetNearestJunction(road_b, out var junction_index_b, out _);
+
+					if (ok_a && ok_b)
+					{
+						var junction_a = WorldMap.road_junctions[junction_index_a];
+						var junction_b = WorldMap.road_junctions[junction_index_b];
+
+						TryResolveBranch(junction_a, (pos_b - junction_a.pos).GetNormalizedFast(), out var branch_src);
+						TryResolveBranch(junction_b, dir, out var branch_dst);
+
+						if (RoadNav.Astar.TryFindPath(branch_src, branch_dst, ref branches_span, ignore_limits: true, dot_min: 0.00f, dot_max: 1.00f))
+						{
+							//segment_start = branch_src.GetSegment();
+							segment_start = branches_span[0].GetSegment();
+							segment_start = segment_start.chain.GetNearestSegment(pos_a);
+
+							//segment_end = road_b;
+
+							//segment_start = road_a;
+							segment_end = road_b;
+
+							//segment_end = branch_dst.GetSegment();
+							//segment_end = branches_span[branches_span.Length - 1].GetSegment();
+							//segment_end = segment_end.chain.GetNearestSegment(pos_b);
+
+							return true;
+						}
+					}
+				}
+
+				return false;
 			}
 
 #if CLIENT
@@ -391,14 +439,16 @@ namespace TC2.Conquest
 
 								var pos_c_current = region.WorldToCanvas(this.transform.GetInterpolatedPosition());
 								var pos_c_target = region.WorldToCanvas(this.unit.pos_target);
+								var pos_c_next = region.WorldToCanvas(this.unit.pos_next);
 
 								var dir = (pos_w - this.transform.GetInterpolatedPosition()).GetNormalized(out var dist);
 
 								//GUI.Text($"{ent_unit}; {pos:0.00} {pos_w:0.00}; {pos_c:0.00}");
 
-								GUI.DrawLine(pos_c_current, pos_c_target, Color32BGRA.Green.WithAlphaMult(0.25f), thickness: 0.125f * scale * 0.25f, GUI.Layer.Foreground);
+								GUI.DrawLine(pos_c_current, pos_c_next, Color32BGRA.Green.WithAlphaMult(0.25f), thickness: 0.125f * scale * 0.25f, GUI.Layer.Foreground);
 
 								GUI.DrawCircle(pos_c_current, 0.750f * scale, Color32BGRA.Green, segments: 16, layer: GUI.Layer.Foreground);
+								GUI.DrawCircleFilled(pos_c_next, 0.1250f * scale, Color32BGRA.Green.WithAlphaMult(0.50f), segments: 4, layer: GUI.Layer.Foreground);
 								GUI.DrawCircleFilled(pos_c_target, 0.1250f * scale, Color32BGRA.Green.WithAlphaMult(0.50f), segments: 4, layer: GUI.Layer.Foreground);
 
 
@@ -430,6 +480,21 @@ namespace TC2.Conquest
 									}
 								}
 
+								ref var current_branch = ref unit.branches[unit.current_branch_index];
+								if (current_branch.sign != 0)
+								{
+									GUI.DrawCircleFilled(region.WorldToCanvas(WorldMap.road_junctions[current_branch.junction_index].pos), 0.5f * scale * 0.50f, Color32BGRA.Orange.WithAlphaMult(0.50f), segments: 16, layer: GUI.Layer.Foreground);
+								}
+
+								GUI.Text($"{unit.current_branch_index}/{unit.branches_count}");
+								if (unit.next_segment.IsValid())
+								{
+									GUI.DrawCircleFilled(region.WorldToCanvas(unit.next_segment.GetPosition()), 0.5f * scale * 0.50f, Color32BGRA.Cyan.WithAlphaMult(0.50f), segments: 16, layer: GUI.Layer.Foreground);
+									GUI.Text($"{unit.next_segment.index}; {unit.next_segment.GetPosition()}");
+								}
+
+								WorldMap.DrawBranch(ref current_branch);
+
 								if (WorldMap.IsHovered())
 								{
 									if (mouse.GetKeyDown(Mouse.Key.Left))
@@ -451,50 +516,17 @@ namespace TC2.Conquest
 									var road_a = WorldMap.GetNearestRoad(Road.Type.Road, transform.position, out var road_a_dist_sq);
 									var road_b = WorldMap.GetNearestRoad(Road.Type.Road, pos_w_snapped, out var road_b_dist_sq);
 
-
 									if (road_a.IsValid() && road_b.IsValid())
 									{
 										var sign_a = Train.GetSign(dir, road_a, true, 0.00f, 1.00f);
 										var sign_b = Train.GetSign(-dir, road_b, true, 0.00f, 1.00f);
 
-										//var ok_a = WorldMap.TryGetNextJunction(road_a, sign_a, out var junction_index_a, out var segment_a_b, out var segment_a_c);
-										//var ok_b = WorldMap.TryGetNextJunction(road_b, sign_b, out var junction_index_b, out var segment_b_b, out var segment_b_c);
-
-
 										var ok_a = WorldMap.TryGetNearestJunction(road_a, out var junction_index_a, out _);
 										var ok_b = WorldMap.TryGetNearestJunction(road_b, out var junction_index_b, out _);
-										//var ok_b = WorldMap.TryGetNextJunction(road_b, sign_b, out var junction_index_b, out var segment_b_b, out var segment_b_c);
-
-										GUI.DrawCircleFilled(region.WorldToCanvas(road_a.GetPosition()), 0.125f * scale * 0.50f, Color32BGRA.Magenta.WithAlphaMult(0.50f), segments: 4, layer: GUI.Layer.Foreground);
-										GUI.DrawCircleFilled(region.WorldToCanvas(road_b.GetPosition()), 0.125f * scale * 0.50f, Color32BGRA.Magenta.WithAlphaMult(0.50f), segments: 4, layer: GUI.Layer.Foreground);
-
-
-										GUI.LabelShaded("a:", $"{ok_a}; {junction_index_a}");
-										GUI.LabelShaded("b:", $"{ok_b}; {junction_index_b}");
-
-										if (ok_a)
-										{
-											GUI.DrawCircleFilled(region.WorldToCanvas(road_a.GetPosition()), 0.25f * scale * 0.50f, Color32BGRA.Yellow, segments: 4, layer: GUI.Layer.Foreground);
-											//GUI.DrawCircleFilled(region.WorldToCanvas(segment_a_b.GetPosition()), 0.25f * scale * 0.50f, Color32BGRA.Yellow, segments: 4, layer: GUI.Layer.Foreground);
-											//GUI.DrawCircleFilled(region.WorldToCanvas(segment_a_c.GetPosition()), 0.25f * scale * 0.50f, Color32BGRA.Yellow, segments: 4, layer: GUI.Layer.Foreground);
-											//GUI.DrawCircleFilled(region.WorldToCanvas(WorldMap.road_junctions[junction_index_a].pos), 0.725f * scale * 0.50f, Color32BGRA.Red, segments: 4, layer: GUI.Layer.Foreground);
-										}
-
-										//if (ok_b)
-										//{
-										//	GUI.DrawCircleFilled(region.WorldToCanvas(WorldMap.road_junctions[junction_index_b].pos), 0.725f * scale * 0.50f, Color32BGRA.Green, segments: 4, layer: GUI.Layer.Foreground);
-										//}
 
 										if (ok_a && ok_b)
 										{
-
 											Span<Road.Junction.Branch> branches_span = stackalloc Road.Junction.Branch[32];
-
-											//var branch_src = new Road.Junction.Branch((ushort)junction_index_a, 0, Train.GetSign((WorldMap.road_junctions[junction_index_a].pos - road_b.GetPosition()).GetNormalized(), road_b, true, 0, 1));
-											//var branch_dst = new Road.Junction.Branch((ushort)junction_index_b, 0, Train.GetSign((WorldMap.road_junctions[junction_index_b].pos - road_b.GetPosition()).GetNormalized(), road_b, true, 0, 1));
-
-											//TryAdvanceJunction(road_a, segment_a_b, segment_a_c, junction_index_a, out var branch_src, out _, out _, out _, dot_min: 0.01f, dot_max: 0.90f, ignore_limits: false);
-											//TryAdvanceJunction(road_b, segment_b_b, segment_b_c, junction_index_b, out var branch_dst, out _, out _, out _, dot_min: 0.01f, dot_max: 0.90f, ignore_limits: false);
 
 											var junction_a = WorldMap.road_junctions[junction_index_a];
 											var junction_b = WorldMap.road_junctions[junction_index_b];
@@ -502,18 +534,14 @@ namespace TC2.Conquest
 											TryResolveBranch(junction_a, (pos_w_snapped - junction_a.pos).GetNormalizedFast(), out var branch_src);
 											TryResolveBranch(junction_b, dir, out var branch_dst);
 
-
-											WorldMap.DrawBranch(ref branch_src);
-											WorldMap.DrawBranch(ref branch_dst);
-
+											//WorldMap.DrawBranch(ref branch_src);
+											//WorldMap.DrawBranch(ref branch_dst);
 
 											if (RoadNav.Astar.TryFindPath(branch_src, branch_dst, ref branches_span, ignore_limits: true, dot_min: 0.00f, dot_max: 1.00f))
 											{
-												//App.WriteLine("yes");
-
 												foreach (ref var branch in branches_span)
 												{
-													if (branch.sign != 0)
+													//if (branch.sign != 0)
 													{
 														WorldMap.DrawBranch(ref branch);
 													}
@@ -523,45 +551,6 @@ namespace TC2.Conquest
 											}
 										}
 									}
-									//var nearest_location_a = WorldMap.GetNearestLocation(transform.position, out var distance_sq_a);
-									//var nearest_location_b = WorldMap.GetNearestLocation(pos_w_snapped, out var distance_sq_b);
-
-									//ref var nearest_location_a_data = ref nearest_location_a.GetData();
-									//ref var nearest_location_b_data = ref nearest_location_b.GetData();
-
-									//if (nearest_location_a_data.IsNotNull() && nearest_location_b_data.IsNotNull())
-									//{
-									//	Span<Road.Junction.Branch> branches_span = stackalloc Road.Junction.Branch[32];
-
-									//	//var road = WorldMap.location_to_road[nearest_location];
-									//	var road_a = WorldMap.GetNearestRoad(nearest_location_a_data.h_prefecture, Road.Type.Road, transform.position, out var dist_road_a_sq);
-									//	var road_b = WorldMap.GetNearestRoad(nearest_location_b_data.h_prefecture, Road.Type.Road, pos_w_snapped, out var dist_road_b_sq);
-
-									//	GUI.DrawCircle(region.WorldToCanvas(road_a.GetPosition()), 0.250f * region.GetWorldToCanvasScale(), Color32BGRA.Magenta, segments: 4, layer: GUI.Layer.Foreground);
-									//	GUI.DrawCircle(region.WorldToCanvas(road_b.GetPosition()), 0.250f * region.GetWorldToCanvasScale(), Color32BGRA.Magenta, segments: 4, layer: GUI.Layer.Foreground);
-
-
-									//	//								WorldMap.TryGetNextJunction(road_a, -1, out var junction_index_a, out var segment_a_b, out var segment_a_c);
-									//	//								WorldMap.TryGetNextJunction(road_b, 1, out var junction_index_b, out var segment_b_b, out var segment_b_c);
-
-									//	//								var target = pos_w_snapped;
-									//	//								var branch_src = new Road.Junction.Branch((ushort)junction_index_a, segment_a_b.index, -1);
-									//	//								var branch_dst = new Road.Junction.Branch((ushort)junction_index_b, segment_b_b.index, 1);
-
-									//	//								if (RoadNav.Astar.TryFindPath(branch_src, branch_dst, ref branches_span))
-									//	//								{
-									//	//#if CLIENT
-									//	//									foreach (ref var branch in branches_span)
-									//	//									{
-									//	//										if (branch.sign != 0)
-									//	//										{
-									//	//											WorldMap.DrawBranch(ref branch);
-									//	//										}
-									//	//									}
-									//	//#endif
-									//	//								}
-									//}
-
 
 									if (mouse.GetKeyDown(Mouse.Key.Right))
 									{
