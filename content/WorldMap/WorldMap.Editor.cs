@@ -30,7 +30,7 @@ namespace TC2.Conquest
 
 		public static void DrawBranch(ref Road.Junction.Branch branch, float size = 0.125f, Color32BGRA? color = null, int? index = null)
 		{
-			if (branch.IsNull()) return;
+			if (branch.IsNull() || branch.sign == 0) return;
 
 			var junc = road_junctions[branch.junction_index];
 			var seg_a = junc.segments[branch.index];
