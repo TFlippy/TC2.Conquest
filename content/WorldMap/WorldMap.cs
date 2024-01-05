@@ -250,6 +250,14 @@ namespace TC2.Conquest
 			ref var road = ref segment.GetRoad();
 			if (road.IsNull()) return false;
 
+			//{
+			//	if (road_segment_to_junction_index.TryGetValue(segment, out var junction_index_tmp))
+			//	{
+			//		branch = new((ushort)junction_index_tmp, (byte)segment.index, 1);
+			//		return false;
+			//	}
+			//}
+
 			var junction_index = -1;
 			var sign = 0;
 			var points = road.points.AsSpan();
@@ -268,8 +276,8 @@ namespace TC2.Conquest
 			var dir_b = Vector2.Zero;
 
 			//var dot = -1.00f;
-			var dot_a = -1.00f;
-			var dot_b = -1.00f;
+			var dot_a = -10.00f;
+			var dot_b = -10.00f;
 
 			var a = segment;
 			//while (--a.index >= 0)
