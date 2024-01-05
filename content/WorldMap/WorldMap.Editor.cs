@@ -630,8 +630,6 @@ namespace TC2.Conquest
 							ref var target = ref edit_route_target.GetRefOrNull();
 							if (target.IsNotNull())
 							{
-
-
 								var nearest_junction = road_junctions.MinBy(x => Vector2.DistanceSquared(x.pos, pos));
 								if (Vector2.DistanceSquared(nearest_junction.pos, pos) < 1.00f)
 								{

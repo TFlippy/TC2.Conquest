@@ -167,7 +167,7 @@ namespace TC2.Conquest
 				closed_list ??= new(64);
 
 				var ts = Timestamp.Now();
-				var junctions_span = CollectionsMarshal.AsSpan(WorldMap.road_junctions);
+				var junctions_span = WorldMap.road_junctions.AsSpan();
 
 				//Path.Clear();
 				open_list.Clear();

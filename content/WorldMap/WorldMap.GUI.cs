@@ -558,7 +558,7 @@ namespace TC2.Conquest
 
 						if (editor_mode != EditorMode.None)
 						{
-							if (road_junctions.Count > 0)
+							if (road_junctions.Length > 0)
 							{
 								var ts = Timestamp.Now();
 								foreach (var junction in road_junctions)

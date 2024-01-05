@@ -1,4 +1,5 @@
 ﻿
+using System.Collections.Frozen;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -64,9 +65,10 @@ namespace TC2.Conquest
 		public static void RecalculateRoads()
 		{
 			road_segments_tmp.Clear();
-			road_junctions.Clear();
 			road_segments_overlapped_tmp.Clear();
-			road_segment_to_junction_index.Clear();
+
+			var road_junctions_tmp = new List<Road.Junction>(64);
+			var road_segment_to_junction_index_tmp = new Dictionary<Road.Segment, int>(64);
 
 			pos_hash_to_prefecture.Clear();
 
@@ -169,13 +171,13 @@ namespace TC2.Conquest
 
 							if (junction.segments_count > 1)
 							{
-								var junction_index = road_junctions.Count;
+								var junction_index = road_junctions_tmp.Count;
 								junction.index = (ushort)junction_index;
-								road_junctions.Add(junction);
+								road_junctions_tmp.Add(junction);
 
 								for (var j = 0; j < junction.segments_count; j++)
 								{
-									road_segment_to_junction_index[junction.segments[j]] = junction_index;
+									road_segment_to_junction_index_tmp[junction.segments[j]] = junction_index;
 								}
 							}
 						}
@@ -205,7 +207,7 @@ namespace TC2.Conquest
 							location_to_road[asset] = nearest_segment;
 							road_to_location[nearest_segment] = asset;
 
-							if (road_segment_to_junction_index.ContainsKey(nearest_segment))
+							if (road_segment_to_junction_index_tmp.ContainsKey(nearest_segment))
 							{
 								App.WriteLine($"Location \"{asset.identifier}\"'s nearest road is a junction - this may cause issues!", App.Color.Yellow);
 							}
@@ -220,7 +222,7 @@ namespace TC2.Conquest
 							location_to_rail[asset] = nearest_segment;
 							rail_to_location[nearest_segment] = asset;
 
-							if (road_segment_to_junction_index.ContainsKey(nearest_segment))
+							if (road_segment_to_junction_index_tmp.ContainsKey(nearest_segment))
 							{
 								App.WriteLine($"Location \"{asset.identifier}\"'s nearest rail is a junction - this may cause issues!", App.Color.Yellow);
 							}
@@ -228,6 +230,9 @@ namespace TC2.Conquest
 					}
 				}
 			}
+
+			road_junctions = road_junctions_tmp.ToArray();
+			road_segment_to_junction_index = road_segment_to_junction_index_tmp.ToFrozenDictionary();
 		}
 
 		// TODO: implement a faster lookup
@@ -279,9 +284,23 @@ namespace TC2.Conquest
 			else return ref Unsafe.NullRef<Doodad.Renderer.Data>();
 		}
 
-		public static Road.Junction GetJunction(int junction_index)
+		public static ref Road.Junction GetJunction(int junction_index)
 		{
-			return road_junctions[junction_index];
+			if ((uint)junction_index < road_junctions.Length) return ref road_junctions[junction_index];
+			else return ref Unsafe.NullRef<Road.Junction>();
+		}
+
+		public static Span<Road.Segment> GetSegments(this Road.Junction junction)
+		{
+			return junction.segments.Slice(junction.segments_count);
+		}
+
+
+		public static bool TryGetSegmentIndex(this Road.Junction junction, Road.Segment segment, out int index)
+		{
+			index = -1;
+			var segments_span = junction.GetSegments();
+			return segments_span.TryGetIndexOf(in segment, ref index);
 		}
 
 		public static Road.Segment GetSegment(this Road.Junction.Branch branch)
@@ -351,7 +370,7 @@ namespace TC2.Conquest
 			//var thickness = road_segment.GetRoad().scale * 0.50f;
 			var alpha = 0.25f;
 
-			var junctions_span = CollectionsMarshal.AsSpan(road_junctions);
+			var junctions_span = road_junctions.AsSpan();
 			//junctions_span.GetNearestIndex(mouse, out var junction_index, out var junction_dist_sq, (ref Road.Junction junction) => ref junction.pos);
 
 			//if (junction_dist_sq < 1.00f.Pow2())

@@ -7,8 +7,8 @@ namespace TC2.Conquest
 {
 	public static partial class WorldMap
 	{
-		public static Dictionary<Road.Segment, int> road_segment_to_junction_index = new(256);
-		public static readonly List<Road.Junction> road_junctions = new(128);
+		public static FrozenDictionary<Road.Segment, int> road_segment_to_junction_index;
+		public static Road.Junction[] road_junctions;
 
 		public static float road_junction_threshold = 0.1250f;
 		public const float km_per_unit = 2.00f;
@@ -185,9 +185,10 @@ namespace TC2.Conquest
 
 		//}
 
-		public static bool TryGetNearestJunction(this Road.Segment segment, out int junction_index, out float dist_sq)
+		public static bool TryGetNearestJunction(this Road.Segment segment, out int junction_index, out float dist_sq, out int sign)
 		{
 			junction_index = -1;
+			sign = 0;
 			dist_sq = float.MaxValue;
 
 			ref var road = ref segment.GetRoad();
@@ -225,17 +226,99 @@ namespace TC2.Conquest
 				}
 			}
 
-			if ((uint)junction_index_a < road_junctions.Count && Maths.TrySetMin(ref dist_sq, Vector2.DistanceSquared(pos, road_junctions[junction_index_a].pos)))
+			if ((uint)junction_index_a < road_junctions.Length && Maths.TrySetMin(ref dist_sq, Vector2.DistanceSquared(pos, road_junctions[junction_index_a].pos)))
 			{
 				junction_index = junction_index_a;
+				sign = 1;
 			}
 
-			if ((uint)junction_index_b < road_junctions.Count && Maths.TrySetMin(ref dist_sq, Vector2.DistanceSquared(pos, road_junctions[junction_index_b].pos)))
+			if ((uint)junction_index_b < road_junctions.Length && Maths.TrySetMin(ref dist_sq, Vector2.DistanceSquared(pos, road_junctions[junction_index_b].pos)))
 			{
 				junction_index = junction_index_b;
+				sign = -1;
 			}
 
 			return junction_index != -1;
+		}
+
+		public static bool TryGetNearestBranch(this Road.Segment segment, out Road.Junction.Branch branch, out float dist_sq)
+		{
+			branch = default;
+			dist_sq = float.MaxValue;
+
+			ref var road = ref segment.GetRoad();
+			if (road.IsNull()) return false;
+
+			//if (road_segment_to_junction_index.TryGetValue(segment, out var junction_index))
+			//{
+			//	ref var junction = ref WorldMap.GetJunction(junction_index);
+
+			//	if (junction.TryGetSegmentIndex(segment, out var branch_segment_index))
+			//	{
+			//		branch.junction_index = (ushort)junction_index;
+			//		branch.index = (byte)branch_segment_index;
+			//		branch.sign = 
+			//	}
+
+
+			//	dist_sq = 0.00f;
+
+
+			//	return true;
+			//}
+
+			var junction_index = -1;
+			var sign = 0;
+			var points = road.points.AsSpan();
+
+			var index = (int)segment.index;
+			var pos = points[index];
+
+			var junction_index_a = -1;
+			var junction_index_b = -1;
+
+			var a = segment;
+			while (--a.index >= 0)
+			{
+				if (road_segment_to_junction_index.TryGetValue(a, out junction_index_a))
+				{
+					break;
+				}
+			}
+
+			var b = segment;
+			while (++b.index <= points.Length)
+			{
+				if (road_segment_to_junction_index.TryGetValue(b, out junction_index_b))
+				{
+					break;
+				}
+			}
+
+			if ((uint)junction_index_a < road_junctions.Length && Maths.TrySetMin(ref dist_sq, Vector2.DistanceSquared(pos, road_junctions[junction_index_a].pos)))
+			{
+				junction_index = junction_index_a;
+				segment.index = a.index;
+				sign = 1;
+			}
+
+			if ((uint)junction_index_b < road_junctions.Length && Maths.TrySetMin(ref dist_sq, Vector2.DistanceSquared(pos, road_junctions[junction_index_b].pos)))
+			{
+				junction_index = junction_index_b;
+				segment.index = b.index;
+				sign = -1;
+			}
+
+			ref var junction = ref WorldMap.GetJunction(junction_index);
+			if (junction.IsNotNull() && junction.TryGetSegmentIndex(segment, out var branch_segment_index))
+			{
+				branch = new((ushort)junction_index, (byte)branch_segment_index, (sbyte)sign);
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 		public static bool TryGetNextJunction(this Road.Segment a, int dir_sign, out int junction_index, out Road.Segment b, out Road.Segment c, bool skip_inner_junctions = false)
@@ -347,7 +430,7 @@ namespace TC2.Conquest
 			c_alt_sign = default;
 			c_branch = default;
 
-			if ((uint)junction_index < road_junctions.Count)
+			if ((uint)junction_index < road_junctions.Length)
 			{
 				var junction = road_junctions[junction_index];
 				var junction_segments = junction.segments.Slice(junction.segments_count);
