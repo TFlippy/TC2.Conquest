@@ -1,13 +1,14 @@
 ﻿
 using TC2.Base;
 using TC2.Base.Components;
+using System.Collections.Frozen;
 
 namespace TC2.Conquest
 {
 	public static partial class WorldMap
 	{
 		public static Dictionary<Road.Segment, int> road_segment_to_junction_index = new(256);
-		public static List<Road.Junction> road_junctions = new(128);
+		public static readonly List<Road.Junction> road_junctions = new(128);
 
 		public static float road_junction_threshold = 0.1250f;
 		public const float km_per_unit = 2.00f;
@@ -15,13 +16,13 @@ namespace TC2.Conquest
 		public static Entity selected_entity;
 		public static Entity selected_entity_cached;
 
-		public static Dictionary<ILocation.Handle, Road.Segment> location_to_road = new();
-		public static Dictionary<ILocation.Handle, Road.Segment> location_to_rail = new();
+		public static readonly Dictionary<ILocation.Handle, Road.Segment> location_to_road = new();
+		public static readonly Dictionary<ILocation.Handle, Road.Segment> location_to_rail = new();
 
-		public static Dictionary<Road.Segment, ILocation.Handle> road_to_location = new();
-		public static Dictionary<Road.Segment, ILocation.Handle> rail_to_location = new();
+		public static readonly Dictionary<Road.Segment, ILocation.Handle> road_to_location = new();
+		public static readonly Dictionary<Road.Segment, ILocation.Handle> rail_to_location = new();
 
-		public static Dictionary<int, IPrefecture.Handle> pos_hash_to_prefecture = new();
+		public static readonly Dictionary<int, IPrefecture.Handle> pos_hash_to_prefecture = new();
 
 		public static bool TryGetRoad(this ILocation.Handle h_location, out Road.Segment road)
 		{
@@ -159,7 +160,7 @@ namespace TC2.Conquest
 #endif
 		}
 
-		public static bool TryAdvance(Road.Segment a, Road.Segment b, out Road.Segment c, ref int dir_sign, out int junction_index, bool skip_inner_junctions = false)
+		public static bool TryAdvance(this Road.Segment a, Road.Segment b, out Road.Segment c, ref int dir_sign, out int junction_index, bool skip_inner_junctions = false)
 		{
 			junction_index = -1;
 			var is_at_end = false;
@@ -184,7 +185,7 @@ namespace TC2.Conquest
 
 		//}
 
-		public static bool TryGetNearestJunction(Road.Segment segment, out int junction_index, out float dist_sq)
+		public static bool TryGetNearestJunction(this Road.Segment segment, out int junction_index, out float dist_sq)
 		{
 			junction_index = -1;
 			dist_sq = float.MaxValue;
@@ -237,7 +238,7 @@ namespace TC2.Conquest
 			return junction_index != -1;
 		}
 
-		public static bool TryGetNextJunction(Road.Segment a, int dir_sign, out int junction_index, out Road.Segment b, out Road.Segment c, bool skip_inner_junctions = false)
+		public static bool TryGetNextJunction(this Road.Segment a, int dir_sign, out int junction_index, out Road.Segment b, out Road.Segment c, bool skip_inner_junctions = false)
 		{
 			junction_index = -1;
 			b = a;
@@ -293,34 +294,18 @@ namespace TC2.Conquest
 			return false;
 		}
 
-		public static bool TryResolveBranch(Road.Junction junction, Vector2 dir, out Road.Junction.Branch branch)
+		public static bool TryResolveBranch(this Road.Junction junction, Vector2 dir, out Road.Junction.Branch branch)
 		{
-			var ok = false;
 			branch = default;
-			//c_alt = default;
-			//c_alt_dot = -1.00f;
-			//c_alt_sign = default;
-			//c_branch = default;
 
-			//if ((uint)junction_index < road_junctions.Count)
 			if (junction.IsValid())
 			{
-				//var junction = road_junctions[junction_index];
 				var junction_segments = junction.segments.Slice(junction.segments_count);
-
-				//var points_a = road_a.points.AsSpan();
-				//var points_b = road_b.points.AsSpan();
-				//var points_c = road_c.points.AsSpan();
-
 				var dot = -1.00f;
 
 				for (var i = 0; i < junction_segments.Length; i++)
 				{
 					ref var j_segment = ref junction_segments[i];
-					//if (j_segment == a) continue;
-					//if (j_segment == b) continue;
-					//if (j_segment == c) continue;
-
 					ref var j_road = ref j_segment.GetRoad();
 					//if (j_road.IsNull() || j_road.type != type) continue;
 
@@ -331,14 +316,10 @@ namespace TC2.Conquest
 					{
 						var dir_tmp = (j_points[j_segment.index + 1] - j_pos).GetNormalizedFast();
 						var dot_tmp = Vector2.Dot(dir, dir_tmp);
-
-						//World.GetGlobalRegion().DrawDebugDir(j_pos, dir_tmp, Color32BGRA.Orange);
-
 						if (dot_tmp > dot)
 						{
 							dot = dot_tmp;
-							branch = new((ushort)junction.index, (byte)i, (sbyte)1);
-							ok = true;
+							branch = new(junction.index, (byte)i, 1);
 						}
 					}
 
@@ -346,23 +327,19 @@ namespace TC2.Conquest
 					{
 						var dir_tmp = (j_points[j_segment.index - 1] - j_pos).GetNormalizedFast();
 						var dot_tmp = Vector2.Dot(dir, dir_tmp);
-
-						//World.GetGlobalRegion().DrawDebugDir(j_pos, dir_tmp, Color32BGRA.Orange);
-
 						if (dot_tmp > dot)
 						{
 							dot = dot_tmp;
-							branch = new((ushort)junction.index, (byte)i, (sbyte)-1);
-							ok = true;
+							branch = new(junction.index, (byte)i, -1);
 						}
 					}
 				}
 			}
 
-			return ok;
+			return branch.sign != 0;
 		}
 
-		public static bool TryAdvanceJunction(Road.Segment a, Road.Segment b, Road.Segment c, int junction_index, out Road.Junction.Branch c_branch, out Road.Segment c_alt, out int c_alt_sign, out float c_alt_dot, float dot_min = 0.40f, float dot_max = 1.00f, bool ignore_limits = false)
+		public static bool TryAdvanceJunction(this Road.Segment a, Road.Segment b, Road.Segment c, int junction_index, out Road.Junction.Branch c_branch, out Road.Segment c_alt, out int c_alt_sign, out float c_alt_dot, float dot_min = 0.40f, float dot_max = 1.00f, bool ignore_limits = false)
 		{
 			var ok = false;
 			c_alt = default;

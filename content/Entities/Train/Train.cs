@@ -398,52 +398,6 @@ namespace TC2.Conquest
 			out_indices.Sort();
 		}
 
-
-		public static sbyte GetSign(Vector2 dir_ab, Road.Segment j_segment, bool ignore_limits, float dot_min, float dot_max)
-		{
-			ref var region = ref World.GetGlobalRegion();
-			ref var j_road = ref j_segment.GetRoad();
-			//if (j_road.IsNull() || j_road.type != type) continue;
-			if (j_road.IsNull()) return 0;
-
-			var j_points = j_road.points.AsSpan();
-			var j_pos = j_points[j_segment.index];
-
-			var c_alt = default(Road.Segment);
-			var c_alt_sign = 0;
-			var c_alt_dot = -1.00f;
-
-			if (j_segment.index < j_points.Length - 1)
-			{
-				var dir_tmp = (j_points[j_segment.index + 1] - j_pos).GetNormalizedFast();
-				var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
-
-				//var draw = false;
-				if (dot_tmp > c_alt_dot && (ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
-				{
-					c_alt = new(j_segment.chain, (byte)(j_segment.index + 1));
-					c_alt_dot = dot_tmp;
-					c_alt_sign = 1;
-				}
-			}
-
-			if (j_segment.index > 0)
-			{
-				var dir_tmp = (j_points[j_segment.index - 1] - j_pos).GetNormalizedFast();
-				var dot_tmp = Vector2.Dot(dir_ab, dir_tmp);
-
-				//var draw = false;
-				if (dot_tmp > c_alt_dot && (ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
-				{
-					c_alt = new(j_segment.chain, (byte)(j_segment.index - 1));
-					c_alt_dot = dot_tmp;
-					c_alt_sign = -1;
-				}
-			}
-
-			return (sbyte)c_alt_sign;
-		}
-
 		[IComponent.Data(Net.SendType.Reliable)]
 		public partial struct Data: IComponent
 		{

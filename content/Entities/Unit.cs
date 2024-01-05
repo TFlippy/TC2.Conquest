@@ -278,34 +278,6 @@ namespace TC2.Conquest
 
 				if (unit.next_segment.IsValid())
 				{
-					static void GetNextSegment(Vector2 pos_current, ref Road.Segment segment, ref Road.Segment end_segment, ref int current_branch_index, Span<Road.Junction.Branch> branches)
-					{
-						//var dist_sq = Vector2.DistanceSquared(pos_current, segment.GetPosition());
-						if (Maths.IsInDistance(pos_current, segment.GetPosition(), 0.10f))
-						{
-							if (segment == end_segment && end_segment.IsValid())
-							{
-								segment = default;
-								App.WriteLine("done");
-							}
-							else if (current_branch_index < branches.Length)
-							{
-								//if (current_branch_index < branches.Length - 1 && WorldMap.road_segment_to_junction_index.TryGetValue(segment, out var junction_index) && junction_index == branches[current_branch_index + 1].junction_index)
-								if (current_branch_index < branches.Length - 1 && Maths.IsInDistance(pos_current, WorldMap.road_junctions[branches[current_branch_index + 1].junction_index].pos, 0.25f))
-								{
-									current_branch_index++;
-									segment = branches[current_branch_index].GetSegment();
-									//segment.index = (byte)(segment.index + branches[current_branch_index].sign);
-									App.WriteLine(branches[current_branch_index].sign);
-								}
-								else
-								{
-									segment.index = (byte)(segment.index + branches[current_branch_index].sign);
-								}
-							}
-						}
-					}
-
 					GetNextSegment(transform.position, ref unit.next_segment, ref unit.end_segment, ref unit.current_branch_index, unit.branches.Slice(unit.branches_count));
 					
 					if (!unit.next_segment.IsValid())
@@ -339,6 +311,35 @@ namespace TC2.Conquest
 				transform.position += (dir * Maths.Min(dist, ((unit.speed_current * info.DeltaTime * s_to_h) * time_scale)) / WorldMap.km_per_unit);
 			}
 
+
+			public static void GetNextSegment(Vector2 pos_current, ref Road.Segment segment, ref Road.Segment end_segment, ref int current_branch_index, Span<Road.Junction.Branch> branches)
+			{
+				//var dist_sq = Vector2.DistanceSquared(pos_current, segment.GetPosition());
+				if (Maths.IsInDistance(pos_current, segment.GetPosition(), 0.10f))
+				{
+					if (segment == end_segment && end_segment.IsValid())
+					{
+						segment = default;
+						App.WriteLine("done");
+					}
+					else if (current_branch_index < branches.Length)
+					{
+						//if (current_branch_index < branches.Length - 1 && WorldMap.road_segment_to_junction_index.TryGetValue(segment, out var junction_index) && junction_index == branches[current_branch_index + 1].junction_index)
+						if (current_branch_index < branches.Length - 1 && Maths.IsInDistance(pos_current, WorldMap.road_junctions[branches[current_branch_index + 1].junction_index].pos, 0.25f))
+						{
+							current_branch_index++;
+							segment = branches[current_branch_index].GetSegment();
+							//segment.index = (byte)(segment.index + branches[current_branch_index].sign);
+							App.WriteLine(branches[current_branch_index].sign);
+						}
+						else
+						{
+							segment.index = (byte)(segment.index + branches[current_branch_index].sign);
+						}
+					}
+				}
+			}
+
 			public static bool Repath(Vector2 pos_a, Vector2 pos_b, ref Road.Segment segment_start, ref Road.Segment segment_end, ref Span<Road.Junction.Branch> branches_span)
 			{
 				var dir = (pos_b - pos_a).GetNormalizedFast();
@@ -351,19 +352,19 @@ namespace TC2.Conquest
 
 				if (road_a.IsValid() && road_b.IsValid() && road_a != road_b && road_a_dist_sq < 2.00f.Pow2() && road_b_dist_sq < 2.00f.Pow2())
 				{
-					var sign_a = Train.GetSign(dir, road_a, true, 0.00f, 1.00f);
-					var sign_b = Train.GetSign(-dir, road_b, true, 0.00f, 1.00f);
+					var sign_a = road_a.GetSign(dir, true, 0.00f, 1.00f);
+					var sign_b = road_b.GetSign(-dir, true, 0.00f, 1.00f);
 
-					var ok_a = WorldMap.TryGetNearestJunction(road_a, out var junction_index_a, out _);
-					var ok_b = WorldMap.TryGetNearestJunction(road_b, out var junction_index_b, out _);
+					var ok_a = road_a.TryGetNearestJunction(out var junction_index_a, out _);
+					var ok_b = road_b.TryGetNearestJunction(out var junction_index_b, out _);
 
 					if (ok_a && ok_b)
 					{
 						var junction_a = WorldMap.road_junctions[junction_index_a];
 						var junction_b = WorldMap.road_junctions[junction_index_b];
 
-						TryResolveBranch(junction_a, (pos_b - junction_a.pos).GetNormalizedFast(), out var branch_src);
-						TryResolveBranch(junction_b, dir, out var branch_dst);
+						junction_a.TryResolveBranch((pos_b - junction_a.pos).GetNormalizedFast(), out var branch_src);
+						junction_b.TryResolveBranch(dir, out var branch_dst);
 
 						if (RoadNav.Astar.TryFindPath(branch_src, branch_dst, ref branches_span, ignore_limits: true, dot_min: 0.00f, dot_max: 1.00f))
 						{
@@ -518,11 +519,11 @@ namespace TC2.Conquest
 
 									if (road_a.IsValid() && road_b.IsValid())
 									{
-										var sign_a = Train.GetSign(dir, road_a, true, 0.00f, 1.00f);
-										var sign_b = Train.GetSign(-dir, road_b, true, 0.00f, 1.00f);
+										var sign_a = road_a.GetSign(dir, true, 0.00f, 1.00f);
+										var sign_b = road_b.GetSign(-dir, true, 0.00f, 1.00f);
 
-										var ok_a = WorldMap.TryGetNearestJunction(road_a, out var junction_index_a, out _);
-										var ok_b = WorldMap.TryGetNearestJunction(road_b, out var junction_index_b, out _);
+										var ok_a = road_a.TryGetNearestJunction(out var junction_index_a, out _);
+										var ok_b = road_b.TryGetNearestJunction(out var junction_index_b, out _);
 
 										if (ok_a && ok_b)
 										{

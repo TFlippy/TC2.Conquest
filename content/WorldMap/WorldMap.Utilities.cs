@@ -14,6 +14,44 @@ namespace TC2.Conquest
 		//	segment = new Road.Segment()
 		//}
 
+		public static sbyte GetSign(this Road.Segment j_segment, Vector2 dir, bool ignore_limits, float dot_min, float dot_max)
+		{
+			ref var j_road = ref j_segment.GetRoad();
+			if (j_road.IsNull()) return 0;
+
+			var j_points = j_road.points.AsSpan();
+			var j_pos = j_points[j_segment.index];
+
+			var c_alt_sign = 0;
+			var c_alt_dot = -1.00f;
+
+			if (j_segment.index < j_points.Length - 1)
+			{
+				var dir_tmp = (j_points[j_segment.index + 1] - j_pos).GetNormalizedFast();
+				var dot_tmp = Vector2.Dot(dir, dir_tmp);
+
+				if (dot_tmp > c_alt_dot && (ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
+				{
+					c_alt_dot = dot_tmp;
+					c_alt_sign = 1;
+				}
+			}
+
+			if (j_segment.index > 0)
+			{
+				var dir_tmp = (j_points[j_segment.index - 1] - j_pos).GetNormalizedFast();
+				var dot_tmp = Vector2.Dot(dir, dir_tmp);
+
+				if (dot_tmp > c_alt_dot && (ignore_limits || (dot_tmp >= dot_min && dot_tmp <= dot_max)))
+				{
+					c_alt_dot = dot_tmp;
+					c_alt_sign = -1;
+				}
+			}
+
+			return (sbyte)c_alt_sign;
+		}
+
 		public static ulong GetRoadPairKey(Road.Segment a, Road.Segment b)
 		{
 			var ret = (ulong)Unsafe.BitCast<Road.Segment, uint>(a);
@@ -241,6 +279,11 @@ namespace TC2.Conquest
 			else return ref Unsafe.NullRef<Doodad.Renderer.Data>();
 		}
 
+		public static Road.Junction GetJunction(int junction_index)
+		{
+			return road_junctions[junction_index];
+		}
+
 		public static Road.Segment GetSegment(this Road.Junction.Branch branch)
 		{
 			return road_junctions[branch.junction_index].segments[branch.index];
@@ -266,7 +309,7 @@ namespace TC2.Conquest
 		}
 
 		// TODO: implement a faster lookup
-		public static Road.Segment GetNearestRoad(IPrefecture.Handle h_prefecture, Road.Type type, Vector2 position, out float distance_sq)
+		public static Road.Segment GetNearestRoad(this IPrefecture.Handle h_prefecture, Road.Type type, Vector2 position, out float distance_sq)
 		{
 			var road_points_distance_sq = float.MaxValue;
 			var road_point_index = int.MaxValue;
