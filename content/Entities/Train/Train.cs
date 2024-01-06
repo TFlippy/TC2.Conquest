@@ -184,6 +184,9 @@ namespace TC2.Conquest
 				var hash_end = new JunctionNode(b.junction_index, b.index, b.sign, -1.00f, 0.00f).GetHashCode();
 				Span<ResolvedJunction> resolved_junctions_buffer = stackalloc ResolvedJunction[8];
 
+				var pos_a = junctions_span[a.junction_index].pos;
+				var pos_b = junctions_span[b.junction_index].pos;
+
 				while (open_list.Count != 0 && !closed_list.ContainsKey(hash_end))
 				{
 					current = open_list.Dequeue();
@@ -199,6 +202,8 @@ namespace TC2.Conquest
 					var seg_a = junctions_span[current.branch.junction_index].segments[current.branch.index];
 					if (WorldMap.TryGetNextJunction(seg_a, current.branch.sign, out var junction_a, out var segment_b, out var segment_c))
 					{
+						var seg_a_pos = seg_a.GetPosition();
+
 						ref var junction = ref junctions_span[junction_a];
 						try
 						{
@@ -214,22 +219,26 @@ namespace TC2.Conquest
 								var seg = junction.segments[res.segment_index];
 								var branch = new Road.Junction.Branch((ushort)junction_a, res.segment_index, (sbyte)res.sign);
 
+								ref var road = ref seg.GetRoad();
+
 								var n = new JunctionNode(branch.junction_index, branch.index, branch.sign, current.weight, current.distance);
 								if (!closed_list.ContainsKey(n.GetHashCode()))
 								{
-									bool isFound = false;
+									var is_found = false;
 									foreach (var oLNode in open_list.UnorderedItems)
 									{
 										if (oLNode.Element == n)
 										{
-											isFound = true;
+											is_found = true;
 										}
 									}
-									if (!isFound)
+									if (!is_found)
 									{
 										n.parent_hash = current.GetHashCode();
-										n.distance = Vector2.DistanceSquared(junctions_span[n.branch.junction_index].pos, junctions_span[b.junction_index].pos); //  DistanceToTarget = Math.Abs(n.Position.X - end.Position.X) + Math.Abs(n.Position.Y - end.Position.Y);
-										n.cost = (-n.weight + current.cost);
+										n.distance = MathF.Abs(junction.pos.X - pos_b.X) + MathF.Abs(junction.pos.Y - pos_b.Y); //  Vector2.Distance(junction.pos, junctions_span[b.junction_index].pos); //  DistanceToTarget = Math.Abs(n.Position.X - end.Position.X) + Math.Abs(n.Position.Y - end.Position.Y);
+										n.weight = (Vector2.Distance(seg_a_pos, junction.pos) / (road.speed_mult * road.integrity)) * 0.50f;
+										//n.weight = road.speed_mult * road.integrity;
+										n.cost = (n.weight + current.cost);
 										open_list.Enqueue(n, n.distance + n.cost);
 									}
 								}
@@ -857,10 +866,10 @@ namespace TC2.Conquest
 
 				using (var window = GUI.Window.Standalone($"train.{this.ent_train}", rect.GetPosition(), size: rect.GetSize(), flags: GUI.Window.Flags.None, force_position: true))
 				{
-					using (GUI.ID.Push("train"))
+					using (GUI.ID.Push("train"u8))
 					{
 						//GUI.DrawCircle(region.WorldToCanvas(this.transform.GetInterpolatedPosition()),, Color32BGRA.Magenta, segments: 3, layer: GUI.Layer.Foreground);
-						var is_pressed = GUI.ButtonBehavior("train", rect, out var is_hovered, out var is_held);
+						var is_pressed = GUI.ButtonBehavior("train"u8, rect, out var is_hovered, out var is_held);
 
 						var sprite = sprite_train;
 

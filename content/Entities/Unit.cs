@@ -183,6 +183,7 @@ namespace TC2.Conquest
 				}
 
 				public Unit.Data.Flags flags;
+				public Road.Type road_type;
 
 				public ILocation.Handle h_location;
 				public Vector2 pos_next;
@@ -254,13 +255,15 @@ namespace TC2.Conquest
 			[ISystem.Update(ISystem.Mode.Single, ISystem.Scope.Global)]
 			public static void OnUpdateGlobal(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Global] ref World.Global world_global, [Source.Owned] ref Unit.Data unit, [Source.Owned] ref Transform.Data transform)
 			{
+				var dt = info.DeltaTime;
+
 				if (unit.flags.TrySetFlag(Data.Flags.Wants_Repath, false))
 				{
 					unit.current_branch_index = 0;
 					unit.branches_count = 0;
 
 					var branches_span = unit.branches.AsSpan();
-					if (Repath(transform.position, unit.pos_target, ref unit.next_segment, ref unit.end_segment, ref branches_span))
+					if (Repath(transform.position, unit.pos_target, unit.road_type, ref unit.next_segment, ref unit.end_segment, ref branches_span))
 					{
 						var branch = branches_span[0];
 
@@ -272,6 +275,8 @@ namespace TC2.Conquest
 						unit.pos_next = unit.pos_target;
 					}
 				}
+
+				var speed_mult = 1.00f;
 
 				const float s_to_h = 1.00f / 60.00f;
 				var time_scale = world_global.speed;
@@ -286,6 +291,12 @@ namespace TC2.Conquest
 					}
 					else
 					{
+						ref var road = ref unit.next_segment.GetRoad();
+						if (road.IsNotNull())
+						{
+							speed_mult *= road.speed_mult * road.integrity;
+						}
+						
 						unit.pos_next = unit.next_segment.GetPosition();
 					}
 				}
@@ -296,7 +307,7 @@ namespace TC2.Conquest
 
 				var pos_target = unit.pos_next;
 				var dir = (pos_target - transform.position).GetNormalized(out var dist);
-				unit.speed_current = unit.speed;
+				unit.speed_current.MoveTowards(Maths.Min(unit.speed, unit.speed * 0.50f * speed_mult), unit.acc * 0.20f, dt);
 
 
 				//if (dist > unit.acc * info.DeltaTime * 0.50f)
@@ -308,7 +319,7 @@ namespace TC2.Conquest
 				//	unit.speed_current.MoveTowards(Maths.Min(dist * 50 * 5, unit.speed), unit.acc * info.DeltaTime);
 				//}
 
-				transform.position += (dir * Maths.Min(dist, ((unit.speed_current * info.DeltaTime * s_to_h) * time_scale)) / WorldMap.km_per_unit);
+				transform.position += (dir * Maths.Min(dist, ((unit.speed_current * dt * s_to_h) * time_scale)) / WorldMap.km_per_unit);
 			}
 
 
@@ -340,15 +351,17 @@ namespace TC2.Conquest
 				}
 			}
 
-			public static bool Repath(Vector2 pos_a, Vector2 pos_b, ref Road.Segment segment_start, ref Road.Segment segment_end, ref Span<Road.Junction.Branch> branches_span)
+			public static bool Repath(Vector2 pos_a, Vector2 pos_b, Road.Type road_type, ref Road.Segment segment_start, ref Road.Segment segment_end, ref Span<Road.Junction.Branch> branches_span)
 			{
 				//var dir = (pos_b - pos_a).GetNormalizedFast();
+
+				if (road_type == Road.Type.Undefined) return false;
 
 				segment_start = default;
 				segment_end = default;
 
-				var road_a = WorldMap.GetNearestRoad(Road.Type.Road, pos_a, out var road_a_dist_sq);
-				var road_b = WorldMap.GetNearestRoad(Road.Type.Road, pos_b, out var road_b_dist_sq);
+				var road_a = WorldMap.GetNearestRoad(road_type, pos_a, out var road_a_dist_sq);
+				var road_b = WorldMap.GetNearestRoad(road_type, pos_b, out var road_b_dist_sq);
 
 				if (road_a.IsValid() && road_b.IsValid() && road_a != road_b && road_a_dist_sq < 0.50f.Pow2() && road_b_dist_sq < 1.00f.Pow2())
 				{
@@ -378,20 +391,19 @@ namespace TC2.Conquest
 						//var dir_b = (junction_b.pos - junction_a.pos).GetNormalizedFast();
 
 
-//#if CLIENT
-//						ref var region = ref World.GetGlobalRegion();
-//						region.DrawDebugCircle(junction_a.pos, 0.50f, Color32BGRA.Red.WithAlphaMult(0.250f), filled: true);
-//						region.DrawDebugCircle(junction_b.pos, 0.50f, Color32BGRA.Green.WithAlphaMult(0.250f), filled: true);
+						//#if CLIENT
+						//						ref var region = ref World.GetGlobalRegion();
+						//						region.DrawDebugCircle(junction_a.pos, 0.50f, Color32BGRA.Red.WithAlphaMult(0.250f), filled: true);
+						//						region.DrawDebugCircle(junction_b.pos, 0.50f, Color32BGRA.Green.WithAlphaMult(0.250f), filled: true);
 
-//						region.DrawDebugDir(junction_a.pos, dir_a * 4, thickness: 10, color: Color32BGRA.Red.WithAlphaMult(0.250f));
-//						region.DrawDebugDir(junction_b.pos, dir_b * 4, thickness: 10, color: Color32BGRA.Green.WithAlphaMult(0.250f));
-//#endif
+						//						region.DrawDebugDir(junction_a.pos, dir_a * 4, thickness: 10, color: Color32BGRA.Red.WithAlphaMult(0.250f));
+						//						region.DrawDebugDir(junction_b.pos, dir_b * 4, thickness: 10, color: Color32BGRA.Green.WithAlphaMult(0.250f));
+						//#endif
 
 						//if ((junction_a.TryResolveBranch(dir_a, out var branch_src)) && (road_b.TryGetNearestBranch(out var branch_dst, out _) || junction_b.TryResolveBranch((pos_b - junction_b.pos).GetNormalizedFast(), out branch_dst)))
 						//if ((road_a.TryGetNearestBranch(out var branch_src) || junction_a.TryResolveBranch(dir_a, out branch_src)) && (road_b.TryGetNearestBranch(out var branch_dst) || junction_b.TryResolveBranch((pos_b - junction_b.pos).GetNormalizedFast(), out branch_dst)))
 						//if ((road_a.TryGetEntryBranch(dir, out var branch_src) || junction_a.TryResolveBranch(dir_a, out branch_src)) && (road_b.TryGetNearestBranch(out var branch_dst) || junction_b.TryResolveBranch(dir, out branch_dst)))
-						if ((road_a.TryGetEntryBranch(dir, out var branch_src, dot_min: 0.00f) || junction_a.TryResolveBranch(dir_a, out branch_src)) && (road_b.TryGetExitBranch(dir_b, out var branch_dst, dot_min: 0.00f) || junction_b.TryResolveBranch(dir, out branch_dst))) // || road_b.TryGetEntryBranch(-dir, out branch_dst, dot_min: 0.00f))) // || junction_b.TryResolveBranch(dir, out branch_dst)))
-						//if ((road_a.TryGetEntryBranch(dir, out var branch_src, dot_min: 0.00f, dot_max: 1.00f)) && (road_b.TryGetEntryBranch(dir, out var branch_dst, dot_min: 0.00f, dot_max: 1.00f) || junction_b.TryResolveBranch(dir_b, out branch_dst)))
+						if ((road_a.TryGetEntryBranch(dir, out var branch_src, dot_min: 0.00f) || junction_a.TryResolveBranch(dir_a, out branch_src)) && (road_b.TryGetExitBranch(dir_b, out var branch_dst, dot_min: 0.00f) || junction_b.TryResolveBranch(dir, out branch_dst))) // || road_b.TryGetEntryBranch(-dir, out branch_dst, dot_min: 0.00f))) // || junction_b.TryResolveBranch(dir, out branch_dst)))																																																																		   //if ((road_a.TryGetEntryBranch(dir, out var branch_src, dot_min: 0.00f, dot_max: 1.00f)) && (road_b.TryGetEntryBranch(dir, out var branch_dst, dot_min: 0.00f, dot_max: 1.00f) || junction_b.TryResolveBranch(dir_b, out branch_dst)))
 						{
 							//TryResolveBranch(junction_b, dir_b, out var branch_dst);
 
@@ -435,20 +447,14 @@ namespace TC2.Conquest
 				{
 					ref var region = ref this.ent_unit.GetRegionCommon();
 
-					using (var window = GUI.Window.Interaction("unit", this.ent_unit))
+					using (var window = GUI.Window.Interaction("unit"u8, this.ent_unit))
 					{
 						if (window.show)
 						{
-							//if (window.appearing)
-							//{
-							//	is_mouse_dragging = false;
-							//	mouse_drag_rect = null;
-							//	mouse_drag_a = null;
-							//	mouse_drag_b = null;
-							//}
-
-							static void DrawPath(ref Region.Data.Common region, Road.Segment segment_start, Road.Segment segment_end, Span<Road.Junction.Branch> branches_span, Color32BGRA color = default, float thickness = 0.250f)
+							static void DrawPath(ref Region.Data.Common region, Road.Segment segment_start, Road.Segment segment_end, Span<Road.Junction.Branch> branches_span, out float distance, Color32BGRA color = default, float thickness = 0.250f)
 							{
+								distance = 0.00f;
+
 								var pos_current = segment_start.GetPosition();
 								var segment_current = segment_start;
 								var current_branch_index = 0;
@@ -460,6 +466,8 @@ namespace TC2.Conquest
 								{
 									var pos_a = pos_current;
 									var pos_b = pos_current = segment_current.GetPosition();
+
+									distance += Vector2.Distance(pos_a, pos_b);
 
 									GetNextSegment(pos_current, ref segment_current, ref segment_end, ref current_branch_index, branches_span);
 
@@ -473,7 +481,7 @@ namespace TC2.Conquest
 
 								ref var world_global = ref region.GetGlobalComponent<World.Global>();
 								var time_scale = world_global.speed;
-								var speed_km_h = this.unit.speed;
+								var speed_km_h = this.unit.speed_current;
 
 								GUI.LabelShaded("Speed:", $"{speed_km_h:0.00} km/h");
 								//GUI.Text($"{time_scale:0.00}");
@@ -501,8 +509,6 @@ namespace TC2.Conquest
 								GUI.DrawCircle(pos_c_current, 0.750f * scale, Color32BGRA.Green, segments: 16, layer: GUI.Layer.Foreground);
 								GUI.DrawCircleFilled(pos_c_next, 0.1250f * scale, Color32BGRA.Green.WithAlphaMult(0.50f), segments: 4, layer: GUI.Layer.Foreground);
 								GUI.DrawCircleFilled(pos_c_target, 0.1250f * scale, Color32BGRA.Green.WithAlphaMult(0.50f), segments: 4, layer: GUI.Layer.Foreground);
-
-
 
 								var is_mouse_dragging_cached = is_mouse_dragging;
 								is_mouse_dragging = mouse.GetKeyNow(Mouse.Key.Left);
@@ -544,12 +550,14 @@ namespace TC2.Conquest
 								//	GUI.Text($"{unit.next_segment.index}; {unit.next_segment.GetPosition()}");
 								//}
 
-								if (unit.branches_count > 0 && unit.next_segment.IsValid() && unit.end_segment.IsValid())
-								{
-									var road_a = unit.next_segment; // branches[0].GetSegment();
-									var road_b = unit.end_segment;
+								var path_distance = dist;
 
-									DrawPath(ref region, road_a, road_b, unit.branches.AsSpan().Slice(unit.current_branch_index, unit.branches_count - unit.current_branch_index), color: GUI.font_color_green.WithAlphaMult(0.50f), thickness: 0.125f);
+								if (this.unit.branches_count > 0 && this.unit.next_segment.IsValid() && this.unit.end_segment.IsValid())
+								{
+									var road_a = this.unit.next_segment; // branches[0].GetSegment();
+									var road_b = this.unit.end_segment;
+
+									DrawPath(ref region, road_a, road_b, this.unit.branches.AsSpan().Slice(this.unit.current_branch_index, this.unit.branches_count - this.unit.current_branch_index), color: GUI.font_color_green.WithAlphaMult(0.40f), thickness: 0.125f, distance: out path_distance);
 								}
 
 								//WorldMap.DrawBranch(ref current_branch);
@@ -563,6 +571,27 @@ namespace TC2.Conquest
 										mouse_drag_a = pos_w_snapped;
 									}
 
+									if (this.unit.road_type != Road.Type.Undefined)
+									{
+										var road_a = default(Road.Segment);
+										var road_b = default(Road.Segment);
+
+										var ts = Timestamp.Now();
+										Span<Road.Junction.Branch> branches_span = stackalloc Road.Junction.Branch[32];
+										if (Repath(this.transform.position, pos_w_snapped, this.unit.road_type, ref road_a, ref road_b, ref branches_span))
+										{
+											var ts_elapsed = ts.GetMilliseconds();
+											GUI.Text($"{ts_elapsed:0.0000} ms");
+
+											DrawPath(ref region, road_a, road_b, branches_span, color: GUI.col_button_yellow.WithAlphaMult(0.20f), thickness: 0.125f, distance: out path_distance);
+
+											//foreach (ref var branch in branches_span)
+											//{
+											//	WorldMap.DrawBranch(ref branch);
+											//}
+										}
+									}
+
 									GUI.DrawLine(pos_c_current, pos_c_current + (dir * 100), layer: GUI.Layer.Foreground);
 									GUI.DrawLine(pos_c_current, pos_c_hover, Color32BGRA.Yellow.WithAlphaMult(0.25f), thickness: 0.125f * scale * 0.25f, GUI.Layer.Foreground);
 
@@ -570,96 +599,8 @@ namespace TC2.Conquest
 
 									GUI.DrawCircleFilled(pos_c_hover, 0.125f * scale * 0.50f, Color32BGRA.Yellow.WithAlphaMult(0.50f), segments: 4, layer: GUI.Layer.Foreground);
 
-									GUI.DrawTextCentered($"{dist * WorldMap.km_per_unit:0.00} km", pos_c_hover - ((pos_c_hover - pos_c_current).GetNormalized() * 0.50f * scale), layer: GUI.Layer.Foreground, box_shadow: true);
+									GUI.DrawTextCentered($"{path_distance * WorldMap.km_per_unit:0.00} km", pos_c_hover - ((pos_c_hover - pos_c_current).GetNormalized() * 0.50f * scale), layer: GUI.Layer.Foreground, box_shadow: true);
 
-
-		
-
-									var road_a = default(Road.Segment);
-									var road_b = default(Road.Segment);
-
-									var ts = Timestamp.Now();
-									Span<Road.Junction.Branch> branches_span = stackalloc Road.Junction.Branch[32];
-									if (Repath(transform.position, pos_w_snapped, ref road_a, ref road_b, ref branches_span))
-									{
-										var ts_elapsed = ts.GetMilliseconds();
-										GUI.Text($"{ts_elapsed:0.0000} ms");
-
-										DrawPath(ref region, road_a, road_b, branches_span, color: GUI.col_button_yellow.WithAlphaMult(0.15f), thickness: 0.125f);
-
-										//foreach (ref var branch in branches_span)
-										//{
-										//	WorldMap.DrawBranch(ref branch);
-										//}
-									}
-
-									//var road_a = WorldMap.GetNearestRoad(Road.Type.Road, transform.position, out var road_a_dist_sq);
-									//var road_b = WorldMap.GetNearestRoad(Road.Type.Road, pos_w_snapped, out var road_b_dist_sq);
-
-									//if (road_a.IsValid() && road_b.IsValid())
-									//{
-									//	//var dir_a = dir;
-									//	//var dir_b = (pos_w_snapped - road_b.GetPosition()).GetNormalizedFast();
-
-									//	//var sign_a = road_a.GetSign(dir_a, true, 0.00f, 1.00f);
-									//	//var sign_b = road_b.GetSign(dir_b, true, 0.00f, 1.00f);
-
-									//	var ok_a = road_a.TryGetNearestJunction(out var junction_index_a, out _);
-									//	var ok_b = road_b.TryGetNearestJunction(out var junction_index_b, out _);
-
-									//	if (ok_a && ok_b)
-									//	{
-									//		Span<Road.Junction.Branch> branches_span = stackalloc Road.Junction.Branch[32];
-
-									//		var junction_a = WorldMap.road_junctions[junction_index_a];
-									//		var junction_b = WorldMap.road_junctions[junction_index_b];
-
-									//		var dir_a = (pos_w_snapped - junction_a.pos).GetNormalizedFast();
-									//		var dir_b = (pos_w_snapped - junction_b.pos).GetNormalizedFast();
-
-									//		TryResolveBranch(junction_a, dir_a, out var branch_src);
-									//		TryResolveBranch(junction_b, dir_b, out var branch_dst);
-
-									//		WorldMap.DrawBranch(ref branch_src);
-									//		WorldMap.DrawBranch(ref branch_dst);
-
-									//		if (RoadNav.Astar.TryFindPath(branch_src, branch_dst, ref branches_span, ignore_limits: true, dot_min: 0.00f, dot_max: 1.00f))
-									//		{
-
-
-									//			static void DrawPath(ref Region.Data.Common region, Road.Segment segment_start, Road.Segment segment_end, Span<Road.Junction.Branch> branches)
-									//			{
-									//				var pos_current = segment_start.GetPosition();
-									//				var segment_current = segment_start;
-									//				var current_branch_index = 0;
-
-									//				var scale = region.GetWorldToCanvasScale();
-
-									//				for (var i = 0; i < 200 && segment_current.IsValid(); i++)
-									//				{
-									//					var pos_a = pos_current;
-									//					var pos_b = pos_current = segment_current.GetPosition();
-
-									//					GetNextSegment(pos_current, ref segment_current, ref segment_end, ref current_branch_index, branches);
-
-									//					GUI.DrawLine(region.WorldToCanvas(pos_a), region.WorldToCanvas(pos_b), color: Color32BGRA.Yellow.WithAlphaMult(0.50f), thickness: 0.250f * scale, layer: GUI.Layer.Foreground);
-									//				}
-									//			}
-
-									//			DrawPath(ref region, road_a, road_b, branches_span);
-
-									//			foreach (ref var branch in branches_span)
-									//			{
-									//				//if (branch.sign != 0)
-									//				{
-									//					WorldMap.DrawBranch(ref branch);
-									//				}
-									//			}
-
-									//			GUI.TextShaded("ok");
-									//		}
-									//	}
-									//}
 
 									if (mouse.GetKeyDown(Mouse.Key.Right))
 									{

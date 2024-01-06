@@ -348,7 +348,7 @@ namespace TC2.Conquest
 			{
 				var size = new Vector2(48 * 18, 600);
 
-				using (var window = GUI.Window.Standalone("CreateCharacter", size: size, position: new(GUI.CanvasSize.X * 0.50f, GUI.CanvasSize.Y * 0.50f), pivot: new(0.50f, 0.50f), padding: new(8, 8), force_position: false))
+				using (var window = GUI.Window.Standalone("CreateCharacter"u8, size: size, position: new(GUI.CanvasSize.X * 0.50f, GUI.CanvasSize.Y * 0.50f), pivot: new(0.50f, 0.50f), padding: new(8, 8), force_position: false))
 				{
 					//this.StoreCurrentWindowTypeID();
 					if (window.show)

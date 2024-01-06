@@ -107,7 +107,7 @@ namespace TC2.Conquest
 			{
 				var rect = group_canvas.GetInnerRect();
 
-				using (GUI.ID.Push("worldmap"))
+				using (GUI.ID.Push("worldmap"u8))
 				{
 					GUI.DrawWindowBackground(GUI.tex_window_character);
 					//sb.Clear();
@@ -722,7 +722,7 @@ namespace TC2.Conquest
 
 						if (dragging && GUI.IsHovered)
 						{
-							GUI.SetHoveredID("worldmap");
+							GUI.SetHoveredID("worldmap"u8);
 						}
 					}
 				}
@@ -809,7 +809,7 @@ namespace TC2.Conquest
 					{
 						var sub_size = interactable.window_size;
 						//using (var window_sub = window.BeginChildWindow("worldmap.side.right.sub", GUI.AlignX.Left, GUI.AlignY.Top, pivot: new(1.00f, 0.00f), size: sub_size + new Vector2(16, 16), padding: new(8, 8), open: WorldMap.selected_entity.IsValid(), tex_bg: GUI.tex_window_popup_b))
-						using (var window = GUI.Window.Standalone("worldmap.interact", pivot: new(0.50f, 0.00f), position: new(GUI.CanvasSize.X * 0.50f, 32), force_position: false, size: sub_size + new Vector2(16, 16), size_min: interactable.window_size_min, padding: new(8, 8), flags: GUI.Window.Flags.Resizable))
+						using (var window = GUI.Window.Standalone("worldmap.interact"u8, pivot: new(0.50f, 0.00f), position: new(GUI.CanvasSize.X * 0.50f, 32), force_position: false, size: sub_size + new Vector2(16, 16), size_min: interactable.window_size_min, padding: new(8, 8), flags: GUI.Window.Flags.Resizable))
 						{
 							if (window.appearing)
 							{
@@ -871,7 +871,7 @@ namespace TC2.Conquest
 
 		private static void DrawLeftWindow(ref AABB rect)
 		{
-			using (var window = GUI.Window.Standalone("worldmap.side.left", position: new Vector2(rect.a.X, rect.a.Y) + new Vector2(6, 12), size: new(284, Maths.Min(rect.GetHeight() - 8, 550)), pivot: new(0.00f, 0.00f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus | GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.Child))
+			using (var window = GUI.Window.Standalone("worldmap.side.left"u8, position: new Vector2(rect.a.X, rect.a.Y) + new Vector2(6, 12), size: new(284, Maths.Min(rect.GetHeight() - 8, 550)), pivot: new(0.00f, 0.00f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus | GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.Child))
 			{
 				if (window.show)
 				{
@@ -912,7 +912,7 @@ namespace TC2.Conquest
 
 								GUI.SameLine();
 								GUI.TitleCentered(character_data.name, size: 24, pivot: new(0.00f, 0.00f), offset: new(4, 4));
-								if (GUI.Selectable3("character", GUI.GetLastItemRect(), selected: is_ent_character_alive && WorldMap.selected_entity == ent_character))
+								if (GUI.Selectable3("character"u8, GUI.GetLastItemRect(), selected: is_ent_character_alive && WorldMap.selected_entity == ent_character))
 								{
 									if (is_ent_character_alive)
 									{
@@ -942,7 +942,7 @@ namespace TC2.Conquest
 
 										GUI.TitleCentered(ent_enterable.GetName(), size: 16, pivot: new(0.00f, 1.00f), offset: new(4, -4), color: GUI.font_color_disabled);
 										//if (GUI.Selectable3(ent_enterable, GUI.GetLastItemRect(), selected: WorldMap.h_selected_location == h_location_nearest))
-										if (GUI.Selectable3("enterable.current", GUI.GetLastItemRect(), selected: WorldMap.selected_entity == ent_enterable))
+										if (GUI.Selectable3("enterable.current"u8, GUI.GetLastItemRect(), selected: WorldMap.selected_entity == ent_enterable))
 										{
 											//WorldMap.h_selected_location.Toggle(h_location_nearest);
 											//if (WorldMap.h_selected_location != default) WorldMap.FocusLocation(h_location_nearest);
@@ -955,8 +955,8 @@ namespace TC2.Conquest
 
 										if (can_enter)
 										{
-											GUI.TitleCentered("[Enter]", size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: Color32BGRA.Green);
-											if (GUI.Selectable3("enter", GUI.GetLastItemRect(), selected: false))
+											GUI.TitleCentered("[Enter]"u8, size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: Color32BGRA.Green);
+											if (GUI.Selectable3("enter"u8, GUI.GetLastItemRect(), selected: false))
 											{
 												var rpc = new Enterable.EnterRPC()
 												{
@@ -996,8 +996,8 @@ namespace TC2.Conquest
 									}
 									//GUI.FocusableAsset(character_data.h_location_current);
 
-									GUI.TitleCentered("[Exit]", size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: Color32BGRA.Red);
-									if (GUI.Selectable3("exit", GUI.GetLastItemRect(), selected: false))
+									GUI.TitleCentered("[Exit]"u8, size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: Color32BGRA.Red);
+									if (GUI.Selectable3("exit"u8, GUI.GetLastItemRect(), selected: false))
 									{
 										var rpc = new Enterable.ExitRPC()
 										{
@@ -1170,7 +1170,7 @@ namespace TC2.Conquest
 			{
 				//var draw_external = true;
 
-				using (var window = GUI.Window.Standalone("worldmap.side.right", position: new Vector2(rect.b.X, rect.a.Y) + new Vector2(-6, 12), size: new(322, Maths.Min(rect.GetHeight() - 8, 550)), pivot: new(1.00f, 0.00f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus | GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.Child))
+				using (var window = GUI.Window.Standalone("worldmap.side.right"u8, position: new Vector2(rect.b.X, rect.a.Y) + new Vector2(-6, 12), size: new(322, Maths.Min(rect.GetHeight() - 8, 550)), pivot: new(1.00f, 0.00f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus | GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.Child))
 				{
 					if (window.show)
 					{
@@ -1229,7 +1229,7 @@ namespace TC2.Conquest
 
 															if (Client.GetRegionID() != selected_region_id)
 															{
-																if (GUI.DrawButton("Enter", size: GUI.Rm, font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+																if (GUI.DrawButton("Enter"u8, size: GUI.Rm, font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
 																{
 																	Client.RequestSetActiveRegion(selected_region_id, delay_seconds: 0.75f);
 
@@ -1242,7 +1242,7 @@ namespace TC2.Conquest
 															else
 															{
 																color = GUI.col_button_error;
-																if (GUI.DrawButton("Exit", size: GUI.Rm, font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+																if (GUI.DrawButton("Exit"u8, size: GUI.Rm, font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
 																{
 																	Client.RequestSetActiveRegion(0, delay_seconds: 0.10f);
 																}
@@ -1297,7 +1297,7 @@ namespace TC2.Conquest
 
 											using (GUI.Wrap.Push(GUI.RmX))
 											{
-												GUI.LabelShaded("Type:", location_data.type.GetEnumName(), font_a: GUI.Font.Superstar, size_a: 20, font_b: GUI.Font.Superstar, size_b: 20);
+												GUI.LabelShaded("Type:"u8, location_data.type.GetEnumName(), font_a: GUI.Font.Superstar, size_a: 20, font_b: GUI.Font.Superstar, size_b: 20);
 											}
 										}
 
@@ -1525,7 +1525,7 @@ namespace TC2.Conquest
 
 			public void Draw()
 			{
-				using (var window = GUI.Window.Interaction("Location###location.gui", this.ent_location))
+				using (var window = GUI.Window.Interaction("Location###location.gui"u8, this.ent_location))
 				{
 					this.StoreCurrentWindowTypeID(order: -150);
 					if (window.show)
@@ -1558,7 +1558,7 @@ namespace TC2.Conquest
 
 									Span<(float buy, float sell, float produce)> weights_span = stackalloc (float buy, float sell, float produce)[materials_filtered_span.Length];
 
-									using (var scrollbox = GUI.Scrollbox.New("scroll.economy", size: GUI.Rm))
+									using (var scrollbox = GUI.Scrollbox.New("scroll.economy"u8, size: GUI.Rm))
 									{
 										// BUY
 										using (var group_buy = GUI.Group.New(size: new Vector2(GUI.RmX * 0.50f, GUI.RmY), padding: new(4)))
@@ -1590,13 +1590,13 @@ namespace TC2.Conquest
 
 														GUI.TitleCentered(material_data.name, pivot: new(0.00f, 0.50f));
 														GUI.TextCentered($"{weights_span[i].buy:0.00}", pivot: new(1.00f, 0.50f), offset: new(-96, 0));
-														GUI.DrawHoverTooltip("Buy");
+														GUI.DrawHoverTooltip("Buy"u8);
 
 														GUI.TextCentered($"{weights_span[i].sell:0.00}", pivot: new(1.00f, 0.50f), offset: new(-48, 0));
-														GUI.DrawHoverTooltip("Sell");
+														GUI.DrawHoverTooltip("Sell"u8);
 
 														GUI.TextCentered($"{weights_span[i].produce:0.00}", pivot: new(1.00f, 0.50f), offset: new(0, 0));
-														GUI.DrawHoverTooltip("Produce");
+														GUI.DrawHoverTooltip("Produce"u8);
 
 														//App.WriteLine($"BUY [{i:00}]: {materials_filtered_span[i].data.name,-32}{weights_span[i]:0.00}");
 													}

@@ -121,7 +121,7 @@ namespace TC2.Conquest
 
 			if (overlay_alpha > 0.01f)
 			{
-				using (var window = GUI.Window.HUD("worldmap.loading", size: GUI.CanvasSize, position: GUI.CanvasSize * 0.50f))
+				using (var window = GUI.Window.HUD("worldmap.loading"u8, size: GUI.CanvasSize, position: GUI.CanvasSize * 0.50f))
 				{
 					if (window.show)
 					{

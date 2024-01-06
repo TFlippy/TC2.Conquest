@@ -867,7 +867,7 @@ namespace TC2.Conquest
 				if (hs_pending_asset_saves.Count > 0)
 				{
 					var text_offset = 16;
-					GUI.DrawTextCentered("Pending Saves:", rect.GetPosition(new(0.50f, 0.00f)) + new Vector2(0, text_offset), font: GUI.Font.Superstar, size: 24, layer: GUI.Layer.Foreground, color: GUI.font_color_yellow);
+					GUI.DrawTextCentered("Pending Saves:"u8, rect.GetPosition(new(0.50f, 0.00f)) + new Vector2(0, text_offset), font: GUI.Font.Superstar, size: 24, layer: GUI.Layer.Foreground, color: GUI.font_color_yellow);
 					text_offset += 22;
 
 					foreach (var asset in hs_pending_asset_saves)
@@ -891,7 +891,7 @@ namespace TC2.Conquest
 		{
 			if (editor_mode != EditorMode.None) // App.debug_mode_gui)
 			{
-				using (var window = GUI.Window.Standalone("worldmap.debug", position: rect.GetPosition(0, 1, new(8, -8)), size: new(300, 400), pivot: new(0.00f, 1.00f), padding: new(8), force_position: false))
+				using (var window = GUI.Window.Standalone("worldmap.debug"u8, position: rect.GetPosition(0, 1, new(8, -8)), size: new(300, 400), pivot: new(0.00f, 1.00f), padding: new(8), force_position: false))
 				{
 					if (window.show)
 					{
@@ -899,7 +899,7 @@ namespace TC2.Conquest
 
 						GUI.DrawWindowBackground();
 
-						GUI.Title("Worldmap Debug");
+						GUI.Title("Worldmap Debug"u8);
 
 						GUI.SeparatorThick();
 
@@ -923,7 +923,7 @@ namespace TC2.Conquest
 						GUI.SameLine();
 						GUI.Checkbox("Show Doodads", ref show_doodads, new(32, 32), show_text: false, show_tooltip: true);
 
-						if (GUI.DrawButton("Recalculate Roads", size: new Vector2(160, 40)))
+						if (GUI.DrawButton("Recalculate Roads"u8, size: new Vector2(160, 40)))
 						{
 							RecalculateRoads();
 						}
@@ -946,7 +946,7 @@ namespace TC2.Conquest
 
 						GUI.SeparatorThick();
 
-						using (var scrollbox = GUI.Scrollbox.New("worldmap.scroll.editor", size: GUI.Rm))
+						using (var scrollbox = GUI.Scrollbox.New("worldmap.scroll.editor"u8, size: GUI.Rm))
 						{
 							switch (editor_mode)
 							{

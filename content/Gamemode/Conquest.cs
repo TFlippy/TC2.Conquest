@@ -285,7 +285,7 @@ namespace TC2.Conquest
 				var alive = this.player.flags.HasAny(Player.Flags.Alive);
 
 				var window_pos = (GUI.CanvasSize * new Vector2(0.50f, 0.00f)) + new Vector2(000, 48);
-				using (var window = GUI.Window.Standalone("Scoreboard", position: alive ? null : window_pos, size: new Vector2(600, 400), pivot: alive ? new Vector2(0.50f, 0.00f) : new(1.00f, 0.00f), flags: GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.No_Click_Focus))
+				using (var window = GUI.Window.Standalone("Scoreboard"u8, position: alive ? null : window_pos, size: new Vector2(600, 400), pivot: alive ? new Vector2(0.50f, 0.00f) : new(1.00f, 0.00f), flags: GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.No_Click_Focus))
 				{
 					this.StoreCurrentWindowTypeID();
 					if (window.show)
