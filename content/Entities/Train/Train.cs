@@ -657,7 +657,7 @@ namespace TC2.Conquest
 					train.speed = train.speed_max;
 				}
 
-				train.speed_current = Maths.MoveTowards(train.speed_current, train.speed, (train.speed_current < train.speed ? train.acceleration : train.brake) * info.DeltaTime);
+				train.speed_current = Maths.MoveTowards(train.speed_current, train.speed, (train.speed_current < train.speed ? train.acceleration : train.brake) * App.fixed_update_interval_s);
 
 				if (train.road_distance_current >= train.road_distance_target)
 				{
@@ -833,7 +833,7 @@ namespace TC2.Conquest
 
 				if (train.segment_a.IsValid())
 				{
-					train.road_distance_current += train.speed_current * info.DeltaTime;
+					train.road_distance_current += train.speed_current * App.fixed_update_interval_s;
 
 					//transform.SetRotation(transform.rotation, Maths.LerpAngle(train.dir_ab.GetAngleRadians(), train.direction.GetAngleRadians(), Maths.NormalizeClamp(train.road_distance_current, 0.350f)));
 

@@ -255,7 +255,7 @@ namespace TC2.Conquest
 			[ISystem.Update(ISystem.Mode.Single, ISystem.Scope.Global)]
 			public static void OnUpdateGlobal(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Global] ref World.Global world_global, [Source.Owned] ref Unit.Data unit, [Source.Owned] ref Transform.Data transform)
 			{
-				var dt = info.DeltaTime;
+				var dt = App.fixed_update_interval_s;
 
 				if (unit.flags.TrySetFlag(Data.Flags.Wants_Repath, false))
 				{
