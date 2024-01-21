@@ -436,7 +436,51 @@ namespace TC2.Conquest
 
 								if (show_locations)
 								{
-									GUI.DrawSpriteCentered(marker.icon, rect_icon, layer: GUI.Layer.Window, 0.125f * Maths.Max(scale * zoom * asset_scale, 16), color: color);
+									var sprite = marker.icon;
+									if (marker.flags.HasAny(Marker.Data.Flags.Directional))
+									{
+										var rot = marker.rotation;
+										var rot_snapped = Maths.Snap(rot, MathF.PI * 0.250f);
+										var rot_rem = Maths.DeltaAngle(rot, rot_snapped);
+
+										var rot_invlerp = Maths.InvLerp01(-MathF.PI, MathF.PI, rot_snapped);
+										sprite.frame.X = (uint)(rot_invlerp * 8);
+
+										// the sprites aren't 45°
+										switch (sprite.frame.X)
+										{
+											case 1:
+											{
+												rot_rem += MathF.PI * 0.100f;
+											}
+											break;
+
+											case 3:
+											{
+												rot_rem -= MathF.PI * 0.100f;
+											}
+											break;
+
+											case 5:
+											{
+												rot_rem += MathF.PI * 0.050f;
+											}
+											break;
+
+											case 7:
+											{
+												rot_rem -= MathF.PI * 0.050f;
+											}
+											break;
+										}
+
+										GUI.DrawSprite2(sprite, rect_icon.Scale(asset_scale), layer: GUI.Layer.Window, color: color, rotation: rot_rem);
+									}
+									else
+									{
+										GUI.DrawSpriteCentered(sprite, rect_icon, layer: GUI.Layer.Window, 0.125f * Maths.Max(scale * zoom * asset_scale, 16), color: color);
+									}
+
 									if (nameable.IsNotNull())
 									{
 										GUI.DrawTextCentered(nameable.name, Vector2.Transform(transform.position + marker.text_offset, mat_l2c), pivot: new(0.50f, 0.50f), color: GUI.font_color_title, font: GUI.Font.Superstar, size: 0.50f * Maths.Max(marker.scale * zoom * scale, 16), layer: GUI.Layer.Window, box_shadow: true);

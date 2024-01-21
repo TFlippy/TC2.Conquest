@@ -20,7 +20,7 @@ worldmap.enterable:
 
 worldmap.marker:
 {
-	flags: none
+	flags: directional
 	radius: 0.500
 	scale: 0.500
 	color: "0xffffffff"

@@ -63,13 +63,15 @@ namespace TC2.Conquest
 				{
 					None = 0u,
 
-					Hidden = 1u << 0
+					Hidden = 1u << 0,
+					Directional = 1u << 1
 				}
 
 				public WorldMap.Marker.Data.Flags flags;
 
 				public float radius = 1.00f;
 				public float scale = 1.00f;
+				public float rotation;
 
 				public Color32BGRA color;
 

@@ -188,6 +188,7 @@ namespace TC2.Conquest
 				public ILocation.Handle h_location;
 				public Vector2 pos_next;
 				public Vector2 pos_target;
+				public Vector2 dir_last;
 
 				// speed in km/h
 				public float speed = 6.00f;
@@ -247,13 +248,21 @@ namespace TC2.Conquest
 			}
 
 			[ISystem.Update(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region)]
-			public static void OnUpdate(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity, [Source.Owned] ref Unit.Data unit, [Source.Owned] ref Transform.Data transform)
+			public static void Update(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity, [Source.Owned] ref Unit.Data unit, [Source.Owned] ref Transform.Data transform)
 			{
 
 			}
 
+#if CLIENT
+			[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region)]
+			public static void UpdateMarker(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity, [Source.Owned] in Unit.Data unit, [Source.Owned] in Transform.Data transform, [Source.Owned] ref Marker.Data marker)
+			{			
+				marker.rotation = unit.dir_last.GetAngleRadiansFast();	
+			}
+#endif
+
 			[ISystem.Update(ISystem.Mode.Single, ISystem.Scope.Global)]
-			public static void OnUpdateGlobal(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Global] ref World.Global world_global, [Source.Owned] ref Unit.Data unit, [Source.Owned] ref Transform.Data transform)
+			public static void UpdateGlobal(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Global] ref World.Global world_global, [Source.Owned] ref Unit.Data unit, [Source.Owned] ref Transform.Data transform)
 			{
 				var dt = App.fixed_update_interval_s;
 
@@ -296,7 +305,7 @@ namespace TC2.Conquest
 						{
 							speed_mult *= road.speed_mult * road.integrity;
 						}
-						
+
 						unit.pos_next = unit.next_segment.GetPosition();
 					}
 				}
@@ -307,6 +316,11 @@ namespace TC2.Conquest
 
 				var pos_target = unit.pos_next;
 				var dir = (pos_target - transform.position).GetNormalized(out var dist);
+
+				if (dist > 0.01f)
+				{
+					unit.dir_last = dir;
+				}
 				unit.speed_current.MoveTowards(Maths.Min(unit.speed, unit.speed * 0.50f * speed_mult), unit.acc * 0.20f, dt);
 
 
