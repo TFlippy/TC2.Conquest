@@ -18,6 +18,9 @@ namespace TC2.Conquest
 				ref var region = ref connection.GetRegionCommon();
 				Assert.NotNull(ref region, Assert.Level.Error);
 
+				Assert.Check(this.vars.h_species.IsValid());
+				Assert.Check(this.vars.h_origin.IsValid());
+
 				var random = XorRandom.New(true);
 
 				var props = new CustomCharacter.Props();
@@ -561,7 +564,8 @@ namespace TC2.Conquest
 								GUI.SeparatorThick();
 							}
 
-							if (GUI.DrawConfirmButton("character.create", "Create Character", "Do you want to create\n    this character?", size: GUI.Rm, font_size: 24, color: GUI.col_button_ok))
+							var is_valid = vars.h_origin.IsValid() && vars.h_species.IsValid();
+							if (GUI.DrawConfirmButton("character.create", "Create Character", "Do you want to create\n    this character?", size: GUI.Rm, font_size: 24, color: GUI.col_button_ok, enabled: is_valid))
 							{
 								var rpc = new Conquest.CreateCharacterRPC();
 								rpc.vars = vars;
