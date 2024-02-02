@@ -321,7 +321,7 @@ namespace TC2.Conquest
 				{
 					unit.dir_last = dir;
 				}
-				unit.speed_current.MoveTowards(Maths.Min(unit.speed, unit.speed * 0.50f * speed_mult), unit.acc * 0.20f, dt);
+				unit.speed_current.MoveTowards(Maths.Min(unit.speed, unit.speed * 0.50f * speed_mult), unit.acc * 0.20f * dt);
 
 
 				//if (dist > unit.acc * info.DeltaTime * 0.50f)
