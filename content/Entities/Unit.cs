@@ -651,7 +651,8 @@ namespace TC2.Conquest
 			}
 
 			[ISystem.LateGUI(ISystem.Mode.Single, ISystem.Scope.Global)]
-			public static void OnGUI(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] ref Unit.Data unit, [Source.Owned] ref Transform.Data transform, [HasRelation(Source.Modifier.Owned, Relation.Type.Stored, true)] bool has_parent)
+			public static void OnGUI(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] ref Unit.Data unit, [Source.Owned] ref Transform.Data transform, 
+			[HasRelation(Source.Modifier.Owned, Relation.Type.Stored, true)] bool has_parent)
 			{
 				if (WorldMap.IsOpen && WorldMap.selected_entity == entity)
 				{
@@ -664,8 +665,6 @@ namespace TC2.Conquest
 					};
 					gui.Submit();
 				}
-
-				//App.WriteLine("GUI");
 			}
 #endif
 		}

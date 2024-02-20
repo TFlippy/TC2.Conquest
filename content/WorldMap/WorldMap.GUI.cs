@@ -345,9 +345,13 @@ namespace TC2.Conquest
 						#region Markers
 						foreach (ref var row in region.IterateQuery<WorldMap.Marker.GetAllMarkersQuery>())
 						{
-							row.Run((ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, in WorldMap.Marker.Data marker, in Transform.Data transform, ref Nameable.Data nameable, bool is_stored) =>
+							row.Run((ISystem.Info.Global info, ref Region.Data.Global region, Entity entity,
+							in WorldMap.Marker.Data marker,
+							in Transform.Data transform,
+							ref Nameable.Data nameable,
+							bool has_parent) =>
 							{
-								if (is_stored || marker.flags.HasAny(Marker.Data.Flags.Hidden)) return;
+								if (has_parent || marker.flags.HasAny(Marker.Data.Flags.Hidden)) return;
 
 								var pos = transform.GetInterpolatedPosition();
 								var scale = 0.500f;

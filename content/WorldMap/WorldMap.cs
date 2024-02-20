@@ -86,7 +86,11 @@ namespace TC2.Conquest
 			}
 
 			[Query(ISystem.Scope.Global)]
-			public delegate void GetAllMarkersQuery(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] in WorldMap.Marker.Data marker, [Source.Owned] in Transform.Data transform, [Source.Owned, Optional(true)] ref Nameable.Data nameable, [HasRelation(Source.Modifier.Owned, Relation.Type.Stored, true)] bool is_stored);
+			public delegate void GetAllMarkersQuery(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, 
+				[Source.Owned] in WorldMap.Marker.Data marker, 
+				[Source.Owned] in Transform.Data transform, 
+				[Source.Owned, Optional(true)] ref Nameable.Data nameable, 
+				[HasRelation(Source.Modifier.Owned, Relation.Type.Stored, true)] bool has_parent);
 
 #if SERVER
 			[ISystem.Modified(ISystem.Mode.Single, ISystem.Scope.Global)]
