@@ -78,17 +78,16 @@ namespace TC2.Conquest
 					//Assert.NotNull(ref location_data);
 
 					ref var region = ref World.GetGlobalRegion();
-					var ent_asset = this.h_character.AsEntity(0);
+					var ent_character = this.h_character.AsGlobalEntity();
 
-					if (ent_asset.IsAlive())
+					if (ent_character.IsAlive())
 					{
-						ent_asset.Delete();
+						//ent_character.Delete();
+						ent_character.AddRelation(entity, Relation.Type.Stored);
 					}
 
-					character_data.ent_inside = entity;
+					//character_data.ent_inside = entity;
 					character_asset.Sync();
-
-
 				}
 #endif
 			}
@@ -110,7 +109,7 @@ namespace TC2.Conquest
 					//Assert.NotNull(ref location_data);
 
 					ref var region = ref World.GetGlobalRegion();
-					var ent_asset = this.h_character.AsEntity(0);
+					var ent_character = this.h_character.AsGlobalEntity();
 
 					ref var transform = ref entity.GetComponent<Transform.Data>();
 					Assert.NotNull(ref transform);
@@ -135,10 +134,15 @@ namespace TC2.Conquest
 						//}
 					}
 
-					character_data.ent_inside = default;
+					//character_data.ent_inside = default;
+					if (ent_character.IsAlive())
+					{
+						ent_character.RemoveRelation(Entity.Wildcard, Relation.Type.Stored);
+					}
+
 					character_asset.Sync();
 
-					region.SpawnPrefab("unit.guy", position: pos, faction_id: character_data.faction, entity: ent_asset).ContinueWith((ent) =>
+					region.SpawnPrefab("unit.guy", position: pos, faction_id: character_data.faction, entity: ent_character).ContinueWith((ent) =>
 					{
 						ref var unit = ref ent.GetComponent<Unit.Data>();
 						if (unit.IsNotNull())
@@ -247,21 +251,27 @@ namespace TC2.Conquest
 #endif
 			}
 
-			[ISystem.Update(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region)]
-			public static void Update(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity, [Source.Owned] ref Unit.Data unit, [Source.Owned] ref Transform.Data transform)
-			{
+			//[ISystem.Update(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region)]
+			//public static void Update(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity, [Source.Owned] ref Unit.Data unit, [Source.Owned] ref Transform.Data transform)
+			//{
 
+			//}
+
+			[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region)]
+			public static void UpdateParented(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity, [Source.Owned] ref Transform.Data transform_child, [Source.Stored] in Transform.Data transform_parent, [Source.Owned] ref Marker.Data marker)
+			{
+				transform_child.SetPosition(transform_parent.position);
 			}
 
 #if CLIENT
-			[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region)]
+			[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region), HasRelation(Source.Modifier.Owned, Relation.Type.Stored, false)]
 			public static void UpdateMarker(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity, [Source.Owned] in Unit.Data unit, [Source.Owned] in Transform.Data transform, [Source.Owned] ref Marker.Data marker)
 			{			
 				marker.rotation = unit.dir_last.GetAngleRadiansFast();	
 			}
 #endif
 
-			[ISystem.Update(ISystem.Mode.Single, ISystem.Scope.Global)]
+			[ISystem.Update(ISystem.Mode.Single, ISystem.Scope.Global), HasRelation(Source.Modifier.Owned, Relation.Type.Stored, false)]
 			public static void UpdateGlobal(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Global] ref World.Global world_global, [Source.Owned] ref Unit.Data unit, [Source.Owned] ref Transform.Data transform)
 			{
 				var dt = App.fixed_update_interval_s;
@@ -451,6 +461,7 @@ namespace TC2.Conquest
 				public Entity ent_unit;
 				public Unit.Data unit;
 				public Transform.Data transform;
+				public bool has_parent;
 
 				public static Vector2? mouse_drag_a;
 				public static Vector2? mouse_drag_b;
@@ -616,11 +627,14 @@ namespace TC2.Conquest
 									GUI.DrawTextCentered($"{path_distance * WorldMap.km_per_unit:0.00} km", pos_c_hover - ((pos_c_hover - pos_c_current).GetNormalized() * 0.50f * scale), layer: GUI.Layer.Foreground, box_shadow: true);
 
 
-									if (mouse.GetKeyDown(Mouse.Key.Right))
+									if (!this.has_parent)
 									{
-										var rpc = new Unit.MoveRPC();
-										rpc.pos_target = pos_w_snapped;
-										rpc.Send(this.ent_unit);
+										if (mouse.GetKeyDown(Mouse.Key.Right))
+										{
+											var rpc = new Unit.MoveRPC();
+											rpc.pos_target = pos_w_snapped;
+											rpc.Send(this.ent_unit);
+										}
 									}
 								}
 							}
@@ -637,7 +651,7 @@ namespace TC2.Conquest
 			}
 
 			[ISystem.LateGUI(ISystem.Mode.Single, ISystem.Scope.Global)]
-			public static void OnGUI(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] ref Unit.Data unit, [Source.Owned] ref Transform.Data transform)
+			public static void OnGUI(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] ref Unit.Data unit, [Source.Owned] ref Transform.Data transform, [HasRelation(Source.Modifier.Owned, Relation.Type.Stored, true)] bool has_parent)
 			{
 				if (WorldMap.IsOpen && WorldMap.selected_entity == entity)
 				{
@@ -645,7 +659,8 @@ namespace TC2.Conquest
 					{
 						ent_unit = entity,
 						unit = unit,
-						transform = transform
+						transform = transform,
+						has_parent = has_parent
 					};
 					gui.Submit();
 				}

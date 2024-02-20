@@ -345,9 +345,9 @@ namespace TC2.Conquest
 						#region Markers
 						foreach (ref var row in region.IterateQuery<WorldMap.Marker.GetAllMarkersQuery>())
 						{
-							row.Run((ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, in WorldMap.Marker.Data marker, in Transform.Data transform, ref Nameable.Data nameable) =>
+							row.Run((ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, in WorldMap.Marker.Data marker, in Transform.Data transform, ref Nameable.Data nameable, bool is_stored) =>
 							{
-								if (marker.flags.HasAny(Marker.Data.Flags.Hidden)) return;
+								if (is_stored || marker.flags.HasAny(Marker.Data.Flags.Hidden)) return;
 
 								var pos = transform.GetInterpolatedPosition();
 								var scale = 0.500f;
@@ -932,8 +932,9 @@ namespace TC2.Conquest
 						ref var character_data = ref h_character.GetData(out var character_asset);
 						if (character_data.IsNotNull())
 						{
-							var ent_character = h_character.AsEntity(0);
-							var ent_inside = character_data.ent_inside;
+							var ent_character = h_character.AsGlobalEntity();
+							//var ent_inside = character_data.ent_inside;
+							var ent_inside = ent_character.GetParent(Relation.Type.Stored);
 
 							var is_ent_character_alive = ent_character.IsAlive();
 							var is_ent_inside_alive = ent_inside.IsAlive();
@@ -973,7 +974,7 @@ namespace TC2.Conquest
 								//GUI.TitleCentered(character_data.origin.GetName(), size: 16, pivot: new(0.00f, 1.00f), offset: new(4, -4));
 
 
-								if (is_ent_character_alive && transform.IsNotNull())
+								if (is_ent_character_alive && !is_ent_inside_alive && transform.IsNotNull())
 								{
 									//var h_location_nearest = WorldMap.GetNearestLocation(transform.position, out var distance_sq);
 									var ent_enterable = WorldMap.Enterable.GetNearest(transform.position, out var distance_sq);
@@ -1047,7 +1048,7 @@ namespace TC2.Conquest
 										{
 											h_character = h_character,
 										};
-										rpc.Send(character_data.ent_inside);
+										rpc.Send(ent_inside);
 									}
 								}
 							}
