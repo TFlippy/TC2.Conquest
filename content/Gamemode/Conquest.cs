@@ -166,7 +166,7 @@ namespace TC2.Conquest
 		public static void ScoutCommand(ref ChatCommand.Context context, int count)
 		{
 			ref var region = ref context.GetRegion();
-			ref var player = ref context.GetPlayer();
+			ref var player = ref context.GetPlayerData();
 
 			ref var faction_data = ref player.faction_id.GetData(out IFaction.Definition faction_asset);
 			if (faction_data.IsNotNull())
