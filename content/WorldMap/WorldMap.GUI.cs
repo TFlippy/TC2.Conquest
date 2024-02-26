@@ -938,10 +938,14 @@ namespace TC2.Conquest
 						{
 							var ent_character = h_character.AsGlobalEntity();
 							//var ent_inside = character_data.ent_inside;
-							var ent_inside = ent_character.GetParent(Relation.Type.Stored);
 
 							var is_ent_character_alive = ent_character.IsAlive();
+
+							var ent_inside = is_ent_character_alive ? ent_character.GetParent(Relation.Type.Stored) : default;
+
 							var is_ent_inside_alive = ent_inside.IsAlive();
+
+
 
 							var h_location_inside = default(ILocation.Handle);
 							if (is_ent_inside_alive && ent_inside.TryGetAssetHandle(out h_location_inside))

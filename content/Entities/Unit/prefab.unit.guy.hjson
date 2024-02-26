@@ -41,7 +41,6 @@ faction:
 	
 }
 
-
 nameable:
 {
 	flags: no_rename

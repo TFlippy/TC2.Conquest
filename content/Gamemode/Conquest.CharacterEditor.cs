@@ -29,7 +29,7 @@ namespace TC2.Conquest
 
 				var character = new ICharacter.Data();
 				character.origin = this.vars.h_origin;
-				character.h_location_current = this.vars.h_location;
+				//character.h_location_current = this.vars.h_location;
 				character.faction = player.h_faction;
 				character.species = this.vars.h_species;
 
@@ -56,11 +56,19 @@ namespace TC2.Conquest
 				var asset = ICharacter.Database.RegisterOrUpdate(identifier,
 					index: null,
 					scope: Asset.Scope.World,
-					flags: Asset.Flags.None,
+					flags: Asset.Flags.Entity,
+					h_prefab: "unit.guy",
 					region_id: 0,
 					data: ref character);
 				
 				asset.Sync(true);
+
+				var h_location = this.vars.h_location;
+
+				var ent_location = h_location.GetEntity();
+				var ent_asset = asset.GetEntity();
+
+				ent_asset.AddRelation(ent_location, Relation.Type.Stored);
 
 				player.h_character_main = asset;
 				player_asset.Sync();
@@ -370,6 +378,57 @@ namespace TC2.Conquest
 
 						using (var group_left = GUI.Group.New(size: new(GUI.RmX - 244, GUI.RmY)))
 						{
+							using (var group_b = GUI.Group.New(size: new(GUI.RmX, 48), padding: new(4)))
+							{
+								group_b.DrawBackground(GUI.tex_window);
+
+								if (GUI.AssetInput2("edit.location", ref vars.h_location, size: new(GUI.RmX, GUI.RmY), show_label: false, tab_height: 40.00f, close_on_select: false,
+								filter: (x) => !x.data.flags.HasAny(ILocation.Flags.Hidden) && x.data.buildings.HasAny(ILocation.Buildings.Train_Station | ILocation.Buildings.Trainyard),
+								draw: (asset, group, is_title) =>
+								{
+									if (asset != null)
+									{
+										using (var group_icon = GUI.Group.New(size: new(GUI.RmY)))
+										{
+											using (GUI.Clip.Push(group_icon.GetInnerRect()))
+											{
+												GUI.DrawSpriteCentered(asset.data.icon, group_icon.GetInnerRect(), GUI.Layer.Window, scale: 2.00f, color: asset.data.color.WithAlpha(255));
+											}
+											group_icon.DrawBackground(GUI.tex_frame);
+										}
+
+										GUI.SameLine();
+
+										GUI.TitleCentered(asset.data.name, pivot: new(0.00f, 0.50f), offset: new(8, 0), size: 24);
+
+										ref var prefecture_data = ref asset.data.h_prefecture.GetData();
+										if (prefecture_data.IsNotNull())
+										{
+											GUI.TitleCentered(prefecture_data.name, pivot: new(1.00f, 0.50f), offset: new(-8, 0), size: 16);
+										}
+
+										if (GUI.IsHoveringRect(group.GetOuterRect()))
+										{
+											using (var tooltip = GUI.Tooltip.New(size: new(300, 0)))
+											{
+												using (GUI.Wrap.Push(GUI.RmX))
+												{
+													GUI.TextShaded(asset.data.desc);
+												}
+											}
+										}
+									}
+									else
+									{
+										GUI.TitleCentered("<location>", pivot: new(0.00f, 0.50f), offset: new(8, 0), size: 24);
+									}
+								}))
+								{
+									WorldMap.FocusLocation(vars.h_location);
+									//reset = true;
+								}
+							}
+
 							using (var group_top = GUI.Group.New(size: new(GUI.RmX, 96)))
 							{
 								using (var group_head = GUI.Group.New(size: new(GUI.RmY), padding: new(4)))
