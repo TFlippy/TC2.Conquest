@@ -613,6 +613,12 @@ namespace TC2.Conquest
 								{
 									var pos_c = Vector2.Transform(junction.pos, mat_l2c);
 
+									//for (var i = 0; i < junction.segments_count; i++)
+									//{
+									//	var dir = junction.segments[i].GetPosition() - junction.pos;
+									//	GUI.DrawLine(pos_c, Vector2.Transform(junction.pos + (dir * 24), mat_l2c), layer: GUI.Layer.Window);
+									//}
+
 									GUI.DrawCircleFilled(pos_c, 0.125f * zoom, junction.segments_count > 1 ? Color32BGRA.Green : Color32BGRA.Yellow.WithAlphaMult(0.250f), 4, GUI.Layer.Window);
 									GUI.DrawTextCentered($"{junction.segments_count}", pos_c, layer: GUI.Layer.Window);
 								}
@@ -1322,11 +1328,24 @@ namespace TC2.Conquest
 										//GUI.SeparatorThick();
 									}
 
-									using (var group_top = GUI.Group.New(size: new(GUI.RmX, (GUI.RmX * 0.50f) + 40 + 4), padding: new(4, 4)))
+									using (var group_top = GUI.Group.New(size: new(GUI.RmX, 0), padding: new(4, 4)))
 									{
-										using (var group_left = GUI.Group.New(size: new(GUI.RmX * 0.50f, GUI.RmY)))
+										using (var group_left = GUI.Group.New(size: new(128 + 12, 0)))
 										{
-											GUI.DrawMapThumbnail(map_asset, size: new(GUI.RmX), show_frame: true);
+											using (var group_thumbnail = GUI.Group.New(size: new(GUI.RmX)))
+											{
+												if (map_asset != null)
+												{
+													GUI.DrawMapThumbnail(map_asset, size: GUI.Rm, show_frame: false);
+												}
+												else
+												{
+													//GUI.DrawSpriteCentered(location_data.thumbnail, group_thumbnail.GetInnerRect(), GUI.Layer.Window, scale: 1.00f);
+													GUI.DrawSpriteCentered(location_data.thumbnail, group_thumbnail.GetInnerRect(), GUI.Layer.Window, scale: 0.50f);
+												}
+
+												GUI.DrawBackground(GUI.tex_frame_white, rect: group_thumbnail.GetOuterRect(), padding: new(4), color: GUI.col_button);
+											}
 
 											if (map_asset != null)
 											{
@@ -1335,7 +1354,7 @@ namespace TC2.Conquest
 
 												if (Client.GetRegionID() != selected_region_id)
 												{
-													if (GUI.DrawButton("Enter"u8, size: GUI.Rm, font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+													if (GUI.DrawButton("Enter"u8, size: new(GUI.RmX, 48), font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
 													{
 														Client.RequestSetActiveRegion(selected_region_id, delay_seconds: 0.75f);
 
@@ -1348,7 +1367,7 @@ namespace TC2.Conquest
 												else
 												{
 													color = GUI.col_button_error;
-													if (GUI.DrawButton("Exit"u8, size: GUI.Rm, font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+													if (GUI.DrawButton("Exit"u8, size: new(GUI.RmX, 48), font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
 													{
 														Client.RequestSetActiveRegion(0, delay_seconds: 0.10f);
 													}
@@ -1356,7 +1375,7 @@ namespace TC2.Conquest
 											}
 											else
 											{
-												if (GUI.DrawButton("Derp"u8, size: GUI.Rm, font_size: 24, enabled: false, color: GUI.col_button, text_color: GUI.font_color_button_text))
+												if (GUI.DrawButton("Button"u8, size: new(GUI.RmX, 48), font_size: 24, enabled: false, color: GUI.col_button, text_color: GUI.font_color_button_text))
 												{
 
 												}
@@ -1374,6 +1393,10 @@ namespace TC2.Conquest
 												if (map_asset != null)
 												{
 													GUI.TextShaded(map_asset.Description);
+												}
+												else
+												{
+													GUI.TextShaded(location_data.desc);
 												}
 											}
 										}

@@ -392,7 +392,14 @@ namespace TC2.Conquest
 										{
 											using (GUI.Clip.Push(group_icon.GetInnerRect()))
 											{
-												GUI.DrawSpriteCentered(asset.data.icon, group_icon.GetInnerRect(), GUI.Layer.Window, scale: 2.00f, color: asset.data.color.WithAlpha(255));
+												if (asset.data.thumbnail.texture.id != 0)
+												{
+													GUI.DrawSpriteCentered(asset.data.thumbnail, group_icon.GetInnerRect(), GUI.Layer.Window, scale: 0.25f);
+												}
+												else
+												{
+													GUI.DrawSpriteCentered(asset.data.icon, group_icon.GetInnerRect(), GUI.Layer.Window, scale: 2.00f, color: asset.data.color.WithAlpha(255));
+												}
 											}
 											group_icon.DrawBackground(GUI.tex_frame);
 										}

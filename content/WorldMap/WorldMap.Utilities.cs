@@ -109,7 +109,7 @@ namespace TC2.Conquest
 
 							if (!road_segments_tmp.TryAdd(pos_key, segment))
 							{
-								var segment_other = road_segments_tmp[pos_key];
+								//var segment_other = road_segments_tmp[pos_key];
 								//if (segment_other.chain == segment.chain) continue;
 
 								if (!road_segments_overlapped_tmp.TryGetValue(pos_key, out var segments_list))
@@ -119,6 +119,14 @@ namespace TC2.Conquest
 								}
 
 								segments_list.Add(segment);
+							}
+							else if (point_index == 0 || point_index == points_span.Length - 1)
+							{
+								if (!road_segments_overlapped_tmp.TryGetValue(pos_key, out var segments_list))
+								{
+									segments_list = road_segments_overlapped_tmp[pos_key] = new(4);
+									segments_list.Add(road_segments_tmp[pos_key]);
+								}
 							}
 						}
 					}
@@ -169,7 +177,7 @@ namespace TC2.Conquest
 								}
 							}
 
-							if (junction.segments_count > 1)
+							if (junction.segments_count > 1 || (junction.segments_count == 1 && (junction.segments[0].index == 0 || junction.segments[0].index == junction.segments[0].chain.GetSpan().Length - 1)))
 							{
 								var junction_index = road_junctions_tmp.Count;
 								junction.index = (ushort)junction_index;
@@ -318,6 +326,50 @@ namespace TC2.Conquest
 			var span = road_chain.GetSpan();
 			span.GetNearestIndex(pos, out var index, out var dist_sq);
 			return new Road.Segment(road_chain, (byte)index);
+		}
+
+		public static Road.Segment GetNearestSegment(this Road.Junction.Branch branch, Vector2 pos, out Vector2 pos_segment)
+		{
+			var branch_segment = branch.GetSegment();
+			var span = branch_segment.chain.GetSpan();
+			pos_segment = pos;
+
+			var index = (int)branch_segment.index;
+			var dist_sq_nearest = float.MaxValue;
+
+			var pos_prev = branch_segment.GetPosition();
+			if (branch.sign.IsNegative())
+			{
+				for (var i = index; i >= 0; i--)
+				{
+					var pos_segment_tmp = Maths.ClosestPointOnLine(pos_prev, span[i], pos);
+					var dist_sq_tmp = Vector2.DistanceSquared(pos_segment_tmp, pos);
+					if (dist_sq_tmp < dist_sq_nearest)
+					{
+						dist_sq_nearest = dist_sq_tmp;
+						pos_segment = pos_segment_tmp;						
+						index = i;
+					}
+					pos_prev = span[i];
+				}
+			}
+			else
+			{
+				for (var i = index; i < span.Length; i++)
+				{
+					var pos_segment_tmp = Maths.ClosestPointOnLine(pos_prev, span[i], pos);
+					var dist_sq_tmp = Vector2.DistanceSquared(pos_segment_tmp, pos);
+					if (dist_sq_tmp < dist_sq_nearest)
+					{
+						dist_sq_nearest = dist_sq_tmp;
+						pos_segment = pos_segment_tmp;
+						index = i;
+					}
+					pos_prev = span[i];
+				}
+			}
+
+			return new Road.Segment(branch_segment.chain, (byte)index);
 		}
 
 		// TODO: this is dumb

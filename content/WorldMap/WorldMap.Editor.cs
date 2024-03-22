@@ -895,7 +895,8 @@ namespace TC2.Conquest
 				{
 					if (window.show)
 					{
-						var mat_l2c = World.GetGlobalRegion().GetWorldToCanvasMatrix();
+						ref var region = ref World.GetGlobalRegion();
+						var mat_l2c = region.GetWorldToCanvasMatrix();
 
 						GUI.DrawWindowBackground();
 
@@ -992,6 +993,22 @@ namespace TC2.Conquest
 								{
 									//var junctions_span = CollectionsMarshal.AsSpan(road_junctions);
 									//junctions_span.GetNearestIndex
+								}
+								break;
+
+								case EditorMode.Prefecture:
+								{
+									var mouse_pos_world = region.CanvasToWorld(mouse_pos_new);
+									var road_nearest = GetNearestRoad(Road.Type.Road, mouse_pos_world, out var dist_sq);
+									if (road_nearest.IsValid())
+									{
+										var hovered_prefecture = WorldMap.GetPrefectureAtPosition(mouse_pos_world);
+
+
+										GUI.DrawCircleFilled(region.WorldToCanvas(road_nearest.GetPosition()), 10.00f, Color32BGRA.Magenta, layer: GUI.Layer.Foreground);
+										GUI.DrawTextCentered($"{hovered_prefecture}\n{road_nearest.index}", mouse_pos_new, layer: GUI.Layer.Foreground);
+									}
+									//GUI.DrawTextCentered($"{road_nearest.index}", mouse_pos_new + new Vector2(0, -16), layer: GUI.Layer.Foreground);
 								}
 								break;
 

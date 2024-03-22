@@ -266,15 +266,17 @@ namespace TC2.Conquest
 #if CLIENT
 			[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region), HasRelation(Source.Modifier.Owned, Relation.Type.Stored, false)]
 			public static void UpdateMarker(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity, [Source.Owned] in Unit.Data unit, [Source.Owned] in Transform.Data transform, [Source.Owned] ref Marker.Data marker)
-			{			
-				marker.rotation = unit.dir_last.GetAngleRadiansFast();	
+			{
+				marker.rotation = unit.dir_last.GetAngleRadiansFast();
 			}
 #endif
 
 			[ISystem.Update(ISystem.Mode.Single, ISystem.Scope.Global), HasRelation(Source.Modifier.Owned, Relation.Type.Stored, false)]
-			public static void UpdateGlobal(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Global] ref World.Global world_global, [Source.Owned] ref Unit.Data unit, [Source.Owned] ref Transform.Data transform)
+			public static void UpdateGlobal(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Global] ref World.Global world_global, [Source.Owned] ref WorldMap.Unit.Data unit, [Source.Owned] ref Transform.Data transform)
 			{
 				var dt = App.fixed_update_interval_s;
+
+				//App.WriteLine("unit");
 
 				if (unit.flags.TrySetFlag(Data.Flags.Wants_Repath, false))
 				{
@@ -282,7 +284,7 @@ namespace TC2.Conquest
 					unit.branches_count = 0;
 
 					var branches_span = unit.branches.AsSpan();
-					if (Repath(transform.position, unit.pos_target, unit.road_type, ref unit.next_segment, ref unit.end_segment, ref branches_span))
+					if (Repath(unit.road_type, transform.position, unit.pos_target, out var pos_end, ref unit.next_segment, ref unit.end_segment, ref branches_span))
 					{
 						var branch = branches_span[0];
 
@@ -375,10 +377,10 @@ namespace TC2.Conquest
 				}
 			}
 
-			public static bool Repath(Vector2 pos_a, Vector2 pos_b, Road.Type road_type, ref Road.Segment segment_start, ref Road.Segment segment_end, ref Span<Road.Junction.Branch> branches_span)
+			public static bool Repath(Road.Type road_type, Vector2 pos_a, Vector2 pos_b, out Vector2 pos_end, ref Road.Segment segment_start, ref Road.Segment segment_end, ref Span<Road.Junction.Branch> branches_span)
 			{
 				//var dir = (pos_b - pos_a).GetNormalizedFast();
-
+				pos_end = pos_b;
 				if (road_type == Road.Type.Undefined) return false;
 
 				segment_start = default;
@@ -387,8 +389,16 @@ namespace TC2.Conquest
 				var road_a = WorldMap.GetNearestRoad(road_type, pos_a, out var road_a_dist_sq);
 				var road_b = WorldMap.GetNearestRoad(road_type, pos_b, out var road_b_dist_sq);
 
+
 				if (road_a.IsValid() && road_b.IsValid() && road_a != road_b && road_a_dist_sq < 0.50f.Pow2() && road_b_dist_sq < 1.00f.Pow2())
 				{
+
+#if CLIENT
+					if (road_a.IsValid()) World.GetGlobalRegion().DrawDebugCircle(road_a.GetPosition(), 0.125f, Color32BGRA.Magenta, filled: true);
+					if (road_b.IsValid()) World.GetGlobalRegion().DrawDebugCircle(road_b.GetPosition(), 0.125f, Color32BGRA.Magenta, filled: true);
+#endif
+
+
 					//var sign_a = road_a.GetSign(dir, true, 0.00f, 1.00f);
 					//var sign_b = road_b.GetSign(-dir, true, 0.00f, 1.00f);
 
@@ -401,6 +411,12 @@ namespace TC2.Conquest
 					{
 						var junction_a = WorldMap.road_junctions[junction_index_a];
 						var junction_b = WorldMap.road_junctions[junction_index_b];
+
+#if CLIENT
+						World.GetGlobalRegion().DrawDebugCircle(junction_a.pos, 0.125f, Color32BGRA.Yellow, filled: true);
+						World.GetGlobalRegion().DrawDebugCircle(junction_b.pos, 0.125f, Color32BGRA.Yellow, filled: true);
+#endif
+
 
 						//junction_a.TryResolveBranch((pos_b - junction_a.pos).GetNormalizedFast(), out var branch_src);
 						//junction_b.TryResolveBranch(dir, out var branch_dst);
@@ -431,7 +447,7 @@ namespace TC2.Conquest
 						{
 							//TryResolveBranch(junction_b, dir_b, out var branch_dst);
 
-							if (RoadNav.Astar.TryFindPath(branch_src, branch_dst, ref branches_span, ignore_limits: true, dot_min: 0.00f, dot_max: 1.00f))
+							if (RoadNav.Astar.TryFindPath(branch_src, branch_dst, ref branches_span, ignore_limits: true, dot_min: -1.00f, dot_max: 1.00f))
 							{
 								//segment_start = branch_src.GetSegment();
 								segment_start = branches_span[0].GetSegment();
@@ -440,11 +456,16 @@ namespace TC2.Conquest
 								//segment_end = road_b;
 
 								//segment_start = road_a;
-								segment_end = road_b;
+								//segment_end = road_b;
 
-								segment_end = branch_dst.GetSegment();
-								segment_end = branches_span[branches_span.Length - 1].GetSegment();
-								segment_end = segment_end.chain.GetNearestSegment(pos_b);
+								//segment_end = branch_dst.GetSegment();
+								//segment_end = branches_span[branches_span.Length - 1].GetSegment();
+								segment_end = branches_span[branches_span.Length - 1].GetNearestSegment(pos_b, out pos_end);
+								//segment_end = segment_end.chain.GetNearestSegment(pos_b);
+
+								//segment_end.chain.GetNearestSegment
+
+								//pos_end = Maths.ClosestPointOnLine(segment_end.GetPosition(), )
 
 								return true;
 							}
@@ -476,7 +497,7 @@ namespace TC2.Conquest
 					{
 						if (window.show)
 						{
-							static void DrawPath(ref Region.Data.Common region, Road.Segment segment_start, Road.Segment segment_end, Span<Road.Junction.Branch> branches_span, out float distance, Color32BGRA color = default, float thickness = 0.250f)
+							static void DrawPath(ref Region.Data.Common region, Road.Segment segment_start, Road.Segment segment_end, Vector2 pos_end, Span<Road.Junction.Branch> branches_span, out float distance, Color32BGRA color = default, float thickness = 0.250f)
 							{
 								distance = 0.00f;
 
@@ -487,7 +508,8 @@ namespace TC2.Conquest
 								var scale = region.GetWorldToCanvasScale();
 								if (color == 0) color = Color32BGRA.Yellow.WithAlphaMult(0.250f);
 
-								for (var i = 0; i < 200 && segment_current.IsValid(); i++)
+								var is_valid = segment_current.IsValid();
+								for (var i = 0; i < 200; i++)
 								{
 									var pos_a = pos_current;
 									var pos_b = pos_current = segment_current.GetPosition();
@@ -495,8 +517,33 @@ namespace TC2.Conquest
 									distance += Vector2.Distance(pos_a, pos_b);
 
 									GetNextSegment(pos_current, ref segment_current, ref segment_end, ref current_branch_index, branches_span);
+									//if (current_branch_index == branches_span.Length - 1)
+									//{
+									//GUI.DrawCircleFilled(region.WorldToCanvas(pos_b), 0.125f * scale, color: Color32BGRA.Magenta.WithAlpha(100), segments: 4, layer: GUI.Layer.Foreground);
+									//GUI.DrawTextCentered($"[{i}]", region.WorldToCanvas(pos_b), color: Color32BGRA.White, layer: GUI.Layer.Foreground);
+									//}
 
-									GUI.DrawLine(region.WorldToCanvas(pos_a), region.WorldToCanvas(pos_b), color: color, thickness: thickness * scale, layer: GUI.Layer.Foreground);
+									is_valid = segment_current.IsValid();
+
+
+									if (is_valid)
+									{
+										GUI.DrawLine(region.WorldToCanvas(pos_a), region.WorldToCanvas(pos_b), color: color, thickness: thickness * scale, layer: GUI.Layer.Foreground);
+									}
+									else
+									{
+										//var pos_end_line = Maths.ClosestPointOnLine(pos_a, pos_b, pos_end);
+
+										////Maths.ClosestPointOnLine(pos_a, pos_b, pos_end);
+
+										////GUI.DrawLine(region.WorldToCanvas(pos_a), region.WorldToCanvas(pos_b), color: color, thickness: thickness * scale, layer: GUI.Layer.Foreground);
+										//GUI.DrawLine(region.WorldToCanvas(pos_a), region.WorldToCanvas(pos_end_line), color: color, thickness: thickness * scale, layer: GUI.Layer.Foreground);
+										//GUI.DrawLine(region.WorldToCanvas(pos_end_line), region.WorldToCanvas(pos_end), color: color, thickness: thickness * scale, layer: GUI.Layer.Foreground);
+										GUI.DrawLine(region.WorldToCanvas(pos_a), region.WorldToCanvas(pos_end), color: color, thickness: thickness * scale, layer: GUI.Layer.Foreground);
+
+										//GUI.DrawCircleFilled(region.WorldToCanvas(pos_end_line), 0.125f * scale, color: Color32BGRA.Magenta.WithAlpha(100), segments: 4, layer: GUI.Layer.Foreground);
+										break;
+									}
 								}
 							}
 
@@ -582,7 +629,7 @@ namespace TC2.Conquest
 									var road_a = this.unit.next_segment; // branches[0].GetSegment();
 									var road_b = this.unit.end_segment;
 
-									DrawPath(ref region, road_a, road_b, this.unit.branches.AsSpan().Slice(this.unit.current_branch_index, this.unit.branches_count - this.unit.current_branch_index), color: GUI.font_color_green.WithAlphaMult(0.40f), thickness: 0.125f, distance: out path_distance);
+									DrawPath(ref region, road_a, road_b, this.unit.pos_target, this.unit.branches.AsSpan().Slice(this.unit.current_branch_index, this.unit.branches_count - this.unit.current_branch_index), color: GUI.font_color_green.WithAlphaMult(0.40f), thickness: 0.125f, distance: out path_distance);
 								}
 
 								//WorldMap.DrawBranch(ref current_branch);
@@ -603,12 +650,12 @@ namespace TC2.Conquest
 
 										var ts = Timestamp.Now();
 										Span<Road.Junction.Branch> branches_span = stackalloc Road.Junction.Branch[32];
-										if (Repath(this.transform.position, pos_w_snapped, this.unit.road_type, ref road_a, ref road_b, ref branches_span))
+										if (Repath(this.unit.road_type, this.transform.position, pos_w_snapped, out var pos_end, ref road_a, ref road_b, ref branches_span))
 										{
 											var ts_elapsed = ts.GetMilliseconds();
 											GUI.Text($"{ts_elapsed:0.0000} ms");
 
-											DrawPath(ref region, road_a, road_b, branches_span, color: GUI.col_button_yellow.WithAlphaMult(0.20f), thickness: 0.125f, distance: out path_distance);
+											DrawPath(ref region, road_a, road_b, pos_end, branches_span, color: GUI.col_button_yellow.WithAlphaMult(0.20f), thickness: 0.125f, distance: out path_distance);
 
 											//foreach (ref var branch in branches_span)
 											//{
@@ -651,7 +698,7 @@ namespace TC2.Conquest
 			}
 
 			[ISystem.LateGUI(ISystem.Mode.Single, ISystem.Scope.Global)]
-			public static void OnGUI(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] ref Unit.Data unit, [Source.Owned] ref Transform.Data transform, 
+			public static void OnGUI(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] ref Unit.Data unit, [Source.Owned] ref Transform.Data transform,
 			[HasRelation(Source.Modifier.Owned, Relation.Type.Stored, true)] bool has_parent)
 			{
 				if (WorldMap.IsOpen && WorldMap.selected_entity == entity)
