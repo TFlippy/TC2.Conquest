@@ -389,7 +389,6 @@ namespace TC2.Conquest
 				var road_a = WorldMap.GetNearestRoad(road_type, pos_a, out var road_a_dist_sq);
 				var road_b = WorldMap.GetNearestRoad(road_type, pos_b, out var road_b_dist_sq);
 
-
 				if (road_a.IsValid() && road_b.IsValid() && road_a != road_b && road_a_dist_sq < 0.50f.Pow2() && road_b_dist_sq < 1.00f.Pow2())
 				{
 
@@ -402,6 +401,7 @@ namespace TC2.Conquest
 					//var sign_a = road_a.GetSign(dir, true, 0.00f, 1.00f);
 					//var sign_b = road_b.GetSign(-dir, true, 0.00f, 1.00f);
 
+					//var ok_a = road_a.chain.GetNearestSegment(pos_b).TryGetNearestJunction(out var junction_index_a, out _, out var sign_a);
 					var ok_a = road_a.TryGetNearestJunction(out var junction_index_a, out _, out var sign_a);
 					var ok_b = road_b.TryGetNearestJunction(out var junction_index_b, out _, out var sign_b);
 
@@ -424,27 +424,45 @@ namespace TC2.Conquest
 
 
 						var dir = (pos_b - pos_a).GetNormalizedFast();
-						var dir_a = (pos_b - junction_a.pos).GetNormalizedFast();
-						//var dir_a = -(junction_a.pos - pos_a).GetNormalizedFast();
-						//var dir_a = dir;
+						var dir_a = -(pos_a - junction_a.pos).GetNormalizedFast();
+						//var dir_a = (junction_a.pos - pos_a).GetNormalizedFast();
+						var dir_a2 = -(junction_a.pos - pos_b).GetNormalizedFast();
+						var dir_ab = (junction_a.pos - junction_b.pos).GetNormalizedFast();
+						//var dir_b = dir; // (pos_b - junction_b.pos).GetNormalizedFast();
+						//var dir_b2 = (junction_b.pos - junction_a.pos).GetNormalizedFast();
 						var dir_b = (pos_b - junction_b.pos).GetNormalizedFast();
-						//var dir_b = (junction_b.pos - junction_a.pos).GetNormalizedFast();
+						var dir_b2 = (pos_b - junction_b.pos).GetNormalizedFast();
 
 
-						//#if CLIENT
-						//						ref var region = ref World.GetGlobalRegion();
-						//						region.DrawDebugCircle(junction_a.pos, 0.50f, Color32BGRA.Red.WithAlphaMult(0.250f), filled: true);
-						//						region.DrawDebugCircle(junction_b.pos, 0.50f, Color32BGRA.Green.WithAlphaMult(0.250f), filled: true);
+#if CLIENT
+						ref var region = ref World.GetGlobalRegion();
+						region.DrawDebugCircle(junction_a.pos, 0.50f, Color32BGRA.Red.WithAlphaMult(0.250f), filled: true);
+						region.DrawDebugCircle(junction_b.pos, 0.50f, Color32BGRA.Green.WithAlphaMult(0.250f), filled: true);
 
-						//						region.DrawDebugDir(junction_a.pos, dir_a * 4, thickness: 10, color: Color32BGRA.Red.WithAlphaMult(0.250f));
-						//						region.DrawDebugDir(junction_b.pos, dir_b * 4, thickness: 10, color: Color32BGRA.Green.WithAlphaMult(0.250f));
-						//#endif
+						region.DrawDebugDir(junction_a.pos, dir_a * 4, thickness: 10, color: Color32BGRA.Red.WithAlphaMult(0.250f));
+						region.DrawDebugDir(junction_b.pos, dir_b * 4, thickness: 10, color: Color32BGRA.Green.WithAlphaMult(0.250f));
+#endif
 
-						//if ((junction_a.TryResolveBranch(dir_a, out var branch_src)) && (road_b.TryGetNearestBranch(out var branch_dst, out _) || junction_b.TryResolveBranch((pos_b - junction_b.pos).GetNormalizedFast(), out branch_dst)))
-						//if ((road_a.TryGetNearestBranch(out var branch_src) || junction_a.TryResolveBranch(dir_a, out branch_src)) && (road_b.TryGetNearestBranch(out var branch_dst) || junction_b.TryResolveBranch((pos_b - junction_b.pos).GetNormalizedFast(), out branch_dst)))
-						//if ((road_a.TryGetEntryBranch(dir, out var branch_src) || junction_a.TryResolveBranch(dir_a, out branch_src)) && (road_b.TryGetNearestBranch(out var branch_dst) || junction_b.TryResolveBranch(dir, out branch_dst)))
-						if ((road_a.TryGetEntryBranch(dir, out var branch_src, dot_min: 0.00f) || junction_a.TryResolveBranch(dir_a, out branch_src)) && (road_b.TryGetExitBranch(dir_b, out var branch_dst, dot_min: 0.00f) || junction_b.TryResolveBranch(dir, out branch_dst))) // || road_b.TryGetEntryBranch(-dir, out branch_dst, dot_min: 0.00f))) // || junction_b.TryResolveBranch(dir, out branch_dst)))																																																																		   //if ((road_a.TryGetEntryBranch(dir, out var branch_src, dot_min: 0.00f, dot_max: 1.00f)) && (road_b.TryGetEntryBranch(dir, out var branch_dst, dot_min: 0.00f, dot_max: 1.00f) || junction_b.TryResolveBranch(dir_b, out branch_dst)))
+						//if ((junction_a.TryResolveBranch(dir_a, out var branch_src)) && (road_b.TryGetNearestBranch(out var branch_dst) || junction_b.TryResolveBranch((pos_b - junction_b.pos).GetNormalizedFast(), out branch_dst)))
+						////if ((road_a.TryGetNearestBranch(out var branch_src) || junction_a.TryResolveBranch(dir_a, out branch_src)) && (road_b.TryGetNearestBranch(out var branch_dst) || junction_b.TryResolveBranch((pos_b - junction_b.pos).GetNormalizedFast(), out branch_dst)))
+						//if ((road_a.TryGetEntryBranch(dir_a, out var branch_src)) 
+						//	&& (road_b.TryGetEntryBranch(dir_b, out var branch_dst) || road_b.TryGetExitBranch(dir_b, out branch_dst)))
+
+
+
+
+						if ((junction_a.TryResolveBranch(dir, out var branch_src) || road_a.TryGetEntryBranch(dir_a, out branch_src, dot_min: 0.01f, dot_max: 0.99f) || road_a.TryGetExitBranch(dir_a, out branch_src, dot_min: 0.00f, dot_max: 0.99f))
+							&& (junction_b.TryResolveBranch(dir_b, out var branch_dst) || road_b.TryGetEntryBranch(dir_b, out branch_dst, dot_min: 0.01f, dot_max: 0.99f) || road_b.TryGetExitBranch(dir_b, out branch_dst, dot_min: 0.01f, dot_max: 0.99f) || junction_b.TryResolveBranch(dir_b, out branch_dst)))
+							
+							
+							
+							
+							// || road_b.TryGetEntryBranch(-dir, out branch_dst, dot_min: 0.00f))) // || junction_b.TryResolveBranch(dir, out branch_dst)))																																																																		   //if ((road_a.TryGetEntryBranch(dir, out var branch_src, dot_min: 0.00f, dot_max: 1.00f)) && (road_b.TryGetEntryBranch(dir, out var branch_dst, dot_min: 0.00f, dot_max: 1.00f) || junction_b.TryResolveBranch(dir_b, out branch_dst)))
+																																																	   //																																																														   //if ((road_a.TryGetEntryBranch(dir, out var branch_src, dot_min: 0.00f) || junction_a.TryResolveBranch(dir_a, out branch_src)) && (road_b.TryGetExitBranch(dir_b, out var branch_dst, dot_min: 0.00f) || junction_b.TryResolveBranch(dir, out branch_dst))) // || road_b.TryGetEntryBranch(-dir, out branch_dst, dot_min: 0.00f))) // || junction_b.TryResolveBranch(dir, out branch_dst)))																																																																		   //if ((road_a.TryGetEntryBranch(dir, out var branch_src, dot_min: 0.00f, dot_max: 1.00f)) && (road_b.TryGetEntryBranch(dir, out var branch_dst, dot_min: 0.00f, dot_max: 1.00f) || junction_b.TryResolveBranch(dir_b, out branch_dst)))
+																																																	   //if (road_a.TryGetNearestBranch(out var branch_src) && road_b.TryGetNearestBranch(out var branch_dst))
 						{
+							//App.WriteLine(WorldMap.GetJunction(branch_src.junction_index).segments_count);
+
 							//TryResolveBranch(junction_b, dir_b, out var branch_dst);
 
 							if (RoadNav.Astar.TryFindPath(branch_src, branch_dst, ref branches_span, ignore_limits: true, dot_min: -1.00f, dot_max: 1.00f))

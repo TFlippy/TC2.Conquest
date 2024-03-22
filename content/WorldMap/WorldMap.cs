@@ -200,7 +200,7 @@ namespace TC2.Conquest
 			ref var road = ref segment.GetRoad();
 			if (road.IsNull()) return false;
 
-			if (road_segment_to_junction_index.TryGetValue(segment, out junction_index))
+			if (road_segment_to_junction_index.TryGetValue(segment, ref junction_index))
 			{
 				dist_sq = 0.00f;
 				return true;
@@ -218,7 +218,7 @@ namespace TC2.Conquest
 			//while (--a.index >= 0)
 			while (--a.index < points.Length) // overflows to 255, not -1
 			{
-				if (road_segment_to_junction_index.TryGetValue(a, out junction_index_a))
+				if (road_segment_to_junction_index.TryGetValue(a, ref junction_index_a))
 				{
 					break;
 				}
@@ -227,7 +227,7 @@ namespace TC2.Conquest
 			var b = segment;
 			while (++b.index < points.Length)
 			{
-				if (road_segment_to_junction_index.TryGetValue(b, out junction_index_b))
+				if (road_segment_to_junction_index.TryGetValue(b, ref junction_index_b))
 				{
 					break;
 				}
@@ -366,7 +366,7 @@ namespace TC2.Conquest
 			var sign = 0;
 			var points = road.points.AsSpan();
 
-			var index = (int)segment.index;
+			var index = (int)(uint)segment.index;
 			var pos = points[index];
 
 			var a_index = byte.MaxValue;
@@ -441,7 +441,7 @@ namespace TC2.Conquest
 			}
 
 			ref var junction = ref WorldMap.GetJunction(junction_index);
-			if (junction.IsNotNull() && junction.TryGetSegmentIndex(segment, out var branch_segment_index))
+			if (junction.IsNotNull() && junction.segments_count > 1 && junction.TryGetSegmentIndex(segment, out var branch_segment_index))
 			{
 				branch = new((ushort)junction_index, (byte)branch_segment_index, (sbyte)sign);
 				return true;
@@ -464,7 +464,7 @@ namespace TC2.Conquest
 			var sign = 0;
 			var points = road.points.AsSpan();
 
-			var index = (int)segment.index;
+			var index = (int)(uint)segment.index;
 			var pos = points[index];
 
 			var junction_index_a = -1;
@@ -474,7 +474,7 @@ namespace TC2.Conquest
 			//while (--a.index >= 0)
 			while (--a.index < points.Length) // overflows to 255, not -1
 			{
-				if (road_segment_to_junction_index.TryGetValue(a, out junction_index_a))
+				if (road_segment_to_junction_index.TryGetValue(a, ref junction_index_a))
 				{
 					break;
 				}
@@ -483,7 +483,7 @@ namespace TC2.Conquest
 			var b = segment;
 			while (++b.index < points.Length)
 			{
-				if (road_segment_to_junction_index.TryGetValue(b, out junction_index_b))
+				if (road_segment_to_junction_index.TryGetValue(b, ref junction_index_b))
 				{
 					break;
 				}
@@ -536,13 +536,13 @@ namespace TC2.Conquest
 
 					//World.GetGlobalRegion().DrawDebugCircle(c.GetPosition(), 0.25f, Color32BGRA.Cyan.WithAlphaMult(0.25f), filled: true);
 
-					if (!skip_inner_junctions && road_segment_to_junction_index.TryGetValue(c, out junction_index))
+					if (!skip_inner_junctions && road_segment_to_junction_index.TryGetValue(c, ref junction_index))
 					{
 						return true;
 					}
 				}
 
-				if (road_segment_to_junction_index.TryGetValue(c, out junction_index))
+				if (road_segment_to_junction_index.TryGetValue(c, ref junction_index))
 				{
 					return true;
 				}
@@ -556,13 +556,13 @@ namespace TC2.Conquest
 
 					//World.GetGlobalRegion().DrawDebugCircle(c.GetPosition(), 0.125f, Color32BGRA.Magenta.WithAlphaMult(0.25f), filled: true);
 
-					if (!skip_inner_junctions && road_segment_to_junction_index.TryGetValue(c, out junction_index))
+					if (!skip_inner_junctions && road_segment_to_junction_index.TryGetValue(c, ref junction_index))
 					{
 						return true;
 					}
 				}
 
-				if (road_segment_to_junction_index.TryGetValue(c, out junction_index))
+				if (road_segment_to_junction_index.TryGetValue(c, ref junction_index))
 				{
 					return true;
 				}
