@@ -947,7 +947,7 @@ namespace TC2.Conquest
 
 							var is_ent_character_alive = ent_character.IsAlive();
 
-							var ent_inside = is_ent_character_alive ? ent_character.GetParent(Relation.Type.Stored) : default;
+							var ent_inside = is_ent_character_alive ? ent_character.GetParent(Relation.Type.Child) : default;
 
 							var is_ent_inside_alive = ent_inside.IsAlive();
 

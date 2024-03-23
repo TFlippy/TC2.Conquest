@@ -44,7 +44,10 @@ worldmap.marker:
 
 interactable:
 {
-	window_size: [192.000, 232.000]
+	window_size: [240.000, 336.000]
+	window_size_min: [240.000, 336.000]
+	window_offset: [0.000, 0.000]
+	flags: none
 }
 
 faction:
@@ -54,5 +57,7 @@ faction:
 
 nameable:
 {
-	flags: no_rename
+	tags: industrial, homely
+	flags: no_rename, randomize
+	type: vehicle
 }

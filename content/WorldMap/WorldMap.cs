@@ -12,6 +12,7 @@ namespace TC2.Conquest
 
 		public static float road_junction_threshold = 0.1250f;
 		public const float km_per_unit = 2.00f;
+		public const float km_per_unit_inv = 1.00f / km_per_unit;
 
 		public static Entity selected_entity;
 		public static Entity selected_entity_cached;
@@ -90,7 +91,7 @@ namespace TC2.Conquest
 				[Source.Owned] in WorldMap.Marker.Data marker, 
 				[Source.Owned] in Transform.Data transform, 
 				[Source.Owned, Optional(true)] ref Nameable.Data nameable, 
-				[HasRelation(Source.Modifier.Owned, Relation.Type.Stored, true)] bool has_parent);
+				[HasRelation(Source.Modifier.Owned, Relation.Type.Child, true)] bool has_parent);
 
 #if SERVER
 			[ISystem.Modified(ISystem.Mode.Single, ISystem.Scope.Global)]

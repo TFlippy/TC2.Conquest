@@ -83,7 +83,7 @@ namespace TC2.Conquest
 					if (ent_character.IsAlive())
 					{
 						//ent_character.Delete();
-						ent_character.AddRelation(entity, Relation.Type.Stored);
+						ent_character.AddRelation(entity, Relation.Type.Child);
 					}
 
 					//character_data.ent_inside = entity;
@@ -126,6 +126,7 @@ namespace TC2.Conquest
 					if (entity.TryGetAssetHandle(out h_location) && WorldMap.location_to_road.TryGetValue(h_location, out var road))
 					{
 						pos = road.GetPosition();
+						App.WriteLine(pos);
 
 						//ref var location_data = ref h_location.GetData();
 						//if (location_data.IsNotNull())
@@ -134,29 +135,40 @@ namespace TC2.Conquest
 						//}
 					}
 
-					//character_data.ent_inside = default;
-					if (ent_character.IsAlive())
-					{
-						ent_character.RemoveRelation(Entity.Wildcard, Relation.Type.Stored);
-					}
 
 					character_asset.Sync();
 
-					region.SpawnPrefab("unit.guy", position: pos, faction_id: character_data.faction, entity: ent_character).ContinueWith((ent) =>
+					//character_data.ent_inside = default;
+					if (ent_character.IsAlive())
 					{
-						ref var unit = ref ent.GetComponent<Unit.Data>();
-						if (unit.IsNotNull())
+						ent_character.RemoveRelation(Entity.Wildcard, Relation.Type.Child);
+						
+						ref var transform_character = ref ent_character.GetComponent<Transform.Data>();
+						if (transform_character.IsNotNull())
 						{
-							unit.pos_target = pos;
-							unit.h_location = default;
+							transform_character.SetPosition(pos);
+							transform_character.Sync(ent_character);
 						}
+					}
+					//else
+					{
+						region.SpawnPrefab("unit.guy", position: pos, faction_id: character_data.faction, entity: ent_character).ContinueWith((ent) =>
+						{
+							ref var unit = ref ent.GetComponent<Unit.Data>();
+							if (unit.IsNotNull())
+							{
+								unit.pos_target = pos;
+								unit.h_location = default;
+								unit.Sync(ent);
+							}
 
-						ref var nameable = ref ent.GetComponent<Nameable.Data>();
-						if (nameable.IsNotNull())
-						{
-							nameable.name = character_asset.GetName();
-						}
-					});
+							ref var nameable = ref ent.GetComponent<Nameable.Data>();
+							if (nameable.IsNotNull())
+							{
+								nameable.name = character_asset.GetName();
+							}
+						});
+					}
 				}
 #endif
 			}
@@ -258,20 +270,20 @@ namespace TC2.Conquest
 			//}
 
 			[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region)]
-			public static void UpdateParented(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity, [Source.Owned] ref Transform.Data transform_child, [Source.Stored] in Transform.Data transform_parent, [Source.Owned] ref Marker.Data marker)
+			public static void UpdateParented(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity, [Source.Owned] ref Transform.Data transform_child, [Source.Parent] in Transform.Data transform_parent, [Source.Owned] ref Marker.Data marker)
 			{
 				transform_child.SetPosition(transform_parent.position);
 			}
 
 #if CLIENT
-			[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region), HasRelation(Source.Modifier.Owned, Relation.Type.Stored, false)]
+			[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region), HasRelation(Source.Modifier.Owned, Relation.Type.Child, false)]
 			public static void UpdateMarker(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity, [Source.Owned] in Unit.Data unit, [Source.Owned] in Transform.Data transform, [Source.Owned] ref Marker.Data marker)
 			{
 				marker.rotation = unit.dir_last.GetAngleRadiansFast();
 			}
 #endif
 
-			[ISystem.Update(ISystem.Mode.Single, ISystem.Scope.Global), HasRelation(Source.Modifier.Owned, Relation.Type.Stored, false)]
+			[ISystem.Update(ISystem.Mode.Single, ISystem.Scope.Global), HasRelation(Source.Modifier.Owned, Relation.Type.Child, false)]
 			public static void UpdateGlobal(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Global] ref World.Global world_global, [Source.Owned] ref WorldMap.Unit.Data unit, [Source.Owned] ref Transform.Data transform)
 			{
 				var dt = App.fixed_update_interval_s;
@@ -333,7 +345,7 @@ namespace TC2.Conquest
 				{
 					unit.dir_last = dir;
 				}
-				unit.speed_current.MoveTowards(Maths.Min(unit.speed, unit.speed * 0.50f * speed_mult), unit.acc * 0.20f * dt);
+				unit.speed_current.MoveTowards(Maths.Min(unit.speed, unit.speed * 0.50f * speed_mult), unit.acc * dt * time_scale);
 
 
 				//if (dist > unit.acc * info.DeltaTime * 0.50f)
@@ -345,7 +357,7 @@ namespace TC2.Conquest
 				//	unit.speed_current.MoveTowards(Maths.Min(dist * 50 * 5, unit.speed), unit.acc * info.DeltaTime);
 				//}
 
-				transform.position += (dir * Maths.Min(dist, ((unit.speed_current * dt * s_to_h) * time_scale)) / WorldMap.km_per_unit);
+				transform.position += (dir * Maths.Min(dist, ((unit.speed_current * dt * s_to_h) * time_scale)) * WorldMap.km_per_unit_inv);
 			}
 
 
@@ -392,10 +404,10 @@ namespace TC2.Conquest
 				if (road_a.IsValid() && road_b.IsValid() && road_a != road_b && road_a_dist_sq < 0.50f.Pow2() && road_b_dist_sq < 1.00f.Pow2())
 				{
 
-#if CLIENT
-					if (road_a.IsValid()) World.GetGlobalRegion().DrawDebugCircle(road_a.GetPosition(), 0.125f, Color32BGRA.Magenta, filled: true);
-					if (road_b.IsValid()) World.GetGlobalRegion().DrawDebugCircle(road_b.GetPosition(), 0.125f, Color32BGRA.Magenta, filled: true);
-#endif
+//#if CLIENT
+//					if (road_a.IsValid()) World.GetGlobalRegion().DrawDebugCircle(road_a.GetPosition(), 0.125f, Color32BGRA.Magenta, filled: true);
+//					if (road_b.IsValid()) World.GetGlobalRegion().DrawDebugCircle(road_b.GetPosition(), 0.125f, Color32BGRA.Magenta, filled: true);
+//#endif
 
 
 					//var sign_a = road_a.GetSign(dir, true, 0.00f, 1.00f);
@@ -412,10 +424,10 @@ namespace TC2.Conquest
 						var junction_a = WorldMap.road_junctions[junction_index_a];
 						var junction_b = WorldMap.road_junctions[junction_index_b];
 
-#if CLIENT
-						World.GetGlobalRegion().DrawDebugCircle(junction_a.pos, 0.125f, Color32BGRA.Yellow, filled: true);
-						World.GetGlobalRegion().DrawDebugCircle(junction_b.pos, 0.125f, Color32BGRA.Yellow, filled: true);
-#endif
+//#if CLIENT
+//						World.GetGlobalRegion().DrawDebugCircle(junction_a.pos, 0.125f, Color32BGRA.Yellow, filled: true);
+//						World.GetGlobalRegion().DrawDebugCircle(junction_b.pos, 0.125f, Color32BGRA.Yellow, filled: true);
+//#endif
 
 
 						//junction_a.TryResolveBranch((pos_b - junction_a.pos).GetNormalizedFast(), out var branch_src);
@@ -424,9 +436,9 @@ namespace TC2.Conquest
 
 
 						var dir = (pos_b - pos_a).GetNormalizedFast();
-						var dir_a = -(pos_a - junction_a.pos).GetNormalizedFast();
+						var dir_a = (pos_a - junction_a.pos).GetNormalizedFast();
 						//var dir_a = (junction_a.pos - pos_a).GetNormalizedFast();
-						var dir_a2 = -(junction_a.pos - pos_b).GetNormalizedFast();
+						var dir_a2 = (junction_a.pos - pos_b).GetNormalizedFast();
 						var dir_ab = (junction_a.pos - junction_b.pos).GetNormalizedFast();
 						//var dir_b = dir; // (pos_b - junction_b.pos).GetNormalizedFast();
 						//var dir_b2 = (junction_b.pos - junction_a.pos).GetNormalizedFast();
@@ -434,14 +446,14 @@ namespace TC2.Conquest
 						var dir_b2 = (pos_b - junction_b.pos).GetNormalizedFast();
 
 
-#if CLIENT
-						ref var region = ref World.GetGlobalRegion();
-						region.DrawDebugCircle(junction_a.pos, 0.50f, Color32BGRA.Red.WithAlphaMult(0.250f), filled: true);
-						region.DrawDebugCircle(junction_b.pos, 0.50f, Color32BGRA.Green.WithAlphaMult(0.250f), filled: true);
+//#if CLIENT
+//						ref var region = ref World.GetGlobalRegion();
+//						region.DrawDebugCircle(junction_a.pos, 0.50f, Color32BGRA.Red.WithAlphaMult(0.250f), filled: true);
+//						region.DrawDebugCircle(junction_b.pos, 0.50f, Color32BGRA.Green.WithAlphaMult(0.250f), filled: true);
 
-						region.DrawDebugDir(junction_a.pos, dir_a * 4, thickness: 10, color: Color32BGRA.Red.WithAlphaMult(0.250f));
-						region.DrawDebugDir(junction_b.pos, dir_b * 4, thickness: 10, color: Color32BGRA.Green.WithAlphaMult(0.250f));
-#endif
+//						region.DrawDebugDir(junction_a.pos, dir_a * 4, thickness: 10, color: Color32BGRA.Red.WithAlphaMult(0.250f));
+//						region.DrawDebugDir(junction_b.pos, dir_b * 4, thickness: 10, color: Color32BGRA.Green.WithAlphaMult(0.250f));
+//#endif
 
 						//if ((junction_a.TryResolveBranch(dir_a, out var branch_src)) && (road_b.TryGetNearestBranch(out var branch_dst) || junction_b.TryResolveBranch((pos_b - junction_b.pos).GetNormalizedFast(), out branch_dst)))
 						////if ((road_a.TryGetNearestBranch(out var branch_src) || junction_a.TryResolveBranch(dir_a, out branch_src)) && (road_b.TryGetNearestBranch(out var branch_dst) || junction_b.TryResolveBranch((pos_b - junction_b.pos).GetNormalizedFast(), out branch_dst)))
@@ -451,8 +463,13 @@ namespace TC2.Conquest
 
 
 
-						if ((junction_a.TryResolveBranch(dir, out var branch_src) || road_a.TryGetEntryBranch(dir_a, out branch_src, dot_min: 0.01f, dot_max: 0.99f) || road_a.TryGetExitBranch(dir_a, out branch_src, dot_min: 0.00f, dot_max: 0.99f))
-							&& (junction_b.TryResolveBranch(dir_b, out var branch_dst) || road_b.TryGetEntryBranch(dir_b, out branch_dst, dot_min: 0.01f, dot_max: 0.99f) || road_b.TryGetExitBranch(dir_b, out branch_dst, dot_min: 0.01f, dot_max: 0.99f) || junction_b.TryResolveBranch(dir_b, out branch_dst)))
+						if ((junction_a.TryResolveBranch(dir, out var branch_src) 
+							|| road_a.TryGetEntryBranch(dir_a, out branch_src, dot_min: 0.01f, dot_max: 0.99f) 
+							|| road_a.TryGetExitBranch(dir_a, out branch_src, dot_min: 0.01f, dot_max: 0.99f))
+							&& (junction_b.TryResolveBranch(dir_b, out var branch_dst) 
+							|| road_b.TryGetEntryBranch(dir_b, out branch_dst, dot_min: 0.01f, dot_max: 0.99f)
+							|| road_b.TryGetExitBranch(dir_b, out branch_dst, dot_min: 0.01f, dot_max: 0.99f) 
+							|| junction_b.TryResolveBranch(-dir, out branch_dst)))
 							
 							
 							
@@ -465,7 +482,7 @@ namespace TC2.Conquest
 
 							//TryResolveBranch(junction_b, dir_b, out var branch_dst);
 
-							if (RoadNav.Astar.TryFindPath(branch_src, branch_dst, ref branches_span, ignore_limits: true, dot_min: -1.00f, dot_max: 1.00f))
+							if (RoadNav.Astar.TryFindPath(branch_src, branch_dst, ref branches_span, ignore_limits: true, dot_min: -0.90f, dot_max: 1.00f))
 							{
 								//segment_start = branch_src.GetSegment();
 								segment_start = branches_span[0].GetSegment();
@@ -544,9 +561,12 @@ namespace TC2.Conquest
 									is_valid = segment_current.IsValid();
 
 
+
 									if (is_valid)
 									{
 										GUI.DrawLine(region.WorldToCanvas(pos_a), region.WorldToCanvas(pos_b), color: color, thickness: thickness * scale, layer: GUI.Layer.Foreground);
+
+										//GUI.DrawLine(region.WorldToCanvas(pos_a), region.WorldToCanvas(pos_b), color: color, thickness: thickness * scale, layer: GUI.Layer.Foreground);
 									}
 									else
 									{
@@ -717,7 +737,7 @@ namespace TC2.Conquest
 
 			[ISystem.LateGUI(ISystem.Mode.Single, ISystem.Scope.Global)]
 			public static void OnGUI(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] ref Unit.Data unit, [Source.Owned] ref Transform.Data transform,
-			[HasRelation(Source.Modifier.Owned, Relation.Type.Stored, true)] bool has_parent)
+			[HasRelation(Source.Modifier.Owned, Relation.Type.Child, true)] bool has_parent)
 			{
 				if (WorldMap.IsOpen && WorldMap.selected_entity == entity)
 				{

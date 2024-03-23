@@ -68,7 +68,7 @@ namespace TC2.Conquest
 				var ent_location = h_location.GetEntity();
 				var ent_asset = asset.GetEntity();
 
-				ent_asset.AddRelation(ent_location, Relation.Type.Stored);
+				ent_asset.AddRelation(ent_location, Relation.Type.Child);
 
 				player.h_character_main = asset;
 				player_asset.Sync();
