@@ -372,6 +372,41 @@ namespace TC2.Conquest
 			return new Road.Segment(branch_segment.chain, (byte)index);
 		}
 
+		public static Vector2 GetNearestPosition(this Road.Segment road_segment, Vector2 pos, out float dist_sq)
+		{
+			ref var road = ref road_segment.GetRoad();
+			var points = road.points.AsSpan();
+
+			var road_index = road_segment.index;
+			var dist_closest_sq = float.MaxValue;
+			var pos_closest = pos;
+
+			if (road_segment.index < points.Length - 1)
+			{
+				var line = new Line(points[road_index], points[road_index + 1]);
+				var pos_closest_tmp = line.GetClosestPoint(pos);
+			
+				if (Maths.TrySetMin(ref dist_closest_sq, Vector2.DistanceSquared(pos_closest, pos_closest_tmp)))
+				{
+					pos_closest = pos_closest_tmp;
+				}
+			}
+
+			if (road_segment.index > 0)
+			{
+				var line = new Line(points[road_index], points[road_index - 1]);
+				var pos_closest_tmp = line.GetClosestPoint(pos);
+
+				if (Maths.TrySetMin(ref dist_closest_sq, Vector2.DistanceSquared(pos_closest, pos_closest_tmp)))
+				{
+					pos_closest = pos_closest_tmp;
+				}
+			}
+
+			dist_sq = dist_closest_sq;
+			return pos_closest;
+		}
+
 		// TODO: this is dumb
 		public static Road.Segment GetNearestRoad(Road.Type type, Vector2 position, out float distance_sq)
 		{

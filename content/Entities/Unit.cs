@@ -38,7 +38,7 @@ namespace TC2.Conquest
 			}
 
 			[MethodImpl(MethodImplOptions.NoInlining)]
-			public static Entity GetNearest(Vector2 pos, out float dist_sq, IFaction.Handle h_faction = default, Entity ent_exclude = default)
+			public static Entity GetNearest(Vector2 pos, out float dist_sq, IFaction.Handle h_faction = default, Entity ent_exclude = default, Enterable.Data.Type type = Data.Type.Undefined)
 			{
 				ref var region = ref World.GetGlobalRegion();
 				var dist_sq_current = float.MaxValue;
@@ -57,7 +57,7 @@ namespace TC2.Conquest
 						//region.DrawDebugText(transform.position, $"{entity} != {ent_exclude}; {index}/{info.Count}/{count}; {info.Offset}; {info.TableCount}", Color32BGRA.White);
 #endif
 
-						if (entity != ent_exclude && (h_faction.id == 0 || h_faction == faction.id))
+						if (entity != ent_exclude && (h_faction.id == 0 || h_faction == faction.id) && (type == Enterable.Data.Type.Undefined || enterable.type == type))
 						{
 							var dist_sq_tmp = Vector2.DistanceSquared(pos, transform.position); // - enterable.radius.Pow2();
 							if (dist_sq_tmp < dist_sq_current)
@@ -77,120 +77,161 @@ namespace TC2.Conquest
 				dist_sq = dist_sq_current;
 				return ent_nearest;
 			}
+		}
 
+		public static partial class Unit
+		{
 			// TODO: add validation
-			public struct EnterRPC: Net.IRPC<Enterable.Data>
+			public struct EnterRPC: Net.IRPC<WorldMap.Unit.Data>
 			{
-				public ICharacter.Handle h_character;
+				//public ICharacter.Handle h_character;
+				public Entity ent_enterable;
 
 #if SERVER
-				public void Invoke(ref NetConnection connection, Entity entity, ref Enterable.Data data)
+				public void Invoke(ref NetConnection connection, Entity entity, ref WorldMap.Unit.Data data)
 				{
-					ref var character_data = ref this.h_character.GetData(out var character_asset);
-					Assert.NotNull(ref character_data);
+					Assert.Check(this.ent_enterable != entity);
+					Assert.Check(this.ent_enterable.IsAlive());
+					Assert.Check(this.ent_enterable.GetRegionID() == entity.GetRegionID());
+					Assert.Check(!this.ent_enterable.TryGetParent(Relation.Type.Child, out var ent_enterable_parent));
 
-					//ref var location_data = ref this.h_location.GetData(out var location_asset);
-					//Assert.NotNull(ref location_data);
+					ref var enterable = ref this.ent_enterable.GetComponent<WorldMap.Enterable.Data>();
+					Assert.NotNull(ref enterable);
 
-					ref var region = ref World.GetGlobalRegion();
-					var ent_character = this.h_character.AsGlobalEntity();
-
-					if (ent_character.IsAlive())
-					{
-						//ent_character.Delete();
-						ent_character.AddRelation(entity, Relation.Type.Child);
-					}
-
-					//character_data.ent_inside = entity;
-					character_asset.Sync();
+					entity.AddRelation(this.ent_enterable, Relation.Type.Child);
 				}
 #endif
 			}
 
 			// TODO: add validation
-			public struct ExitRPC: Net.IRPC<Enterable.Data>
+			public struct ExitRPC: Net.IRPC<WorldMap.Unit.Data>
 			{
-				public ICharacter.Handle h_character;
+				//public ICharacter.Handle h_character;
+				//public Entity ent_unit;
 
 #if SERVER
-				public void Invoke(ref NetConnection connection, Entity entity, ref Enterable.Data data)
+				public void Invoke(ref NetConnection connection, Entity entity, ref WorldMap.Unit.Data data)
 				{
-					ref var character_data = ref this.h_character.GetData(out var character_asset);
-					Assert.NotNull(ref character_data);
+					var ent_enterable = entity.GetParent(Relation.Type.Child);
 
-					//var h_location = character_data.h_location_current;
+					Assert.Check(ent_enterable != entity);
+					Assert.Check(ent_enterable.IsAlive());
+					Assert.Check(ent_enterable.GetRegionID() == entity.GetRegionID());
 
-					//ref var location_data = ref h_location.GetData(out var location_asset);
-					//Assert.NotNull(ref location_data);
+					ref var enterable = ref ent_enterable.GetComponent<WorldMap.Enterable.Data>();
+					Assert.NotNull(ref enterable);
 
-					ref var region = ref World.GetGlobalRegion();
-					var ent_character = this.h_character.AsGlobalEntity();
-
-					ref var transform = ref entity.GetComponent<Transform.Data>();
+					ref var transform = ref ent_enterable.GetComponent<Transform.Data>();
 					Assert.NotNull(ref transform);
 
 					//var road = WorldMap.GetNearestRoad(location_data.h_prefecture, Road.Type.Road, (Vector2)location_data.point, out var dist_sq);
 					//var pos = road.GetPosition().GetRefValueOrDefault();
-
+				
 					//var random = XorRandom.New(true);
 					//if (pos == default) pos = (Vector2)location_data.point + random.NextUnitVector2Range(0.25f, 0.50f);
 
 					var pos = transform.position;
 
-					var h_location = default(ILocation.Handle);
-					if (entity.TryGetAssetHandle(out h_location) && WorldMap.location_to_road.TryGetValue(h_location, out var road))
-					{
-						pos = road.GetPosition();
-						App.WriteLine(pos);
+					var road = WorldMap.GetNearestRoad(Road.Type.Road, pos, out var dist_sq);
+					var pos_tmp = road.GetNearestPosition(pos, out dist_sq);
 
-						//ref var location_data = ref h_location.GetData();
-						//if (location_data.IsNotNull())
-						//{
-						//	WorldMap.
-						//}
+					if (dist_sq <= enterable.radius.Pow2())
+					{
+						pos = pos_tmp;
 					}
 
-
-					character_asset.Sync();
+					ref var region = ref World.GetGlobalRegion();
 
 					//character_data.ent_inside = default;
-					if (ent_character.IsAlive())
+					if (entity.IsAlive())
 					{
-						ent_character.RemoveRelation(Entity.Wildcard, Relation.Type.Child);
-						
-						ref var transform_character = ref ent_character.GetComponent<Transform.Data>();
-						if (transform_character.IsNotNull())
+						entity.RemoveRelation(ent_enterable, Relation.Type.Child);
+
+						ref var transform_unit = ref entity.GetComponent<Transform.Data>();
+						if (transform_unit.IsNotNull())
 						{
-							transform_character.SetPosition(pos);
-							transform_character.Sync(ent_character);
+							transform_unit.SetPosition(pos);
+							transform_unit.Sync(entity);
 						}
 					}
-					//else
-					{
-						region.SpawnPrefab("unit.guy", position: pos, faction_id: character_data.faction, entity: ent_character).ContinueWith((ent) =>
-						{
-							ref var unit = ref ent.GetComponent<Unit.Data>();
-							if (unit.IsNotNull())
-							{
-								unit.pos_target = pos;
-								unit.h_location = default;
-								unit.Sync(ent);
-							}
 
-							ref var nameable = ref ent.GetComponent<Nameable.Data>();
-							if (nameable.IsNotNull())
-							{
-								nameable.name = character_asset.GetName();
-							}
-						});
-					}
+
+					//else
+					//{
+					//	region.SpawnPrefab("unit.guy", position: pos, entity: entity).ContinueWith((ent) =>
+					//	{
+					//		ref var unit = ref ent.GetComponent<Unit.Data>();
+					//		if (unit.IsNotNull())
+					//		{
+					//			unit.pos_target = pos;
+					//			unit.h_location = default;
+					//			unit.Sync(ent);
+					//		}
+
+					//		ref var nameable = ref ent.GetComponent<Nameable.Data>();
+					//		if (nameable.IsNotNull())
+					//		{
+					//			nameable.name = character_asset.GetName();
+					//		}
+					//	});
+					//}
+
+
+
+					//var h_location = default(ILocation.Handle);
+					//if (entity.TryGetAssetHandle(out h_location) && WorldMap.location_to_road.TryGetValue(h_location, out var road))
+					//{
+					//	pos = road.GetPosition();
+					//	App.WriteLine(pos);
+
+					//	//ref var location_data = ref h_location.GetData();
+					//	//if (location_data.IsNotNull())
+					//	//{
+					//	//	WorldMap.
+					//	//}
+					//}
+
+
+
+					//character_asset.Sync();
+
+					//ref var region = ref World.GetGlobalRegion();
+
+					////character_data.ent_inside = default;
+					//if (ent_character.IsAlive())
+					//{
+					//	ent_character.RemoveRelation(Entity.Wildcard, Relation.Type.Child);
+
+					//	ref var transform_character = ref ent_character.GetComponent<Transform.Data>();
+					//	if (transform_character.IsNotNull())
+					//	{
+					//		transform_character.SetPosition(pos);
+					//		transform_character.Sync(ent_character);
+					//	}
+					//}
+					////else
+					//{
+					//	region.SpawnPrefab("unit.guy", position: pos, faction_id: character_data.faction, entity: ent_character).ContinueWith((ent) =>
+					//	{
+					//		ref var unit = ref ent.GetComponent<Unit.Data>();
+					//		if (unit.IsNotNull())
+					//		{
+					//			unit.pos_target = pos;
+					//			unit.h_location = default;
+					//			unit.Sync(ent);
+					//		}
+
+					//		ref var nameable = ref ent.GetComponent<Nameable.Data>();
+					//		if (nameable.IsNotNull())
+					//		{
+					//			nameable.name = character_asset.GetName();
+					//		}
+					//	});
+					//}
 				}
 #endif
 			}
-		}
 
-		public static partial class Unit
-		{
 			[Query(ISystem.Scope.Global)]
 			public delegate void GetAllQuery(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] in Unit.Data unit, [Source.Owned] in Transform.Data transform, [Source.Owned, Optional(false)] in Faction.Data faction);
 
@@ -608,22 +649,23 @@ namespace TC2.Conquest
 								var time_scale = world_global.speed;
 								var speed_km_h = this.unit.speed_current;
 
-								GUI.LabelShaded("Speed:", $"{speed_km_h:0.00} km/h");
-								GUI.Text($"{time_scale:0.00}");
+								//GUI.LabelShaded("Speed:", $"{speed_km_h:0.00} km/h");
+								//GUI.Text($"{time_scale:0.00}");
 
 								//App.WriteLine("h");
 								//if (false)
 								{
-									var ent_enterable = WorldMap.Enterable.GetNearest(this.transform.position, out var distance_sq, ent_exclude: this.ent_unit);
+									var distance_sq = 0.00f;
+									var ent_enterable = this.has_parent ? this.ent_unit.GetParent(Relation.Type.Child) : WorldMap.Enterable.GetNearest(this.transform.position, out distance_sq, ent_exclude: this.ent_unit);
 
 									//GUI.Text($"{ent_enterable}");
 
-									if (ent_enterable.IsAlive())
+									if (ent_enterable.IsAlive() && ent_enterable != this.ent_unit && !ent_enterable.TryGetParent(Relation.Type.Child, out var ent_enterable_parent))
 									{
 										ref var enterable = ref ent_enterable.GetComponent<Enterable.Data>();
 										if (enterable.IsNotNull())
 										{
-											var can_enter = distance_sq <= enterable.radius.Pow2();
+											//var can_enter = distance_sq <= enterable.radius.Pow2();
 
 											ent_enterable.TryGetAssetHandle(out ILocation.Handle h_location_enterable);
 
@@ -640,23 +682,40 @@ namespace TC2.Conquest
 											}
 											//GUI.FocusableAsset(h_location_nearest);
 
-											if (can_enter)
+											if (this.has_parent)
 											{
-												GUI.TitleCentered("[Enter]"u8, size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: Color32BGRA.Green);
-												if (GUI.Selectable3("unit.enter"u8, GUI.GetLastItemRect(), selected: false))
+												GUI.TitleCentered("[Exit]"u8, size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: Color32BGRA.Red);
+												if (GUI.Selectable3("exit"u8, GUI.GetLastItemRect(), selected: false))
 												{
-													var rpc = new Enterable.EnterRPC()
+													var rpc = new WorldMap.Unit.ExitRPC()
 													{
 														//h_character = h_character,
-														//h_location = h_location_nearest
 													};
-													rpc.Send(ent_enterable);
+													rpc.Send(this.ent_unit);
 												}
 											}
 											else
 											{
-												GUI.TitleCentered($"{distance_sq.Sqrt() * WorldMap.km_per_unit:0.00} km", size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: GUI.font_color_disabled);
-												//GUI.TitleCentered("Wilderness", size: 16, pivot: new(0.00f, 1.00f), offset: new(4, -4), color: GUI.font_color_green_b.WithAlphaMult(0.50f));
+												var can_enter = distance_sq <= enterable.radius.Pow2();
+												if (can_enter)
+												{
+													GUI.TitleCentered("[Enter]"u8, size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: Color32BGRA.Green);
+													if (GUI.Selectable3("unit.enter"u8, GUI.GetLastItemRect(), selected: false))
+													{
+														var rpc = new WorldMap.Unit.EnterRPC()
+														{
+															ent_enterable = ent_enterable
+															//h_character = h_character,
+															//h_location = h_location_nearest
+														};
+														rpc.Send(this.ent_unit);
+													}
+												}
+												else
+												{
+													GUI.TitleCentered($"{distance_sq.Sqrt() * WorldMap.km_per_unit:0.00} km", size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: GUI.font_color_disabled);
+													//GUI.TitleCentered("Wilderness", size: 16, pivot: new(0.00f, 1.00f), offset: new(4, -4), color: GUI.font_color_green_b.WithAlphaMult(0.50f));
+												}
 											}
 										}
 									}
@@ -771,7 +830,7 @@ namespace TC2.Conquest
 											if (Repath(this.unit.road_type, this.transform.position, pos_w_snapped, out var pos_end, ref road_a, ref road_b, ref branches_span))
 											{
 												var ts_elapsed = ts.GetMilliseconds();
-												GUI.Text($"{ts_elapsed:0.0000} ms");
+												//GUI.Text($"{ts_elapsed:0.0000} ms");
 
 												DrawPath(ref region, road_a, road_b, pos_end, branches_span, color: GUI.col_button_yellow.WithAlphaMult(0.20f), thickness: 0.125f, distance: out path_distance);
 

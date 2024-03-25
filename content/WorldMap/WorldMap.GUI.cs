@@ -1078,12 +1078,12 @@ namespace TC2.Conquest
 												GUI.TitleCentered("[Enter]"u8, size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: Color32BGRA.Green);
 												if (GUI.Selectable3("enter"u8, GUI.GetLastItemRect(), selected: false))
 												{
-													var rpc = new Enterable.EnterRPC()
+													var rpc = new WorldMap.Unit.EnterRPC()
 													{
-														h_character = h_character,
+														ent_enterable = ent_enterable,
 														//h_location = h_location_nearest
 													};
-													rpc.Send(ent_enterable);
+													rpc.Send(ent_character);
 												}
 											}
 											else
@@ -1120,11 +1120,11 @@ namespace TC2.Conquest
 									GUI.TitleCentered("[Exit]"u8, size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: Color32BGRA.Red);
 									if (GUI.Selectable3("exit"u8, GUI.GetLastItemRect(), selected: false))
 									{
-										var rpc = new Enterable.ExitRPC()
+										var rpc = new WorldMap.Unit.ExitRPC()
 										{
-											h_character = h_character,
+											//h_character = h_character,
 										};
-										rpc.Send(ent_inside);
+										rpc.Send(ent_character);
 									}
 								}
 							}
