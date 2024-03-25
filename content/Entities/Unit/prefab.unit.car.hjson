@@ -42,10 +42,19 @@ worldmap.marker:
 	
 // }
 
+stockpile:
+{
+	grid_column_count: 6
+	capacity_items: 6
+	capacity_shipments: 4
+	capacity_characters: 4
+}
+
 interactable:
 {
-	window_size: [240.000, 336.000]
-	window_size_min: [240.000, 336.000]
+	window_size: [592.000, 408.000]
+	window_size_min: [592.000, 408.000]
+	window_size_misc: [200.000, 312.000]
 	window_offset: [0.000, 0.000]
 	flags: none
 }

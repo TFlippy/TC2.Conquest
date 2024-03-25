@@ -352,7 +352,7 @@ namespace TC2.Conquest
 							bool has_parent) =>
 							{
 								if (has_parent || marker.flags.HasAny(Marker.Data.Flags.Hidden)) return;
-
+								
 								var pos = transform.GetInterpolatedPosition();
 								var scale = 0.500f;
 								var asset_scale = Maths.Clamp(marker.scale, 0.50f, 1.00f);
@@ -478,11 +478,41 @@ namespace TC2.Conquest
 											break;
 										}
 
-										GUI.DrawSprite2(sprite, rect_icon.Scale(asset_scale), layer: GUI.Layer.Window, color: color, rotation: rot_rem);
+										if (marker.flags.HasAny(Marker.Data.Flags.Use_Worldmap_Renderer))
+										{
+											Doodad.Renderer.Add(new Doodad.Renderer.Data()
+											{
+												sprite = sprite,
+												position = Maths.Snap(pos + marker.icon_offset, 1.00f / 32.00f),
+												rotation = -rot_rem,
+												z = 0.75f,
+												color = Color32BGRA.White,
+												scale = new Vector2(marker.scale)
+											});
+										}
+										else
+										{
+											GUI.DrawSprite2(sprite, rect_icon.Scale(asset_scale), layer: GUI.Layer.Window, color: color, rotation: rot_rem);
+										}
 									}
 									else
 									{
-										GUI.DrawSpriteCentered(sprite, rect_icon, layer: GUI.Layer.Window, 0.125f * Maths.Max(scale * zoom * asset_scale, 16), color: color);
+										if (marker.flags.HasAny(Marker.Data.Flags.Use_Worldmap_Renderer))
+										{
+											Doodad.Renderer.Add(new Doodad.Renderer.Data()
+											{
+												sprite = sprite,
+												position = Maths.Snap(pos + marker.icon_offset, 1.00f / 32.00f),
+												rotation = transform.GetInterpolatedRotation(),
+												z = 0.75f,
+												color = Color32BGRA.White,
+												scale = new Vector2(marker.scale)
+											});
+										}
+										else
+										{
+											GUI.DrawSpriteCentered(sprite, rect_icon, layer: GUI.Layer.Window, 0.125f * Maths.Max(scale * zoom * asset_scale, 16), color: color);
+										}
 									}
 
 									if (nameable.IsNotNull())
@@ -913,6 +943,32 @@ namespace TC2.Conquest
 									//App.WriteLine("close");
 									//Sound.PlayGUI(GUI.sound_window_close, volume: 0.30f);
 								}
+
+
+
+
+								if (interactable.window_size_misc.X > 0)
+								{
+									using (var window_side = window.BeginChildWindow("worldmap.interact.sub", GUI.AlignX.Left, GUI.AlignY.Center, size: new(interactable.window_size_misc.X + 16, (interactable.window_size_misc.Y <= 0 ? interactable.window_size.Y : interactable.window_size_misc.Y) + 8), padding: new(8), offset: new(6, 0), open: true))
+									{
+										if (window_side.show)
+										{
+											//using (GUI.Group.New(GUI.Rm))
+											using (var scrollbox = GUI.Scrollbox.New("worldmap.interact.sub.scroll", size: GUI.Rm))
+											{
+												using (var dock_misc = GUI.Dock.New("Misc"))
+												{
+													//GUI.DrawInventoryDock(Inventory.Type.Essence, new(48, 48));
+
+													dock_misc.SetSpace(size: GUI.Rm);
+												}
+
+												//GUI.Text("hi");
+												//GUI.DrawInventoryDock(this.vehicle.inventory_type, GUI.Rm);
+											}
+										}
+									}
+								}
 							}
 						}
 					}
@@ -935,6 +991,8 @@ namespace TC2.Conquest
 
 					ref var world_info = ref Client.GetWorldInfo();
 					ref var region = ref World.GetGlobalRegion();
+
+					//App.WriteLine("h");
 
 					using (GUI.Group.New(size: GUI.Rm))
 					{
@@ -991,44 +1049,48 @@ namespace TC2.Conquest
 								if (is_ent_character_alive && !is_ent_inside_alive && transform.IsNotNull())
 								{
 									//var h_location_nearest = WorldMap.GetNearestLocation(transform.position, out var distance_sq);
-									var ent_enterable = WorldMap.Enterable.GetNearest(transform.position, out var distance_sq);
-									ref var enterable = ref ent_enterable.GetComponent<Enterable.Data>();
-									if (enterable.IsNotNull())
+									var ent_enterable = WorldMap.Enterable.GetNearest(transform.position, out var distance_sq, ent_exclude: ent_character);
+									//var ent_enterable = WorldMap.Enterable.GetNearest(transform.position, out var distance_sq);
+									if (ent_enterable.IsAlive())
 									{
-										var can_enter = distance_sq <= enterable.radius.Pow2();
-
-										ent_enterable.TryGetAssetHandle(out ILocation.Handle h_location_enterable);
-
-										GUI.TitleCentered(ent_enterable.GetName(), size: 16, pivot: new(0.00f, 1.00f), offset: new(4, -4), color: GUI.font_color_disabled);
-										//if (GUI.Selectable3(ent_enterable, GUI.GetLastItemRect(), selected: WorldMap.h_selected_location == h_location_nearest))
-										if (GUI.Selectable3("enterable.current"u8, GUI.GetLastItemRect(), selected: WorldMap.selected_entity == ent_enterable))
+										ref var enterable = ref ent_enterable.GetComponent<Enterable.Data>();
+										if (enterable.IsNotNull())
 										{
-											//WorldMap.h_selected_location.Toggle(h_location_nearest);
-											//if (WorldMap.h_selected_location != default) WorldMap.FocusLocation(h_location_nearest);
+											var can_enter = distance_sq <= enterable.radius.Pow2();
 
-											WorldMap.selected_entity.Toggle(ent_enterable);
-											if (h_location_enterable.IsValid()) WorldMap.h_selected_location.Toggle(h_location_enterable);
-											if (WorldMap.selected_entity == ent_enterable) WorldMap.FocusEntity(ent_enterable);
-										}
-										//GUI.FocusableAsset(h_location_nearest);
+											ent_enterable.TryGetAssetHandle(out ILocation.Handle h_location_enterable);
 
-										if (can_enter)
-										{
-											GUI.TitleCentered("[Enter]"u8, size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: Color32BGRA.Green);
-											if (GUI.Selectable3("enter"u8, GUI.GetLastItemRect(), selected: false))
+											GUI.TitleCentered(ent_enterable.GetName(), size: 16, pivot: new(0.00f, 1.00f), offset: new(4, -4), color: GUI.font_color_disabled);
+											//if (GUI.Selectable3(ent_enterable, GUI.GetLastItemRect(), selected: WorldMap.h_selected_location == h_location_nearest))
+											if (GUI.Selectable3("enterable.current"u8, GUI.GetLastItemRect(), selected: WorldMap.selected_entity == ent_enterable))
 											{
-												var rpc = new Enterable.EnterRPC()
-												{
-													h_character = h_character,
-													//h_location = h_location_nearest
-												};
-												rpc.Send(ent_enterable);
+												//WorldMap.h_selected_location.Toggle(h_location_nearest);
+												//if (WorldMap.h_selected_location != default) WorldMap.FocusLocation(h_location_nearest);
+
+												WorldMap.selected_entity.Toggle(ent_enterable);
+												if (h_location_enterable.IsValid()) WorldMap.h_selected_location.Toggle(h_location_enterable);
+												if (WorldMap.selected_entity == ent_enterable) WorldMap.FocusEntity(ent_enterable);
 											}
-										}
-										else
-										{
-											GUI.TitleCentered($"{distance_sq.Sqrt() * WorldMap.km_per_unit:0.00} km", size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: GUI.font_color_disabled);
-											//GUI.TitleCentered("Wilderness", size: 16, pivot: new(0.00f, 1.00f), offset: new(4, -4), color: GUI.font_color_green_b.WithAlphaMult(0.50f));
+											//GUI.FocusableAsset(h_location_nearest);
+
+											if (can_enter)
+											{
+												GUI.TitleCentered("[Enter]"u8, size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: Color32BGRA.Green);
+												if (GUI.Selectable3("enter"u8, GUI.GetLastItemRect(), selected: false))
+												{
+													var rpc = new Enterable.EnterRPC()
+													{
+														h_character = h_character,
+														//h_location = h_location_nearest
+													};
+													rpc.Send(ent_enterable);
+												}
+											}
+											else
+											{
+												GUI.TitleCentered($"{distance_sq.Sqrt() * WorldMap.km_per_unit:0.00} km", size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: GUI.font_color_disabled);
+												//GUI.TitleCentered("Wilderness", size: 16, pivot: new(0.00f, 1.00f), offset: new(4, -4), color: GUI.font_color_green_b.WithAlphaMult(0.50f));
+											}
 										}
 									}
 								}
@@ -1451,23 +1513,32 @@ namespace TC2.Conquest
 
 												foreach (var ent_child in children_span)
 												{
-													if (ILocation.TryGetAsset(ent_child, out var h_location_child))
+													//if (ILocation.TryGetAsset(ent_child, out var h_location_child))
 													{
+														ILocation.TryGetAsset(ent_child, out var h_location_child);
 														ref var location_data_child = ref h_location_child.GetData(out var location_asset_child);
-														if (location_data_child.IsNotNull())
+
+														//if (location_data_child.IsNotNull())
 														{
-															using (var group_row = GUI.Group.New(size: new(GUI.RmX, 64)))
+															using (var group_row = GUI.Group.New(size: new(GUI.RmX, 32)))
 															{
 																var selected = WorldMap.selected_entity == ent_child;
-																var color = location_data_child.color with { a = 255 };
-
-																if (selected) color = GUI.col_white;
 
 																using (var group_icon = GUI.Group.New(size: new(GUI.RmY)))
 																{
 																	group_icon.DrawBackground(GUI.tex_slot);
 
-																	GUI.DrawSpriteCentered(location_data_child.icon, group_icon.GetInnerRect(), GUI.Layer.Window, scale: 3.00f, color: color);
+																	if (location_data_child.IsNotNull())
+																	{
+																		var color = location_data_child.color with { a = 255 };
+																		if (selected) color = GUI.col_white;
+
+																		GUI.DrawSpriteCentered(location_data_child.icon, group_icon.GetInnerRect(), GUI.Layer.Window, scale: 3.00f, color: color);
+																	}
+																	else
+																	{
+																		GUI.DrawSpriteCentered(ent_child.GetIcon(), group_icon.GetInnerRect(), GUI.Layer.Window, scale: 3.00f, color: GUI.col_white);
+																	}
 
 																	if (GUI.Selectable3(ent_child.GetShortID(), group_icon.GetInnerRect(), selected: selected))
 																	{
@@ -1481,7 +1552,8 @@ namespace TC2.Conquest
 																	{
 																		using (GUI.Wrap.Push(GUI.RmX))
 																		{
-																			GUI.Title(location_data_child.name_short, size: 20);
+																			//GUI.Title(location_data_child.name_short, size: 20);
+																			GUI.Title(ent_child.GetName(), size: 20);
 																		}
 
 																		GUI.SeparatorThick(new(-4, -4));
@@ -1490,7 +1562,7 @@ namespace TC2.Conquest
 																		{
 																			using (GUI.Wrap.Push(GUI.RmX))
 																			{
-																				GUI.Text(location_data_child.desc);
+																				//GUI.Text(location_data_child.desc);
 																			}
 																		}
 																	}
@@ -1499,8 +1571,9 @@ namespace TC2.Conquest
 
 																GUI.SameLine();
 
-																using (var group_right = GUI.Group.New(size: GUI.Rm))
+																using (var group_right = GUI.Group.New(size: GUI.Rm, padding: new(4)))
 																{
+																	GUI.Title(ent_child.GetName(), size: 24);
 																	//group_right.DrawBackground(GUI.tex_window_popup);
 																}
 															}

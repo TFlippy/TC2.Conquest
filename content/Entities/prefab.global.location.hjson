@@ -22,6 +22,7 @@ transform:
 
 worldmap.enterable:
 {
+    type: location
     radius: 1.000
 }
 

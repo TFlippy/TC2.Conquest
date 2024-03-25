@@ -1453,7 +1453,7 @@
 			position: [30.847, -14.8714]
 			scale: [-0.375776, 0.599727]
 			rotation: -0.030
-			z: 0.124
+			z: 0.080
 			color: "0xffbcbcbc"
 		}
 		{
@@ -2270,7 +2270,7 @@
 			scale: [0.327387, 0.274993]
 			rotation: -0.070
 			z: 0.455
-			color: "0xffb4b4b4"
+			color: "0xffc7b244"
 		}
 		{
 			sprite:
@@ -2300,10 +2300,10 @@
 				frame: [2, 1]
 			}
 			
-			position: [30.56942, -13.52684]
-			scale: [-0.475717, 0.524724]
+			position: [30.20223, -13.1284]
+			scale: [-0.550717, 0.374724]
 			rotation: 0.000
-			z: 0.182
+			z: 0.221
 			color: "0xffcccccc"
 		}
 		{
@@ -2677,7 +2677,7 @@
 			position: [30.44643, -12.85814]
 			scale: [-0.621637, 0.598292]
 			rotation: 0.000
-			z: 0.236
+			z: 0.469
 			color: "0xffd1d1d1"
 		}
 		{
@@ -2728,7 +2728,7 @@
 			position: [30.9327, -13.26963]
 			scale: [0.721637, 0.823292]
 			rotation: -0.170
-			z: 0.073
+			z: -0.681
 			color: "0xff909090"
 		}
 		{
@@ -3405,11 +3405,11 @@
 				frame: [0, 4]
 			}
 			
-			position: [31.31342, -11.24503]
-			scale: [0.440928, -0.646001]
+			position: [31.25092, -11.39347]
+			scale: [0.290928, -0.821001]
 			rotation: 3.020
-			z: -0.390
-			color: "0xffedc391"
+			z: -0.770
+			color: "0xff9a6e47"
 		}
 		{
 			sprite:
@@ -3507,10 +3507,10 @@
 				frame: [0, 5]
 			}
 			
-			position: [35.95245, -12.82536]
-			scale: [-0.644342, 0.651142]
-			rotation: 0.000
-			z: -0.415
+			position: [30.84099, -13.5988]
+			scale: [0.719342, 0.450]
+			rotation: 0.020
+			z: 0.168
 			color: "0xffd1d1d1"
 		}
 		{
@@ -3524,9 +3524,9 @@
 				frame: [4, 4]
 			}
 			
-			position: [34.62655, -10.21839]
-			scale: [-0.800, 0.474317]
-			rotation: -0.190
+			position: [34.64865, -10.1742]
+			scale: [-0.524999, 0.574998]
+			rotation: 0.000
 			z: -0.561
 			color: "0xffc7b244"
 		}
@@ -3813,10 +3813,10 @@
 				frame: [5, 4]
 			}
 			
-			position: [31.17123, -12.93396]
+			position: [30.45248, -14.0824]
 			scale: [-0.475, 0.649997]
 			rotation: -0.020
-			z: 0.138
+			z: 0.168
 			color: "0xffcccccc"
 		}
 		{
@@ -4306,7 +4306,7 @@
 				frame: [3, 7]
 			}
 			
-			position: [32.44909, -13.12739]
+			position: [32.60534, -12.84614]
 			scale: [0.500, 0.500]
 			rotation: 0.000
 			z: 0.223
@@ -5535,6 +5535,924 @@
 			rotation: 0.000
 			z: 0.451
 			color: "0xfffffefe"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [3, 4]
+			}
+			
+			position: [37.38721, -12.2748]
+			scale: [0.449685, -0.381173]
+			rotation: 3.300
+			z: 0.285
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [2, 1]
+			}
+			
+			position: [37.83726, -11.15212]
+			scale: [-0.450732, 0.424724]
+			rotation: 0.000
+			z: 0.182
+			color: "0xffc7b244"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [2, 1]
+			}
+			
+			position: [44.39696, -14.26431]
+			scale: [0.469111, 0.525003]
+			rotation: 0.230
+			z: 0.268
+			color: "0xffc7b244"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [3, 4]
+			}
+			
+			position: [37.95876, -11.23706]
+			scale: [-0.429381, 0.524221]
+			rotation: -0.190
+			z: 0.080
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [5, 4]
+			}
+			
+			position: [37.15451, -10.25953]
+			scale: [-0.450718, 0.524691]
+			rotation: -0.020
+			z: 0.434
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [3, 4]
+			}
+			
+			position: [42.14085, -9.895709]
+			scale: [-0.454481, 0.574219]
+			rotation: 0.090
+			z: 0.522
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [5, 4]
+			}
+			
+			position: [42.50711, -10.20484]
+			scale: [0.450718, 0.524691]
+			rotation: -0.020
+			z: 0.434
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [0, 1]
+			}
+			
+			position: [46.25025, -12.06895]
+			scale: [0.474064, 0.424997]
+			rotation: -0.260
+			z: 0.455
+			color: "0xffc7b244"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [3, 4]
+			}
+			
+			position: [45.75381, -12.21511]
+			scale: [-0.504477, 0.39922]
+			rotation: -0.310
+			z: 0.133
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [5, 4]
+			}
+			
+			position: [44.57756, -13.58952]
+			scale: [-0.450718, 0.524691]
+			rotation: -0.020
+			z: 0.292
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [2, 1]
+			}
+			
+			position: [37.14541, -8.852934]
+			scale: [-0.450776, 0.524724]
+			rotation: 0.070
+			z: 0.274
+			color: "0xfff1dfa4"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [5, 4]
+			}
+			
+			position: [37.79667, -10.70085]
+			scale: [-0.450718, 0.524691]
+			rotation: -0.020
+			z: 0.434
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [64, 24]
+				frame: [0, 4]
+			}
+			
+			position: [36.03777, -11.5733]
+			scale: [0.34092, -0.445995]
+			rotation: 2.970
+			z: -0.390
+			color: "0xffedc391"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [4, 4]
+			}
+			
+			position: [36.56796, -11.38975]
+			scale: [0.549142, 0.549954]
+			rotation: -0.190
+			z: 0.221
+			color: "0xffc7b244"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [3, 4]
+			}
+			
+			position: [36.95773, -11.18379]
+			scale: [-0.329408, 0.574228]
+			rotation: -0.090
+			z: 0.285
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [0, 1]
+			}
+			
+			position: [37.5003, -11.61034]
+			scale: [0.737109, 0.700162]
+			rotation: -0.170
+			z: -0.126
+			color: "0xffe3e3e3"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [0, 1]
+			}
+			
+			position: [44.12409, -9.190628]
+			scale: [0.737109, 0.700162]
+			rotation: -0.170
+			z: 0.327
+			color: "0xffe3e3e3"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [2, 1]
+			}
+			
+			position: [44.90526, -9.423112]
+			scale: [-0.450776, 0.524724]
+			rotation: -0.050
+			z: 0.274
+			color: "0xffbcbcbc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [2, 1]
+			}
+			
+			position: [43.87976, -8.587007]
+			scale: [0.575751, 0.600]
+			rotation: 0.100
+			z: 0.381
+			color: "0xffb3b1a0"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [5, 4]
+			}
+			
+			position: [44.64902, -8.515648]
+			scale: [-0.450718, 0.524691]
+			rotation: -0.020
+			z: 0.345
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [3, 4]
+			}
+			
+			position: [45.18946, -8.742968]
+			scale: [-0.454481, 0.574219]
+			rotation: 0.090
+			z: 0.345
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [0, 4]
+			}
+			
+			position: [44.78302, -11.37904]
+			scale: [0.690918, 0.802418]
+			rotation: -0.170
+			z: -0.912
+			color: "0xffe2c8b8"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [0, 1]
+			}
+			
+			position: [44.25714, -11.1358]
+			scale: [0.474064, 0.424997]
+			rotation: -0.260
+			z: 0.455
+			color: "0xffc7b244"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [0, 4]
+			}
+			
+			position: [34.59721, -9.865047]
+			scale: [-0.690918, 0.677418]
+			rotation: -0.170
+			z: -0.912
+			color: "0xffe2c8b8"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [5, 4]
+			}
+			
+			position: [34.53465, -9.899977]
+			scale: [-0.450718, 0.524691]
+			rotation: -0.020
+			z: 0.434
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [0, 1]
+			}
+			
+			position: [44.84925, -10.98297]
+			scale: [0.524598, 0.675147]
+			rotation: -0.100
+			z: 0.752
+			color: "0xffe3e3e3"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [3, 4]
+			}
+			
+			position: [44.73431, -10.61118]
+			scale: [-0.379481, 0.449219]
+			rotation: 0.090
+			z: 1.000
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [0, 1]
+			}
+			
+			position: [43.83598, -7.70382]
+			scale: [0.564518, 0.441416]
+			rotation: 0.050
+			z: 0.416
+			color: "0xff838383"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [0, 1]
+			}
+			
+			position: [45.9475, -12.58306]
+			scale: [0.539518, 0.366416]
+			rotation: 0.050
+			z: 0.174
+			color: "0xff838383"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [3, 4]
+			}
+			
+			position: [46.98828, -12.42306]
+			scale: [-0.454481, 0.574219]
+			rotation: 0.090
+			z: 0.133
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [3, 4]
+			}
+			
+			position: [38.20273, -15.43183]
+			scale: [-0.404481, 0.499219]
+			rotation: 0.090
+			z: 0.133
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [0, 1]
+			}
+			
+			position: [37.03686, -14.23737]
+			scale: [0.452387, 0.399993]
+			rotation: -0.070
+			z: 0.455
+			color: "0xffc7b244"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [3, 4]
+			}
+			
+			position: [38.11734, -8.891657]
+			scale: [-0.479481, 0.649219]
+			rotation: 0.090
+			z: 0.133
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [5, 7]
+			}
+			
+			position: [31.09859, -14.03996]
+			scale: [0.500, 0.500]
+			rotation: 0.000
+			z: 0.133
+			color: "0xffffffff"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [4, 7]
+			}
+			
+			position: [31.419, -13.61635]
+			scale: [0.500, 0.500]
+			rotation: 0.000
+			z: 0.223
+			color: "0xffffffff"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [3, 7]
+			}
+			
+			position: [31.17745, -13.31963]
+			scale: [0.500, 0.500]
+			rotation: 0.000
+			z: 0.363
+			color: "0xffffffff"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [3, 7]
+			}
+			
+			position: [30.55245, -15.48941]
+			scale: [0.500, 0.500]
+			rotation: 0.000
+			z: 0.009
+			color: "0xffffffff"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [4, 7]
+			}
+			
+			position: [31.56101, -12.95277]
+			scale: [-0.500, 0.500]
+			rotation: 0.000
+			z: 0.504
+			color: "0xffffffff"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [1, 6]
+			}
+			
+			position: [31.78806, -12.81314]
+			scale: [-0.500, 0.500]
+			rotation: 0.000
+			z: 0.504
+			color: "0xfffffefe"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [3, 4]
+			}
+			
+			position: [32.24982, -15.64322]
+			scale: [0.404383, 0.424223]
+			rotation: 0.000
+			z: 0.285
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [4, 7]
+			}
+			
+			position: [31.74222, -14.84033]
+			scale: [0.500, 0.500]
+			rotation: 0.000
+			z: 0.223
+			color: "0xffffffff"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [5, 7]
+			}
+			
+			position: [32.56541, -13.23708]
+			scale: [-0.500, 0.500]
+			rotation: 0.000
+			z: 0.150
+			color: "0xffffffff"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [0, 5]
+			}
+			
+			position: [36.01481, -12.89681]
+			scale: [-0.644342, 0.651142]
+			rotation: 0.000
+			z: -0.415
+			color: "0xffd1d1d1"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [5, 4]
+			}
+			
+			position: [31.21742, -12.91245]
+			scale: [-0.475, 0.649997]
+			rotation: -0.020
+			z: 0.451
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [64, 24]
+				frame: [0, 4]
+			}
+			
+			position: [26.51405, -13.93536]
+			scale: [-0.399831, -0.400]
+			rotation: -3.050
+			z: -0.017
+			color: "0xffffffff"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [64, 24]
+				frame: [0, 4]
+			}
+			
+			position: [32.48123, -14.91296]
+			scale: [0.382197, 0.279021]
+			rotation: 6.280
+			z: -0.298
+			color: "0xff9a6e47"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [64, 24]
+				frame: [0, 4]
+			}
+			
+			position: [30.08436, -14.06921]
+			scale: [0.382197, 0.279021]
+			rotation: 6.280
+			z: -0.298
+			color: "0xff9a6e47"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [64, 24]
+				frame: [0, 4]
+			}
+			
+			position: [30.53143, -11.91258]
+			scale: [0.382197, 0.279021]
+			rotation: 6.280
+			z: -0.699
+			color: "0xff9a6e47"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [64, 24]
+				frame: [0, 4]
+			}
+			
+			position: [40.57069, -13.37664]
+			scale: [0.375, -0.571001]
+			rotation: 3.390
+			z: -0.770
+			color: "0xff9a6e47"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [3, 4]
+			}
+			
+			position: [41.08797, -13.71971]
+			scale: [-0.379481, 0.624219]
+			rotation: 0.350
+			z: 0.133
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [64, 24]
+				frame: [0, 4]
+			}
+			
+			position: [38.32154, -11.43924]
+			scale: [-0.425, -0.746001]
+			rotation: 3.390
+			z: -0.770
+			color: "0xff9a6e47"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [5, 4]
+			}
+			
+			position: [37.83036, -13.27405]
+			scale: [0.450718, 0.524691]
+			rotation: -0.020
+			z: 0.434
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [4, 7]
+			}
+			
+			position: [39.21431, -13.92336]
+			scale: [-0.500, 0.500]
+			rotation: 0.000
+			z: 0.504
+			color: "0xffffffff"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [24, 24]
+				frame: [5, 7]
+			}
+			
+			position: [30.34838, -15.17515]
+			scale: [-0.500, 0.500]
+			rotation: 0.000
+			z: 0.044
+			color: "0xffffffff"
 		}
 	]
 }

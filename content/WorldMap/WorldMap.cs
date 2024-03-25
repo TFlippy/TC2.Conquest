@@ -65,7 +65,8 @@ namespace TC2.Conquest
 					None = 0u,
 
 					Hidden = 1u << 0,
-					Directional = 1u << 1
+					Directional = 1u << 1,
+					Use_Worldmap_Renderer = 1u << 2
 				}
 
 				public WorldMap.Marker.Data.Flags flags;
