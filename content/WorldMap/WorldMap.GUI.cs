@@ -302,14 +302,19 @@ namespace TC2.Conquest
 												var color_thumbnail = GUI.col_white;
 
 												var map_pos = Vector2.Zero;
+												//var text_offset = Vector2.Zero;
+												var icon_offset = Vector2.Zero;
+
 												ref var location_data = ref map_info.h_location.GetData();
 												if (location_data.IsNotNull())
 												{
 													map_pos = (Vector2)location_data.point;
+													//text_offset = location_data.text_offset;
+													icon_offset = location_data.icon_offset;
 												}
 
-												var rect_text = AABB.Centered(Vector2.Transform(map_pos + map_info.text_offset, mat_l2c), new Vector2(icon_size * zoom * 0.50f));
-												var rect_icon = AABB.Centered(Vector2.Transform(map_pos + map_info.icon_offset, mat_l2c), new Vector2(icon_size * zoom * 1.00f));
+												//var rect_text = AABB.Centered(Vector2.Transform(map_pos + text_offset, mat_l2c), new Vector2(icon_size * zoom * 0.50f));
+												var rect_icon = AABB.Centered(Vector2.Transform(map_pos + icon_offset + new Vector2(0, -0.375f), mat_l2c), new Vector2(icon_size * zoom * 1.00f));
 												var is_selected = selected_region_id == i || (location_data.IsNotNull() && h_selected_location == map_info.h_location);
 
 												var alpha = 0.50f;
@@ -907,23 +912,31 @@ namespace TC2.Conquest
 
 								using (var group_row = GUI.Group.New(size: new(GUI.RmX, 40)))
 								{
-									var count = dock.GetTabCount();
-									for (var i = 0u; i < count; i++)
+									using (var group_tabs = GUI.Group.New(size: new(GUI.RmX - GUI.RmY, GUI.RmY)))
 									{
-										if (i > 0) GUI.SameLine();
-										dock.DrawTab(i, new(0, group_row.size.Y));
+										using (GUI.Clip.Push(group_tabs.GetOuterRect()))
+										{
+											var count = dock.GetTabCount();
+											for (var i = 0u; i < count; i++)
+											{
+												if (i > 0) GUI.SameLine();
+												dock.DrawTab(i, new(0, group_row.size.Y));
+											}
+										}
 									}
+
+									GUI.SameLine();
 
 									using (var group_close = group_row.Split(size: new Vector2(group_row.size.Y), align_x: GUI.AlignX.Right, align_y: GUI.AlignY.Center))
 									{
 										//group_close.DrawBackground(GUI.tex_window_sidebar_b);
 
-										if (GUI.DrawSpriteButton("close", new("ui_icons_window", 16, 16, 0, 0), size: GUI.Rm, color: GUI.font_color_red_b.WithColorMult(0.75f), color_hover: GUI.font_color_red_b.WithColorMult(1.00f), play_sound: false))
+										if (GUI.DrawSpriteButton("close"u8, new("ui_icons_window", 16, 16, 0, 0), size: GUI.Rm, color: GUI.font_color_red_b.WithColorMult(0.75f), color_hover: GUI.font_color_red_b.WithColorMult(1.00f), play_sound: false))
 										{
 											//window.Close();
 											WorldMap.selected_entity = default;
 										}
-										GUI.DrawHoverTooltip("Close");
+										GUI.DrawHoverTooltip("Close"u8);
 									}
 								}
 
@@ -949,14 +962,14 @@ namespace TC2.Conquest
 
 								if (interactable.window_size_misc.X > 0)
 								{
-									using (var window_side = window.BeginChildWindow("worldmap.interact.sub", GUI.AlignX.Left, GUI.AlignY.Center, size: new(interactable.window_size_misc.X + 16, (interactable.window_size_misc.Y <= 0 ? interactable.window_size.Y : interactable.window_size_misc.Y) + 8), padding: new(8), offset: new(6, 0), open: true))
+									using (var window_side = window.BeginChildWindow("worldmap.interact.sub"u8, GUI.AlignX.Left, GUI.AlignY.Center, size: new(interactable.window_size_misc.X + 16, (interactable.window_size_misc.Y <= 0 ? interactable.window_size.Y : interactable.window_size_misc.Y) + 8), padding: new(8), offset: new(6, 0), open: true))
 									{
 										if (window_side.show)
 										{
 											//using (GUI.Group.New(GUI.Rm))
-											using (var scrollbox = GUI.Scrollbox.New("worldmap.interact.sub.scroll", size: GUI.Rm))
+											using (var scrollbox = GUI.Scrollbox.New("worldmap.interact.sub.scroll"u8, size: GUI.Rm))
 											{
-												using (var dock_misc = GUI.Dock.New("Misc"))
+												using (var dock_misc = GUI.Dock.New("Misc"u8))
 												{
 													//GUI.DrawInventoryDock(Inventory.Type.Essence, new(48, 48));
 

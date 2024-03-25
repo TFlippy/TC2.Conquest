@@ -6,7 +6,9 @@ namespace TC2.Conquest
 		public static partial class Enterable
 		{
 			[Query(ISystem.Scope.Global)]
-			public delegate void GetAllQuery(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] in Enterable.Data enterable, [Source.Owned] in Transform.Data transform, [Source.Owned, Optional(false)] in Faction.Data faction);
+			public delegate void GetAllQuery(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, 
+				[Source.Owned] in Enterable.Data enterable, [Source.Owned] in Transform.Data transform, 
+				[Source.Owned, Optional(false)] in Faction.Data faction, [HasRelation(Source.Modifier.Owned, Relation.Type.Child, true)] bool has_parent);
 
 			[IComponent.Data(Net.SendType.Reliable)]
 			public partial struct Data: IComponent
@@ -49,7 +51,7 @@ namespace TC2.Conquest
 					var index = row.Index;
 					var count = row.Count;
 
-					row.Run((ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] in Enterable.Data enterable, [Source.Owned] in Transform.Data transform, [Source.Owned, Optional(false)] in Faction.Data faction) =>
+					row.Run((ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] in Enterable.Data enterable, [Source.Owned] in Transform.Data transform, [Source.Owned, Optional(false)] in Faction.Data faction, [HasRelation(Source.Modifier.Owned, Relation.Type.Child, true)] bool has_parent) =>
 					{
 						//try
 						//{
@@ -57,7 +59,7 @@ namespace TC2.Conquest
 						//region.DrawDebugText(transform.position, $"{entity} != {ent_exclude}; {index}/{info.Count}/{count}; {info.Offset}; {info.TableCount}", Color32BGRA.White);
 #endif
 
-						if (entity != ent_exclude && (h_faction.id == 0 || h_faction == faction.id) && (type == Enterable.Data.Type.Undefined || enterable.type == type))
+						if (!has_parent && entity != ent_exclude && (h_faction.id == 0 || h_faction == faction.id) && (type == Enterable.Data.Type.Undefined || enterable.type == type))
 						{
 							var dist_sq_tmp = Vector2.DistanceSquared(pos, transform.position); // - enterable.radius.Pow2();
 							if (dist_sq_tmp < dist_sq_current)
@@ -660,7 +662,7 @@ namespace TC2.Conquest
 
 									//GUI.Text($"{ent_enterable}");
 
-									if (ent_enterable.IsAlive() && ent_enterable != this.ent_unit && !ent_enterable.TryGetParent(Relation.Type.Child, out var ent_enterable_parent))
+									if (ent_enterable.IsAlive() && ent_enterable != this.ent_unit) // && !ent_enterable.TryGetParent(Relation.Type.Child, out var ent_enterable_parent))
 									{
 										ref var enterable = ref ent_enterable.GetComponent<Enterable.Data>();
 										if (enterable.IsNotNull())
