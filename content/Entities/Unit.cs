@@ -16,7 +16,7 @@ namespace TC2.Conquest
 				public enum Type: uint
 				{
 					Undefined = 0,
-
+					
 					Vehicle,
 					Location,
 				}
@@ -586,7 +586,7 @@ namespace TC2.Conquest
 				{
 					ref var region = ref this.ent_unit.GetRegionCommon();
 
-					using (var window = GUI.Window.InteractionMisc("unit"u8, this.ent_unit, size: new(0, 64)))
+					using (var window = GUI.Window.InteractionMisc("unit"u8, this.ent_unit, size: new(0, 0)))
 					{
 						if (window.show)
 						{

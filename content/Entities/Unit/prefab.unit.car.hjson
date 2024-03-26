@@ -15,6 +15,9 @@ worldmap.unit:
 
 worldmap.enterable:
 {
+	type: vehicle
+	flags: none
+	mask_units: character
 	radius: 0.250
 }
 
@@ -37,6 +40,18 @@ worldmap.marker:
 	}
 }
 
+storage:
+{
+	@inventory8:
+	{
+		name: "Inventory"
+		stack_size_multiplier: 10.000
+		type: storage
+		flags: standalone, ignore_mass, faction
+		offset: [0.000, -1.750]
+	}
+}
+
 // sound.emitter:
 // {
 	
@@ -54,7 +69,7 @@ interactable:
 {
 	window_size: [592.000, 408.000]
 	window_size_min: [592.000, 408.000]
-	window_size_misc: [200.000, 312.000]
+	window_size_misc: [214.000, 312.000]
 	window_offset: [0.000, 0.000]
 	flags: none
 }

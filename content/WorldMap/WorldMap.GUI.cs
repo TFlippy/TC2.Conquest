@@ -663,6 +663,7 @@ namespace TC2.Conquest
 						}
 
 						var hovered = is_worldmap_hovered = GUI.IsHoveringRect(rect, allow_blocked: false, allow_overlapped: false, root_window: false, child_windows: false);
+						if (hovered) Chat.target_region_id = 0;
 
 						#region Editor
 						DrawEditor(ref rect, ref scenario_data, scenario_asset, ref mouse, ref kb, zoom, ref mat_l2c, ref mouse_local, hovered);
