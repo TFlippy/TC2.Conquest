@@ -317,6 +317,11 @@ namespace TC2.Conquest
 					data.flags.SetFlag(Data.Flags.Wants_Repath, true);
 
 					data.Sync(entity, true);
+
+					//Sound.PlayGUI(ref connection, "ui.misc.03", volume: 0.35f, pitch: 1.30f);
+
+					//var random = XorRandom.New(true);
+					//Sound.PlayGUI(ref connection, random.NextBool(0.50f) ? "phone.in.00" : "phone.out.00", volume: 0.25f, pitch: 1.00f);
 				}
 #endif
 			}
@@ -327,8 +332,8 @@ namespace TC2.Conquest
 
 			//}
 
-			[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region)]
-			public static void UpdateParented(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity, [Source.Owned] ref Transform.Data transform_child, [Source.Parent] in Transform.Data transform_parent, [Source.Owned] ref Marker.Data marker)
+			[ISystem.PostUpdate.A(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region)]
+			public static void UpdateParented([Source.Owned] ref Transform.Data transform_child, [Source.Parent] in Transform.Data transform_parent, [Source.Owned] ref Marker.Data marker)
 			{
 				transform_child.SetPosition(transform_parent.position);
 			}
@@ -586,7 +591,7 @@ namespace TC2.Conquest
 				{
 					ref var region = ref this.ent_unit.GetRegionCommon();
 
-					using (var window = GUI.Window.InteractionMisc("unit"u8, this.ent_unit, size: new(0, 0)))
+					using (var window = GUI.Window.InteractionMisc("unit"u8, this.ent_unit, size: new(GUI.RmX, 0)))
 					{
 						if (window.show)
 						{

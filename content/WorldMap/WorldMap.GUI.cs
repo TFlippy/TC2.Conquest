@@ -239,7 +239,7 @@ namespace TC2.Conquest
 									}
 
 									//GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(pos_center, mat_l2c), pivot: new(0.50f, 0.50f), font: GUI.Font.Superstar, size: 1.00f * zoom, color: GUI.font_color_title.WithAlphaMult(1.00f), layer: GUI.Layer.Window);
-									if (show_prefectures) GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(pos_center, mat_l2c), pivot: new(0.50f, 0.50f), font: GUI.Font.Superstar, size: 0.75f * zoom * asset_data.size, color: asset_data.color_fill.WithColorMult(0.35f).WithAlphaMult(0.50f), layer: GUI.Layer.Window);
+									if (show_prefectures) GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(pos_center, mat_l2c), pivot: new(0.50f, 0.50f), font: GUI.Font.Superstar, size: 0.75f * zoom * asset_data.size, color: asset_data.color_fill.WithColorMult(0.30f).WithAlpha(150), layer: GUI.Layer.Window);
 								}
 							}
 						}
@@ -627,7 +627,7 @@ namespace TC2.Conquest
 										//GUI.Text($"nearest in {ts_elapsed:0.0000} ms");
 									}
 								}
-
+								
 								GUI.FocusableAsset(asset.GetHandle(), rect: rect_icon);
 							}
 							#endregion
