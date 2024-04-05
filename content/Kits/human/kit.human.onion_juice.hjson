@@ -7,7 +7,7 @@
 	
 	flags: none
 	slot: resources
-	categories: food, materials, junk, healing, fancy
+	categories: food, materials, small, healing, civilian
 	faction: "null"
 	species: "null"
 	
@@ -28,8 +28,8 @@
 		[
 			{
 				type: resource
-				material: "sauce"
-				quantity: 6.000
+				material: "onion.juice"
+				quantity: 3.000
 				flags: despawn, no_consume
 			}
 			null

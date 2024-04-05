@@ -298,11 +298,10 @@ namespace TC2.Conquest
 			else return ref Unsafe.NullRef<Road.Junction>();
 		}
 
-		public static Span<Road.Segment> GetSegments(this Road.Junction junction)
+		public static Span<Road.Segment> GetSegments(ref this Road.Junction junction)
 		{
 			return junction.segments.Slice(junction.segments_count);
 		}
-
 
 		public static bool TryGetSegmentIndex(this Road.Junction junction, Road.Segment segment, out int index)
 		{
