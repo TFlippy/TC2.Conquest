@@ -1,4 +1,5 @@
 ﻿{
+	$version: "0.1.60.4"
 	name: "Captain"
 	desc:
 		'''
@@ -11,12 +12,24 @@
 	gender_ratio: 0.020
 	species: "human"
 	faction: "null"
+	cost: 0.000
 	flags: selectable, special
+	
 	character_flags: none
+	character_flags_optional: none
+	
+	industry_flags: none
+	industry_flags_optional: none
+	
+	service_flags: none
+	service_flags_optional: none
+	
+	crime_flags: none
+	crime_flags_optional: none
 	
 	conditions:
 	{
-		weight_mult: 0.010
+		weight_mult: 0.460
 		
 		infrastructure:
 		{
