@@ -66,10 +66,14 @@ namespace TC2.Conquest
 
 					Hidden = 1u << 0,
 					Directional = 1u << 1,
-					Use_Worldmap_Renderer = 1u << 2
+					Use_Worldmap_Renderer = 1u << 2,
+					Hide_If_Parented = 1u << 3
 				}
 
 				public WorldMap.Marker.Data.Flags flags;
+
+				[Editor.Picker.Position(relative: true, mark_modified: true)]
+				public Vector2 relative_offset;
 
 				public float radius = 1.00f;
 				public float scale = 1.00f;
@@ -135,7 +139,7 @@ namespace TC2.Conquest
 			//[Source.Owned] in Location.Data location,
 			//[Source.Owned] in Interactable.Data interactable)
 			//{
-			//	if (interactable.show)
+			//	if (interactable.IsActive())
 			//	{
 			//		var gui = new LocationGUI()
 			//		{

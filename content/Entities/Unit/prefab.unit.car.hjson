@@ -23,10 +23,10 @@ worldmap.enterable:
 
 worldmap.marker:
 {
-	flags: directional
-	radius: 0.500
-	scale: 0.500
-	color: "0xffffffff"
+	flags: directional, hide_if_parented
+	radius: 0.250
+	scale: 0.375
+	color: "0xffc0c0c0"
 	text_offset: [0.000, 0.200]
 	icon_offset: [0.000, 0.000]
 	icon:
@@ -44,11 +44,9 @@ storage:
 {
 	@inventory8:
 	{
-		name: "Inventory"
-		stack_size_multiplier: 10.000
+		stack_size_multiplier: 4.000
 		type: storage
 		flags: standalone, ignore_mass, faction
-		offset: [0.000, -1.750]
 	}
 }
 

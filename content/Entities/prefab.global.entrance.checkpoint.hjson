@@ -1,0 +1,71 @@
+$tags: []
+
+entrance:
+{
+
+}
+
+checkpoint:
+{
+
+}
+
+faction:
+{
+
+}
+
+transform:
+{
+	
+}
+
+interactable:
+{
+	flags: none
+	window_size: [600.000, 422.000]
+	window_size_misc: [216.000, 0.000]
+	window_offset: [0.000, 0.000]
+}
+
+company:
+{
+  
+}
+
+office:
+{
+    
+}
+
+nameable:
+{
+	flags: no_rename, use_asset_name
+}
+
+worldmap.enterable:
+{
+    type: entrance
+    radius: 1.000
+}
+
+// interactable:
+// {
+//     window_size: [456.000, 336.000]
+// }
+
+worldmap.marker:
+{
+	radius: 0.250
+	scale: 0.500
+	rotation: 0.000
+	color: "0xffc0c0c0"
+	text_offset: [0.000, 0.200]
+	icon_offset: [0.000, 0.000]
+	icon:
+	{
+		texture: "worldmap.icons.01"
+		size: [24, 24]
+		frame: [18, 0]
+	}
+}

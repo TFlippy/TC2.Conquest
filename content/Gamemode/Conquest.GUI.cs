@@ -52,7 +52,7 @@ namespace TC2.Conquest
 					this.StoreCurrentWindowTypeID();
 					if (window.show)
 					{
-						ref var region = ref ent_respawn.GetRegion();
+						ref var region = ref this.ent_respawn.GetRegion();
 						ref var player = ref Client.GetPlayer();
 						var random = XorRandom.New(true);
 
@@ -119,133 +119,7 @@ namespace TC2.Conquest
 								}
 							}
 
-							//{
-							//	ref var info = ref region.GetMapInfo();
-
-							//	using (GUI.Wrap.Push(GUI.RmX))
-							//	{
-							//		using (GUI.Group.New(size: new(GUI.RmX, 0), padding: new(4)))
-							//		{
-							//			using (GUI.Wrap.Push(GUI.RmX))
-							//			{
-							//				//if (!info.name.IsEmpty()) GUI.Title(info.name, size: 32);
-							//				//if (!info.desc.IsEmpty()) GUI.Text(info.desc);
-							//			}
-							//		}
-
-							//		//var ts = Timestamp.Now();
-							//		using (var group = GUI.Group.New(size: new(GUI.RmX, 0), padding: new(4)))
-							//		{
-							//			//ref var minimap = ref Minimap.MinimapHUD.minimaps[region.GetID()];
-							//			//if (minimap != null)
-							//			//{
-							//			//	var map_frame_size = minimap.GetFrameSize(2);
-							//			//	map_frame_size = map_frame_size.ScaleToSize(new Vector2(GUI.RmX, 80));
-
-							//			//	Minimap.DrawMap(ref region, minimap, map_frame_size, map_scale: 1.00f);
-							//			//}
-
-							//			ref var minimap = ref Minimap.MinimapHUD.minimaps[region.GetID()];
-							//			if (minimap != null)
-							//			{
-							//				var map_frame_size = minimap.GetFrameSize(2);
-							//				map_frame_size = map_frame_size.ScaleToSize(new Vector2(GUI.RmX, 80));
-
-							//				using (var map = GUI.Map.New(ref region, minimap, size: map_frame_size, map_scale: 1.00f, draw_markers: false))
-							//				{
-							//					foreach (ref var row in region.IterateQuery<Region.GetSpawnsQuery>())
-							//					{
-							//						var selected = row.Entity == Spawn.RespawnGUI.ent_selected_spawn;
-
-							//						var transform_copy = default(Transform.Data);
-							//						var nameable_copy = default(Nameable.Data);
-							//						var color = selected ? Color32BGRA.White : new Color32BGRA(0xff9a7f7f);
-
-							//						row.Run((ISystem.Info info, Entity entity, in Spawn.Data spawn, in Nameable.Data nameable, in Transform.Data transform, in Faction.Data faction) =>
-							//						{
-							//							transform_copy = transform;
-							//							nameable_copy = nameable;
-
-							//							if (faction.id.TryGetData(out var ref_faction))
-							//							{
-							//								color = ref_faction.value.color_a;
-							//								//sprite.frame.X = 1;
-							//							}
-							//						});
-
-							//						using (var node = map.DrawNode(new Sprite(tex_icons_minimap, 16, 16, 3, 0), transform_copy.GetInterpolatedPosition() + new Vector2(0, -3), color: color, color_hovered: Color32BGRA.White))
-							//						{
-							//							//GUI.DrawTextCentered(nameable_copy.name, node.rect.GetPosition() + new Vector2(16, 0), piv layer: GUI.Layer.Window, font: GUI.Font.Superstar, size: 16);
-
-							//							if (node.is_hovered)
-							//							{
-							//								GUI.SetCursor(App.CursorType.Hand, 100);
-
-							//								if (GUI.GetMouse().GetKeyDown(Mouse.Key.Left))
-							//								{
-							//									//App.WriteLine("press");
-							//									ent_selected_spawn_new = row.Entity;
-							//								}
-
-							//								using (GUI.Tooltip.New())
-							//								{
-							//									GUI.Title(nameable_copy.name, font: GUI.Font.Superstar, size: 16);
-							//								}
-							//							}
-							//						}
-							//					}
-							//				}
-							//			}
-							//		}
-							//		//App.WriteLine($"{ts.GetMilliseconds():0.0000} ms");
-
-							//		//GUI.NewLine(4);
-							//		//GUI.Separator();
-							//		//GUI.NewLine(4);
-
-							//		//using (GUI.Group.New(size: new(GUI.RmX * 0.50f, 0), padding: new(4)))
-							//		//{
-							//		//	GUI.LabelShaded("Urbanization:", info.urbanization, format: "{0:P2}", color_a: GUI.font_color_default, color_b: GUI.font_color_desc);
-							//		//	GUI.DrawHoverTooltip("TODO: desc");
-
-							//		//	GUI.LabelShaded("Industrialization:", info.industrialization, format: "{0:P2}", color_a: GUI.font_color_default, color_b: GUI.font_color_desc);
-							//		//	GUI.DrawHoverTooltip("TODO: desc");
-
-							//		//	GUI.LabelShaded("Education:", info.education, format: "{0:P2}", color_a: GUI.font_color_default, color_b: GUI.font_color_desc);
-							//		//	GUI.DrawHoverTooltip("TODO: desc");
-
-							//		//	GUI.LabelShaded("Wealth:", info.wealth, format: "{0:P2}", color_a: GUI.font_color_default, color_b: GUI.font_color_desc);
-							//		//	GUI.DrawHoverTooltip("TODO: desc");
-
-							//		//	GUI.LabelShaded("Wilderness:", info.wilderness, format: "{0:P2}", color_a: GUI.font_color_default, color_b: GUI.font_color_desc);
-							//		//	GUI.DrawHoverTooltip("TODO: desc");
-							//		//}
-
-							//		//GUI.SameLine();
-
-							//		//using (GUI.Group.New(size: new(GUI.RmX, 0), padding: new(4)))
-							//		//{
-							//		//	GUI.LabelShaded("Devastation:", info.devastation, format: "{0:P2}", color_a: GUI.font_color_default, color_b: GUI.font_color_desc);
-							//		//	GUI.DrawHoverTooltip("Destruction of the environment through\ndisasters, warfare and industry.");
-
-							//		//	GUI.LabelShaded("Savagery:", info.savagery, format: "{0:P2}", color_a: GUI.font_color_default, color_b: GUI.font_color_desc);
-							//		//	GUI.DrawHoverTooltip("Hostility of wildlife, flora\nand other inhabitants.");
-
-							//		//	GUI.LabelShaded("Anarchy:", info.anarchy, format: "{0:P2}", color_a: GUI.font_color_default, color_b: GUI.font_color_desc);
-							//		//	GUI.DrawHoverTooltip("Political stability of the region.");
-
-							//		//	GUI.LabelShaded("Elevation:", info.elevation, format: "{0:0.00} m", color_a: GUI.font_color_default, color_b: GUI.font_color_desc);
-							//		//	GUI.DrawHoverTooltip("TODO: desc");
-
-							//		//	GUI.LabelShaded("Population:", info.population, format: "~{0}", color_a: GUI.font_color_default, color_b: GUI.font_color_desc);
-							//		//	GUI.DrawHoverTooltip("TODO: desc");
-							//		//}
-							//	}
-							//}
-
 							{
-								ref var info = ref region.GetMapInfo();
-
 								using (GUI.Wrap.Push(GUI.RmX))
 								{
 									using (var group = GUI.Group.New(size: new(GUI.RmX, 92), padding: new(4)))
@@ -412,7 +286,7 @@ namespace TC2.Conquest
 								//	is_empty = characters.GetFilledCount() == 0;
 								//}
 
-								Crafting.Context.New(ref region, ent_selected_spawn, ent_selected_spawn, out var crafting_context, inventory: h_inventory, shipment: oc_shipment, search_radius: 0.00f, h_faction: faction_id);
+								Crafting.Context.New(ref region, ent_selected_spawn, ent_selected_spawn, out var crafting_context, inventory: h_inventory, shipment: oc_shipment, search_radius: 0.00f, h_faction: this.faction_id);
 
 								//var context = GUI.ItemContext.Begin();
 
@@ -467,7 +341,7 @@ namespace TC2.Conquest
 														is_empty &= h_character.id == 0;
 														//var selectable = h_character.CanSpawnAsCharacter(faction_id, faction.id, spawn.flags); //  character_data.IsNotNull() && character_data.faction == faction_id;
 
-														Dormitory.DormitoryGUI.DrawCharacterSmall(h_character);
+														Dormitory.DrawCharacterSmall(h_character);
 
 														var selected = h_selected_character_tmp.id != 0 && h_character == h_selected_character_tmp; // selected_index;
 														if (GUI.Selectable3("selectable", group_row.GetOuterRect(), selected))
@@ -490,7 +364,7 @@ namespace TC2.Conquest
 
 											if (h_inventory.IsValid())
 											{
-												using (GUI.Group.New(size: h_inventory.GetPreferedFrameSize()))
+												using (GUI.Group.New(size: h_inventory.GetFrameSize(2, 0)))
 												{
 													GUI.DrawInventory(h_inventory, is_readonly: true);
 												}
@@ -539,7 +413,7 @@ namespace TC2.Conquest
 										}
 									}
 
-									if (!dormitory.flags.HasAny(Dormitory.Flags.Hide_XP))
+									if (dormitory.flags.HasNone(Dormitory.Flags.Hide_XP))
 									{
 										GUI.SeparatorThick();
 
@@ -562,7 +436,7 @@ namespace TC2.Conquest
 										}
 									}
 
-									if (!dormitory.flags.HasAny(Dormitory.Flags.Hide_Kits))
+									if (dormitory.flags.HasNone(Dormitory.Flags.Hide_Kits))
 									{
 										GUI.SeparatorThick();
 
@@ -639,7 +513,7 @@ namespace TC2.Conquest
 								{
 									GUI.SeparatorThick();
 
-									ref var faction_data = ref faction_id.GetData(out IFaction.Definition s_faction);
+									ref var faction_data = ref this.faction_id.GetData(out IFaction.Definition s_faction);
 									if (faction_data.IsNotNull())
 									{
 										using (GUI.Group.New(size: GUI.Rm, padding: new(8)))
@@ -684,7 +558,7 @@ namespace TC2.Conquest
 
 			if (player.IsLocal())
 			{
-				if (!player.flags.HasAll(Player.Flags.Alive) && !(player.flags.HasAll(Player.Flags.Editor) && !Editor.show_respawn_menu))
+				if (player.flags.HasNone(Player.Flags.Alive) && !(player.flags.HasAny(Player.Flags.Editor) && !Editor.show_respawn_menu))
 				{
 					var gui = new RespawnGUI
 					{

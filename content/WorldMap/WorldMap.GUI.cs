@@ -356,12 +356,22 @@ namespace TC2.Conquest
 							ref Nameable.Data nameable,
 							bool has_parent) =>
 							{
-								if (has_parent || marker.flags.HasAny(Marker.Data.Flags.Hidden)) return;
-								
+								if (marker.flags.HasAny(Marker.Data.Flags.Hidden)) return;
+
 								var pos = transform.GetInterpolatedPosition();
 								var scale = 0.500f;
-								var asset_scale = Maths.Clamp(marker.scale, 0.50f, 1.00f);
+								var asset_scale = Maths.Clamp(marker.scale, 0.250f, 1.00f);
 
+								if ((has_parent && marker.flags.HasAny(Marker.Data.Flags.Hide_If_Parented)))
+								{
+									return;
+								}
+								else
+								{
+
+								}
+								
+								
 								//var rect_text = AABB.Centered(Vector2.Transform(pos + asset_data.text_offset, mat_l2c), new Vector2(scale * zoom * asset_scale * 1.50f));
 								var rect_icon = AABB.Centered(Vector2.Transform(pos + marker.icon_offset, mat_l2c), ((Vector2)marker.icon.size) * region.GetWorldToCanvasScale() * 0.125f);
 								var rect_button = AABB.Circle(Vector2.Transform(pos + marker.icon_offset, mat_l2c), marker.radius * region.GetWorldToCanvasScale());
@@ -373,6 +383,18 @@ namespace TC2.Conquest
 								var is_pressed = GUI.ButtonBehavior(entity, rect_button, out var is_hovered, out var is_held);
 
 								var color = (is_selected || is_hovered) ? Color32BGRA.White : marker.color;
+
+								if (has_parent && entity.TryGetParent(Relation.Type.Child, out var ent_parent))
+								{
+									ref var transform_parent = ref ent_parent.GetComponent<Transform.Data>();
+									if (transform_parent.IsNotNull())
+									{
+										var pos_parent = transform_parent.GetInterpolatedPosition();
+										var dir = (pos_parent - pos).GetNormalized(out var parent_dist);
+										//GUI.DrawLineTextured(region.WorldToCanvas(pos), region.WorldToCanvas(transform_parent.GetInterpolatedPosition()), GUI.tex_separator_b, color: GUI.col_white, thickness: 0.200f * region.GetWorldToCanvasScale(), overshoot: 0.25f, layer: GUI.Layer.Window);
+										GUI.DrawLine(region.WorldToCanvas(pos), region.WorldToCanvas(pos_parent - (dir * 0.125f)), color: GUI.col_button_yellow.WithAlpha(100), thickness: 0.125f * region.GetWorldToCanvasScale(), layer: GUI.Layer.Window);
+									} 
+								}
 
 								if (is_hovered)
 								{
@@ -1907,7 +1929,7 @@ namespace TC2.Conquest
 		[Source.Owned] in Location.Data location,
 		[Source.Owned] in Interactable.Data interactable)
 		{
-			if (interactable.show)
+			if (interactable.IsActive())
 			{
 				var gui = new LocationGUI()
 				{

@@ -124,18 +124,18 @@ namespace TC2.Conquest
 		}
 
 #if SERVER
-		[ChatCommand.Region("pause", "", admin: true)]
+		[ChatCommand.Global("pause", "", admin: true)]
 		public static void PauseCommand(ref ChatCommand.Context context, bool? value = null)
 		{
-			ref var region = ref context.GetRegion();
-			if (!region.IsNull())
+			ref var region = ref World.GetGlobalRegion();
+			if (region.IsNotNull())
 			{
 				ref var g_conquest = ref region.GetGlobalComponent<Conquest.Gamemode>();
-				if (!g_conquest.IsNull())
+				if (g_conquest.IsNotNull())
 				{
 					var sync = false;
-					sync |= g_conquest.flags.TrySetFlag(Conquest.Gamemode.Flags.Paused, value ?? !g_conquest.flags.HasAll(Conquest.Gamemode.Flags.Paused));
-					Server.SendChatMessage(g_conquest.flags.HasAll(Conquest.Gamemode.Flags.Paused) ? "Paused Conquest." : "Unpaused Conquest.", channel: Chat.Channel.System);
+					sync |= g_conquest.flags.TrySetFlag(Conquest.Gamemode.Flags.Paused, value ?? g_conquest.flags.HasNone(Conquest.Gamemode.Flags.Paused));
+					Server.SendChatMessage(g_conquest.flags.HasAny(Conquest.Gamemode.Flags.Paused) ? "Paused Conquest." : "Unpaused Conquest.", channel: Chat.Channel.System);
 
 					if (sync)
 					{
@@ -145,13 +145,13 @@ namespace TC2.Conquest
 			}
 		}
 
-		[ChatCommand.Region("setmap", "", creative: true)]
+		[ChatCommand.Global("setmap", "", creative: true)]
 		public static void SetMapCommand(ref ChatCommand.Context context, byte region_id, string map)
 		{
 			ref var world = ref Server.GetWorld();
 
 			ref var region_new = ref world.ImportRegion2(region_id, map);
-			if (!region_new.IsNull())
+			if (region_new.IsNotNull())
 			{
 				//world.SetContinueRegionID(region_id);
 

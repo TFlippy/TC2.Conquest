@@ -19,12 +19,15 @@ namespace TC2.Conquest
 					
 					Vehicle,
 					Location,
+					Entrance
 				}
 
 				[Flags]
 				public enum Flags: uint
 				{
 					None = 0u,
+
+					Hide_If_Parented = 1u << 0
 				}
 
 				public Enterable.Data.Type type;
@@ -59,7 +62,7 @@ namespace TC2.Conquest
 						//region.DrawDebugText(transform.position, $"{entity} != {ent_exclude}; {index}/{info.Count}/{count}; {info.Offset}; {info.TableCount}", Color32BGRA.White);
 #endif
 
-						if (!has_parent && entity != ent_exclude && (h_faction.id == 0 || h_faction == faction.id) && (type == Enterable.Data.Type.Undefined || enterable.type == type))
+						if ((enterable.flags.HasNone(Data.Flags.Hide_If_Parented) ? has_parent : true) && entity != ent_exclude && (h_faction.id == 0 || h_faction == faction.id) && (type == Enterable.Data.Type.Undefined || enterable.type == type))
 						{
 							var dist_sq_tmp = Vector2.DistanceSquared(pos, transform.position); // - enterable.radius.Pow2();
 							if (dist_sq_tmp < dist_sq_current)
@@ -95,12 +98,14 @@ namespace TC2.Conquest
 					Assert.Check(this.ent_enterable != entity);
 					Assert.Check(this.ent_enterable.IsAlive());
 					Assert.Check(this.ent_enterable.GetRegionID() == entity.GetRegionID());
-					Assert.Check(!this.ent_enterable.TryGetParent(Relation.Type.Child, out var ent_enterable_parent));
+					//Assert.Check(!this.ent_enterable.TryGetParent(Relation.Type.Child, out var ent_enterable_parent));
 
 					ref var enterable = ref this.ent_enterable.GetComponent<WorldMap.Enterable.Data>();
 					Assert.NotNull(ref enterable);
 
-					entity.AddRelation(this.ent_enterable, Relation.Type.Child);
+					Assert.Check(enterable.flags.HasNone(Enterable.Data.Flags.Hide_If_Parented) || !this.ent_enterable.GetParent(Relation.Type.Child).IsValid());
+
+					entity.AddRelation(this.ent_enterable, Relation.Type.Child, true);
 				}
 #endif
 			}
@@ -332,10 +337,11 @@ namespace TC2.Conquest
 
 			//}
 
+			
 			[ISystem.PostUpdate.A(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region)]
 			public static void UpdateParented([Source.Owned] ref Transform.Data transform_child, [Source.Parent] in Transform.Data transform_parent, [Source.Owned] ref Marker.Data marker)
 			{
-				transform_child.SetPosition(transform_parent.position);
+				transform_child.SetPosition(transform_parent.position + marker.relative_offset);
 			}
 
 #if CLIENT

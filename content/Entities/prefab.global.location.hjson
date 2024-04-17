@@ -20,11 +20,11 @@ transform:
 	
 }
 
-worldmap.enterable:
-{
-    type: location
-    radius: 1.000
-}
+// worldmap.enterable:
+// {
+//     type: location
+//     radius: 0.500
+// }
 
 // interactable:
 // {
@@ -33,7 +33,7 @@ worldmap.enterable:
 
 worldmap.marker:
 {
-	
+	radius: 0.375
 }
 
 nameable:
