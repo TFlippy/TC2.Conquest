@@ -380,7 +380,7 @@ namespace TC2.Conquest
 
 				var speed_mult = 1.00f;
 
-				const float s_to_h = 1.00f / 60.00f;
+				const float s_to_h = 1.00f / 60.00f / 60.00f;
 				var time_scale = world_global.speed;
 
 				if (unit.next_segment.IsValid())
@@ -659,7 +659,7 @@ namespace TC2.Conquest
 								var mouse = GUI.GetMouse();
 
 								ref var world_global = ref region.GetGlobalComponent<World.Global>();
-								var time_scale = world_global.speed;
+								//var time_scale = world_global.speed;
 								var speed_km_h = this.unit.speed_current;
 
 								//GUI.LabelShaded("Speed:", $"{speed_km_h:0.00} km/h");
