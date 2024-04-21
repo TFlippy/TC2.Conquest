@@ -369,7 +369,9 @@ namespace TC2.Conquest
 
 						case Action.Exit:
 						{
-							
+							data.pos_target = this.pos_target;
+							data.ent_target = default;
+							data.flags.AddFlag(Unit.Flags.Wants_Repath);
 						}
 						break;
 

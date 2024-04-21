@@ -451,15 +451,49 @@ namespace TC2.Conquest
 										if (is_selected)
 										{
 											WorldMap.selected_entity = default;
+											if (GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
+											{
+												//WorldMap.hs_selected_entities.Remove(entity);
+												if (WorldMap.hs_selected_entities.Count > 0)
+												{
+													WorldMap.hs_selected_entities.Remove(entity);
+												}
+												else
+												{
+													WorldMap.hs_selected_entities.Add(entity);
+												}
+											}
+											else
+											{
+												if (WorldMap.hs_selected_entities.Count > 1)
+												{
+													WorldMap.hs_selected_entities.Clear();
+													WorldMap.hs_selected_entities.Add(entity);
+												}
+												else
+												{
+													WorldMap.hs_selected_entities.Clear();
+												}
+											}
 											GUI.selected_entity = default;
 											if (location_asset != null) WorldMap.h_selected_location = default;
 											Sound.PlayGUI(GUI.sound_select, volume: 0.09f, pitch: 0.80f);
 										}
 										else
 										{
-											WorldMap.selected_entity = entity;
-											GUI.selected_entity = entity;
-											if (location_asset != null) WorldMap.h_selected_location = location_asset;
+											if (GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
+											{
+												if (!WorldMap.hs_selected_entities.Remove(entity)) WorldMap.hs_selected_entities.Add(entity);
+											}
+											else
+											{
+												WorldMap.selected_entity = entity;
+												GUI.selected_entity = entity;
+												if (location_asset != null) WorldMap.h_selected_location = location_asset;
+
+												WorldMap.hs_selected_entities.Clear();
+												WorldMap.hs_selected_entities.Add(entity);
+											}
 											Sound.PlayGUI(GUI.sound_select, volume: 0.09f);
 										}
 										// Client.RequestSetActiveRegion((byte)i);
@@ -1237,13 +1271,21 @@ namespace TC2.Conquest
 
 															//var selected = asset == h_selected_location; // selected_region_id == i;
 
-															var is_selected = WorldMap.selected_entity == entity;
+															var is_selected = WorldMap.selected_entity == entity || WorldMap.hs_selected_entities.Contains(entity);
 															if (GUI.Selectable3(entity.GetShortID(), group_row.GetOuterRect(), is_selected))
 															{
 																//App.WriteLine("click");
 																//WorldMap.FocusEntity(ent_unit);
+																if (GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
+																{
+																	if (WorldMap.hs_selected_entities.Contains(entity)) WorldMap.hs_selected_entities.Remove(entity);
+																	else WorldMap.hs_selected_entities.Add(entity);
+																}
+																else
+																{
+																	WorldMap.selected_entity.Toggle(entity);
+																}
 
-																WorldMap.selected_entity.Toggle(entity);
 																//if (!is_selected) WorldMap.FocusEntity(entity);
 															}
 														}
@@ -1282,10 +1324,18 @@ namespace TC2.Conquest
 
 																		//var selected = asset == h_selected_location; // selected_region_id == i;
 
-																		var is_selected = WorldMap.selected_entity == ent_child;
+																		var is_selected = WorldMap.selected_entity == ent_child || WorldMap.hs_selected_entities.Contains(ent_child);
 																		if (GUI.Selectable3(ent_child.GetShortID(), group_row.GetOuterRect(), is_selected))
 																		{
-																			WorldMap.selected_entity.Toggle(ent_child);
+																			if (GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
+																			{
+																				if (WorldMap.hs_selected_entities.Contains(ent_child)) WorldMap.hs_selected_entities.Remove(ent_child);
+																				else WorldMap.hs_selected_entities.Add(ent_child);
+																			}
+																			else
+																			{
+																				WorldMap.selected_entity.Toggle(ent_child);
+																			}
 																		}
 																	}
 																}
@@ -1742,8 +1792,8 @@ namespace TC2.Conquest
 						{
 							drag_rect_cached_world = region.CanvasToWorld(drag_rect_cached);
 
-							selected_entities.Clear();
-							var selected_entities_count = 0;
+							hs_selected_entities.Clear();
+							//var selected_entities_count = 0;
 
 							foreach (ref var row in region.IterateQuery<WorldMap.Unit.GetAllQuery>())
 							{
@@ -1752,7 +1802,7 @@ namespace TC2.Conquest
 									if (drag_rect_cached_world.ContainsPoint(transform.position) && entity.GetParent(Relation.Type.Child) == default)
 									{
 										//GUI.DrawCircle(region.WorldToCanvas(transform.position), 0.50f * region.GetWorldToCanvasScale(), color: Color32BGRA.Green.WithAlpha(200), layer: GUI.Layer.Foreground);
-										selected_entities[selected_entities_count++] = entity;
+										hs_selected_entities.Add(entity);
 									}
 								});
 							}
@@ -1784,12 +1834,11 @@ namespace TC2.Conquest
 
 						var unit_index = 0;
 
-						// TODO: temporary shithack
-						if (!selected_entities.Contains(WorldMap.selected_entity)) selected_entities[^1] = WorldMap.selected_entity;
+						//// TODO: temporary shithack
+						//if (!selected_entities.Contains(WorldMap.selected_entity)) selected_entities[^1] = WorldMap.selected_entity;
 
-						for (var i = 0; i < selected_entities.Length; i++)
+						foreach (var ent_unit in hs_selected_entities)
 						{
-							var ent_unit = selected_entities[i];
 							if (ent_unit.IsAlive())
 							{
 								var ent_parent = ent_unit.GetParent(Relation.Type.Child);
@@ -1885,10 +1934,10 @@ namespace TC2.Conquest
 							GUI.DrawRect(region.WorldToCanvas(drag_rect_cached_world), color: drag_rect_color, layer: GUI.Layer.Foreground);
 						}
 
-						if (selected_entities.Length > 0 && GUI.IsMouseDoubleClicked() && WorldMap.IsHovered())
+						if (hs_selected_entities.Count > 0 && GUI.IsMouseDoubleClicked() && WorldMap.IsHovered())
 						{
 							drag_rect_cached_world = default;
-							selected_entities.Clear();
+							hs_selected_entities.Clear();
 						}
 					}
 				}
