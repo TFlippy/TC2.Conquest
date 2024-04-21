@@ -740,6 +740,9 @@ namespace TC2.Conquest
 		public static Vector2 worldmap_window_size = new Vector2(1024, 1024);
 		public static Vector2 worldmap_window_offset = new Vector2(0, 0);
 
+		public static Vector2 worldmap_mouse_position;
+		public static Vector2 worldmap_mouse_position_snapped;
+
 		public static float rotation;
 
 		public static Road.Chain edit_road;

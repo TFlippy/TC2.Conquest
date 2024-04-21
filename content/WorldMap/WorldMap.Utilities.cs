@@ -451,7 +451,7 @@ namespace TC2.Conquest
 		}
 
 #if CLIENT
-		public static void DrawConnectedRoads(Road.Segment road_segment, ref Matrix3x2 mat_l2c, float zoom, int iter_max = 10, float budget = 1000.00f)
+		public static void DrawConnectedRoads(ref Region.Data.Global region, Road.Segment road_segment, int iter_max = 10, float budget = 1000.00f)
 		{
 			//var thickness = road_segment.GetRoad().scale * 0.50f;
 			var alpha = 0.25f;
@@ -483,7 +483,7 @@ namespace TC2.Conquest
 				}
 				else
 				{
-					DrawSegment(segments_visited, junctions_queue, new(0, 0.00f, budget), ref road_segment, ref mat_l2c, zoom, type, Color32BGRA.Green.WithAlphaMult(alpha), alpha, budget);
+					DrawSegment(ref region, segments_visited, junctions_queue, new(0, 0.00f, budget), ref road_segment, type, Color32BGRA.Green.WithAlphaMult(alpha), alpha, budget);
 				}
 
 				for (var i = 0; i < iter_max; i++)
@@ -492,12 +492,12 @@ namespace TC2.Conquest
 					for (var j = 0; j < count; j++)
 					{
 						var connection = junctions_queue.Dequeue();
-						DrawJunction(segments_visited, junctions_queue, junctions_span, in connection, ref mat_l2c, zoom, i, iter_max, type, alpha, budget);
+						DrawJunction(ref region, segments_visited, junctions_queue, junctions_span, in connection, i, iter_max, type, alpha, budget);
 					}
 				}
 
 				//DrawJunction(hs_visited, queue, junctions_span, ref junction.segments[0], ref mat_l2c, zoom, 0, iter_max);
-				static void DrawJunction(HashSet<ulong> hs_visited, Queue<RoadConnection> queue, Span<Road.Junction> junctions_span, in RoadConnection connection, ref Matrix3x2 mat_l2c, float zoom, int depth, int iter_max, Road.Type type, float alpha, float budget)
+				static void DrawJunction(ref Region.Data.Global region, HashSet<ulong> hs_visited, Queue<RoadConnection> queue, Span<Road.Junction> junctions_span, in RoadConnection connection, int depth, int iter_max, Road.Type type, float alpha, float budget)
 				{
 					var color = Color32BGRA.FromHSV((1.00f - ((float)depth / (float)iter_max)) * 2.00f, 1.00f, 1.00f).WithAlphaMult(alpha);
 
@@ -507,11 +507,11 @@ namespace TC2.Conquest
 					var segments_span = junction.segments.Slice(junction.segments_count);
 					foreach (ref var segment_base in segments_span)
 					{
-						DrawSegment(hs_visited, queue, in connection, ref segment_base, ref mat_l2c, zoom, type, color, alpha, budget);
+						DrawSegment(ref region, hs_visited, queue, in connection, ref segment_base, type, color, alpha, budget);
 					}
 				}
 
-				static void DrawSegment(HashSet<ulong> hs_visited, Queue<RoadConnection> queue, in RoadConnection connection, ref Road.Segment segment_base, ref Matrix3x2 mat_l2c, float zoom, Road.Type type, Color32BGRA color, float alpha, float budget)
+				static void DrawSegment(ref Region.Data.Global region, HashSet<ulong> hs_visited, Queue<RoadConnection> queue, in RoadConnection connection, ref Road.Segment segment_base, Road.Type type, Color32BGRA color, float alpha, float budget)
 				{
 					ref var road = ref segment_base.GetRoad();
 					if (road.type != type) return;
@@ -540,13 +540,13 @@ namespace TC2.Conquest
 							connection_copy.distance += distance;
 							connection_copy.budget -= (distance / (road.speed_mult * road.integrity));
 
-							GUI.DrawLine(Vector2.Transform(pos_last, mat_l2c) - depth_offset, Vector2.Transform(road_points_span[i], mat_l2c) - depth_offset, Color32BGRA.FromHSV((Maths.NormalizeClamp(connection_copy.budget, budget)) * 2.00f, 1.00f, 1.00f).WithAlphaMult(alpha), thickness: thickness * zoom, layer: GUI.Layer.Window);
+							GUI.DrawLine(region.WorldToCanvas(pos_last) - depth_offset, region.WorldToCanvas(road_points_span[i]) - depth_offset, Color32BGRA.FromHSV((Maths.NormalizeClamp(connection_copy.budget, budget)) * 2.00f, 1.00f, 1.00f).WithAlphaMult(alpha), thickness: thickness * region.GetWorldToCanvasScale(), layer: GUI.Layer.Window);
 
 							if (connection_copy.budget <= 0.00f) break;
 
 							if (road_segment_to_junction_index.TryGetValue(segment, out var junction_index_new))
 							{
-								GUI.DrawTextCentered($"{(connection_copy.distance * km_per_unit):0.0}km; {connection_copy.budget:0}/{budget:0}", pos_last.Transform(in mat_l2c), layer: GUI.Layer.Window, box_shadow: false);
+								GUI.DrawTextCentered($"{(connection_copy.distance * km_per_unit):0.0}km; {connection_copy.budget:0}/{budget:0}", region.WorldToCanvas(pos_last), layer: GUI.Layer.Window, box_shadow: false);
 
 								connection_copy.junction_index = junction_index_new;
 								queue.Enqueue(connection_copy);
@@ -573,13 +573,13 @@ namespace TC2.Conquest
 							connection_copy.distance += distance;
 							connection_copy.budget -= (distance / (road.speed_mult * road.integrity));
 
-							GUI.DrawLine(Vector2.Transform(pos_last, mat_l2c) - depth_offset, Vector2.Transform(road_points_span[i], mat_l2c) - depth_offset, Color32BGRA.FromHSV((Maths.NormalizeClamp(connection_copy.budget, budget)) * 2.00f, 1.00f, 1.00f).WithAlphaMult(alpha), thickness: thickness * zoom, layer: GUI.Layer.Window);
+							GUI.DrawLine(region.WorldToCanvas(pos_last) - depth_offset, region.WorldToCanvas(road_points_span[i]) - depth_offset, Color32BGRA.FromHSV((Maths.NormalizeClamp(connection_copy.budget, budget)) * 2.00f, 1.00f, 1.00f).WithAlphaMult(alpha), thickness: thickness * region.GetWorldToCanvasScale(), layer: GUI.Layer.Window);
 
 							if (connection_copy.budget <= 0.00f) break;
 
 							if (road_segment_to_junction_index.TryGetValue(segment, out var junction_index_new))
 							{
-								GUI.DrawTextCentered($"{(connection_copy.distance * km_per_unit):0.0}km; {connection_copy.budget:0}/{budget:0}", pos_last.Transform(in mat_l2c), layer: GUI.Layer.Window, box_shadow: false);
+								GUI.DrawTextCentered($"{(connection_copy.distance * km_per_unit):0.0}km; {connection_copy.budget:0}/{budget:0}", region.WorldToCanvas(pos_last), layer: GUI.Layer.Window, box_shadow: false);
 
 								connection_copy.junction_index = junction_index_new;
 								queue.Enqueue(connection_copy);
@@ -662,7 +662,7 @@ namespace TC2.Conquest
 			}
 		}
 
-		public static void DrawOutline(Matrix3x2 mat_l2c, float zoom, Span<short2> points, Color32BGRA color, float thickness, float cap_size, Texture.Handle h_texture)
+		public static void DrawOutline(ref Region.Data.Global region, Span<short2> points, Color32BGRA color, float thickness, float cap_size, Texture.Handle h_texture)
 		{
 			var count = points.Length;
 
@@ -676,10 +676,10 @@ namespace TC2.Conquest
 					var a = (Vector2)last_vert;
 					var b = (Vector2)vert;
 
-					var ta = Vector2.Transform(a, mat_l2c);
-					var tb = Vector2.Transform(b, mat_l2c);
+					var ta = region.WorldToCanvas(a); // Vector2.Transform(a, mat_l2c);
+					var tb = region.WorldToCanvas(b); // Vector2.Transform(b, mat_l2c);
 
-					GUI.DrawLineTexturedCapped(ta, tb, h_texture, color: color, thickness: thickness * zoom * 2, cap_size: cap_size, layer: GUI.Layer.Window);
+					GUI.DrawLineTexturedCapped(ta, tb, h_texture, color: color, thickness: thickness * region.GetWorldToCanvasScale(), cap_size: cap_size, layer: GUI.Layer.Window);
 				}
 				last_vert = vert;
 			}

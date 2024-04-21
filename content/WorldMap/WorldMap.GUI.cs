@@ -80,23 +80,6 @@ namespace TC2.Conquest
 			last_open_frame = App.CurrentFrame;
 
 			WorldMap.hovered_entity = default;
-			
-			//App.WriteLine($"{App.CurrentFrame - WorldMap.last_open_frame}");
-
-
-			//ts_last_draw = Timestamp.Now();
-
-			//var use_renderer = true;
-
-			//if (!Client.IsLoadingRegion())
-
-			//if (!is_loading)
-
-			//if (enable_renderer)
-			//{
-			//	IScenario.WorldMap.Renderer.Clear();
-			//	IScenario.Doodad.Renderer.Clear();
-			//}
 
 			var mouse = GUI.GetMouse();
 			var kb = GUI.GetKeyboard();
@@ -185,16 +168,25 @@ namespace TC2.Conquest
 							GUI.DrawTexture(h_texture_bg_00, rect, GUI.Layer.Window, uv_0: Vector2.Transform(rect.a, mat_c2l) * tex_scale_inv, uv_1: Vector2.Transform(rect.b, mat_c2l) * tex_scale_inv, clip: false, color: color_grid.WithAlphaMult(0.10f));
 						}
 
+						//var mouse_pos = GUI.GetMousePosition();
+						//var mouse_local = Vector2.Transform(mouse_pos, mat_c2l);
+						//var mouse_local_snapped = mouse_local;
+						//mouse_local_snapped.Snap(1.00f / scale_b, out mouse_local_snapped);
+
 						var mouse_pos = GUI.GetMousePosition();
-						var mouse_local = Vector2.Transform(mouse_pos, mat_c2l);
+						var mouse_local = region.CanvasToWorld(mouse_pos);
 						var mouse_local_snapped = mouse_local;
 						mouse_local_snapped.Snap(1.00f / scale_b, out mouse_local_snapped);
+
+						WorldMap.worldmap_mouse_position = mouse_local;
+						WorldMap.worldmap_mouse_position_snapped = mouse_local_snapped;
 
 						var tex_line_prefecture = h_texture_line_00;
 						var tex_line_governorate = h_texture_line_01;
 
 						#region Prefectures
-						//if (editor_mode != EditorMode.Doodad)
+						DrawPrefectures(ref region);
+						static void DrawPrefectures(ref Region.Data.Global region)
 						{
 							foreach (var asset in IPrefecture.Database.GetAssets())
 							{
@@ -204,78 +196,88 @@ namespace TC2.Conquest
 								var points = asset_data.points.AsSpan();
 								if (!points.IsEmpty)
 								{
-									var pos_center = Vector2.Zero;
+									Inner(ref region, ref asset_data, points);
 
-									Span<Vector2> points_t_span = stackalloc Vector2[points.Length];
-									for (var i = 0; i < points.Length; i++)
+									[MethodImpl(MethodImplOptions.NoInlining)] // Stackalloc in loop
+									static void Inner(ref Region.Data.Global region, ref IPrefecture.Data asset_data, Span<short2> points)
 									{
-										var point = (Vector2)points[i];
-										pos_center += point;
-										var point_t = point.Transform(in mat_l2c);
+										var pos_center = Vector2.Zero;
 
-										points_t_span[i] = point_t;
-									}
-									pos_center /= points.Length;
-									pos_center += asset_data.offset;
-
-									if (show_prefectures && show_fill) GUI.DrawPolygon(points_t_span, asset_data.color_fill with { a = 50 }, GUI.Layer.Window);
-
-									//DrawOutline(points, asset_data.color_border.WithAlphaMult(0.50f), 0.100f);
-									if (enable_renderer)
-									{
-										if (show_prefectures && show_borders) DrawOutline(mat_l2c, zoom, points, asset_data.color_border, asset_data.border_scale * 0.50f, 2.00f, asset_data.h_texture_border);
-
-										//if (show_roads)
+										Span<Vector2> points_t_span = stackalloc Vector2[points.Length];
+										for (var i = 0; i < points.Length; i++)
 										{
-											var roads_span = asset_data.roads.AsSpan();
-											foreach (ref var road in roads_span)
-											{
-												if (road.type == Road.Type.Road && !show_roads) continue;
-												if (road.type == Road.Type.Rail && !show_rails) continue;
+											var point = (Vector2)points[i];
+											pos_center += point;
+											var point_t = region.WorldToCanvas(point); //.Transform(in mat_l2c);
 
-												DrawOutlineShader(road.points, road.color_border, road.scale, road.h_texture, loop: false);
+											points_t_span[i] = point_t;
+										}
+										pos_center /= points.Length;
+										pos_center += asset_data.offset;
+
+										if (show_prefectures && show_fill) GUI.DrawPolygon(points_t_span, asset_data.color_fill.WithAlpha(50), GUI.Layer.Window);
+
+										//DrawOutline(points, asset_data.color_border.WithAlphaMult(0.50f), 0.100f);
+										if (enable_renderer)
+										{
+											if (show_prefectures && show_borders) DrawOutline(ref region, points, asset_data.color_border, asset_data.border_scale, 2.00f, asset_data.h_texture_border);
+
+											//if (show_roads)
+											{
+												var roads_span = asset_data.roads.AsSpan();
+												foreach (ref var road in roads_span)
+												{
+													if (road.type == Road.Type.Road && !show_roads) continue;
+													if (road.type == Road.Type.Rail && !show_rails) continue;
+
+													DrawOutlineShader(road.points, road.color_border, road.scale, road.h_texture, loop: false);
+												}
 											}
 										}
-									}
-									else
-									{
-										if (show_prefectures && show_borders) DrawOutline(mat_l2c, zoom, points, asset_data.color_border, 0.125f * 0.75f, 4.00f, asset_data.h_texture_border);
-									}
+										else
+										{
+											if (show_prefectures && show_borders) DrawOutline(ref region, points, asset_data.color_border, 0.125f * 0.75f, 4.00f, asset_data.h_texture_border);
+										}
 
-									//GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(pos_center, mat_l2c), pivot: new(0.50f, 0.50f), font: GUI.Font.Superstar, size: 1.00f * zoom, color: GUI.font_color_title.WithAlphaMult(1.00f), layer: GUI.Layer.Window);
-									if (show_prefectures) GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(pos_center, mat_l2c), pivot: new(0.50f, 0.50f), font: GUI.Font.Superstar, size: 0.75f * zoom * asset_data.size, color: asset_data.color_fill.WithColorMult(0.30f).WithAlpha(150), layer: GUI.Layer.Window);
+										//GUI.DrawTextCentered(asset_data.name_short, Vector2.Transform(pos_center, mat_l2c), pivot: new(0.50f, 0.50f), font: GUI.Font.Superstar, size: 1.00f * zoom, color: GUI.font_color_title.WithAlphaMult(1.00f), layer: GUI.Layer.Window);
+										if (show_prefectures) GUI.DrawTextCentered(asset_data.name_short, region.WorldToCanvas(pos_center), pivot: new(0.50f, 0.50f), font: GUI.Font.Superstar, size: region.GetWorldToCanvasScale() * asset_data.size, color: asset_data.color_fill.WithColorMult(0.30f).WithAlpha(150), layer: GUI.Layer.Window);
+									}
 								}
 							}
 						}
 						#endregion
 
 						#region Governorates
-						foreach (var asset in IGovernorate.Database.GetAssets())
+						DrawGovernorates(ref region);
+						static void DrawGovernorates(ref Region.Data.Global region)
 						{
-							if (asset.id == 0) continue;
-							ref var asset_data = ref asset.GetData();
-
-							var points = asset_data.points.AsSpan();
-							if (!points.IsEmpty)
+							foreach (var asset in IGovernorate.Database.GetAssets())
 							{
-								if (enable_renderer)
-								{
-									if (show_governorates && show_borders) DrawOutlineShader(points, asset_data.color_border, asset_data.border_scale, asset_data.h_texture_border);
-								}
-								else
-								{
-									if (show_governorates && show_borders) DrawOutline(mat_l2c, zoom, points, asset_data.color_border, 0.125f, 0.25f, asset_data.h_texture_border);
-								}
+								if (asset.id == 0) continue;
+								ref var asset_data = ref asset.GetData();
 
-								var pos_center = Vector2.Zero;
-								var color = Color32BGRA.White.LumaBlend(asset_data.color_border, 0.50f);
-
-								for (var i = 0; i < points.Length; i++)
+								var points = asset_data.points.AsSpan();
+								if (!points.IsEmpty)
 								{
-									var point = (Vector2)points[i];
-									pos_center += point;
+									if (enable_renderer)
+									{
+										if (show_governorates && show_borders) DrawOutlineShader(points, asset_data.color_border, asset_data.border_scale, asset_data.h_texture_border);
+									}
+									else
+									{
+										if (show_governorates && show_borders) DrawOutline(ref region, points, asset_data.color_border, 0.125f, 0.25f, asset_data.h_texture_border);
+									}
+
+									var pos_center = Vector2.Zero;
+									var color = Color32BGRA.White.LumaBlend(asset_data.color_border, 0.50f);
+
+									for (var i = 0; i < points.Length; i++)
+									{
+										var point = (Vector2)points[i];
+										pos_center += point;
+									}
+									pos_center /= points.Length;
 								}
-								pos_center /= points.Length;
 							}
 						}
 						#endregion
@@ -354,7 +356,7 @@ namespace TC2.Conquest
 						#region Markers
 						foreach (ref var row in region.IterateQuery<WorldMap.Marker.GetAllMarkersQuery>())
 						{
-							row.Run((ISystem.Info.Global info, ref Region.Data.Global region, Entity entity,
+							row.Run(static (ISystem.Info.Global info, ref Region.Data.Global region, Entity entity,
 							in WorldMap.Marker.Data marker,
 							in Transform.Data transform,
 							ref Nameable.Data nameable,
@@ -364,12 +366,15 @@ namespace TC2.Conquest
 								if (has_parent && marker.flags.HasAny(Marker.Data.Flags.Hide_If_Parented)) return;
 
 								var pos = transform.GetInterpolatedPosition();
-								var scale = 0.500f;
+								var scale = 1.000f;
 								var asset_scale = Maths.Clamp(marker.scale, 0.250f, 1.00f);
 
 								//var rect_text = AABB.Centered(Vector2.Transform(pos + asset_data.text_offset, mat_l2c), new Vector2(scale * zoom * asset_scale * 1.50f));
-								var rect_icon = AABB.Centered(Vector2.Transform(pos + marker.icon_offset, mat_l2c), ((Vector2)marker.icon.size) * region.GetWorldToCanvasScale() * 0.125f);
-								var rect_button = AABB.Circle(Vector2.Transform(pos + marker.icon_offset, mat_l2c), marker.radius * region.GetWorldToCanvasScale());
+								//var rect_icon = AABB.Centered(Vector2.Transform(pos + marker.icon_offset, mat_l2c), ((Vector2)marker.icon.size) * region.GetWorldToCanvasScale() * 0.125f);
+								//var rect_button = AABB.Circle(Vector2.Transform(pos + marker.icon_offset, mat_l2c), marker.radius * region.GetWorldToCanvasScale());
+
+								var rect_icon = AABB.Centered(region.WorldToCanvas(pos + marker.icon_offset), ((Vector2)marker.icon.size) * region.GetWorldToCanvasScale() * 0.125f);
+								var rect_button = AABB.Circle(region.WorldToCanvas(pos + marker.icon_offset), marker.radius * region.GetWorldToCanvasScale());
 
 								//GUI.DrawRect(rect_icon, layer: GUI.Layer.Foreground);
 								//GUI.DrawRect(rect_text, layer: GUI.Layer.Foreground);
@@ -417,10 +422,10 @@ namespace TC2.Conquest
 
 												if (location_to_road.TryGetValue(location_asset, out var nearest_road))
 												{
-													GUI.DrawCircleFilled(nearest_road.GetPosition().Transform(in mat_l2c), 0.125f * zoom * 0.50f, Color32BGRA.Yellow, 8, GUI.Layer.Window);
-													if (Maths.IsInDistance(mouse_local, nearest_road.GetPosition(), 0.25f))
+													GUI.DrawCircleFilled(region.WorldToCanvas(nearest_road.GetPosition()), 0.125f * region.GetWorldToCanvasScale(), Color32BGRA.Yellow, 8, GUI.Layer.Window);
+													if (Maths.IsInDistance(WorldMap.worldmap_mouse_position, nearest_road.GetPosition(), 0.25f))
 													{
-														DrawConnectedRoads(nearest_road, ref mat_l2c, zoom, iter_max: 50, budget: 30.00f);
+														DrawConnectedRoads(ref region, nearest_road, iter_max: 50, budget: 30.00f);
 													}
 												}
 
@@ -428,10 +433,10 @@ namespace TC2.Conquest
 
 												if (location_to_rail.TryGetValue(location_asset, out var nearest_rail))
 												{
-													GUI.DrawCircleFilled(nearest_rail.GetPosition().Transform(in mat_l2c), 0.125f * zoom * 0.50f, Color32BGRA.Orange, 8, GUI.Layer.Window);
-													if (Maths.IsInDistance(mouse_local, nearest_rail.GetPosition(), 0.25f))
+													GUI.DrawCircleFilled(region.WorldToCanvas(nearest_rail.GetPosition()), 0.125f * region.GetWorldToCanvasScale(), Color32BGRA.Orange, 8, GUI.Layer.Window);
+													if (Maths.IsInDistance(WorldMap.worldmap_mouse_position, nearest_rail.GetPosition(), 0.25f))
 													{
-														DrawConnectedRoads(nearest_rail, ref mat_l2c, zoom, iter_max: 50, budget: 100.00f);
+														DrawConnectedRoads(ref region, nearest_rail, iter_max: 50, budget: 100.00f);
 													}
 												}
 												//GUI.Text($"nearest in {ts_elapsed:0.0000} ms");
@@ -534,13 +539,13 @@ namespace TC2.Conquest
 										}
 										else
 										{
-											GUI.DrawSpriteCentered(sprite, rect_icon, layer: GUI.Layer.Window, 0.125f * Maths.Max(scale * zoom * asset_scale, 16), color: color);
+											GUI.DrawSpriteCentered(sprite, rect_icon, layer: GUI.Layer.Window, 0.125f * Maths.Max(scale * region.GetWorldToCanvasScale() * asset_scale, 16), color: color);
 										}
 									}
 
 									if (nameable.IsNotNull())
 									{
-										GUI.DrawTextCentered(nameable.name, Vector2.Transform(transform.position + marker.text_offset, mat_l2c), pivot: new(0.50f, 0.50f), color: GUI.font_color_title, font: GUI.Font.Superstar, size: 0.50f * Maths.Max(marker.scale * zoom * scale, 16), layer: GUI.Layer.Window, box_shadow: true);
+										GUI.DrawTextCentered(nameable.name, region.WorldToCanvas(transform.position + marker.text_offset), pivot: new(0.50f, 0.50f), color: GUI.font_color_title, font: GUI.Font.Superstar, size: Maths.Max(marker.scale * region.GetWorldToCanvasScale() * 0.50f, 16), layer: GUI.Layer.Window, box_shadow: true);
 									}
 								}
 							});
