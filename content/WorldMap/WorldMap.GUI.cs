@@ -1778,11 +1778,36 @@ namespace TC2.Conquest
 												if (!is_selected) WorldMap.FocusEntity(ent_unit);
 											}
 
-											if (WorldMap.IsHovered() && mouse.GetKeyDown(Mouse.Key.Right))
+											if (WorldMap.IsHovered())
 											{
-												var rpc = new Unit.MoveRPC();
-												rpc.pos_target = pos_w_snapped + ((transform.position - pos_w_snapped).GetNormalized(out var dist) * Maths.Min((unit_index++) * 0.30f, dist * 0.50f));
-												rpc.Send(ent_unit);
+												var rpc = new Unit.ActionRPC();
+												rpc.action = Unit.Action.Move;
+
+												var ent_hovered = WorldMap.hovered_entity;
+												if (ent_hovered.IsAlive() && ent_hovered != ent_unit)
+												{
+													ref var enterable = ref ent_hovered.GetComponent<Enterable.Data>();
+													if (enterable.IsNotNull())
+													{
+														if (ent_unit.TryGetParent(Relation.Type.Child, out var ent_parent) && ent_hovered == ent_parent)
+														{
+															GUI.SetCursor(App.CursorType.Remove, 200);
+															rpc.action = Unit.Action.Exit;
+														}
+														else
+														{
+															GUI.SetCursor(App.CursorType.Add, 200);
+															rpc.action = Unit.Action.Enter;
+															rpc.ent_target = ent_hovered;
+														}
+													}
+												}
+
+												if (mouse.GetKeyDown(Mouse.Key.Right))
+												{
+													rpc.pos_target = pos_w_snapped + ((transform.position - pos_w_snapped).GetNormalized(out var dist) * Maths.Min((unit_index++) * 0.30f, dist * 0.50f));
+													rpc.Send(ent_unit);
+												}
 											}
 										}
 									}

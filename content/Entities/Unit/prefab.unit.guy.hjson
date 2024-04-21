@@ -8,6 +8,7 @@ transform:
 
 worldmap.unit:
 {
+	type: character
 	speed: 7.000
 	acc: 15.000
 }

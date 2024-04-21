@@ -35,7 +35,7 @@ namespace TC2.Conquest
 				public Enterable.Data.Type type;
 				public Enterable.Data.Flags flags;
 
-				public BitField<Unit.Data.Type> mask_units;
+				public BitField<Unit.Type> mask_units;
 
 				public float radius = 0.50f;
 
@@ -97,17 +97,19 @@ namespace TC2.Conquest
 #if SERVER
 				public void Invoke(ref NetConnection connection, Entity entity, ref WorldMap.Unit.Data data)
 				{
-					Assert.Check(this.ent_enterable != entity);
-					Assert.Check(this.ent_enterable.IsAlive());
-					Assert.Check(this.ent_enterable.GetRegionID() == entity.GetRegionID());
-					//Assert.Check(!this.ent_enterable.TryGetParent(Relation.Type.Child, out var ent_enterable_parent));
+					Unit.TryEnter(entity, this.ent_enterable);
 
-					ref var enterable = ref this.ent_enterable.GetComponent<WorldMap.Enterable.Data>();
-					Assert.NotNull(ref enterable);
+					//Assert.Check(this.ent_enterable != entity);
+					//Assert.Check(this.ent_enterable.IsAlive());
+					//Assert.Check(this.ent_enterable.GetRegionID() == entity.GetRegionID());
+					////Assert.Check(!this.ent_enterable.TryGetParent(Relation.Type.Child, out var ent_enterable_parent));
 
-					Assert.Check(enterable.flags.HasNone(Enterable.Data.Flags.Hide_If_Parented) || !this.ent_enterable.GetParent(Relation.Type.Child).IsValid());
+					//ref var enterable = ref this.ent_enterable.GetComponent<WorldMap.Enterable.Data>();
+					//Assert.NotNull(ref enterable);
 
-					entity.AddRelation(this.ent_enterable, Relation.Type.Child, true);
+					//Assert.Check(enterable.flags.HasNone(Enterable.Data.Flags.Hide_If_Parented) || !this.ent_enterable.GetParent(Relation.Type.Child).IsValid());
+
+					//entity.AddRelation(this.ent_enterable, Relation.Type.Child, true);
 				}
 #endif
 			}
@@ -121,48 +123,49 @@ namespace TC2.Conquest
 #if SERVER
 				public void Invoke(ref NetConnection connection, Entity entity, ref WorldMap.Unit.Data data)
 				{
-					var ent_enterable = entity.GetParent(Relation.Type.Child);
+					Unit.TryExit(entity);
+					//var ent_enterable = entity.GetParent(Relation.Type.Child);
 
-					Assert.Check(ent_enterable != entity);
-					Assert.Check(ent_enterable.IsAlive());
-					Assert.Check(ent_enterable.GetRegionID() == entity.GetRegionID());
+					//Assert.Check(ent_enterable != entity);
+					//Assert.Check(ent_enterable.IsAlive());
+					//Assert.Check(ent_enterable.GetRegionID() == entity.GetRegionID());
 
-					ref var enterable = ref ent_enterable.GetComponent<WorldMap.Enterable.Data>();
-					Assert.NotNull(ref enterable);
+					//ref var enterable = ref ent_enterable.GetComponent<WorldMap.Enterable.Data>();
+					//Assert.NotNull(ref enterable);
 
-					ref var transform = ref ent_enterable.GetComponent<Transform.Data>();
-					Assert.NotNull(ref transform);
+					//ref var transform = ref ent_enterable.GetComponent<Transform.Data>();
+					//Assert.NotNull(ref transform);
 
-					//var road = WorldMap.GetNearestRoad(location_data.h_prefecture, Road.Type.Road, (Vector2)location_data.point, out var dist_sq);
-					//var pos = road.GetPosition().GetRefValueOrDefault();
+					////var road = WorldMap.GetNearestRoad(location_data.h_prefecture, Road.Type.Road, (Vector2)location_data.point, out var dist_sq);
+					////var pos = road.GetPosition().GetRefValueOrDefault();
 
-					//var random = XorRandom.New(true);
-					//if (pos == default) pos = (Vector2)location_data.point + random.NextUnitVector2Range(0.25f, 0.50f);
+					////var random = XorRandom.New(true);
+					////if (pos == default) pos = (Vector2)location_data.point + random.NextUnitVector2Range(0.25f, 0.50f);
 
-					var pos = transform.position;
+					//var pos = transform.position;
 
-					var road = WorldMap.GetNearestRoad(Road.Type.Road, pos, out var dist_sq);
-					var pos_tmp = road.GetNearestPosition(pos, out dist_sq);
+					//var road = WorldMap.GetNearestRoad(Road.Type.Road, pos, out var dist_sq);
+					//var pos_tmp = road.GetNearestPosition(pos, out dist_sq);
 
-					if (dist_sq <= enterable.radius.Pow2())
-					{
-						pos = pos_tmp;
-					}
+					//if (dist_sq <= enterable.radius.Pow2())
+					//{
+					//	pos = pos_tmp;
+					//}
 
-					ref var region = ref World.GetGlobalRegion();
+					//ref var region = ref World.GetGlobalRegion();
 
-					//character_data.ent_inside = default;
-					if (entity.IsAlive())
-					{
-						entity.RemoveRelation(ent_enterable, Relation.Type.Child);
+					////character_data.ent_inside = default;
+					//if (entity.IsAlive())
+					//{
+					//	entity.RemoveRelation(ent_enterable, Relation.Type.Child);
 
-						ref var transform_unit = ref entity.GetComponent<Transform.Data>();
-						if (transform_unit.IsNotNull())
-						{
-							transform_unit.SetPosition(pos);
-							transform_unit.Sync(entity);
-						}
-					}
+					//	ref var transform_unit = ref entity.GetComponent<Transform.Data>();
+					//	if (transform_unit.IsNotNull())
+					//	{
+					//		transform_unit.SetPosition(pos);
+					//		transform_unit.Sync(entity);
+					//	}
+					//}
 
 
 					//else
@@ -244,61 +247,63 @@ namespace TC2.Conquest
 			[Query(ISystem.Scope.Global)]
 			public delegate void GetAllQuery(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] in Unit.Data unit, [Source.Owned] in Transform.Data transform, [Source.Owned, Optional(false)] in Faction.Data faction);
 
+			public enum Type: byte
+			{
+				Undefined = 0,
+
+				Character,
+				Vehicle
+			}
+
+			public enum Action: byte
+			{
+				None = 0,
+
+				Enter,
+				Exit,
+				Move,
+				Follow,
+				Attack,
+				Investigate,
+				Load,
+				Unload
+			}
+
+			[Flags]
+			public enum Flags: ushort
+			{
+				None = 0,
+
+				Wants_Repath = 1 << 0
+			}
+
+
 			[IComponent.Data(Net.SendType.Reliable)]
 			public partial struct Data: IComponent
 			{
-				public enum Type: byte
-				{
-					Undefined = 0,
-
-					Character,
-					Vehicle
-				}
-
-				public enum Action: byte
-				{
-					None = 0,
-
-					Enter,
-					Exit,
-					Move,
-					Attack,
-					Investigate,
-					Load,
-					Unload
-				}
-
-
-				[Flags]
-				public enum Flags: ushort
-				{
-					None = 0,
-
-					Wants_Repath = 1 << 0
-				}
-
-				public Unit.Data.Flags flags;
-				public Unit.Data.Type type;
-				public Unit.Data.Action action;
+				public Unit.Flags flags;
+				public Unit.Type type;
+				public Unit.Action action;
 
 				public Road.Type road_type;
-
-				public ILocation.Handle h_location;
 
 				public Vector2 pos_next;
 				public Vector2 pos_target;
 				public Vector2 dir_last;
+				public Entity ent_target;
 
 				// speed in km/h
 				public float speed = 6.00f;
 				public float speed_current;
 				public float acc = 3.00f;
 
+				//[Net.Ignore, Save.Ignore] public float target_dist;
 				[Net.Ignore, Save.Ignore] public Road.Segment next_segment;
 				[Net.Ignore, Save.Ignore] public Road.Segment end_segment;
 				[Net.Ignore, Save.Ignore] public int current_branch_index;
 				[Net.Ignore, Save.Ignore] public FixedArray32<Road.Junction.Branch> branches;
 				[Net.Ignore, Save.Ignore] public int branches_count;
+				[Net.Ignore, Save.Ignore] public EntRef<Transform.Data> ref_target_transform;
 
 				public Data()
 				{
@@ -331,17 +336,55 @@ namespace TC2.Conquest
 				return ent_nearest;
 			}
 
-			public struct MoveRPC: Net.IRPC<Unit.Data>
+			public struct ActionRPC: Net.IRPC<Unit.Data>
 			{
+				public Unit.Action action;
+				public Entity ent_target;
 				public Vector2 pos_target;
 
 #if SERVER
 				public void Invoke(ref NetConnection connection, Entity entity, ref Unit.Data data)
 				{
-					data.pos_target = this.pos_target;
-					data.flags.SetFlag(Data.Flags.Wants_Repath, true);
+					var ok = true;
+					switch (this.action)
+					{
+						case Action.Move:
+						{
+							data.pos_target = this.pos_target;
+							data.ent_target = default;
+							data.flags.AddFlag(Unit.Flags.Wants_Repath);
+						}
+						break;
 
-					data.Sync(entity, true);
+						case Action.Enter:
+						{
+							Assert.Check(this.ent_target.IsAlive());
+							Assert.Check(this.ent_target.HasComponent<Enterable.Data>());
+
+							data.pos_target = this.pos_target;
+							data.ent_target = this.ent_target;
+							data.flags.AddFlag(Unit.Flags.Wants_Repath);
+						}
+						break;
+
+						case Action.Exit:
+						{
+							
+						}
+						break;
+
+						default:
+						{
+							ok = false;
+						}
+						break;
+					}
+
+					if (ok)
+					{
+						data.action = this.action;
+						data.Sync(entity, true);
+					}
 
 					//Sound.PlayGUI(ref connection, "ui.misc.03", volume: 0.35f, pitch: 1.30f);
 
@@ -382,14 +425,153 @@ namespace TC2.Conquest
 			//	}
 			//}
 
-			[ISystem.Update.A(ISystem.Mode.Single, ISystem.Scope.Global), HasRelation(Source.Modifier.Owned, Relation.Type.Child, false)]
-			public static void UpdateGlobal(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Global] ref World.Global world_global, [Source.Owned] ref WorldMap.Unit.Data unit, [Source.Owned] ref Transform.Data transform)
+
+
+			[ISystem.Update.A(ISystem.Mode.Single, ISystem.Scope.Global)]
+			public static void UpdateActions(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Global] ref World.Global world_global, [Source.Owned] ref WorldMap.Unit.Data unit, [Source.Owned] ref Transform.Data transform)
+			{
+				switch (unit.action)
+				{
+					case Unit.Action.Move:
+					{
+						// TODO: Move UpdateMovement() here?
+					}
+					break;
+
+					case Unit.Action.Enter:
+					{
+						ref var transform_target = ref unit.ref_target_transform.GetValueOrNullRef(unit.ent_target, out var target_changed);
+						if (transform_target.IsNotNull())
+						{
+							unit.pos_target = transform_target.position;
+
+#if SERVER
+							if (unit.pos_target.IsInRadius(transform.position, 0.125f))
+							{
+								if (Unit.TryEnter(entity, unit.ent_target))
+								{
+									unit.action = default;
+									unit.ent_target = default;
+									unit.Sync(entity);
+								}
+							}
+#endif
+						}
+					}
+					break;
+
+					case Unit.Action.Exit:
+					{
+#if SERVER
+						if (Unit.TryExit(entity))
+						{
+
+						}
+
+						unit.action = default;
+						unit.ent_target = default;
+						unit.Sync(entity);
+#endif
+					}
+					break;
+				}
+
+#if SERVER
+				//region.DrawDebugCircle(transform.position, 0.125f, Color32BGRA.Magenta);
+#endif
+			}
+
+#if SERVER
+			public static bool TryEnter(Entity ent_unit, Entity ent_enterable)
+			{
+				try
+				{
+					Assert.Check(ent_enterable != ent_unit);
+					Assert.Check(ent_enterable.IsAlive());
+					Assert.Check(ent_enterable.GetRegionID() == ent_unit.GetRegionID());
+					//Assert.Check(!this.ent_enterable.TryGetParent(Relation.Type.Child, out var ent_enterable_parent));
+
+					ref var enterable = ref ent_enterable.GetComponent<WorldMap.Enterable.Data>();
+					Assert.NotNull(ref enterable);
+
+					Assert.Check(enterable.flags.HasNone(Enterable.Data.Flags.Hide_If_Parented) || !ent_enterable.GetParent(Relation.Type.Child).IsValid());
+
+					ent_unit.AddRelation(ent_enterable, Relation.Type.Child, true);
+
+					return true;
+				}
+				catch (Exception e)
+				{
+					App.WriteException(e);
+					return false;
+				}
+			}
+
+			public static bool TryExit(Entity ent_unit)
+			{
+				try
+				{
+					var ent_enterable = ent_unit.GetParent(Relation.Type.Child);
+
+					Assert.Check(ent_enterable != ent_unit);
+					Assert.Check(ent_enterable.IsAlive());
+					Assert.Check(ent_enterable.GetRegionID() == ent_unit.GetRegionID());
+
+					ref var enterable = ref ent_enterable.GetComponent<WorldMap.Enterable.Data>();
+					Assert.NotNull(ref enterable);
+
+					ref var transform = ref ent_enterable.GetComponent<Transform.Data>();
+					Assert.NotNull(ref transform);
+
+					//var road = WorldMap.GetNearestRoad(location_data.h_prefecture, Road.Type.Road, (Vector2)location_data.point, out var dist_sq);
+					//var pos = road.GetPosition().GetRefValueOrDefault();
+
+					//var random = XorRandom.New(true);
+					//if (pos == default) pos = (Vector2)location_data.point + random.NextUnitVector2Range(0.25f, 0.50f);
+
+					var pos = transform.position;
+
+					var road = WorldMap.GetNearestRoad(Road.Type.Road, pos, out var dist_sq);
+					var pos_tmp = road.GetNearestPosition(pos, out dist_sq);
+
+					if (dist_sq <= enterable.radius.Pow2())
+					{
+						pos = pos_tmp;
+					}
+
+					ref var region = ref World.GetGlobalRegion();
+
+					//character_data.ent_inside = default;
+					if (ent_unit.IsAlive())
+					{
+						ent_unit.RemoveRelation(ent_enterable, Relation.Type.Child);
+
+						ref var transform_unit = ref ent_unit.GetComponent<Transform.Data>();
+						if (transform_unit.IsNotNull())
+						{
+							transform_unit.SetPosition(pos);
+							transform_unit.Sync(ent_unit);
+						}
+					}
+					return true;
+				}
+				catch (Exception e)
+				{
+					App.WriteException(e);
+					return false;
+				}
+			}
+#endif
+
+			// TODO: probably make this serverside + skip if not moving
+			[ISystem.Update.B(ISystem.Mode.Single, ISystem.Scope.Global), HasRelation(Source.Modifier.Owned, Relation.Type.Child, false)]
+			public static void UpdateMovement(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Global] ref World.Global world_global, [Source.Owned] ref WorldMap.Unit.Data unit, [Source.Owned] ref Transform.Data transform)
 			{
 				var dt = App.fixed_update_interval_s;
 
 				//App.WriteLine("unit");
 
-				if (unit.flags.TrySetFlag(Data.Flags.Wants_Repath, false))
+				if (unit.flags.TrySetFlag(Unit.Flags.Wants_Repath, false))
 				{
 					unit.current_branch_index = 0;
 					unit.branches_count = 0;
@@ -397,7 +579,7 @@ namespace TC2.Conquest
 					var branches_span = unit.branches.AsSpan();
 					if (Repath(unit.road_type, transform.position, unit.pos_target, out var pos_end, ref unit.next_segment, ref unit.end_segment, ref branches_span))
 					{
-						var branch = branches_span[0];
+						//var branch = branches_span[0];
 
 						unit.branches_count = branches_span.Length;
 						unit.pos_next = unit.next_segment.GetPosition();
@@ -440,29 +622,14 @@ namespace TC2.Conquest
 				var pos_target = unit.pos_next;
 				var dir = (pos_target - transform.position).GetNormalized(out var dist);
 
-				if (dist > 0.01f)
-				{
-					unit.dir_last = dir;
-				}
-
 				speed_mult *= Maths.Clamp(dist * 4.50f, 0.20f, 1.00f);
 
-
 				unit.speed_current.MoveTowards(Maths.Min(unit.speed, unit.speed * 0.90f * speed_mult), unit.acc * dt * time_scale);
-
-
-				//if (dist > unit.acc * info.DeltaTime * 0.50f)
-				//{
-				//	unit.speed_current.MoveTowards(unit.speed, unit.acc * info.DeltaTime);
-				//}
-				//else
-				//{
-				//	unit.speed_current.MoveTowards(Maths.Min(dist * 50 * 5, unit.speed), unit.acc * info.DeltaTime);
-				//}
+				//unit.target_dist = dist;
+				if (dist > 0.01f) unit.dir_last = dir;
 
 				transform.position += (dir * Maths.Min(dist, ((unit.speed_current * dt * s_to_h) * time_scale)) * WorldMap.km_per_unit_inv);
 			}
-
 
 			public static void GetNextSegment(Vector2 pos_current, ref Road.Segment segment, ref Road.Segment end_segment, ref int current_branch_index, Span<Road.Junction.Branch> branches)
 			{
