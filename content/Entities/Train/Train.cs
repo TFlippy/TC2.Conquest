@@ -266,7 +266,7 @@ namespace TC2.Conquest
 					temp = closed_list[temp.parent_hash];
 				}
 				while (temp.branch.junction_index != a.junction_index && results_count < out_results.Length - 1);
-				
+
 				out_results[results_count++] = a;
 
 				//foreach (var route in Path)
@@ -738,9 +738,9 @@ namespace TC2.Conquest
 									train.sign = c_alt_sign;
 									ok = true;
 								}
-									//train.dot_current = c_alt_dot;
+								//train.dot_current = c_alt_dot;
 
-								
+
 
 								//return;
 							}
@@ -932,8 +932,7 @@ namespace TC2.Conquest
 
 						if (is_pressed)
 						{
-							if (WorldMap.selected_entity == this.ent_train) WorldMap.selected_entity = default;
-							else WorldMap.selected_entity = this.ent_train;
+							WorldMap.selected_entity.Toggle(this.ent_train);
 
 							App.WriteLine("press");
 

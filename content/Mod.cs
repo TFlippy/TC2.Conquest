@@ -42,7 +42,7 @@ namespace TC2.Conquest
 		{
 
 			var has_region = Client.HasRegion() || Client.IsLoadingRegion();
-			GUI.worldmenu_widget_size_override = has_region ? new Vector2(1200, 800) : new Vector2(1680, 980);
+			GUI.worldmenu_widget_size_override = has_region ? new Vector2(Maths.Min(1380, GUI.CanvasSize.X - 400), Maths.Min(860, GUI.CanvasSize.Y - 200)) : new Vector2(1680, 980);
 			GUI.RegionMenu.enabled = false;
 
 			//if (!has_region) GUI.GameMenu.widget_toggle_open = true;

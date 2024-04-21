@@ -24,7 +24,7 @@ interactable:
 {
 	flags: none
 	window_size: [600.000, 422.000]
-	window_size_misc: [216.000, 0.000]
+	// window_size_misc: [216.000, 0.000]
 	window_offset: [0.000, 0.000]
 }
 
