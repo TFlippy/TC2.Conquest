@@ -616,11 +616,10 @@ namespace TC2.Conquest
 						}
 
 						var hovered = is_worldmap_hovered = GUI.IsHoveringRect(rect, allow_blocked: false, allow_overlapped: false, root_window: false, child_windows: false);
-						//if (hovered)
-						//{
-						//	Chat.target_region_id = 0;
-						//	GUI.DisablePlayerMovement();
-						//}
+						if (hovered)
+						{
+							GUI.SetHoveredID("worldmap"u8);
+						}
 
 						var hovered_any = GUI.IsHoveringRect(rect, allow_blocked: true, allow_overlapped: true, root_window: true, child_windows: true, any_window: true);
 						if (hovered_any)
@@ -1278,8 +1277,7 @@ namespace TC2.Conquest
 																//WorldMap.FocusEntity(ent_unit);
 																if (GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
 																{
-																	if (WorldMap.hs_selected_entities.Contains(entity)) WorldMap.hs_selected_entities.Remove(entity);
-																	else WorldMap.hs_selected_entities.Add(entity);
+																	if (!WorldMap.hs_selected_entities.Remove(entity)) WorldMap.hs_selected_entities.Add(entity);
 																}
 																else
 																{
@@ -1329,8 +1327,7 @@ namespace TC2.Conquest
 																		{
 																			if (GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
 																			{
-																				if (WorldMap.hs_selected_entities.Contains(ent_child)) WorldMap.hs_selected_entities.Remove(ent_child);
-																				else WorldMap.hs_selected_entities.Add(ent_child);
+																				if (!WorldMap.hs_selected_entities.Remove(ent_child)) WorldMap.hs_selected_entities.Add(ent_child);
 																			}
 																			else
 																			{
@@ -1767,8 +1764,6 @@ namespace TC2.Conquest
 
 		public static AABB drag_rect_cached;
 		public static AABB drag_rect_cached_world;
-
-		public static readonly Entity[] selected_entities = new Entity[8];
 		public static readonly HashSet<Entity> hs_selected_entities = new();
 		private static void DrawBottomWindow(bool is_loading, ref AABB rect)
 		{
@@ -1891,33 +1886,37 @@ namespace TC2.Conquest
 
 											if (WorldMap.IsHovered())
 											{
-												var rpc = new Unit.ActionRPC();
-												rpc.action = Unit.Action.Move;
-
-												var ent_hovered = WorldMap.hovered_entity;
-												if (ent_hovered.IsAlive() && ent_hovered != ent_unit)
+												if (unit.IsNotNull())
 												{
-													ref var enterable = ref ent_hovered.GetComponent<Enterable.Data>();
-													if (enterable.IsNotNull())
+													var rpc = new Unit.ActionRPC();
+													rpc.action = Unit.Action.Move;
+
+													var ent_hovered = WorldMap.hovered_entity;
+													if (ent_hovered.IsAlive() && ent_hovered != ent_unit)
 													{
-														if (has_parent && ent_hovered == ent_parent)
+														ref var enterable = ref ent_hovered.GetComponent<Enterable.Data>();
+														if (enterable.IsNotNull())
 														{
-															GUI.SetCursor(App.CursorType.Remove, 200);
-															rpc.action = Unit.Action.Exit;
-														}
-														else
-														{
-															GUI.SetCursor(App.CursorType.Add, 200);
-															rpc.action = Unit.Action.Enter;
-															rpc.ent_target = ent_hovered;
+															if (has_parent && ent_hovered == ent_parent)
+															{
+																GUI.SetCursor(App.CursorType.Remove, 200);
+																rpc.action = Unit.Action.Exit;
+																rpc.ent_target = ent_hovered;
+															}
+															else
+															{
+																GUI.SetCursor(App.CursorType.Add, 200);
+																rpc.action = Unit.Action.Enter;
+																rpc.ent_target = ent_hovered;
+															}
 														}
 													}
-												}
 
-												if (mouse.GetKeyDown(Mouse.Key.Right))
-												{
-													rpc.pos_target = wpos_mouse_snapped + ((transform.position - wpos_mouse_snapped).GetNormalized(out var dist) * Maths.Min((unit_index++) * 0.30f, dist * 0.50f));
-													rpc.Send(ent_unit);
+													if (mouse.GetKeyDown(Mouse.Key.Right))
+													{
+														rpc.pos_target = wpos_mouse_snapped + ((transform.position - wpos_mouse_snapped).GetNormalized(out var dist) * Maths.Min((unit_index++) * 0.30f, dist * 0.50f));
+														rpc.Send(ent_unit);
+													}
 												}
 											}
 										}
