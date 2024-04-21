@@ -1198,7 +1198,7 @@ namespace TC2.Conquest
 									if (collapsible.Inner(padding: new Vector4(12, 0, 0, 0)))
 									{
 										//var ts = Timestamp.Now();
-										foreach (ref var row in region.IterateQuery<WorldMap.Marker.GetAllMarkersQuery>().HasComponent<Unit.Data>(true))
+										foreach (ref var row in region.IterateQuery<WorldMap.Marker.GetAllMarkersQuery>().HasComponent<Location.Data>(false))
 										{
 											row.Run((ISystem.Info.Global info, ref Region.Data.Global region, Entity entity,
 											in WorldMap.Marker.Data marker,
@@ -1210,7 +1210,6 @@ namespace TC2.Conquest
 												if (marker.flags.HasAny(Marker.Data.Flags.Hidden)) return;
 
 												var pos = transform.GetInterpolatedPosition();
-												var scale = 0.500f;
 												var asset_scale = Maths.Clamp(marker.scale, 0.250f, 1.00f);
 
 												if ((has_parent && marker.flags.HasAny(Marker.Data.Flags.Hide_If_Parented)))
@@ -1241,11 +1240,55 @@ namespace TC2.Conquest
 															var is_selected = WorldMap.selected_entity == entity;
 															if (GUI.Selectable3(entity.GetShortID(), group_row.GetOuterRect(), is_selected))
 															{
-																App.WriteLine("click");
+																//App.WriteLine("click");
 																//WorldMap.FocusEntity(ent_unit);
 
 																WorldMap.selected_entity.Toggle(entity);
-																if (!is_selected) WorldMap.FocusEntity(entity);
+																//if (!is_selected) WorldMap.FocusEntity(entity);
+															}
+														}
+													}
+												}
+
+												ref var enterable = ref entity.GetComponent<Enterable.Data>();
+												if (enterable.IsNotNull())
+												{
+													Span<Entity> children = FixedArray.CreateSpan8<Entity>(out var buffer);
+													entity.GetChildren(ref children, Relation.Type.Child);
+
+													if (!children.IsEmpty)
+													{
+														foreach (var ent_child in children)
+														{
+															GUI.NewLine(0);
+															GUI.OffsetLine(32);
+
+															using (var group_row = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(4, 4)))
+															{
+																if (group_row.IsVisible())
+																{
+																	using (GUI.ID.Push(ent_child))
+																	{
+																		group_row.DrawBackground(GUI.tex_panel);
+
+																		ref var marker_child = ref ent_child.GetComponent<Marker.Data>();
+																		if (marker_child.IsNotNull())
+																		{
+																			GUI.DrawSpriteCentered(marker_child.icon, group_row.GetInnerRect(), layer: GUI.Layer.Window, pivot: new(1.00f, 0.50f), scale: 2.00f);
+																		}
+
+																		GUI.TitleCentered(ent_child.GetName(), size: 16, pivot: new(0.00f, 0.00f), offset: new(0, 0));
+																		//GUI.TextShadedCentered("Test", size: 14, pivot: new(0.00f, 1.00f), color: GUI.font_color_desc);
+
+																		//var selected = asset == h_selected_location; // selected_region_id == i;
+
+																		var is_selected = WorldMap.selected_entity == ent_child;
+																		if (GUI.Selectable3(ent_child.GetShortID(), group_row.GetOuterRect(), is_selected))
+																		{
+																			WorldMap.selected_entity.Toggle(ent_child);
+																		}
+																	}
+																}
 															}
 														}
 													}
@@ -1734,9 +1777,8 @@ namespace TC2.Conquest
 
 						if (!drag_active) drag_rect_color.a = 100;
 
-						var pos = GUI.GetMousePosition(); // mouse.GetInterpolatedPosition();
-						var pos_w = region.CanvasToWorld(pos);
-						pos_w.Snap(1.00f / 32.00f, out var pos_w_snapped);
+						var wpos_mouse_snapped = WorldMap.worldmap_mouse_position_snapped;
+						var canvas_scale = region.GetWorldToCanvasScale();
 
 						var random = XorRandom.New(true);
 
@@ -1750,11 +1792,13 @@ namespace TC2.Conquest
 							var ent_unit = selected_entities[i];
 							if (ent_unit.IsAlive())
 							{
+								var ent_parent = ent_unit.GetParent(Relation.Type.Child);
+								var has_parent = ent_parent.IsAlive();
+
 								ref var transform = ref ent_unit.GetComponent<Transform.Data>();
 								if (transform.IsNotNull())
 								{
 									GUI.DrawCircle(region.WorldToCanvas(transform.position), 0.50f * region.GetWorldToCanvasScale(), color: Color32BGRA.Green.WithAlpha(200), layer: GUI.Layer.Foreground);
-
 
 									using (GUI.ID.Push(ent_unit))
 									{
@@ -1766,6 +1810,24 @@ namespace TC2.Conquest
 											if (marker.IsNotNull())
 											{
 												GUI.DrawSpriteCentered(marker.icon, group.GetInnerRect(), layer: GUI.Layer.Window, scale: 3.00f);
+											}
+
+											ref var unit = ref ent_unit.GetComponent<Unit.Data>();
+											if (unit.IsNotNull())
+											{
+												if (!has_parent)
+												{
+													GUI.DrawLine(region.WorldToCanvas(transform.position), region.WorldToCanvas(unit.pos_next), Color32BGRA.Green.WithAlpha(80), thickness: 0.125f * canvas_scale * 0.25f, GUI.Layer.Foreground);
+
+													GUI.DrawCircleFilled(region.WorldToCanvas(unit.pos_next), 0.1250f * canvas_scale * 0.50f, Color32BGRA.Green.WithAlpha(140), segments: 4, layer: GUI.Layer.Foreground);
+													GUI.DrawCircleFilled(region.WorldToCanvas(unit.pos_target), 0.1250f * canvas_scale * 0.50f, Color32BGRA.Green.WithAlpha(140), segments: 4, layer: GUI.Layer.Foreground);
+
+													if (WorldMap.IsHovered())
+													{
+														GUI.DrawLine(region.WorldToCanvas(transform.position), region.WorldToCanvas(wpos_mouse_snapped), Color32BGRA.Yellow.WithAlpha(80), thickness: 0.125f * canvas_scale * 0.25f, GUI.Layer.Foreground);
+														GUI.DrawRectFilled(region.WorldToCanvas(AABB.Centered(wpos_mouse_snapped, new Vector2(0.125f * 0.50f))), Color32BGRA.Yellow.WithAlpha(140), GUI.Layer.Foreground);
+													}
+												}
 											}
 
 											var is_selected = WorldMap.selected_entity == ent_unit;
@@ -1789,7 +1851,7 @@ namespace TC2.Conquest
 													ref var enterable = ref ent_hovered.GetComponent<Enterable.Data>();
 													if (enterable.IsNotNull())
 													{
-														if (ent_unit.TryGetParent(Relation.Type.Child, out var ent_parent) && ent_hovered == ent_parent)
+														if (has_parent && ent_hovered == ent_parent)
 														{
 															GUI.SetCursor(App.CursorType.Remove, 200);
 															rpc.action = Unit.Action.Exit;
@@ -1805,7 +1867,7 @@ namespace TC2.Conquest
 
 												if (mouse.GetKeyDown(Mouse.Key.Right))
 												{
-													rpc.pos_target = pos_w_snapped + ((transform.position - pos_w_snapped).GetNormalized(out var dist) * Maths.Min((unit_index++) * 0.30f, dist * 0.50f));
+													rpc.pos_target = wpos_mouse_snapped + ((transform.position - wpos_mouse_snapped).GetNormalized(out var dist) * Maths.Min((unit_index++) * 0.30f, dist * 0.50f));
 													rpc.Send(ent_unit);
 												}
 											}

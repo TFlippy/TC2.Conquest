@@ -1100,6 +1100,8 @@ namespace TC2.Conquest
 			public static void OnGUI(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] ref Unit.Data unit, [Source.Owned] ref Transform.Data transform,
 			[HasRelation(Source.Modifier.Owned, Relation.Type.Child, true)] bool has_parent)
 			{
+				return;
+
 				if (WorldMap.IsOpen && WorldMap.selected_entity == entity)
 				{
 					var gui = new Unit.UnitGUI()
