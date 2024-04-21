@@ -14,6 +14,8 @@ namespace TC2.Conquest
 		public const float km_per_unit = 2.00f;
 		public const float km_per_unit_inv = 1.00f / km_per_unit;
 
+		public static Entity hovered_entity;
+
 		public static Entity selected_entity;
 		public static Entity selected_entity_cached;
 
@@ -749,19 +751,19 @@ namespace TC2.Conquest
 		public static Doodad.Renderer.Data? clipboard_doodad;
 
 		public static IAsset.IDefinition edit_asset;
-		public static IScenario.Handle h_world = "krumpel";
+		public static IScenario.Handle h_scenario = "krumpel";
+
+		// TODO: remove this
 		public static ILocation.Handle h_selected_location;
+
 		//public static Road.Handle road_ch;
 		public static int? edit_doodad_index;
-		public static Vector2 edit_doodad_offset;
 
 		public static Texture.Handle h_texture_bg_00 = "worldmap.bg.00";
 		public static Texture.Handle h_texture_icons = "worldmap.icons.00";
 		public static Texture.Handle h_texture_line_00 = "worldmap.border.00";
 		public static Texture.Handle h_texture_line_01 = "worldmap.border.01";
 		public static Texture.Handle h_texture_line_02 = "worldmap.border.02";
-
-		public static Texture.Handle h_texture_terrain_beach_00 = "worldmap.terrain.beach.00";
 
 		public static Vector2 mouse_pos_old;
 		public static Vector2 mouse_pos_new;

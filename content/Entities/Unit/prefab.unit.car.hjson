@@ -10,7 +10,7 @@ worldmap.unit:
 {
 	road_type: road
 	speed: 60.000
-	acc: 60.000
+	acc: 0.400
 }
 
 worldmap.enterable:

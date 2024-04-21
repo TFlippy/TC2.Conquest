@@ -46,7 +46,7 @@ nameable:
 worldmap.enterable:
 {
     type: entrance
-    radius: 1.000
+    radius: 0.500
 }
 
 // interactable:

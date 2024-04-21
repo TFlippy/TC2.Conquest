@@ -8,7 +8,7 @@ transform:
 
 worldmap.unit:
 {
-	speed: 5.000
+	speed: 7.000
 	acc: 15.000
 }
 
@@ -16,9 +16,9 @@ worldmap.marker:
 {
 	flags: hide_if_parented
 	radius: 0.250
-	scale: 0.500
+	scale: 0.375
 	color: "0xffc0c0c0"
-	text_offset: [0.000, 0.200]
+	text_offset: [0.000, 0.150]
 	icon_offset: [0.000, 0.000]
 	icon:
 	{

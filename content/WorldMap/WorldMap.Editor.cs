@@ -277,7 +277,7 @@ namespace TC2.Conquest
 					//	edit_doodad_index = null;
 					//}
 
-					ref var asset_data = ref h_world.GetData(out var asset);
+					ref var asset_data = ref h_scenario.GetData(out var asset);
 					if (asset_data.IsNotNull())
 					{
 						var index = edit_doodad_index ?? -1;
@@ -1016,7 +1016,7 @@ namespace TC2.Conquest
 								{
 									if (edit_doodad_index.TryGetValue(out var index_doodad))
 									{
-										ref var scenario_data = ref h_world.GetData(out var scenario_asset);
+										ref var scenario_data = ref h_scenario.GetData(out var scenario_asset);
 										if (scenario_data.IsNotNull())
 										{
 											ref var doodad = ref scenario_data.doodads.AsSpan().GetRefAtIndexOrNull(index_doodad);
