@@ -56,7 +56,6 @@ namespace TC2.Conquest
 				var asset = ICharacter.Database.RegisterOrUpdate(identifier,
 					index: null,
 					scope: Asset.Scope.World,
-					flags: Asset.Flags.Entity,
 					h_prefab: "unit.guy",
 					region_id: 0,
 					data: ref character);
@@ -65,8 +64,8 @@ namespace TC2.Conquest
 
 				var h_location = this.vars.h_location;
 
-				var ent_location = h_location.GetEntity();
-				var ent_asset = asset.GetEntity();
+				var ent_location = h_location.GetGlobalEntity();
+				var ent_asset = asset.GetGlobalEntity();
 
 				ent_asset.AddRelation(ent_location, Relation.Type.Child);
 
