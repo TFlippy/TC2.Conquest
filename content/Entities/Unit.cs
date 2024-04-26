@@ -434,6 +434,12 @@ namespace TC2.Conquest
 			{
 				switch (unit.action)
 				{
+					case Unit.Action.None:
+					{
+						unit.pos_target = transform.position;
+					}
+					break;
+
 					case Unit.Action.Move:
 					{
 						// TODO: Move UpdateMovement() here?

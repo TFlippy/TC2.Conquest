@@ -410,7 +410,7 @@ namespace TC2.Conquest
 									var is_selected = WorldMap.selected_entity == entity;
 									var is_pressed = GUI.ButtonBehavior(entity, rect_button, out var is_hovered, out var is_held);
 
-									var color = (is_selected || is_hovered) ? Color32BGRA.White : marker.color;
+									var color = (is_selected || is_hovered) ? Color32BGRA.White : (marker.color_override.a > 0 ? marker.color_override : marker.color);
 
 									if (has_parent && entity.TryGetParent(Relation.Type.Child, out var ent_parent))
 									{
@@ -1067,9 +1067,9 @@ namespace TC2.Conquest
 														{
 															group_row.DrawBackground(GUI.tex_panel);
 
-															GUI.DrawSpriteCentered(marker.icon, group_row.GetInnerRect(), layer: GUI.Layer.Window, pivot: new(1.00f, 0.50f), scale: 2.00f);
+															GUI.DrawSpriteCentered(marker.icon, group_row.GetInnerRect(), layer: GUI.Layer.Window, pivot: new(1.00f, 0.50f), scale: 2.00f, color: marker.color_override.IsVisible() ? marker.color_override : marker.color);
 															GUI.TitleCentered(nameable.name, size: 16, pivot: new(0.00f, 0.00f), offset: new(0, 0));
-															GUI.TextShadedCentered("Test", size: 14, pivot: new(0.00f, 1.00f), color: GUI.font_color_desc);
+															GUI.TextShadedCentered(entity.GetFaction().GetName(), size: 14, pivot: new(0.00f, 1.00f), color: GUI.font_color_desc);
 
 															//var selected = asset == h_selected_location; // selected_region_id == i;
 
@@ -1078,7 +1078,7 @@ namespace TC2.Conquest
 															{
 																//App.WriteLine("click");
 																//WorldMap.FocusEntity(ent_unit);
-																if (GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
+																if (WorldMap.hs_selected_entities.Count <= 1 || GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
 																{
 																	if (entity.HasComponent<WorldMap.Unit.Data>())
 																	{
@@ -1091,6 +1091,11 @@ namespace TC2.Conquest
 																}
 
 																//if (!is_selected) WorldMap.FocusEntity(entity);
+															}
+
+															if (GUI.IsItemHovered() && GUI.GetMouse().GetKeyDown(Mouse.Key.Right))
+															{
+																WorldMap.FocusEntity(entity);
 															}
 														}
 													}
@@ -1131,7 +1136,7 @@ namespace TC2.Conquest
 																		var is_selected = WorldMap.selected_entity == ent_child || WorldMap.hs_selected_entities.Contains(ent_child);
 																		if (GUI.Selectable3(ent_child.GetShortID(), group_row.GetOuterRect(), is_selected))
 																		{
-																			if (GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
+																			if (WorldMap.hs_selected_entities.Count <= 1 || GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
 																			{
 																				if (ent_child.HasComponent<WorldMap.Unit.Data>())
 																				{

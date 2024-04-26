@@ -49,6 +49,12 @@ worldmap.enterable:
     radius: 0.500
 }
 
+faction.colorable:
+{
+	intensity_a: 1.000
+	intensity_b: 0.800
+}
+
 // interactable:
 // {
 //     window_size: [456.000, 336.000]

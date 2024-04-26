@@ -82,6 +82,7 @@ namespace TC2.Conquest
 				public float rotation;
 
 				public Color32BGRA color;
+				public Color32BGRA color_override;
 
 				public Vector2 text_offset;
 
@@ -99,6 +100,25 @@ namespace TC2.Conquest
 				[Source.Owned] in Transform.Data transform, 
 				[Source.Owned, Optional(true)] ref Nameable.Data nameable, 
 				[HasRelation(Source.Modifier.Owned, Relation.Type.Child, true)] bool has_parent);
+
+#if CLIENT
+			[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global, interval: 0.20f, order: 1000)]
+			public static void OnFactionModified(ISystem.Info.Common info, Entity entity, 
+			[Source.Owned] in Faction.Data faction, [Source.Owned] ref WorldMap.Marker.Data marker, [Source.Owned] ref Faction.Colorable colorable)
+			{
+				//if (colorable.h_faction_cached != faction.id || renderer.color_mask_r.bgra != colorable.color_a_cached.bgra || renderer.color_mask_g.bgra != colorable.color_b_cached.bgra)
+				{
+					var color_a = default(Color32BGRA);
+					if (faction.id.TryGetData(out var ref_faction))
+					{
+						color_a = ref_faction.value.color_a;
+					}
+
+					marker.color_override = Color32BGRA.LerpRGB(marker.color, color_a, color_a.IsVisible() ? Maths.Max(colorable.intensity_a, color_a.GetLuma()) : 0.00f);
+					colorable.h_faction_cached = faction.id;
+				}
+			}
+#endif
 
 #if SERVER
 			[ISystem.Modified(ISystem.Mode.Single, ISystem.Scope.Global)]

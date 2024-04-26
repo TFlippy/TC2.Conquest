@@ -67,7 +67,25 @@ namespace TC2.Conquest
 				var ent_location = h_location.GetGlobalEntity();
 				var ent_asset = asset.GetGlobalEntity();
 
-				ent_asset.AddRelation(ent_location, Relation.Type.Child);
+				asset.Spawn(0).ContinueWith((ent) =>
+				{
+					ref var transform = ref ent.GetComponent<Transform.Data>();
+					if (transform.IsNotNull())
+					{
+						if (h_location.TryGetDefinition(out var location_asset))
+						{
+							var pos = (Vector2)location_asset.data.point;
+							if (h_location.TryGetRoad(out var road))
+							{
+								pos = road.GetNearestPosition(pos, out _);
+							}
+
+							transform.SetPosition(pos);
+						} 
+					}
+				});
+
+				//ent_asset.AddRelation(ent_location, Relation.Type.Child);
 
 				player.h_character_main = asset;
 				player_asset.Sync();
@@ -263,7 +281,7 @@ namespace TC2.Conquest
 				if (species_data.IsNotNull())
 				{
 					//hair_color = Color32BGRA.Saturate(hair_color, 1.00f - Maths.InvLerp01(species_data.lifecycle.age_mature, species_data.lifecycle.age_elder, age));
-					props.hair_color = Color32BGRA.Lerp(props.hair_color, Color32BGRA.White, Maths.InvLerp01(Maths.Lerp(species_data.lifecycle.age_mature, species_data.lifecycle.age_elder, 0.70f), species_data.lifecycle.age_elder * 1.40f, props.age * props.visual_age_mult));
+					props.hair_color = Color32BGRA.Lerp(props.hair_color, Color32BGRA.White.WithAlpha(80), Maths.InvLerp01(Maths.Lerp(species_data.lifecycle.age_mature, species_data.lifecycle.age_elder, 0.70f), species_data.lifecycle.age_elder * 1.40f, props.age * props.visual_age_mult));
 				}
 				props.hair_color.a = 255;
 			}
@@ -382,7 +400,7 @@ namespace TC2.Conquest
 								group_b.DrawBackground(GUI.tex_window);
 
 								if (GUI.AssetInput2("edit.location", ref vars.h_location, size: new(GUI.RmX, GUI.RmY), show_label: false, tab_height: 40.00f, close_on_select: false,
-								filter: (x) => !x.data.flags.HasAny(ILocation.Flags.Hidden) && x.data.buildings.HasAny(ILocation.Buildings.Train_Station | ILocation.Buildings.Trainyard),
+								filter: (x) => x.data.flags.HasNone(ILocation.Flags.Hidden | ILocation.Flags.Restricted) && x.data.buildings.HasAny(ILocation.Buildings.Train_Station | ILocation.Buildings.Trainyard) && x.data.flags.HasAny(ILocation.Flags.Spawn),
 								draw: (asset, group, is_title) =>
 								{
 									if (asset != null)
