@@ -516,7 +516,7 @@ namespace TC2.Conquest
 												{
 													if (GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
 													{
-														WorldMap.hs_selected_entities.Toggle(entity);
+														WorldMap.hs_selected_entities.Toggle(entity, !is_selected);
 													}
 													else
 													{
@@ -1082,12 +1082,12 @@ namespace TC2.Conquest
 																{
 																	if (entity.HasComponent<WorldMap.Unit.Data>())
 																	{
-																		WorldMap.hs_selected_entities.Toggle(entity);
+																		WorldMap.hs_selected_entities.Toggle(entity, !is_selected);
 																	}
 																}
 																else
 																{
-																	WorldMap.selected_entity.Toggle(entity);
+																	WorldMap.selected_entity.Toggle(entity, !is_selected);
 																}
 
 																//if (!is_selected) WorldMap.FocusEntity(entity);
@@ -1140,12 +1140,12 @@ namespace TC2.Conquest
 																			{
 																				if (ent_child.HasComponent<WorldMap.Unit.Data>())
 																				{
-																					WorldMap.hs_selected_entities.Toggle(ent_child);
+																					WorldMap.hs_selected_entities.Toggle(ent_child, !is_selected);
 																				}
 																			}
 																			else
 																			{
-																				WorldMap.selected_entity.Toggle(ent_child);
+																				WorldMap.selected_entity.Toggle(ent_child, !is_selected);
 																			}
 																		}
 																	}
@@ -1373,10 +1373,10 @@ namespace TC2.Conquest
 																		//group_right.DrawBackground(GUI.tex_window_popup);
 																	}
 
-																	var selected = WorldMap.selected_entity == ent_child;
-																	if (GUI.Selectable3(ent_child.GetShortID(), group_row.GetInnerRect(), selected: selected))
+																	var is_selected = WorldMap.selected_entity == ent_child;
+																	if (GUI.Selectable3(ent_child.GetShortID(), group_row.GetInnerRect(), selected: is_selected))
 																	{
-																		WorldMap.selected_entity.Toggle(ent_child);
+																		WorldMap.selected_entity.Toggle(ent_child, !is_selected);
 																		GUI.SetDebugEntity(ent_child);
 																	}
 																}
@@ -1529,7 +1529,7 @@ namespace TC2.Conquest
 												//App.WriteLine("click");
 												//WorldMap.FocusEntity(ent_unit);
 
-												WorldMap.selected_entity.Toggle(ent_unit);
+												WorldMap.selected_entity.Toggle(ent_unit, !is_selected);
 												if (!is_selected) WorldMap.FocusEntity(ent_unit);
 											}
 

@@ -53,7 +53,8 @@ namespace TC2.Conquest
 					if (window.show)
 					{
 						ref var region = ref this.ent_respawn.GetRegion();
-						ref var player = ref Client.GetPlayer();
+						ref var player = ref Client.GetPlayerData(out var player_asset);
+
 						var random = XorRandom.New(true);
 
 						GUI.DrawWindowBackground(GUI.tex_window_menu, padding: new Vector4(8, 8, 8, 8));
@@ -74,7 +75,7 @@ namespace TC2.Conquest
 									var has_characters = false;
 
 									is_selected_spawn_valid = (is_visible = spawn.IsVisibleToFaction(h_faction, h_faction_spawn))
-										&& ((has_characters = dormitory.HasSpawnableCharacters(h_faction, h_faction_spawn, spawn.flags)) || spawn.IsSelectableByFaction(h_faction, h_faction_spawn, has_characters, is_visible));
+										&& ((has_characters = dormitory.HasSpawnableCharacters(h_faction: h_faction, h_faction_spawn: h_faction_spawn, h_player: player_asset, spawn_flags: spawn.flags)) || spawn.IsSelectableByFaction(h_faction, h_faction_spawn, has_characters, is_visible));
 								}
 							}
 
@@ -98,7 +99,7 @@ namespace TC2.Conquest
 												var has_characters = false;
 
 												is_selected_spawn_valid = (is_visible = spawn.IsVisibleToFaction(h_faction, h_faction_spawn))
-													&& ((has_characters = dormitory.HasSpawnableCharacters(h_faction, h_faction_spawn, spawn.flags)) || spawn.IsSelectableByFaction(h_faction, h_faction_spawn, has_characters, is_visible));
+													&& ((has_characters = dormitory.HasSpawnableCharacters(h_faction: h_faction, h_faction_spawn: h_faction_spawn, h_player: player_asset, spawn_flags: spawn.flags)) || spawn.IsSelectableByFaction(h_faction, h_faction_spawn, has_characters, is_visible));
 
 												//is_selected_spawn_valid = spawn.IsVisibleToFaction(h_faction, h_faction_spawn) && (h_faction_spawn == h_faction || dormitory.HasSpawnableCharacters(h_faction, h_faction_spawn, spawn.flags));
 											}
@@ -184,7 +185,7 @@ namespace TC2.Conquest
 																	ref var dormitory = ref entity.GetComponent<Dormitory.Data>();
 																	if (dormitory.IsNotNull())
 																	{
-																		has_characters = dormitory.HasSpawnableCharacters(faction_id_tmp, faction.id, spawn.flags);
+																		has_characters = dormitory.HasSpawnableCharacters(h_faction: faction_id_tmp, h_faction_spawn: faction.id, h_player: player_asset, spawn_flags: spawn.flags);
 
 																		//var dormitory_characters = dormitory.GetCharacterSpan(); //.characters.Slice(dormitory.characters_capacity);
 
@@ -463,7 +464,7 @@ namespace TC2.Conquest
 									}
 									else
 									{
-										var is_selected_character_spawnable = h_selected_character_tmp.CanSpawnAsCharacter(h_faction, faction.id, spawn_flags: spawn.flags);
+										var is_selected_character_spawnable = h_selected_character_tmp.CanSpawnAsCharacter(h_faction: h_faction, h_faction_spawn: faction.id, h_player: player_asset, spawn_flags: spawn.flags);
 										if (is_selected_character_spawnable)
 										{
 											if (GUI.DrawButton("Spawn", size: new Vector2(GUI.RmX, 48), color: GUI.col_button_ok))
@@ -540,7 +541,7 @@ namespace TC2.Conquest
 								{
 									ent_spawn = ent_selected_spawn_new.Value
 								};
-								rpc.Send(player.ent_player);
+								rpc.Send(Client.GetEntity());
 
 								//ent_selected_spawn = ent_selected_spawn_new.Value;
 								ent_selected_spawn_new = default;
