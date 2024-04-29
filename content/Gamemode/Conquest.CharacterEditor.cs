@@ -679,7 +679,8 @@ namespace TC2.Conquest
 		[ISystem.GUI(ISystem.Mode.Single, ISystem.Scope.Global)]
 		public static void OnCharacterGUI(ISystem.Info.Global info, ref Region.Data.Global region, [Source.Owned] ref World.Global world)
 		{
-			if (WorldMap.IsOpen && Client.GetRegionID() == 0 && Character.CharacterHUD.selected_slot.HasValue && Client.GetCharacterHandle().id == 0)
+			//if (WorldMap.IsOpen && Client.GetRegionID() == 0 && Character.CharacterHUD.selected_slot.HasValue && Client.GetCharacterHandle().id == 0)
+			if (Character.CharacterHUD.selected_slot == -1 && !Client.GetPlayerData().h_character_main.IsValid() && !Client.IsLoadingRegion())
 			{
 				var gui = new Conquest.CreationGUI();
 				gui.Draw();

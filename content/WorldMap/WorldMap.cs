@@ -95,15 +95,16 @@ namespace TC2.Conquest
 			}
 
 			[Query(ISystem.Scope.Global)]
-			public delegate void GetAllMarkersQuery(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, 
-				[Source.Owned] in WorldMap.Marker.Data marker, 
-				[Source.Owned] in Transform.Data transform, 
-				[Source.Owned, Optional(true)] ref Nameable.Data nameable, 
+			public delegate void GetAllMarkersQuery(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity,
+				[Source.Owned] in WorldMap.Marker.Data marker,
+				[Source.Owned] in Transform.Data transform,
+				[Source.Owned, Optional(true)] ref Nameable.Data nameable,
 				[HasRelation(Source.Modifier.Owned, Relation.Type.Child, true)] bool has_parent);
 
 #if CLIENT
-			[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global, interval: 0.20f, order: 1000)]
-			public static void OnFactionModified(ISystem.Info.Common info, Entity entity, 
+			// TODO: temporary workaround, make it update when the asset is modified
+			[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global, interval: 1.00f, order: 1000)]
+			public static void UpdateMarkerFactionColor(ISystem.Info.Common info, Entity entity,
 			[Source.Owned] in Faction.Data faction, [Source.Owned] ref WorldMap.Marker.Data marker, [Source.Owned] ref Faction.Colorable colorable)
 			{
 				//if (colorable.h_faction_cached != faction.id || renderer.color_mask_r.bgra != colorable.color_a_cached.bgra || renderer.color_mask_g.bgra != colorable.color_b_cached.bgra)
@@ -117,6 +118,40 @@ namespace TC2.Conquest
 					marker.color_override = Color32BGRA.LerpRGB(marker.color, color_a, color_a.IsVisible() ? Maths.Max(colorable.intensity_a, color_a.GetLuma()) : 0.00f);
 					colorable.h_faction_cached = faction.id;
 				}
+			}
+
+			// TODO: temporary workaround, make it update when the asset is modified
+			[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global, interval: 1.00f)]
+			public static void UpdateMarkerEntrance(ISystem.Info.Common info, Entity entity,
+			[Source.Owned] ref WorldMap.Marker.Data marker, [Source.Owned] in Entrance.Data entrance)
+			{
+				if (entity.TryGetAsset(out IEntrance.Definition entrance_asset))
+				{
+					marker.relative_offset = entrance_asset.data.relative_offset;
+					marker.icon = entrance_asset.data.icon;
+				}
+			}
+
+			// TODO: temporary workaround, make it update when the asset is modified
+			[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global, interval: 1.00f)]
+			public static void UpdateMarkerLocation(ISystem.Info.Common info, Entity entity,
+			[Source.Owned] ref WorldMap.Marker.Data marker, [Source.Owned] in Location.Data location)
+			{
+				if (location.h_location.TryGetDefinition(out var location_asset))
+				{
+					marker.icon = location_asset.data.icon;
+					marker.icon_offset = location_asset.data.icon_offset;
+					marker.text_offset = location_asset.data.text_offset;
+					marker.color = location_asset.data.color;
+				}
+			}
+
+			// TODO: temporary workaround, make it update when the asset is modified
+			[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global, interval: 1.00f), HasTag("asset", true, Source.Modifier.Owned)]
+			public static void UpdateMarkerIcon(ISystem.Info.Common info, Entity entity,
+			[Source.Owned] ref WorldMap.Marker.Data marker)
+			{
+				entity.TryGetAssetIcon(ref marker.icon);
 			}
 #endif
 
