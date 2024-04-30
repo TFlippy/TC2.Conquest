@@ -481,30 +481,32 @@ namespace TC2.Conquest
 												WorldMap.selected_entity = default;
 												if (entity.HasComponent<WorldMap.Unit.Data>())
 												{
-													if (GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
-													{
-														//WorldMap.hs_selected_entities.Remove(entity);
-														if (WorldMap.hs_selected_entities.Count > 0)
-														{
-															WorldMap.hs_selected_entities.Remove(entity);
-														}
-														else
-														{
-															WorldMap.hs_selected_entities.Add(entity);
-														}
-													}
-													else
-													{
-														if (WorldMap.hs_selected_entities.Count > 1)
-														{
-															WorldMap.hs_selected_entities.Clear();
-															WorldMap.hs_selected_entities.Add(entity);
-														}
-														else
-														{
-															WorldMap.hs_selected_entities.Clear();
-														}
-													}
+													WorldMap.SelectUnitBehavior(entity, SelectUnitMode.Single, SelectUnitFlags.Multiselect | SelectUnitFlags.Hold_Shift | SelectUnitFlags.Toggle, selected: is_selected);
+
+													//if (GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
+													//{
+													//	//WorldMap.hs_selected_entities.Remove(entity);
+													//	if (WorldMap.hs_selected_entities.Count > 0)
+													//	{
+													//		WorldMap.hs_selected_entities.Remove(entity);
+													//	}
+													//	else
+													//	{
+													//		WorldMap.hs_selected_entities.Add(entity);
+													//	}
+													//}
+													//else
+													//{
+													//	if (WorldMap.hs_selected_entities.Count > 1)
+													//	{
+													//		WorldMap.hs_selected_entities.Clear();
+													//		WorldMap.hs_selected_entities.Add(entity);
+													//	}
+													//	else
+													//	{
+													//		WorldMap.hs_selected_entities.Clear();
+													//	}
+													//}
 												}
 												GUI.selected_entity = default;
 												if (location_asset != null) WorldMap.h_selected_location = default;
@@ -514,26 +516,26 @@ namespace TC2.Conquest
 											{
 												if (entity.HasComponent<WorldMap.Unit.Data>())
 												{
-													if (GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
-													{
-														WorldMap.hs_selected_entities.Toggle(entity, !is_selected);
-													}
-													else
-													{
-														WorldMap.selected_entity = entity;
-														GUI.selected_entity = entity;
-														if (location_asset != null) WorldMap.h_selected_location = location_asset;
+													WorldMap.SelectUnitBehavior(entity, SelectUnitMode.Single, SelectUnitFlags.Multiselect | SelectUnitFlags.Hold_Shift | SelectUnitFlags.Toggle, selected: is_selected);
+													//if (GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
+													//{
+													//	WorldMap.hs_selected_entities.Toggle(entity, !is_selected);
+													//}
+													//else
+													//{
+													//	WorldMap.selected_entity = entity;
+													//	GUI.selected_entity = entity;
+													//	if (location_asset != null) WorldMap.h_selected_location = location_asset;
 
-														WorldMap.hs_selected_entities.Clear();
-														WorldMap.hs_selected_entities.Add(entity);
-													}
+													//	WorldMap.hs_selected_entities.Clear();
+													//	WorldMap.hs_selected_entities.Add(entity);
+													//}
 												}
-												else
-												{
-													WorldMap.selected_entity = entity;
-													GUI.selected_entity = entity;
-													if (location_asset != null) WorldMap.h_selected_location = location_asset;
-												}
+
+												WorldMap.selected_entity = entity;
+												GUI.selected_entity = entity;
+												if (location_asset != null) WorldMap.h_selected_location = location_asset;
+												
 												Sound.PlayGUI(GUI.sound_select, volume: 0.09f);
 											}
 											// Client.RequestSetActiveRegion((byte)i);
@@ -1073,22 +1075,34 @@ namespace TC2.Conquest
 
 															//var selected = asset == h_selected_location; // selected_region_id == i;
 
-															var is_selected = WorldMap.selected_entity == entity || WorldMap.hs_selected_entities.Contains(entity);
-															if (GUI.Selectable3(entity.GetShortID(), group_row.GetOuterRect(), is_selected))
+															var is_selected = WorldMap.selected_entity == entity;
+															var contains = WorldMap.hs_selected_entities.Contains(entity);
+
+															if (GUI.Selectable3(entity.GetShortID(), group_row.GetOuterRect(), contains))
 															{
-																//App.WriteLine("click");
-																//WorldMap.FocusEntity(ent_unit);
-																if (WorldMap.hs_selected_entities.Count <= 1 || GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
+																var result = WorldMap.SelectUnitBehavior(entity, SelectUnitMode.Single, SelectUnitFlags.Multiselect | SelectUnitFlags.Hold_Shift | SelectUnitFlags.Toggle);
+																if (result.HasAny(SelectUnitResults.Changed))
 																{
-																	if (entity.HasComponent<WorldMap.Unit.Data>())
+																	if (result.HasAny(SelectUnitResults.Removed)) WorldMap.selected_entity = default;
+																	else
 																	{
-																		WorldMap.hs_selected_entities.Toggle(entity, !is_selected);
+																		WorldMap.selected_entity.Toggle(entity, true);
 																	}
 																}
-																else
-																{
-																	WorldMap.selected_entity.Toggle(entity, !is_selected);
-																}
+
+																//App.WriteLine("click");
+																//WorldMap.FocusEntity(ent_unit);
+																//if (WorldMap.hs_selected_entities.Count <= 1 || GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
+																//{
+																//	if (entity.HasComponent<WorldMap.Unit.Data>())
+																//	{
+																//		WorldMap.hs_selected_entities.Toggle(entity, !is_selected);
+																//	}
+																//}
+																//else
+																//{
+																//	WorldMap.selected_entity.Toggle(entity, !is_selected);
+																//}
 
 																//if (!is_selected) WorldMap.FocusEntity(entity);
 															}
@@ -1096,6 +1110,7 @@ namespace TC2.Conquest
 															if (GUI.IsItemHovered() && GUI.GetMouse().GetKeyDown(Mouse.Key.Right))
 															{
 																WorldMap.FocusEntity(entity);
+																//hs_selected_entities.Add(entity);
 															}
 														}
 													}
@@ -1133,20 +1148,37 @@ namespace TC2.Conquest
 
 																		//var selected = asset == h_selected_location; // selected_region_id == i;
 
-																		var is_selected = WorldMap.selected_entity == ent_child || WorldMap.hs_selected_entities.Contains(ent_child);
-																		if (GUI.Selectable3(ent_child.GetShortID(), group_row.GetOuterRect(), is_selected))
+																		var is_selected = WorldMap.selected_entity == ent_child; // || WorldMap.hs_selected_entities.Contains(ent_child);
+																		var contains = WorldMap.hs_selected_entities.Contains(ent_child);
+
+																		if (GUI.Selectable3(ent_child.GetShortID(), group_row.GetOuterRect(), contains))
 																		{
-																			if (WorldMap.hs_selected_entities.Count <= 1 || GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
+																			var result = WorldMap.SelectUnitBehavior(ent_child, SelectUnitMode.Single, SelectUnitFlags.Multiselect | SelectUnitFlags.Hold_Shift | SelectUnitFlags.Toggle);
+																			if (result.HasAny(SelectUnitResults.Changed))
 																			{
-																				if (ent_child.HasComponent<WorldMap.Unit.Data>())
+																				if (result.HasAny(SelectUnitResults.Removed)) WorldMap.selected_entity = default;
+																				else
 																				{
-																					WorldMap.hs_selected_entities.Toggle(ent_child, !is_selected);
+																					WorldMap.selected_entity.Toggle(ent_child, true);
 																				}
 																			}
-																			else
-																			{
-																				WorldMap.selected_entity.Toggle(ent_child, !is_selected);
-																			}
+																			//if (WorldMap.hs_selected_entities.Count <= 1 || GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
+																			//{
+																			//	if (ent_child.HasComponent<WorldMap.Unit.Data>())
+																			//	{
+																			//		WorldMap.hs_selected_entities.Toggle(ent_child, !is_selected);
+																			//	}
+																			//}
+																			//else
+																			//{
+																			//	WorldMap.selected_entity.Toggle(ent_child, !is_selected);
+																			//}
+																		}
+
+																		if (GUI.IsItemHovered() && GUI.GetMouse().GetKeyDown(Mouse.Key.Right))
+																		{
+																			WorldMap.FocusEntity(ent_child);
+																			//hs_selected_entities.Add(ent_child);
 																		}
 																	}
 																}
@@ -1410,6 +1442,201 @@ namespace TC2.Conquest
 				}
 			}
 		}
+
+		[Flags]
+		public enum SelectUnitFlags: uint
+		{
+			None = 0u,
+
+			Multiselect = 1u << 0,
+			Hold_Shift = 1u << 1,
+			Toggle = 1u << 2
+			//Toggle = 1u << 1
+		}
+
+		[Flags]
+		public enum SelectUnitResults: uint
+		{
+			None = 0u,
+
+			Changed = 1u << 0,
+			Added = 1u << 1,
+			Removed = 1u << 2,
+
+		}
+
+
+		public enum SelectUnitMode: uint
+		{
+			Undefined = 0,
+
+			Single,
+			Multiple
+		}
+
+		public static SelectUnitResults SelectUnitBehavior(Entity ent_unit, SelectUnitMode mode, SelectUnitFlags flags, bool? selected = null)
+		{
+			if (ent_unit.id == 0) return SelectUnitResults.None;
+
+			var hs = WorldMap.hs_selected_entities;
+
+			var selected_count = hs.Count;
+			var contains = hs.Contains(ent_unit);
+			var is_selected = selected ?? contains;
+			var results = SelectUnitResults.None;
+
+
+			if (flags.HasAny(SelectUnitFlags.Multiselect) && (flags.HasNone(SelectUnitFlags.Hold_Shift) || GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift)))
+			{
+				if (is_selected || contains)
+				{
+					if (hs.Remove(ent_unit)) results |= SelectUnitResults.Removed | SelectUnitResults.Changed;
+				}
+				else
+				{
+					if (hs.Add(ent_unit)) results |= SelectUnitResults.Added | SelectUnitResults.Changed;
+				}
+			}
+			else
+			{
+				if (flags.HasAny(SelectUnitFlags.Toggle))
+				{
+					if (is_selected)
+					{
+						switch (mode)
+						{
+							case SelectUnitMode.Single:
+							{
+								hs.Clear();
+
+								results |= SelectUnitResults.Changed;
+								if (selected_count > 1)
+								{
+									if (hs.Add(ent_unit) && !contains) results |= SelectUnitResults.Added;
+								}
+								else
+								{
+									if (contains) results |= SelectUnitResults.Removed;
+								}
+							}
+							break;
+
+							case SelectUnitMode.Multiple:
+							{
+								if (hs.Remove(ent_unit)) results |= SelectUnitResults.Removed | SelectUnitResults.Changed;
+							}
+							break;
+						}
+					}
+					else
+					{
+						switch (mode)
+						{
+							case SelectUnitMode.Single:
+							{
+								hs.Clear();
+
+								results |= SelectUnitResults.Changed;
+								if (hs.Add(ent_unit) && !contains) results |= SelectUnitResults.Added;
+							}
+							break;
+
+							case SelectUnitMode.Multiple:
+							{
+								if (hs.Remove(ent_unit)) results |= SelectUnitResults.Removed | SelectUnitResults.Changed;
+							}
+							break;
+						}
+
+						//hs.Clear();
+
+						//results |= SelectUnitResults.Changed;
+						//if (!contains && hs.Add(ent_unit)) results |= SelectUnitResults.Added;
+					}
+				}
+				else
+				{
+					if (is_selected)
+					{
+						if (hs.Remove(ent_unit)) results |= SelectUnitResults.Removed | SelectUnitResults.Changed;
+					}
+					else
+					{
+						hs.Clear();
+
+						results |= SelectUnitResults.Changed;
+						if (!contains && hs.Add(ent_unit)) results |= SelectUnitResults.Added;
+					}
+				}
+			}
+
+			//}
+			//else
+			//{
+			//	if (flags.HasAny(SelectUnitFlags.Multiselect) && (flags.HasNone(SelectUnitFlags.Hold_Shift) || GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift)))
+			//	{
+			//		if (is_selected)
+			//		{
+			//			if (hs.Remove(ent_unit)) results |= SelectUnitResults.Removed | SelectUnitResults.Changed;
+			//		}
+			//		else
+			//		{
+			//			if (hs.Add(ent_unit)) results |= SelectUnitResults.Added | SelectUnitResults.Changed;
+			//		}
+			//	}
+			//	else
+			//	{
+			//		if (flags.HasAny(SelectUnitFlags.Toggle))
+			//		{
+			//			if (is_selected)
+			//			{
+			//				if (hs.Remove(ent_unit)) results |= SelectUnitResults.Removed | SelectUnitResults.Changed;
+			//			}
+			//			else
+			//			{
+			//				hs.Clear();
+
+			//				results |= SelectUnitResults.Changed;
+			//				if (hs.Add(ent_unit)) results |= SelectUnitResults.Added;
+			//			}
+			//		}
+			//		else
+			//		{
+
+			//		}
+			//	}
+			//}
+
+			return results;
+		}
+
+		//public static void SelectUnitBehavior(Entity ent_unit, SelectUnitFlags flags_empty = SelectUnitFlags.None, SelectUnitFlags flags_single = SelectUnitFlags.None, SelectUnitFlags flags_multiple = SelectUnitFlags.None)
+		//{
+		//	var selected_count = WorldMap.hs_selected_entities.Count;
+		//	if (GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
+		//	{
+		//		if (selected_count > 0)
+		//		{
+		//			WorldMap.hs_selected_entities.Remove(ent_unit);
+		//		}
+		//		else
+		//		{
+		//			WorldMap.hs_selected_entities.Add(ent_unit);
+		//		}
+		//	}
+		//	else
+		//	{
+		//		if (selected_count > 1)
+		//		{
+		//			if (flags_multiple.HasAny(SelectUnitFlags.Clear)) WorldMap.hs_selected_entities.Clear();
+		//			WorldMap.hs_selected_entities.Add(ent_unit);
+		//		}
+		//		else
+		//		{
+		//			if (flags_single.HasAny(SelectUnitFlags.Clear)) WorldMap.hs_selected_entities.Clear();
+		//		}
+		//	}
+		//}
 
 		public static AABB drag_rect_cached;
 		public static AABB drag_rect_cached_world;

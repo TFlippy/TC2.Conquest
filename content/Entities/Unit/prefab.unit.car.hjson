@@ -27,7 +27,7 @@ worldmap.marker:
 	flags: directional, hide_if_parented
 	radius: 0.250
 	scale: 0.375
-	color: "0xffc0c0c0"
+	color: "0xc0ffffff"
 	text_offset: [0.000, 0.200]
 	icon_offset: [0.000, 0.000]
 	icon:
