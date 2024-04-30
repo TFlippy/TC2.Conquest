@@ -281,9 +281,9 @@ namespace TC2.Conquest
 				if (species_data.IsNotNull())
 				{
 					//hair_color = Color32BGRA.Saturate(hair_color, 1.00f - Maths.InvLerp01(species_data.lifecycle.age_mature, species_data.lifecycle.age_elder, age));
-					props.hair_color = Color32BGRA.Lerp(props.hair_color, Color32BGRA.White.WithAlpha(80), Maths.InvLerp01(Maths.Lerp(species_data.lifecycle.age_mature, species_data.lifecycle.age_elder, 0.70f), species_data.lifecycle.age_elder * 1.40f, props.age * props.visual_age_mult));
+					props.hair_color = Color32BGRA.Lerp(props.hair_color, Color32BGRA.White.WithAlpha(40), Maths.InvLerp01(Maths.Lerp(species_data.lifecycle.age_mature, species_data.lifecycle.age_elder, 0.70f), species_data.lifecycle.age_elder * 1.40f, props.age * props.visual_age_mult));
 				}
-				props.hair_color.a = 255;
+				//props.hair_color.a = 255;
 			}
 
 			public CustomCharacter.Vars vars = new();

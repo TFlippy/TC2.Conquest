@@ -78,6 +78,12 @@ faction:
 	
 }
 
+faction.colorable:
+{
+	intensity_a: 1.000
+	intensity_b: 0.800
+}
+
 nameable:
 {
 	tags: industrial, homely
