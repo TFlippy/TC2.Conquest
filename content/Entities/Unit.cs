@@ -417,6 +417,14 @@ namespace TC2.Conquest
 			}
 #endif
 
+			//[ISystem.Update.B(ISystem.Mode.Single, ISystem.Scope.Global)]
+			//public static void UpdateTest([Source.Owned] ref Faction.Data faction, [Source.Owned] ref Marker.Data marker)
+			//{
+			//	ref var faction_data = ref faction.id.GetData();
+				
+			//	marker.derp = Asset.GetPointerTest(ref faction_data);				
+			//}
+
 			//[ISystem.Update.B(ISystem.Mode.Single, ISystem.Scope.Global), HasRelation(Source.Modifier.Owned, Relation.Type.Child, false)]
 			//public static void UpdateTest(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Global] ref World.Global world_global, [Source.Owned] ref WorldMap.Unit.Data unit, [Source.Owned] ref Transform.Data transform)
 			//{
@@ -553,13 +561,22 @@ namespace TC2.Conquest
 					if (ent_unit.IsAlive())
 					{
 						ent_unit.RemoveRelation(ent_enterable, Relation.Type.Child);
-
 						ref var transform_unit = ref ent_unit.GetComponent<Transform.Data>();
 						if (transform_unit.IsNotNull())
 						{
 							transform_unit.SetPosition(pos);
 							transform_unit.Sync(ent_unit);
 						}
+
+						//region.Schedule((ref Region.Data.Global region) =>
+						//{
+						//	ref var transform_unit = ref ent_unit.GetComponent<Transform.Data>();
+						//	if (transform_unit.IsNotNull())
+						//	{
+						//		transform_unit.SetPosition(pos);
+						//		transform_unit.Sync(ent_unit);
+						//	}
+						//});
 					}
 					return true;
 				}

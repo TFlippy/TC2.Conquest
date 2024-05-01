@@ -101,7 +101,7 @@ namespace TC2.Conquest
 				[Source.Owned, Optional(true)] ref Nameable.Data nameable,
 				[HasRelation(Source.Modifier.Owned, Relation.Type.Child, true)] bool has_parent);
 
-#if CLIENT
+//#if CLIENT
 			// TODO: temporary workaround, make it update when the asset is modified
 			[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global, interval: 1.00f, order: 1000)]
 			public static void UpdateMarkerFactionColor(ISystem.Info.Common info, Entity entity,
@@ -153,7 +153,7 @@ namespace TC2.Conquest
 			{
 				entity.TryGetAssetIcon(ref marker.icon);
 			}
-#endif
+//#endif
 
 #if SERVER
 			[ISystem.Modified(ISystem.Mode.Single, ISystem.Scope.Global)]

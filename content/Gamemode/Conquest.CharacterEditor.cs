@@ -57,6 +57,7 @@ namespace TC2.Conquest
 					index: null,
 					scope: Asset.Scope.World,
 					h_prefab: "unit.guy",
+					h_prefab_region: "region.character",
 					region_id: 0,
 					data: ref character);
 				
