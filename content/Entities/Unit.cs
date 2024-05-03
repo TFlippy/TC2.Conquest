@@ -832,6 +832,7 @@ namespace TC2.Conquest
 					//using (var window = GUI.Window.InteractionMisc("unit"u8, this.ent_unit, size: new(0, 0)))
 					using (var window = GUI.Window.Interaction("unit"u8, this.ent_unit))
 					{
+						this.StoreCurrentWindowTypeID();
 						if (window.show)
 						{
 							ref var region = ref this.ent_unit.GetRegionCommon();
