@@ -1697,7 +1697,7 @@ namespace TC2.Conquest
 
 						//var drag_rect = default(AABB);
 
-						var drag_active = GUI.TryGetMouseDragRect(ref drag_rect_cached, out var drag_pressed, out var drag_released, enabled: WorldMap.IsHovered());
+						var drag_active = GUI.TryGetMouseDragRect(ref drag_rect_cached, out var drag_pressed, out var drag_released, enabled: WorldMap.IsHovered() && WorldMap.editor_mode == EditorMode.None);
 						if (drag_active)
 						{
 							drag_rect_cached_world = region.CanvasToWorld(drag_rect_cached);
