@@ -812,7 +812,7 @@ namespace TC2.Conquest
 				return false;
 			}
 
-			public static bool enable_pathfinding = false;
+			public static bool enable_pathfinding = true;
 
 #if CLIENT
 			public partial struct UnitGUI: IGUICommand
@@ -1047,13 +1047,13 @@ namespace TC2.Conquest
 
 								var path_distance = dist;
 
-								//if (this.unit.branches_count > 0 && this.unit.next_segment.IsValid() && this.unit.end_segment.IsValid())
-								//{
-								//	var road_a = this.unit.next_segment; // branches[0].GetSegment();
-								//	var road_b = this.unit.end_segment;
+								if (this.unit.branches_count > 0 && this.unit.next_segment.IsValid() && this.unit.end_segment.IsValid())
+								{
+									var road_a = this.unit.next_segment; // branches[0].GetSegment();
+									var road_b = this.unit.end_segment;
 
-								//	DrawPath(ref region, road_a, road_b, this.unit.pos_target, this.unit.branches.AsSpan().Slice(this.unit.current_branch_index, this.unit.branches_count - this.unit.current_branch_index), color: GUI.font_color_green.WithAlphaMult(0.40f), thickness: 0.125f, distance: out path_distance);
-								//}
+									DrawPath(ref region, road_a, road_b, this.unit.pos_target, this.unit.branches.AsSpan().Slice(this.unit.current_branch_index, this.unit.branches_count - this.unit.current_branch_index), color: GUI.font_color_green.WithAlphaMult(0.40f), thickness: 0.125f, distance: out path_distance);
+								}
 
 								//WorldMap.DrawBranch(ref current_branch);
 
@@ -1066,38 +1066,38 @@ namespace TC2.Conquest
 									//	mouse_drag_a = pos_w_snapped;
 									//}
 
-									//if (!this.has_parent)
-									//{
-									//	if (this.unit.road_type != Road.Type.Undefined)
-									//	{
-									//		var road_a = default(Road.Segment);
-									//		var road_b = default(Road.Segment);
+									if (!this.has_parent)
+									{
+										if (this.unit.road_type != Road.Type.Undefined)
+										{
+											var road_a = default(Road.Segment);
+											var road_b = default(Road.Segment);
 
-									//		var ts = Timestamp.Now();
-									//		Span<Road.Junction.Branch> branches_span = stackalloc Road.Junction.Branch[32];
-									//		if (Repath(this.unit.road_type, this.transform.position, pos_w_snapped, out var pos_end, ref road_a, ref road_b, ref branches_span))
-									//		{
-									//			var ts_elapsed = ts.GetMilliseconds();
-									//			//GUI.Text($"{ts_elapsed:0.0000} ms");
+											var ts = Timestamp.Now();
+											Span<Road.Junction.Branch> branches_span = stackalloc Road.Junction.Branch[32];
+											if (Repath(this.unit.road_type, this.transform.position, pos_w_snapped, out var pos_end, ref road_a, ref road_b, ref branches_span))
+											{
+												var ts_elapsed = ts.GetMilliseconds();
+												//GUI.Text($"{ts_elapsed:0.0000} ms");
 
-									//			DrawPath(ref region, road_a, road_b, pos_end, branches_span, color: GUI.col_button_yellow.WithAlphaMult(0.20f), thickness: 0.125f, distance: out path_distance);
+												DrawPath(ref region, road_a, road_b, pos_end, branches_span, color: GUI.col_button_yellow.WithAlphaMult(0.20f), thickness: 0.125f, distance: out path_distance);
 
-									//			//foreach (ref var branch in branches_span)
-									//			//{
-									//			//	WorldMap.DrawBranch(ref branch);
-									//			//}
-									//		}
-									//	}
+												//foreach (ref var branch in branches_span)
+												//{
+												//	WorldMap.DrawBranch(ref branch);
+												//}
+											}
+										}
 
-									//	GUI.DrawLine(pos_c_current, pos_c_current + (dir * 100), layer: GUI.Layer.Foreground);
-									//	GUI.DrawLine(pos_c_current, pos_c_hover, Color32BGRA.Yellow.WithAlphaMult(0.25f), thickness: 0.125f * scale * 0.25f, GUI.Layer.Foreground);
+										GUI.DrawLine(pos_c_current, pos_c_current + (dir * 100), layer: GUI.Layer.Foreground);
+										GUI.DrawLine(pos_c_current, pos_c_hover, Color32BGRA.Yellow.WithAlphaMult(0.25f), thickness: 0.125f * scale * 0.25f, GUI.Layer.Foreground);
 
-									//	//GUI.DrawTextCentered($"{dist * WorldMap.km_per_unit:0.00} km", (pos_c_current + pos_c_hover) * 0.50f, layer: GUI.Layer.Foreground, box_shadow: true);
+										//GUI.DrawTextCentered($"{dist * WorldMap.km_per_unit:0.00} km", (pos_c_current + pos_c_hover) * 0.50f, layer: GUI.Layer.Foreground, box_shadow: true);
 
-									//	GUI.DrawCircleFilled(pos_c_hover, 0.125f * scale * 0.50f, Color32BGRA.Yellow.WithAlphaMult(0.50f), segments: 4, layer: GUI.Layer.Foreground);
+										GUI.DrawCircleFilled(pos_c_hover, 0.125f * scale * 0.50f, Color32BGRA.Yellow.WithAlphaMult(0.50f), segments: 4, layer: GUI.Layer.Foreground);
 
-									//	GUI.DrawTextCentered($"{path_distance * WorldMap.km_per_unit:0.00} km", pos_c_hover - ((pos_c_hover - pos_c_current).GetNormalized() * 0.50f * scale), layer: GUI.Layer.Foreground, box_shadow: true);
-									//}
+										GUI.DrawTextCentered($"{path_distance * WorldMap.km_per_unit:0.00} km", pos_c_hover - ((pos_c_hover - pos_c_current).GetNormalized() * 0.50f * scale), layer: GUI.Layer.Foreground, box_shadow: true);
+									}
 
 									//if (!this.has_parent)
 									//{
@@ -1126,7 +1126,7 @@ namespace TC2.Conquest
 			public static void OnGUI(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] ref Unit.Data unit, [Source.Owned] ref Transform.Data transform,
 			[HasRelation(Source.Modifier.Owned, Relation.Type.Child, true)] bool has_parent)
 			{
-				return;
+				//return;
 
 				if (WorldMap.IsOpen && WorldMap.selected_entity == entity)
 				{

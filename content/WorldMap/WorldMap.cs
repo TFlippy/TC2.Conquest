@@ -650,6 +650,11 @@ namespace TC2.Conquest
 					//if (j_road.IsNull() || j_road.type != type) continue;
 
 					var j_points = j_road.points.AsSpan();
+					//if (j_segment.index >= j_points.Length)
+					//{
+					//	App.WriteLine($"{j_segment.index}/{j_points.Length}");
+					//}
+
 					var j_pos = j_points[j_segment.index];
 
 					if (j_segment.index < j_points.Length - 1)
