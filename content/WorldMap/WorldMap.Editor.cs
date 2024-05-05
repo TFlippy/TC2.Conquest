@@ -222,7 +222,7 @@ namespace TC2.Conquest
 									}
 								}
 
-								GUI.FocusableAsset(asset.GetHandle(), rect: AABB.Centered(point_t, new(1.00f * zoom)));
+								GUI.FocusableAsset(asset, rect: AABB.Centered(point_t, new(1.00f * zoom)));
 							}
 						}
 					}
@@ -1007,6 +1007,12 @@ namespace TC2.Conquest
 
 										GUI.DrawCircleFilled(region.WorldToCanvas(road_nearest.GetPosition()), 10.00f, Color32BGRA.Magenta, layer: GUI.Layer.Foreground);
 										GUI.DrawTextCentered($"{hovered_prefecture}\n{road_nearest.index}", mouse_pos_new, layer: GUI.Layer.Foreground);
+
+										ref var prefecture_data = ref hovered_prefecture.GetData();
+										if (prefecture_data.IsNotNull())
+										{
+											GUI.DrawRect(region.WorldToCanvas(prefecture_data.bb), color: Color32BGRA.Magenta.WithAlpha(100), layer: GUI.Layer.Foreground);
+										} 
 									}
 									//GUI.DrawTextCentered($"{road_nearest.index}", mouse_pos_new + new Vector2(0, -16), layer: GUI.Layer.Foreground);
 								}

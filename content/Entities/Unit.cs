@@ -274,7 +274,8 @@ namespace TC2.Conquest
 			{
 				None = 0,
 
-				Wants_Repath = 1 << 0
+				Wants_Repath = 1 << 0,
+				Requires_Driver = 1 << 1,
 			}
 
 
@@ -284,6 +285,8 @@ namespace TC2.Conquest
 				public Unit.Flags flags;
 				public Unit.Type type;
 				public Unit.Action action;
+
+				public ICharacter.Handle h_character_driver;
 
 				public Road.Type road_type;
 
@@ -345,6 +348,8 @@ namespace TC2.Conquest
 #if SERVER
 				public void Invoke(ref NetConnection connection, Entity entity, ref Unit.Data data)
 				{
+					//Assert.Check(data.)
+
 					var ok = true;
 					switch (this.action)
 					{
@@ -359,7 +364,11 @@ namespace TC2.Conquest
 						case Action.Enter:
 						{
 							Assert.Check(this.ent_target.IsAlive());
-							Assert.Check(this.ent_target.HasComponent<Enterable.Data>());
+
+							ref var enterable = ref this.ent_target.GetComponent<Enterable.Data>();
+							Assert.NotNull(ref enterable);
+
+							Assert.Check(enterable.mask_units.Has(data.type));
 
 							data.pos_target = this.pos_target;
 							data.ent_target = this.ent_target;
@@ -421,7 +430,7 @@ namespace TC2.Conquest
 			//public static void UpdateTest([Source.Owned] ref Faction.Data faction, [Source.Owned] ref Marker.Data marker)
 			//{
 			//	ref var faction_data = ref faction.id.GetData();
-				
+
 			//	marker.derp = Asset.GetPointerTest(ref faction_data);				
 			//}
 
@@ -585,6 +594,17 @@ namespace TC2.Conquest
 					App.WriteException(e);
 					return false;
 				}
+			}
+#endif
+
+#if SERVER
+			[ISystem.Monitor(ISystem.Mode.Single, ISystem.Scope.Global)]
+			public static void OnDriverEnter(ISystem.Info.Global info, ref Region.Data.Global region, 
+			Entity ent_unit_parent, Entity ent_unit_child, Entity ent_enterable,
+			[Source.Parent] ref WorldMap.Unit.Data unit_parent, [Source.Parent] ref WorldMap.Enterable.Data enterable, 
+			[Source.Owned] ref WorldMap.Unit.Data unit_child)
+			{
+				App.WriteLine("driver enter");
 			}
 #endif
 
@@ -830,10 +850,10 @@ namespace TC2.Conquest
 				public void Draw()
 				{
 					//using (var window = GUI.Window.InteractionMisc("unit"u8, this.ent_unit, size: new(0, 0)))
-					using (var window = GUI.Window.Interaction("unit"u8, this.ent_unit))
+					//using (var window = GUI.Window.Interaction("unit"u8, this.ent_unit))
 					{
-						this.StoreCurrentWindowTypeID();
-						if (window.show)
+						//this.StoreCurrentWindowTypeID();
+						//if (window.show)
 						{
 							ref var region = ref this.ent_unit.GetRegionCommon();
 							static void DrawPath(ref Region.Data.Common region, Road.Segment segment_start, Road.Segment segment_end, Vector2 pos_end, Span<Road.Junction.Branch> branches_span, out float distance, Color32BGRA color = default, float thickness = 0.250f)
@@ -889,7 +909,7 @@ namespace TC2.Conquest
 								}
 							}
 
-							using (GUI.Group.New(new(GUI.AvX, 0), padding: new(4)))
+							//using (GUI.Group.New(new(GUI.AvX, 0), padding: new(4)))
 							{
 								var mouse = GUI.GetMouse();
 
@@ -902,72 +922,72 @@ namespace TC2.Conquest
 
 								//App.WriteLine("h");
 								//if (false)
-								{
-									var distance_sq = 0.00f;
-									var ent_enterable = this.has_parent ? this.ent_unit.GetParent(Relation.Type.Child) : WorldMap.Enterable.GetNearest(this.transform.position, out distance_sq, ent_exclude: this.ent_unit);
+								//{
+								//	var distance_sq = 0.00f;
+								//	var ent_enterable = this.has_parent ? this.ent_unit.GetParent(Relation.Type.Child) : WorldMap.Enterable.GetNearest(this.transform.position, out distance_sq, ent_exclude: this.ent_unit);
 
-									//GUI.Text($"{ent_enterable}");
+								//	//GUI.Text($"{ent_enterable}");
 
-									if (ent_enterable.IsAlive() && ent_enterable != this.ent_unit) // && !ent_enterable.TryGetParent(Relation.Type.Child, out var ent_enterable_parent))
-									{
-										ref var enterable = ref ent_enterable.GetComponent<Enterable.Data>();
-										if (enterable.IsNotNull())
-										{
-											//var can_enter = distance_sq <= enterable.radius.Pow2();
+								//	if (ent_enterable.IsAlive() && ent_enterable != this.ent_unit) // && !ent_enterable.TryGetParent(Relation.Type.Child, out var ent_enterable_parent))
+								//	{
+								//		ref var enterable = ref ent_enterable.GetComponent<Enterable.Data>();
+								//		if (enterable.IsNotNull())
+								//		{
+								//			//var can_enter = distance_sq <= enterable.radius.Pow2();
 
-											ent_enterable.TryGetAssetHandle(out ILocation.Handle h_location_enterable);
+								//			ent_enterable.TryGetAssetHandle(out ILocation.Handle h_location_enterable);
 
-											GUI.TitleCentered(ent_enterable.GetName(), size: 16, pivot: new(0.00f, 1.00f), offset: new(4, -4), color: GUI.font_color_disabled);
-											//if (GUI.Selectable3(ent_enterable, GUI.GetLastItemRect(), selected: WorldMap.h_selected_location == h_location_nearest))
-											if (GUI.Selectable3("unit.enterable.current"u8, GUI.GetLastItemRect(), selected: WorldMap.selected_entity == ent_enterable))
-											{
-												//WorldMap.h_selected_location.Toggle(h_location_nearest);
-												//if (WorldMap.h_selected_location != default) WorldMap.FocusLocation(h_location_nearest);
+								//			GUI.TitleCentered(ent_enterable.GetName(), size: 16, pivot: new(0.00f, 1.00f), offset: new(4, -4), color: GUI.font_color_disabled);
+								//			//if (GUI.Selectable3(ent_enterable, GUI.GetLastItemRect(), selected: WorldMap.h_selected_location == h_location_nearest))
+								//			if (GUI.Selectable3("unit.enterable.current"u8, GUI.GetLastItemRect(), selected: WorldMap.selected_entity == ent_enterable))
+								//			{
+								//				//WorldMap.h_selected_location.Toggle(h_location_nearest);
+								//				//if (WorldMap.h_selected_location != default) WorldMap.FocusLocation(h_location_nearest);
 
-												WorldMap.selected_entity.Toggle(ent_enterable);
-												if (h_location_enterable.IsValid()) WorldMap.h_selected_location.Toggle(h_location_enterable);
-												if (WorldMap.selected_entity == ent_enterable) WorldMap.FocusEntity(ent_enterable);
-											}
-											//GUI.FocusableAsset(h_location_nearest);
+								//				WorldMap.selected_entity.Toggle(ent_enterable);
+								//				if (h_location_enterable.IsValid()) WorldMap.h_selected_location.Toggle(h_location_enterable);
+								//				if (WorldMap.selected_entity == ent_enterable) WorldMap.FocusEntity(ent_enterable);
+								//			}
+								//			//GUI.FocusableAsset(h_location_nearest);
 
-											if (this.has_parent)
-											{
-												GUI.TitleCentered("[Exit]"u8, size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: Color32BGRA.Red);
-												if (GUI.Selectable3("exit"u8, GUI.GetLastItemRect(), selected: false))
-												{
-													var rpc = new WorldMap.Unit.ExitRPC()
-													{
-														//h_character = h_character,
-													};
-													rpc.Send(this.ent_unit);
-												}
-											}
-											else
-											{
-												var can_enter = distance_sq <= enterable.radius.Pow2();
-												if (can_enter)
-												{
-													GUI.TitleCentered("[Enter]"u8, size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: Color32BGRA.Green);
-													if (GUI.Selectable3("unit.enter"u8, GUI.GetLastItemRect(), selected: false))
-													{
-														var rpc = new WorldMap.Unit.EnterRPC()
-														{
-															ent_enterable = ent_enterable
-															//h_character = h_character,
-															//h_location = h_location_nearest
-														};
-														rpc.Send(this.ent_unit);
-													}
-												}
-												else
-												{
-													GUI.TitleCentered($"{distance_sq.Sqrt() * WorldMap.km_per_unit:0.00} km", size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: GUI.font_color_disabled);
-													//GUI.TitleCentered("Wilderness", size: 16, pivot: new(0.00f, 1.00f), offset: new(4, -4), color: GUI.font_color_green_b.WithAlphaMult(0.50f));
-												}
-											}
-										}
-									}
-								}
+								//			if (this.has_parent)
+								//			{
+								//				GUI.TitleCentered("[Exit]"u8, size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: Color32BGRA.Red);
+								//				if (GUI.Selectable3("exit"u8, GUI.GetLastItemRect(), selected: false))
+								//				{
+								//					var rpc = new WorldMap.Unit.ExitRPC()
+								//					{
+								//						//h_character = h_character,
+								//					};
+								//					rpc.Send(this.ent_unit);
+								//				}
+								//			}
+								//			else
+								//			{
+								//				var can_enter = distance_sq <= enterable.radius.Pow2();
+								//				if (can_enter)
+								//				{
+								//					GUI.TitleCentered("[Enter]"u8, size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: Color32BGRA.Green);
+								//					if (GUI.Selectable3("unit.enter"u8, GUI.GetLastItemRect(), selected: false))
+								//					{
+								//						var rpc = new WorldMap.Unit.EnterRPC()
+								//						{
+								//							ent_enterable = ent_enterable
+								//							//h_character = h_character,
+								//							//h_location = h_location_nearest
+								//						};
+								//						rpc.Send(this.ent_unit);
+								//					}
+								//				}
+								//				else
+								//				{
+								//					GUI.TitleCentered($"{distance_sq.Sqrt() * WorldMap.km_per_unit:0.00} km", size: 16, pivot: new(1.00f, 1.00f), offset: new(-4, -4), color: GUI.font_color_disabled);
+								//					//GUI.TitleCentered("Wilderness", size: 16, pivot: new(0.00f, 1.00f), offset: new(4, -4), color: GUI.font_color_green_b.WithAlphaMult(0.50f));
+								//				}
+								//			}
+								//		}
+								//	}
+								//}
 
 								//if (GUI.DrawButton("Enter"))
 

@@ -239,6 +239,13 @@ namespace TC2.Conquest
 				}
 			}
 
+			{
+				foreach (var asset in IPrefecture.Database.GetAssets())
+				{
+					asset.UpdateBB();
+				}
+			}
+
 			road_junctions = road_junctions_tmp.ToArray();
 			road_segment_to_junction_index = road_segment_to_junction_index_tmp.ToFrozenDictionary();
 		}

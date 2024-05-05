@@ -46,6 +46,7 @@ nameable:
 worldmap.enterable:
 {
     type: entrance
+	mask_units: character, vehicle
     radius: 0.500
 }
 
