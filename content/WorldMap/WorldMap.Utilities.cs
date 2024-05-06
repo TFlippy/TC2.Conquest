@@ -53,14 +53,14 @@ namespace TC2.Conquest
 			return (sbyte)c_alt_sign;
 		}
 
-		public static ulong GetRoadPairKey(Road.Segment a, Road.Segment b)
-		{
-			var ret = (ulong)Unsafe.BitCast<Road.Segment, uint>(a);
-			ret <<= 32;
-			ret |= Unsafe.BitCast<Road.Segment, uint>(b);
+		//public static ulong GetRoadPairKey(Road.Segment a, Road.Segment b)
+		//{
+		//	var ret = (ulong)Unsafe.BitCast<Road.Segment, uint>(a);
+		//	ret <<= 32;
+		//	ret |= Unsafe.BitCast<Road.Segment, uint>(b);
 
-			return ret;
-		}
+		//	return ret;
+		//}
 
 		public static void RecalculateRoads()
 		{
@@ -99,7 +99,7 @@ namespace TC2.Conquest
 							ref var point = ref points_span[point_index];
 
 							var pos_grid = new short2((short)point.X, (short)point.Y);
-							var pos_key = Unsafe.BitCast<short2, int>(pos_grid);
+							var pos_key = Maths.ToInt32BitCast(pos_grid);
 
 							pos_hash_to_prefecture[pos_key] = h_prefecture;
 
@@ -202,8 +202,8 @@ namespace TC2.Conquest
 					ref var asset_data = ref asset.GetData();
 					if (asset_data.flags.HasAny(ILocation.Flags.Hidden) || asset_data.h_location_parent.id != 0) continue;
 
-					var pos_grid = new short2((short)asset_data.point.X, (short)asset_data.point.Y);
-					var pos_key = Unsafe.BitCast<short2, int>(pos_grid);
+					var pos_grid = asset_data.point;
+					var pos_key = Maths.ToInt32BitCast(pos_grid);
 
 					pos_hash_to_prefecture[pos_key] = asset_data.h_prefecture;
 
@@ -538,7 +538,7 @@ namespace TC2.Conquest
 						for (var i = segment_base.index + 1; i < road_points_span.Length; i++)
 						{
 							var segment = new Road.Segment(segment_base.chain, (byte)i);
-							var key = GetRoadPairKey(segment, new(segment_base.chain, (byte)(i - 1)));
+							var key = Road.GetRoadPairKey(segment, new(segment_base.chain, (byte)(i - 1)));
 
 							if (hs_visited.Contains(key)) break;
 							hs_visited.Add(key);
@@ -571,7 +571,7 @@ namespace TC2.Conquest
 						for (var i = segment_base.index - 1; i >= 0; i--)
 						{
 							var segment = new Road.Segment(segment_base.chain, (byte)i);
-							var key = GetRoadPairKey(new(segment_base.chain, (byte)(i + 1)), segment);
+							var key = Road.GetRoadPairKey(new(segment_base.chain, (byte)(i + 1)), segment);
 
 							if (hs_visited.Contains(key)) break;
 							hs_visited.Add(key);

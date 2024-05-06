@@ -40,7 +40,7 @@ namespace TC2.Conquest
 		public static IPrefecture.Handle GetPrefectureAtPosition(Vector2 pos)
 		{
 			var pos_grid = new short2((short)pos.X, (short)pos.Y);
-			var pos_key = Unsafe.BitCast<short2, int>(pos_grid);
+			var pos_key = Maths.ToInt32BitCast(pos_grid);
 
 			pos_hash_to_prefecture.TryGetValue(pos_key, out var h_prefecture);
 			return h_prefecture;
@@ -48,7 +48,7 @@ namespace TC2.Conquest
 
 		public static IPrefecture.Handle GetPrefectureAtPoint(short2 pos)
 		{
-			var pos_key = Unsafe.BitCast<short2, int>(pos);
+			var pos_key = Maths.ToInt32BitCast(pos);
 
 			pos_hash_to_prefecture.TryGetValue(pos_key, out var h_prefecture);
 			return h_prefecture;

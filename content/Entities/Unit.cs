@@ -604,7 +604,7 @@ namespace TC2.Conquest
 			[Source.Parent] ref WorldMap.Unit.Data unit_parent, [Source.Parent] ref WorldMap.Enterable.Data enterable, 
 			[Source.Owned] ref WorldMap.Unit.Data unit_child)
 			{
-				App.WriteLine("driver enter");
+				//App.WriteLine("driver enter");
 			}
 #endif
 
