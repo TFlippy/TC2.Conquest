@@ -135,7 +135,7 @@ namespace TC2.Conquest
 					using (GUI.Clip.Push(rect))
 					{
 						var scale_b = IScenario.WorldMap.scale_b;
-						var snap_delta = (worldmap_offset_current_snapped - worldmap_offset_current) * 1.0f;
+						var snap_delta = (worldmap_offset_current_snapped - worldmap_offset_current);
 
 						mat_l2c = Maths.TRS3x2((worldmap_offset_current * -zoom) + rect.GetPosition(new(0.50f)) - snap_delta, rotation, new Vector2(zoom));
 						Matrix3x2.Invert(mat_l2c, out mat_c2l);
@@ -913,6 +913,37 @@ namespace TC2.Conquest
 		{
 			GUI.RegionMenu.ToggleWidget(true);
 			WorldMap.worldmap_offset_target = pos;
+		}
+
+		public static void SelectEntity(Entity entity, bool focus = true, bool interact = true)
+		{
+			if (entity.id != 0 && entity.GetRegionID() == 0 && entity.IsAlive())
+			{
+				GUI.RegionMenu.ToggleWidget(true);
+
+				if (interact)
+				{
+					WorldMap.selected_entity = entity;
+				}
+
+				if (focus)
+				{
+					ref var transform = ref entity.GetComponent<Transform.Data>();
+					if (transform.IsNotNull())
+					{
+						WorldMap.worldmap_offset_target = transform.position;
+					}
+				}
+			}
+			else
+			{
+				WorldMap.selected_region_id = 0;
+				if (interact)
+				{
+					WorldMap.selected_entity = default;
+					WorldMap.h_selected_location = default;
+				}
+			}
 		}
 
 		public static void FocusEntity(Entity entity, bool interact = true)

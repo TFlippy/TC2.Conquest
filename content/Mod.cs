@@ -136,7 +136,6 @@ namespace TC2.Conquest
 		}
 
 		[ISystem.VeryEarlyGUI(ISystem.Mode.Single, ISystem.Scope.Global, order: -50)]
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void UpdateWorldmap(ISystem.Info.Global info)
 		{
 			var has_region = Client.HasRegion() || Client.IsLoadingRegion();
