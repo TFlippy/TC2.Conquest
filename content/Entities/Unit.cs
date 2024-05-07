@@ -18,7 +18,11 @@ namespace TC2.Conquest
 
 		public static bool CanPlayerControlUnit(ref readonly this Unit.Data unit, Entity ent_unit, IPlayer.Handle h_player)
 		{
-			if (!Unsafe.IsNullRef(in unit))
+			if (Unsafe.IsNullRef(in unit))
+			{
+				return true;
+			}
+			else
 			{
 				if (unit.flags.HasAny(Unit.Flags.Requires_Driver)) return h_player.CanControlCharacter(unit.h_character_driver);
 				else if (unit.type == Unit.Type.Character)
