@@ -436,7 +436,8 @@ namespace TC2.Conquest
 											//rect_icon = rect_icon.Grow(10.00f);
 										}
 
-										if (has_parent && entity.TryGetParent(Relation.Type.Child, out var ent_parent))
+										var ent_parent = default(Entity);
+										if (has_parent && entity.TryGetParent(Relation.Type.Child, out ent_parent))
 										{
 											ref var transform_parent = ref ent_parent.GetComponent<Transform.Data>();
 											if (transform_parent.IsNotNull())
@@ -453,15 +454,13 @@ namespace TC2.Conquest
 											WorldMap.hovered_entity = entity;
 											if (is_interactable) GUI.SetCursor(App.CursorType.Hand, 100);
 
-											var location_asset = default(ILocation.Definition);
-
-											if (entity.TryGetAsset(out var asset))
+											if (entity.TryGetAsset(out ILocation.Definition location_asset) || ent_parent.TryGetAsset(out location_asset))
 											{
-												GUI.FocusableAsset(asset, rect: rect_button);
+												GUI.FocusableAsset(location_asset, rect: rect_button);
 
-												location_asset = asset as ILocation.Definition; // TODO: shithack
+												//location_asset = asset as ILocation.Definition; // TODO: shithack
 
-												if (show_locations && location_asset != null)
+												if (show_locations)
 												{
 													if ((is_selected || is_hovered) && editor_mode == EditorMode.Roads)
 													{
@@ -1130,11 +1129,10 @@ namespace TC2.Conquest
 															{
 																group_row.DrawBackground(GUI.tex_panel);
 
-																var ent_parent = entity.GetParent(Relation.Type.Child);
-
 																GUI.DrawSpriteCentered(marker.icon, group_row.GetInnerRect(), layer: GUI.Layer.Window, pivot: new(1.00f, 0.50f), scale: 2.00f, color: marker.color_override.IsVisible() ? marker.color_override : marker.color);
 																GUI.TitleCentered(nameable.name, size: 16, pivot: new(0.00f, 0.00f), offset: new(0, 0));
 
+																var ent_parent = entity.GetParent(Relation.Type.Child);
 																if (ent_parent.IsValid() && ent_parent.TryGetAssetName(out var name_parent))
 																{
 																	GUI.TextShadedCentered(name_parent, size: 14, pivot: new(0.00f, 1.00f), color: GUI.font_color_desc);
@@ -1150,11 +1148,23 @@ namespace TC2.Conquest
 																	var result = WorldMap.SelectUnitBehavior(entity, SelectUnitMode.Single, SelectUnitFlags.Multiselect | SelectUnitFlags.Hold_Shift | SelectUnitFlags.Toggle);
 																	if (result.HasAny(SelectUnitResults.Changed))
 																	{
-																		if (result.HasAny(SelectUnitResults.Removed)) WorldMap.selected_entity = default;
+																		if (result.HasAny(SelectUnitResults.Removed))
+																		{
+																			WorldMap.selected_entity = default;
+																		}
 																		else
 																		{
 																			WorldMap.selected_entity.Toggle(entity, true);
 																		}
+																	}
+
+																	if (WorldMap.selected_entity == entity && (entity.TryGetAsset(out ILocation.Definition location_asset) || ent_parent.TryGetAsset(out location_asset)))
+																	{
+																		WorldMap.h_selected_location = location_asset;
+																	}
+																	else
+																	{
+																		WorldMap.h_selected_location = default;
 																	}
 																}
 															}
@@ -1231,6 +1241,17 @@ namespace TC2.Conquest
 																				//{
 																				//	WorldMap.selected_entity.Toggle(ent_child, !is_selected);
 																				//}
+
+
+																				var ent_parent = entity.GetParent(Relation.Type.Child);
+																				if (WorldMap.selected_entity == ent_child && (ent_child.TryGetAsset(out ILocation.Definition location_asset) || entity.TryGetAsset(out location_asset) || ent_parent.TryGetAsset(out location_asset)))
+																				{
+																					WorldMap.h_selected_location = location_asset;
+																				}
+																				else
+																				{
+																					WorldMap.h_selected_location = default;
+																				}
 																			}
 																		}
 
@@ -1496,6 +1517,10 @@ namespace TC2.Conquest
 							{
 								Sound.PlayGUI(GUI.sound_window_close, volume: 0.30f);
 							}
+						}
+						else
+						{
+							selected_region_id = 0;
 						}
 					}
 				}
