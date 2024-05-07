@@ -414,13 +414,23 @@ namespace TC2.Conquest
 
 										var is_selected = WorldMap.selected_entity == entity;
 										var is_pressed = GUI.ButtonBehavior(entity, rect_button, out var is_hovered, out var is_held);
+										var is_interactable = marker.flags.HasNone(Marker.Data.Flags.No_Interact);
+										var is_selectable = marker.flags.HasNone(Marker.Data.Flags.No_Select);
+
+										is_hovered &= is_selectable;
+
+										ref var unit = ref entity.GetComponent<WorldMap.Unit.Data>();
+										if (unit.IsNotNull())
+										{
+											is_interactable &= unit.CanPlayerControlUnit(entity, Client.GetPlayerHandle());
+										}
 
 										//var color = (is_selected || is_hovered) ? Color32BGRA.White : (marker.color_override.a > 0 ? marker.color_override : marker.color);
 										var color = (marker.color_override.a > 0 ? marker.color_override : marker.color);
 										if (is_selected || is_hovered || WorldMap.hs_selected_entities.Contains(entity))
 										{
 											color = color.WithColorMult(1.20f).WithAlpha(255);
-											asset_scale *= 1.10f;
+											if (is_interactable) asset_scale *= 1.10f;
 											//rect_icon = rect_icon.Grow(10.00f);
 										}
 
@@ -439,7 +449,7 @@ namespace TC2.Conquest
 										if (is_hovered)
 										{
 											WorldMap.hovered_entity = entity;
-											GUI.SetCursor(App.CursorType.Hand, 100);
+											if (is_interactable) GUI.SetCursor(App.CursorType.Hand, 100);
 
 											var location_asset = default(ILocation.Definition);
 
@@ -484,14 +494,14 @@ namespace TC2.Conquest
 												}
 											}
 
-											if (is_pressed)
+											if (is_pressed & is_selectable & is_interactable)
 											{
 												selected_region_id = 0;
 
 												if (is_selected)
 												{
 													WorldMap.selected_entity = default;
-													if (entity.HasComponent<WorldMap.Unit.Data>())
+													if (unit.IsNotNull())
 													{
 														WorldMap.SelectUnitBehavior(entity, SelectUnitMode.Single, SelectUnitFlags.Multiselect | SelectUnitFlags.Hold_Shift | SelectUnitFlags.Toggle, selected: is_selected);
 
@@ -530,7 +540,7 @@ namespace TC2.Conquest
 												}
 												else
 												{
-													if (entity.HasComponent<WorldMap.Unit.Data>())
+													if (unit.IsNotNull())
 													{
 														WorldMap.SelectUnitBehavior(entity, SelectUnitMode.Single, SelectUnitFlags.Multiselect | SelectUnitFlags.Hold_Shift | SelectUnitFlags.Toggle, selected: is_selected);
 														//if (GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
@@ -548,13 +558,16 @@ namespace TC2.Conquest
 														//}
 													}
 
-													WorldMap.selected_entity = entity;
-													GUI.selected_entity = entity;
+													if (is_interactable)
+													{
+														WorldMap.selected_entity = entity;
+														GUI.selected_entity = entity;
 
-													if (location_asset != null) WorldMap.h_selected_location = location_asset;
-													else WorldMap.h_selected_location = default;
+														if (location_asset != null) WorldMap.h_selected_location = location_asset;
+														else WorldMap.h_selected_location = default;
 
-													Sound.PlayGUI(GUI.sound_select, volume: 0.09f);
+														Sound.PlayGUI(GUI.sound_select, volume: 0.09f);
+													}
 												}
 												// Client.RequestSetActiveRegion((byte)i);
 											}
@@ -1708,7 +1721,7 @@ namespace TC2.Conquest
 							{
 								row.Run((ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] in Unit.Data unit, [Source.Owned] in Transform.Data transform, [Source.Owned, Keg.Engine.Game.Optional(false)] in Faction.Data faction) =>
 								{
-									if (drag_rect_cached_world.ContainsPoint(transform.position) && !entity.HasParent(Relation.Type.Child))
+									if (drag_rect_cached_world.ContainsPoint(transform.position) && !entity.HasParent(Relation.Type.Child) && unit.CanPlayerControlUnit(entity, Client.GetPlayerHandle()))
 									{
 										//GUI.DrawCircle(region.WorldToCanvas(transform.position), 0.50f * region.GetWorldToCanvasScale(), color: Color32BGRA.Green.WithAlpha(200), layer: GUI.Layer.Foreground);
 										hs_selected_entities.Add(entity);
@@ -1835,6 +1848,7 @@ namespace TC2.Conquest
 											{
 												if (unit.IsNotNull())
 												{
+
 													var rpc = new Unit.ActionRPC();
 													rpc.action = Unit.Action.Move;
 
@@ -1859,7 +1873,7 @@ namespace TC2.Conquest
 														}
 													}
 
-													if (mouse.GetKeyDown(Mouse.Key.Right))
+													if (mouse.GetKeyDown(Mouse.Key.Right) && unit.CanPlayerControlUnit(ent_unit, Client.GetPlayerHandle()))
 													{
 														rpc.pos_target = wpos_mouse_snapped + ((transform.position - wpos_mouse_snapped).GetNormalized(out var dist) * Maths.Min((unit_index++) * 0.30f, dist * 0.50f));
 														rpc.Send(ent_unit);

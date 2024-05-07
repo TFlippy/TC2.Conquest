@@ -8,6 +8,7 @@ transform:
 
 worldmap.unit:
 {
+	flags: requires_driver
 	type: vehicle
 	road_type: road
 	speed: 45.000

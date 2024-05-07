@@ -5,6 +5,31 @@ namespace TC2.Conquest
 {
 	public static partial class WorldMap
 	{
+		public static bool CanPlayerControlUnit(this Entity ent_unit, IPlayer.Handle h_player)
+		{
+			if (ent_unit.IsAlive())
+			{
+				ref var unit = ref ent_unit.GetComponent<Unit.Data>();
+				return unit.CanPlayerControlUnit(ent_unit: ent_unit, h_player: h_player);
+			}
+
+			return false;
+		}
+
+		public static bool CanPlayerControlUnit(ref readonly this Unit.Data unit, Entity ent_unit, IPlayer.Handle h_player)
+		{
+			if (!Unsafe.IsNullRef(in unit))
+			{
+				if (unit.flags.HasAny(Unit.Flags.Requires_Driver)) return h_player.CanControlCharacter(unit.h_character_driver);
+				else if (unit.type == Unit.Type.Character)
+				{
+					return ent_unit.TryGetAssetHandle(out ICharacter.Handle h_character) && h_player.CanControlCharacter(h_character);
+				}
+			}
+
+			return false;
+		}
+
 		public static partial class Enterable
 		{
 			[Query(ISystem.Scope.Global)]
@@ -339,6 +364,8 @@ namespace TC2.Conquest
 				return ent_nearest;
 			}
 
+	
+
 			public struct ActionRPC: Net.IRPC<Unit.Data>
 			{
 				public Unit.Action action;
@@ -348,7 +375,7 @@ namespace TC2.Conquest
 #if SERVER
 				public void Invoke(ref NetConnection connection, Entity entity, ref Unit.Data data)
 				{
-					//Assert.Check(data.)
+					Assert.Check(data.CanPlayerControlUnit(entity, connection.GetPlayerHandle()));
 
 					var ok = true;
 					switch (this.action)
@@ -557,11 +584,14 @@ namespace TC2.Conquest
 					var pos = transform.position;
 
 					var road = WorldMap.GetNearestRoad(Road.Type.Road, pos, out var dist_sq);
-					var pos_tmp = road.GetNearestPosition(pos, out dist_sq);
-
-					if (dist_sq <= enterable.radius.Pow2())
+					if (road.IsValid())
 					{
-						pos = pos_tmp;
+						var pos_tmp = road.GetNearestPosition(pos, out dist_sq);
+
+						if (dist_sq <= enterable.radius.Pow2())
+						{
+							pos = pos_tmp;
+						}
 					}
 
 					ref var region = ref World.GetGlobalRegion();
@@ -599,12 +629,31 @@ namespace TC2.Conquest
 
 #if SERVER
 			[ISystem.Monitor(ISystem.Mode.Single, ISystem.Scope.Global)]
-			public static void OnDriverEnter(ISystem.Info.Global info, ref Region.Data.Global region, 
+			public static void OnDriverEnter(ISystem.Info.Global info, ref Region.Data.Global region,
 			Entity ent_unit_parent, Entity ent_unit_child, Entity ent_enterable,
-			[Source.Parent] ref WorldMap.Unit.Data unit_parent, [Source.Parent] ref WorldMap.Enterable.Data enterable, 
+			[Source.Parent] ref WorldMap.Unit.Data unit_parent, [Source.Parent] ref WorldMap.Enterable.Data enterable,
 			[Source.Owned] ref WorldMap.Unit.Data unit_child)
 			{
-				//App.WriteLine("driver enter");
+				App.WriteLine($"driver {info.EventType}");
+				if (unit_child.type == WorldMap.Unit.Type.Character && ent_unit_child.TryGetAsset(out ICharacter.Definition character_asset))
+				{
+					switch (info.EventType)
+					{
+						case ISystem.EventType.Add:
+						{
+							unit_parent.h_character_driver = character_asset;
+							unit_parent.Sync(ent_unit_parent);
+						}
+						break;
+
+						case ISystem.EventType.Remove:
+						{
+							unit_parent.h_character_driver = default;
+							unit_parent.Sync(ent_unit_parent);
+						}
+						break;
+					}
+				}
 			}
 #endif
 
@@ -1148,7 +1197,7 @@ namespace TC2.Conquest
 			{
 				//return;
 
-				if (WorldMap.IsOpen && WorldMap.selected_entity == entity)
+				if (WorldMap.IsOpen && WorldMap.selected_entity == entity && unit.CanPlayerControlUnit(entity, Client.GetPlayerHandle()))
 				{
 					var gui = new Unit.UnitGUI()
 					{

@@ -69,7 +69,9 @@ namespace TC2.Conquest
 					Hidden = 1u << 0,
 					Directional = 1u << 1,
 					Use_Worldmap_Renderer = 1u << 2,
-					Hide_If_Parented = 1u << 3
+					Hide_If_Parented = 1u << 3,
+					No_Interact = 1u << 4,
+					No_Select = 1u << 5,
 				}
 
 				public WorldMap.Marker.Data.Flags flags;
@@ -866,8 +868,9 @@ namespace TC2.Conquest
 				interactable.show = WorldMap.selected_entity == entity
 				&& WorldMap.IsOpen
 				//&& WorldMap.ts_last_draw.GetMilliseconds() <= 50 // TODO: shithack
-				&& !interactable.flags.HasAll(Interactable.Flags.No_Window)
+				&& interactable.flags.HasNone(Interactable.Flags.No_Window)
 				&& interactable.window_size != default;
+				//&& entity.CanPlayerControlUnit(Client.GetPlayerHandle());
 			}
 		}
 #endif
