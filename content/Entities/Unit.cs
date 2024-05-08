@@ -325,9 +325,15 @@ namespace TC2.Conquest
 				public Entity ent_target;
 
 				// speed in km/h
-				public float speed = 6.00f;
+				public float speed = 10.00f;
 				public float speed_current;
 				public float acc = 3.00f;
+
+				public float speed_mult_road = 1.00f;
+				public float speed_mult_offroad = 0.30f;
+				public float speed_mult_forest = 0.30f;
+				public float speed_mult_rugged = 0.30f;
+				public float speed_mult_water = 0.30f;
 
 				//[Net.Ignore, Save.Ignore] public float target_dist;
 				[Net.Ignore, Save.Ignore] public Road.Segment next_segment;

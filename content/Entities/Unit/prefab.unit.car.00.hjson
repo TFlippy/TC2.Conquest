@@ -1,0 +1,94 @@
+$name: "Car"
+$tags: []
+
+transform:
+{
+	scale: [1.000, 1.000]
+}
+
+worldmap.unit:
+{
+	flags: requires_driver
+	type: vehicle
+	road_type: road
+	speed: 60.000
+	speed_mult_offroad: 0.240
+	acc: 4.500
+}
+
+worldmap.enterable:
+{
+	type: vehicle
+	flags: none
+	mask_units: character
+	radius: 0.250
+}
+
+worldmap.marker:
+{
+	flags: directional, hide_if_parented
+	radius: 0.250
+	scale: 0.375
+	color: "0xc0ffffff"
+	text_offset: [0.000, 0.200]
+	icon_offset: [0.000, 0.000]
+	icon:
+	{
+		texture: "worldmap.unit.car.00"
+		mask: "missing"
+		fps: 0.000
+		count: 0
+		size: [24, 24]
+		frame: [0, 0]
+	}
+}
+
+// sound.emitter:
+// {
+	
+// }
+
+stockpile:
+{
+	grid_column_count: 2
+	capacity_items: 2
+	capacity_shipments: 1
+	capacity_characters: 2
+}
+
+interactable:
+{
+	window_size: [592.000, 408.000]
+	window_size_min: [592.000, 408.000]
+	window_size_misc: [118.000, 312.000]
+	window_offset: [0.000, 0.000]
+	flags: none
+}
+
+faction:
+{
+	
+}
+
+faction.colorable:
+{
+	intensity_a: 1.000
+	intensity_b: 0.800
+}
+
+nameable:
+{
+	tags: homely
+	flags: randomize
+	type: vehicle
+}
+
+storage:
+{
+	@inventory4:
+	{
+		stack_size_multiplier: 2.000
+		type: storage
+		flags: standalone, ignore_mass, faction, vertical
+	}
+}

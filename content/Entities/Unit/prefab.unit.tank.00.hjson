@@ -1,4 +1,4 @@
-$name: "Car"
+$name: "Tank"
 $tags: []
 
 transform:
@@ -11,8 +11,9 @@ worldmap.unit:
 	flags: requires_driver
 	type: vehicle
 	road_type: road
-	speed: 45.000
-	acc: 0.400
+	speed: 30.000
+	speed_mult_offroad: 0.800
+	acc: 0.300
 }
 
 worldmap.enterable:
@@ -33,22 +34,12 @@ worldmap.marker:
 	icon_offset: [0.000, 0.000]
 	icon:
 	{
-		texture: "worldmap.unit.car.00"
+		texture: "worldmap.unit.tank.00"
 		mask: "missing"
 		fps: 0.000
 		count: 0
 		size: [24, 24]
 		frame: [0, 0]
-	}
-}
-
-storage:
-{
-	@inventory8:
-	{
-		stack_size_multiplier: 4.000
-		type: storage
-		flags: standalone, ignore_mass, faction, vertical
 	}
 }
 
@@ -59,10 +50,9 @@ storage:
 
 stockpile:
 {
-	grid_column_count: 6
-	capacity_items: 6
-	capacity_shipments: 4
-	capacity_characters: 4
+	grid_column_count: 4
+	capacity_items: 4
+	capacity_shipments: 2
 }
 
 interactable:
@@ -87,7 +77,17 @@ faction.colorable:
 
 nameable:
 {
-	tags: industrial, homely
-	flags: no_rename, randomize
-	type: vehicle
+	tags: tech, dangerous, industrial, factory
+	flags: randomize
+	type: gun
+}
+
+storage:
+{
+	@inventory4:
+	{
+		stack_size_multiplier: 4.000
+		type: storage
+		flags: standalone, ignore_mass, faction
+	}
 }
