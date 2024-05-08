@@ -214,6 +214,9 @@ namespace TC2.Conquest
 				}
 			}
 
+			public CustomCharacter.Vars vars = new();
+			public CustomCharacter.Props props = new();
+
 			public static void Apply(ref Vars vars, ref Props props)
 			{
 				ref var species_data = ref vars.h_species.GetData();
@@ -286,9 +289,6 @@ namespace TC2.Conquest
 				}
 				//props.hair_color.a = 255;
 			}
-
-			public CustomCharacter.Vars vars = new();
-			public CustomCharacter.Props props = new();
 		}
 
 		public interface ICharacterModifier: IModifier<ICharacterModifier, CustomCharacter.Props, CustomCharacter.Vars, Character.Flags>
@@ -400,8 +400,8 @@ namespace TC2.Conquest
 							{
 								group_b.DrawBackground(GUI.tex_window);
 
-								if (GUI.AssetInput2("edit.location", ref vars.h_location, size: new(GUI.RmX, GUI.RmY), show_label: false, tab_height: 40.00f, close_on_select: false,
-								filter: (x) => x.data.flags.HasNone(ILocation.Flags.Hidden | ILocation.Flags.Restricted) && x.data.buildings.HasAny(ILocation.Buildings.Train_Station | ILocation.Buildings.Trainyard) && x.data.flags.HasAny(ILocation.Flags.Spawn),
+								if (GUI.AssetInput2("edit.location"u8, ref vars.h_location, size: new(GUI.RmX, GUI.RmY), show_label: false, tab_height: 40.00f, close_on_select: false,
+								filter: static (x) => x.data.flags.HasNone(ILocation.Flags.Hidden | ILocation.Flags.Restricted) && x.data.buildings.HasAny(ILocation.Buildings.Train_Station | ILocation.Buildings.Trainyard) && x.data.flags.HasAny(ILocation.Flags.Spawn),
 								draw: (asset, group, is_title) =>
 								{
 									if (asset != null)
@@ -445,7 +445,7 @@ namespace TC2.Conquest
 									}
 									else
 									{
-										GUI.TitleCentered("<location>", pivot: new(0.00f, 0.50f), offset: new(8, 0), size: 24);
+										GUI.TitleCentered("<location>"u8, pivot: new(0.00f, 0.50f), offset: new(8, 0), size: 24);
 									}
 								}))
 								{
@@ -471,8 +471,8 @@ namespace TC2.Conquest
 									{
 										group_b.DrawBackground(GUI.tex_window);
 
-										if (GUI.AssetInput2("edit.species", ref vars.h_species, size: new(160, GUI.RmY), show_label: false, tab_height: 24.00f, close_on_select: true,
-										filter: (x) => x.data.flags.HasAll(ISpecies.Flags.Sapient),
+										if (GUI.AssetInput2("edit.species"u8, ref vars.h_species, size: new(160, GUI.RmY), show_label: false, tab_height: 24.00f, close_on_select: true,
+										filter: static (x) => x.data.flags.HasAny(ISpecies.Flags.Sapient),
 										draw: (asset, group, is_title) =>
 										{
 											if (asset != null)
@@ -481,7 +481,7 @@ namespace TC2.Conquest
 											}
 											else
 											{
-												GUI.TitleCentered("<species>", pivot: new(0.00f, 0.50f), offset: new(8, 0), size: 24);
+												GUI.TitleCentered("<species>"u8, pivot: new(0.00f, 0.50f), offset: new(8, 0), size: 24);
 											}
 										}))
 										{
@@ -490,8 +490,8 @@ namespace TC2.Conquest
 
 										GUI.SameLine();
 
-										if (GUI.AssetInput2("edit.origin", ref vars.h_origin, size: new(GUI.RmX, GUI.RmY), show_label: false, tab_height: 40.00f, close_on_select: true,
-										filter: (x) => x.data.species == custom_character.vars.h_species && x.data.flags.HasAll(IOrigin.Flags.Special),
+										if (GUI.AssetInput2("edit.origin"u8, ref vars.h_origin, size: new(GUI.RmX, GUI.RmY), show_label: false, tab_height: 40.00f, close_on_select: true,
+										filter: static (x) => x.data.species == custom_character.vars.h_species && x.data.flags.HasAny(IOrigin.Flags.Special),
 										draw: (asset, group, is_title) =>
 										{
 											if (asset != null)
@@ -500,7 +500,7 @@ namespace TC2.Conquest
 											}
 											else
 											{
-												GUI.TitleCentered("<origin>", pivot: new(0.00f, 0.50f), offset: new(8, 0), size: 24);
+												GUI.TitleCentered("<origin>"u8, pivot: new(0.00f, 0.50f), offset: new(8, 0), size: 24);
 											}
 										}))
 										{
@@ -511,22 +511,22 @@ namespace TC2.Conquest
 
 									using (var group_b = GUI.Group.New(size: new(GUI.RmX, 48)))
 									{
-										if (GUI.DrawIconButton("edit.gender.male", new Sprite("ui_icons_gender", 16, 16, 1, 0), size: new(GUI.RmY), color: vars.gender == Organic.Gender.Male ? GUI.col_button_highlight : null))
+										if (GUI.DrawIconButton("edit.gender.male"u8, new Sprite("ui_icons_gender", 16, 16, 1, 0), size: new(GUI.RmY), color: vars.gender == Organic.Gender.Male ? GUI.col_button_highlight : null))
 										{
 											vars.gender = Organic.Gender.Male;
 										}
 
 										GUI.SameLine();
 
-										if (GUI.DrawIconButton("edit.gender.female", new Sprite("ui_icons_gender", 16, 16, 2, 0), size: new(GUI.RmY), color: vars.gender == Organic.Gender.Female ? GUI.col_button_highlight : null))
+										if (GUI.DrawIconButton("edit.gender.female"u8, new Sprite("ui_icons_gender", 16, 16, 2, 0), size: new(GUI.RmY), color: vars.gender == Organic.Gender.Female ? GUI.col_button_highlight : null))
 										{
 											vars.gender = Organic.Gender.Female;
 										}
 
 										GUI.SameLine();
 
-										GUI.AssetInput2("edit.hair", ref h_selected_hair, size: new(160, GUI.RmY), show_label: false, tab_height: 64.00f, close_on_select: false,
-											filter: (x) => x.data.species == custom_character.vars.h_species && x.data.gender == custom_character.vars.gender && x.data.flags.HasAll(IHair.Flags.Hair)
+										GUI.AssetInput2("edit.hair"u8, ref h_selected_hair, size: new(160, GUI.RmY), show_label: false, tab_height: 64.00f, close_on_select: false,
+											filter: static (x) => x.data.species == custom_character.vars.h_species && x.data.gender == custom_character.vars.gender && x.data.flags.HasAny(IHair.Flags.Hair)
 											&& (x.data.character_flags.IsEmpty() || custom_character.vars.character_flags.HasAny(x.data.character_flags)) && (x.data.character_flags_exclude.IsEmpty() || !custom_character.vars.character_flags.HasAny(x.data.character_flags_exclude)),
 											draw: (asset, group, is_title) =>
 											{
@@ -546,14 +546,14 @@ namespace TC2.Conquest
 												}
 												else
 												{
-													GUI.TitleCentered($"Hair:\n<none>", pivot: new(0.00f, 0.50f), offset: new(8, 0), size: 16);
+													GUI.TitleCentered("Hair:\n<none>"u8, pivot: new(0.00f, 0.50f), offset: new(8, 0), size: 16);
 												}
 											});
 
 										GUI.SameLine();
 
-										GUI.AssetInput2("edit.beard", ref h_selected_beard, size: new(160, GUI.RmY), show_label: false, tab_height: 64.00f, close_on_select: false,
-											filter: (x) => x.data.species == custom_character.vars.h_species && x.data.gender == custom_character.vars.gender && x.data.flags.HasAll(IHair.Flags.Beard)
+										GUI.AssetInput2("edit.beard"u8, ref h_selected_beard, size: new(160, GUI.RmY), show_label: false, tab_height: 64.00f, close_on_select: false,
+											filter: (x) => x.data.species == custom_character.vars.h_species && x.data.gender == custom_character.vars.gender && x.data.flags.HasAny(IHair.Flags.Beard)
 											&& (x.data.character_flags.IsEmpty() || custom_character.vars.character_flags.HasAny(x.data.character_flags)) && (x.data.character_flags_exclude.IsEmpty() || !custom_character.vars.character_flags.HasAny(x.data.character_flags_exclude)),
 											draw: (asset, group, is_title) =>
 											{
@@ -573,13 +573,13 @@ namespace TC2.Conquest
 												}
 												else
 												{
-													GUI.TitleCentered($"Beard:\n<none>", pivot: new(0.00f, 0.50f), offset: new(8, 0), size: 16);
+													GUI.TitleCentered("Beard:\n<none>"u8, pivot: new(0.00f, 0.50f), offset: new(8, 0), size: 16);
 												}
 											});
 
 										GUI.SameLine();
 
-										GUI.SliderFloat("Hair Color", ref vars.hair_color_ratio, 0.00f, 1.00f, size: GUI.Rm);
+										GUI.SliderFloat("Hair Color"u8, ref vars.hair_color_ratio, 0.00f, 1.00f, size: GUI.Rm);
 									}
 								}
 							}
@@ -599,32 +599,32 @@ namespace TC2.Conquest
 										//	GUI.SliderIntLerp("Age", ref edit_info.age_ratio, age_min, age_max, size: new(GUI.RmX * 0.75f, GUI.RmY));
 										//}
 
-										GUI.SliderIntLerp("Age", ref vars.age_ratio, props.age_min, props.age_max, size: new(128, 24), show_label: true);
+										GUI.SliderIntLerp("Age"u8, ref vars.age_ratio, props.age_min, props.age_max, size: new(128, 24), show_label: true);
 
 										GUI.NewLine();
 										GUI.SeparatorThick();
 
 										{
 											var max_flag_count = props.character_flags_default.GetCount() + Math.Min(4, props.character_flags_optional.GetCount());
-											GUI.EnumInput("flags.character", ref vars.character_flags, size: new(w, 32), show_label: false, height: 256,
+											GUI.EnumInput("flags.character"u8, ref vars.character_flags, size: new(w, 32), show_label: false, height: 256,
 												max_flags: max_flag_count, mask: props.character_flags_optional, required: props.character_flags_default);
 										}
 
 										{
 											var max_flag_count = props.industry_flags_default.GetCount() + Math.Min(4, props.industry_flags_optional.GetCount());
-											GUI.EnumInput("flags.industry", ref vars.industry_flags, size: new(w, 32), show_label: false, height: 256,
+											GUI.EnumInput("flags.industry"u8, ref vars.industry_flags, size: new(w, 32), show_label: false, height: 256,
 												max_flags: max_flag_count, mask: props.industry_flags_optional, required: props.industry_flags_default);
 										}
 
 										{
 											var max_flag_count = props.service_flags_default.GetCount() + Math.Min(4, props.service_flags_optional.GetCount());
-											GUI.EnumInput("flags.service", ref vars.service_flags, size: new(w, 32), show_label: false, height: 256,
+											GUI.EnumInput("flags.service"u8, ref vars.service_flags, size: new(w, 32), show_label: false, height: 256,
 												max_flags: max_flag_count, mask: props.service_flags_optional, required: props.service_flags_default);
 										}
 
 										{
 											var max_flag_count = props.crime_flags_default.GetCount() + Math.Min(4, props.crime_flags_optional.GetCount());
-											GUI.EnumInput("flags.crime", ref vars.crime_flags, size: new(w, 32), show_label: false, height: 256,
+											GUI.EnumInput("flags.crime"u8, ref vars.crime_flags, size: new(w, 32), show_label: false, height: 256,
 												max_flags: max_flag_count, mask: props.crime_flags_optional, required: props.crime_flags_default);
 										}
 									}
@@ -640,7 +640,7 @@ namespace TC2.Conquest
 							{
 								group_top.DrawBackground(GUI.tex_window);
 
-								using (var scrollbox = GUI.Scrollbox.New("scroll.experience", size: new(GUI.RmX, GUI.RmY - 244)))
+								using (var scrollbox = GUI.Scrollbox.New("scroll.experience"u8, size: new(GUI.RmX, GUI.RmY - 244)))
 								{
 									Experience.DrawTableSmall2(ref props.experience);
 								}
@@ -648,8 +648,8 @@ namespace TC2.Conquest
 								GUI.SeparatorThick();
 							}
 
-							var is_valid = vars.h_origin.IsValid() && vars.h_species.IsValid();
-							if (GUI.DrawConfirmButton("character.create", "Create Character", "Do you want to create\n    this character?", size: GUI.Rm, font_size: 24, color: GUI.col_button_ok, enabled: is_valid))
+							var is_valid = vars.h_origin.IsValid() && vars.h_species.IsValid() && vars.h_location.IsValid();
+							if (GUI.DrawConfirmButton("character.create"u8, "Create Character"u8, "Do you want to create\n    this character?"u8, size: GUI.Rm, font_size: 24, color: GUI.col_button_ok, enabled: is_valid))
 							{
 								var rpc = new Conquest.CreateCharacterRPC();
 								rpc.vars = vars;
