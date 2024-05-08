@@ -445,7 +445,7 @@ namespace TC2.Conquest
 												var pos_parent = transform_parent.GetInterpolatedPosition();
 												var dir = (pos_parent - pos).GetNormalized(out var parent_dist);
 												//GUI.DrawLineTextured(region.WorldToCanvas(pos), region.WorldToCanvas(transform_parent.GetInterpolatedPosition()), GUI.tex_separator_b, color: GUI.col_white, thickness: 0.200f * region.GetWorldToCanvasScale(), overshoot: 0.25f, layer: GUI.Layer.Window);
-												GUI.DrawLine(region.WorldToCanvas(pos), region.WorldToCanvas(pos_parent - (dir * 0.125f)), color: GUI.col_button_yellow.WithAlpha(100), thickness: 0.125f * region.GetWorldToCanvasScale(), layer: GUI.Layer.Window);
+												GUI.DrawLine(region.WorldToCanvas(pos), region.WorldToCanvas(pos_parent - (dir * 0.125f)), color: Color32BGRA.Black.WithAlpha(140), thickness: 0.125f * region.GetWorldToCanvasScale(), layer: GUI.Layer.Window);
 											}
 										}
 
