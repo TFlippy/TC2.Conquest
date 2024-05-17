@@ -416,38 +416,38 @@ namespace TC2.Conquest
 				None = 0u,
 
 				Active = 1u << 0,
-				Stuck = 1u << 1,
-				Docked = 1u << 2,
-				Pathing = 1u << 3,
-				Wants_Repath = 1u << 4,
+				[Asset.Ignore] Stuck = 1u << 1,
+				[Asset.Ignore] Docked = 1u << 2,
+				[Asset.Ignore] Pathing = 1u << 3,
+				[Asset.Ignore] Wants_Repath = 1u << 4,
 			}
 
 			public Train.Data.Flags flags;
 
 			public IRoute.Handle h_route;
-			public int current_branch_index;
-			public int current_route_index;
-			public Road.Junction.Branch last_branch;
-			public FixedArray64<Road.Junction.Branch> branches;
-			public int branches_count;
+			[Asset.Ignore] public int current_branch_index;
+			[Asset.Ignore] public int current_route_index;
+			[Asset.Ignore] public Road.Junction.Branch last_branch;
+			[Asset.Ignore] public FixedArray64<Road.Junction.Branch> branches;
+			[Asset.Ignore] public int branches_count;
 
-			public ILocation.Handle h_location_target;
+			[Asset.Ignore] public ILocation.Handle h_location_target;
 			public ITransport.Handle h_transport;
 
 			public Filter.Mask<ILocation.Buildings> mask_stop_buildings;
 			public Filter.Mask<ILocation.Categories> mask_stop_categories;
 
-			public Road.Segment segment_a;
-			public Road.Segment segment_b;
-			public Road.Segment segment_c;
-			public Road.Segment segment_stop;
+			[Asset.Ignore] public Road.Segment segment_a;
+			[Asset.Ignore] public Road.Segment segment_b;
+			[Asset.Ignore] public Road.Segment segment_c;
+			[Asset.Ignore] public Road.Segment segment_stop;
 
 
-			public Vector2 direction_old;
-			public Vector2 direction;
+			[Asset.Ignore] public Vector2 direction_old;
+			[Asset.Ignore] public Vector2 direction;
 
-			public Vector2 dir_ab;
-			public Vector2 dir_bc;
+			[Asset.Ignore] public Vector2 dir_ab;
+			[Asset.Ignore] public Vector2 dir_bc;
 
 			//public float dot_current;
 			public float dot_min = 0.70f;
@@ -456,20 +456,17 @@ namespace TC2.Conquest
 
 			//public Road.Chain current_road;
 			//public int current_road_index;
-			public float road_distance_current;
-			public float road_distance_target;
+			[Asset.Ignore] public float road_distance_current;
+			[Asset.Ignore] public float road_distance_target;
 
 			public float speed = 0.50f;
-			public float speed_current = 0.50f;
+			[Asset.Ignore] public float speed_current = 0.50f;
 			public float speed_max = 1.50f;
 			public float brake = 0.50f;
 			public float acceleration = 0.50f;
 
-			public float t_stop_departing;
-
-			public int sign;
-
-
+			[Asset.Ignore] public float t_stop_departing;
+			[Asset.Ignore] public int sign;
 
 			public Data()
 			{

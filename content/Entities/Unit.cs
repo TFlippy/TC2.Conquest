@@ -303,7 +303,7 @@ namespace TC2.Conquest
 			{
 				None = 0,
 
-				Wants_Repath = 1 << 0,
+				[Asset.Ignore] Wants_Repath = 1 << 0,
 				Requires_Driver = 1 << 1,
 			}
 
@@ -313,20 +313,20 @@ namespace TC2.Conquest
 			{
 				public Unit.Flags flags;
 				public Unit.Type type;
-				public Unit.Action action;
+				[Asset.Ignore] public Unit.Action action;
 
-				public ICharacter.Handle h_character_driver;
+				[Asset.Ignore] public ICharacter.Handle h_character_driver;
 
 				public Road.Type road_type;
 
-				public Vector2 pos_next;
-				public Vector2 pos_target;
-				public Vector2 dir_last;
-				public Entity ent_target;
+				[Asset.Ignore] public Vector2 pos_next;
+				[Asset.Ignore] public Vector2 pos_target;
+				[Asset.Ignore] public Vector2 dir_last;
+				[Asset.Ignore] public Entity ent_target;
 
 				// speed in km/h
 				public float speed = 10.00f;
-				public float speed_current;
+				[Asset.Ignore] public float speed_current;
 				public float acc = 3.00f;
 
 				public float speed_mult_road = 1.00f;
