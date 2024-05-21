@@ -145,22 +145,22 @@ namespace TC2.Conquest
 			}
 		}
 
-		[ChatCommand.Global("setmap", "", creative: true)]
-		public static void SetMapCommand(ref ChatCommand.Context context, byte region_id, string map)
-		{
-			ref var world = ref Server.GetWorld();
+		//[ChatCommand.Global("setmap", "", creative: true)]
+		//public static void SetMapCommand(ref ChatCommand.Context context, byte region_id, string map)
+		//{
+		//	ref var world = ref Server.GetWorld();
 
-			ref var region_new = ref world.ImportRegion2(region_id, map);
-			if (region_new.IsNotNull())
-			{
-				//world.SetContinueRegionID(region_id);
+		//	ref var region_new = ref world.ImportRegion2(region_id, map);
+		//	if (region_new.IsNotNull())
+		//	{
+		//		//world.SetContinueRegionID(region_id);
 
-				//region_new.Wait().ContinueWith(() =>
-				//{
-				//    Net.SetActiveRegionForAllPlayers(region_id_new);
-				//});
-			}
-		}
+		//		//region_new.Wait().ContinueWith(() =>
+		//		//{
+		//		//    Net.SetActiveRegionForAllPlayers(region_id_new);
+		//		//});
+		//	}
+		//}
 
 		[ChatCommand.Region("scout", "", creative: true)]
 		public static void ScoutCommand(ref ChatCommand.Context context, int count)
@@ -362,7 +362,7 @@ namespace TC2.Conquest
 
 														using (row.Column(0))
 														{
-															GUI.Text(player.GetName(), color: GUI.font_color_default.WithAlphaMult(alpha));
+															GUI.Text(player.h_player.GetName(), color: GUI.font_color_default.WithAlphaMult(alpha));
 														}
 
 														using (row.Column(1))

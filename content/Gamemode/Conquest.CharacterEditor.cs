@@ -20,6 +20,7 @@ namespace TC2.Conquest
 
 				Assert.Check(this.vars.h_species.IsValid());
 				Assert.Check(this.vars.h_origin.IsValid());
+				Assert.Check(this.vars.h_location.IsValid());
 
 				var random = XorRandom.New(true);
 

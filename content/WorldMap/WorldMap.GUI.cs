@@ -796,13 +796,16 @@ namespace TC2.Conquest
 								{
 									if (kb.GetKey(Keyboard.Key.LeftShift))
 									{
-										var scroll = mouse.GetScroll();
-										if (scroll != 0.00f)
+										if (World.GetConfig().enable_mod_editing)
 										{
-											Sound.PlayGUI(GUI.sound_select, volume: 0.09f);
-											editor_mode = (EditorMode)Maths.Wrap(((int)editor_mode) - (int)(scroll), 0, (int)EditorMode.Max);
-											edit_asset = null;
-											edit_doodad_index = null;
+											var scroll = mouse.GetScroll();
+											if (scroll != 0.00f)
+											{
+												Sound.PlayGUI(GUI.sound_select, volume: 0.09f);
+												editor_mode = (EditorMode)Maths.Wrap(((int)editor_mode) - (int)(scroll), 0, (int)EditorMode.Max);
+												edit_asset = null;
+												edit_doodad_index = null;
+											}
 										}
 										//else
 										//{
@@ -876,8 +879,11 @@ namespace TC2.Conquest
 				DrawBottomWindow(is_loading, ref rect);
 				#endregion
 
-				#region Debug			
-				DrawDebugWindow(ref rect);
+				#region Debug
+				if (World.GetConfig().enable_mod_editing)
+				{
+					DrawDebugWindow(ref rect);
+				}
 				#endregion
 			}
 		}
