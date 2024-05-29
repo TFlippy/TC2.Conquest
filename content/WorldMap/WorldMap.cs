@@ -103,7 +103,13 @@ namespace TC2.Conquest
 				[Source.Owned, Optional(true)] ref Nameable.Data nameable,
 				[HasRelation(Source.Modifier.Owned, Relation.Type.Child, true)] bool has_parent);
 
-//#if CLIENT
+			[Query(ISystem.Scope.Global, Query.Flags.None)]
+			public delegate void GetUnitsQuery(ISystem.Info.Global info, ref Region.Data.Global region,
+				Entity ent_marker, Entity ent_transform,
+				[Source.Owned] in WorldMap.Marker.Data marker,
+				[Source.Owned] in Transform.Data transform);
+
+			//#if CLIENT
 			// TODO: temporary workaround, make it update when the asset is modified
 			[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global, interval: 1.00f, order: 1000)]
 			public static void UpdateMarkerFactionColor(ISystem.Info.Common info, Entity entity,

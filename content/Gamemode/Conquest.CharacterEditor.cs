@@ -430,14 +430,15 @@ namespace TC2.Conquest
 
 			public void Draw()
 			{
-				var size = new Vector2(48 * 18, 600);
+				//var size = new Vector2(48 * 18, 600);
 
-				using (var window = GUI.Window.Standalone("CreateCharacter"u8, size: size, position: new(GUI.CanvasSize.X * 0.50f, GUI.CanvasSize.Y * 0.50f), pivot: new(0.50f, 0.50f), padding: new(8, 8), force_position: false))
+				//using (var window = GUI.Window.Standalone("CreateCharacter"u8, size: size, position: new(GUI.CanvasSize.X * 0.50f, GUI.CanvasSize.Y * 0.50f), pivot: new(0.50f, 0.50f), padding: new(8, 8), force_position: false))
+				using (var group_main = GUI.Group.New(size: GUI.Av))
 				{
 					//this.StoreCurrentWindowTypeID();
-					if (window.show)
+					//if (window.show)
 					{
-						GUI.DrawWindowBackground(GUI.tex_window_character, new Vector4(16, 16, 16, 16));
+						//GUI.DrawWindowBackground(GUI.tex_window_character, new Vector4(16, 16, 16, 16));
 
 						var reset = false;
 
@@ -689,34 +690,62 @@ namespace TC2.Conquest
 
 								using (var group_loadout = GUI.Group.New(GUI.Rm))
 								{
-									if (GUI.AssetInput2("edit.vehicle"u8, ref vars.h_recipe_vehicle, size: new(GUI.RmX * 0.50f, 64), show_label: false, tab_height: 64.00f, close_on_select: true,
-									filter: static (x) => x.data.tags.HasAll(Crafting.Recipe.Tags.Overworld | Crafting.Recipe.Tags.Vehicle) && x.data.flags.HasAll(Crafting.Recipe.Flags.Overworld),
-									draw: (asset, group, is_title) =>
+									using (var group_row = GUI.Group.New(size: new(GUI.RmX, 64 + 8)))
 									{
-										if (asset != null)
+										if (GUI.AssetInput2("edit.vehicle"u8, ref vars.h_recipe_vehicle, size: new(GUI.RmX * 0.50f, GUI.RmY), show_label: false, tab_height: 64.00f, close_on_select: true,
+										filter: static (x) => x.data.tags.HasAll(Crafting.Recipe.Tags.Overworld | Crafting.Recipe.Tags.Vehicle) && x.data.flags.HasAll(Crafting.Recipe.Flags.Overworld),
+										draw: (asset, group, is_title) =>
 										{
-											using (var group_icon = GUI.Group.New(size: new(80, GUI.RmY)))
+											if (asset != null)
 											{
-												using (GUI.Clip.Push(group_icon.GetInnerRect()))
+												using (var group_icon = GUI.Group.New(size: new(80, GUI.RmY)))
 												{
-													GUI.DrawSpriteCentered(asset.data.icon, group_icon.GetInnerRect(), GUI.Layer.Window, scale: 3.00f);
+													using (GUI.Clip.Push(group_icon.GetInnerRect()))
+													{
+														GUI.DrawSpriteCentered(asset.data.icon, group_icon.GetInnerRect(), GUI.Layer.Window, scale: 3.00f);
+													}
+													group_icon.DrawBackground(GUI.tex_frame);
 												}
-												group_icon.DrawBackground(GUI.tex_frame);
+
+												GUI.SameLine();
+
+												using (var group_right = GUI.Group.New(size: GUI.Rm))
+												{
+													//GUI.TitleCentered(asset.data.name, pivot: new(0.00f, 0.00f), offset: new(4, 4), size: 24);
+
+													//GUI.NewLine(16);
+
+													GUI.TitleCentered(asset.data.name, rect: group_right.GetInnerRect(), pivot: new(0.00f, 0.00f), offset: new(4, 4), size: 24);
+
+													using (var group_reqs =group_right.Split(size: new(group_right.size.X, 36), align_x: GUI.AlignX.Center, align_y: GUI.AlignY.Bottom))
+													{
+														//GUI.NewLine(4);
+														GUI.DrawMoneyRequirement(custom_character.props.money, asset.data.requirements[0].amount);
+													}
+
+												}
 											}
-
-											GUI.SameLine();
-
-											GUI.TitleCentered(asset.data.name, pivot: new(0.00f, 0.00f), offset: new(4, 4), size: 24);
-										}
-										else
+											else
+											{
+												GUI.TitleCentered("<vehicle>"u8, pivot: new(0.00f, 0.50f), offset: new(4, 0), size: 24);
+											}
+										}))
 										{
-											GUI.TitleCentered("<vehicle>"u8, pivot: new(0.00f, 0.50f), offset: new(4, 0), size: 24);
+											//reset = true;
 										}
-									}))
-									{
-										//reset = true;
-									}
+
+										GUI.SameLine();
+
+										using (var group_items = GUI.Group.New(size: GUI.Rm, padding: new(4)))
+										{
+											group_items.DrawBackground(GUI.tex_panel);
+
+											GUI.DrawMoney(props.money, size: new(GUI.RmX, 24));
+										}
+									} 
 								}
+
+
 							}
 						}
 
@@ -735,7 +764,7 @@ namespace TC2.Conquest
 
 								GUI.SeparatorThick();
 
-								
+
 							}
 
 							var is_valid = vars.h_origin.IsValid() && vars.h_species.IsValid() && vars.h_location.IsValid() && vars.h_recipe_vehicle.IsValid();
@@ -774,12 +803,78 @@ namespace TC2.Conquest
 		[ISystem.GUI(ISystem.Mode.Single, ISystem.Scope.Global)]
 		public static void OnCharacterGUI(ISystem.Info.Global info, ref Region.Data.Global region, [Source.Owned] ref World.Global world)
 		{
-			//if (WorldMap.IsOpen && Client.GetRegionID() == 0 && Character.CharacterHUD.selected_slot.HasValue && Client.GetCharacterHandle().id == 0)
-			if (Character.CharacterHUD.selected_slot == -1 && !Client.GetPlayerData().h_character_main.IsValid() && !Client.IsLoadingRegion())
+			ref var player_data = ref Client.GetPlayerData(out var player_asset);
+			if (player_data.IsNotNull())
 			{
-				var gui = new Conquest.CreationGUI();
-				gui.Draw();
+				var h_character = player_data.h_character_main;
+				var h_character_current = Client.GetCharacterHandle();
+
+				ref var character_data = ref h_character.GetData(out var character_asset);
+				if (character_data.IsNotNull())
+				{
+					var color = GUI.col_button_yellow;
+					using (var widget = Sidebar.Widget.New("character.main", character_data.name, character_data.sprite_head, size: new Vector2(48 * 6, 48 * 4), has_window: false, show_as_selected: h_character_current == h_character, color: color, order: (10.00f - 0.10f)))
+					{
+						widget.func_draw = (widget, group, icon_color) =>
+						{
+							GUI.DrawCharacterHead(h_character: h_character, group.GetInnerRect(), color: icon_color);
+							GUI.FocusableAsset(h_character);
+						};
+
+						//var kb = GUI.GetKeyboard();
+						//if (widget.state_flags.HasAny(Sidebar.Widget.StateFlags.Show) && h_character_current != h_character)
+						//{
+						//	App.WriteLine("switch");
+
+						//	Client.connection_meta->h_character_current_cached = h_character;
+						//	var rpc = new SwitchRPC()
+						//	{
+						//		h_character = h_character
+						//	};
+						//	rpc.Send();
+						//}
+
+						//if (widget.IsHovered())
+						//{
+						//	ref var transform = ref character.ent_controlled.GetComponent<Transform.Data>();
+						//	if (transform.IsNotNull())
+						//	{
+						//		var cpos_pivot = GUI.CanvasSize * 0.50f;
+
+						//		var cpos_a = ImGui.GetMousePos(); // cpos_pivot;
+						//		var cpos_b = region.WorldToCanvas(transform.GetInterpolatedPosition());
+
+						//		//cpos_a = cpos_a.ClampRadius(cpos_pivot, 50);
+						//		//cpos_b = cpos_b.ClampRadius(cpos_pivot, 800);
+
+						//		GUI.DrawLine2(cpos_a, cpos_b, GUI.font_color_default.WithAlphaMult(0.05f), GUI.font_color_default.WithAlphaMult(0.25f), 2, 1);
+						//		GUI.DrawCircleFilled(cpos_b, 2, GUI.font_color_default.WithAlphaMult(0.70f), segments: 10);
+						//	}
+						//}
+					}
+				}
+				else
+				{
+					using (var widget = Sidebar.Widget.New("character.main", "New Main Character", new Sprite(GUI.tex_icons_widget, 16, 16, 2, 0), size: new Vector2(48 * 18, 600), order: (10.00f - 0.10f)))
+					{
+						widget.func_draw = null;
+
+						if (widget.state_flags.HasAny(Sidebar.Widget.StateFlags.Show))
+						{
+							var gui = new Conquest.CreationGUI();
+							gui.Draw();
+							//selected_slot = selected_slot == -1 ? null : -1;
+						}
+					}
+				}
 			}
+
+			//if (WorldMap.IsOpen && Client.GetRegionID() == 0 && Character.CharacterHUD.selected_slot.HasValue && Client.GetCharacterHandle().id == 0)
+			//if (Character.CharacterHUD.selected_slot == -1 && !Client.GetPlayerData().h_character_main.IsValid() && !Client.IsLoadingRegion())
+			//{
+			//	var gui = new Conquest.CreationGUI();
+			//	gui.Draw();
+			//}
 		}
 #endif
 	}
