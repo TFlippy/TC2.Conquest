@@ -85,10 +85,60 @@ nameable:
 
 storage:
 {
-	@inventory8:
+	@inventory16:
 	{
 		stack_size_multiplier: 8.000
 		type: storage
 		flags: standalone, ignore_mass, faction, vertical
 	}
+}
+
+personnel:
+{
+	flags: none
+	move_radius: 6.000
+	slots:
+	[
+		{
+			type: undefined
+			role: driver
+			flags: required
+			tags: logistics, sedentary, technical, operation, vehicle
+			color: "0x00000000"
+			multiplier: 1.500
+		}
+		{
+			type: undefined
+			role: passenger
+			flags: none
+			tags: sedentary, maintenance, vehicle
+			color: "0x00000000"
+			multiplier: 0.400
+		}
+		{
+			type: undefined
+			role: passenger
+			flags: none
+			tags: sedentary, maintenance, vehicle
+			color: "0x00000000"
+			multiplier: 0.400
+		}
+		{
+			type: undefined
+			role: passenger
+			flags: none
+			tags: sedentary, maintenance, vehicle
+			color: "0x00000000"
+			multiplier: 0.400
+		}
+		{
+			type: undefined
+			role: passenger
+			flags: none
+			tags: sedentary, maintenance, vehicle
+			color: "0x00000000"
+			multiplier: 0.400
+		}
+	]
+	characters_capacity: 5
 }

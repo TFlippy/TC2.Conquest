@@ -92,3 +92,45 @@ storage:
 		flags: standalone, ignore_mass, faction, vertical
 	}
 }
+
+personnel:
+{
+	flags: none
+	move_radius: 6.000
+	slots:
+	[
+		{
+			type: undefined
+			role: driver
+			flags: required
+			tags: logistics, sedentary, technical, operation, vehicle
+			color: "0x00000000"
+			multiplier: 1.000
+		}
+		{
+			type: undefined
+			role: passenger
+			flags: none
+			tags: sedentary
+			color: "0x00000000"
+			multiplier: 0.000
+		}
+		{
+			type: undefined
+			role: passenger
+			flags: none
+			tags: sedentary
+			color: "0x00000000"
+			multiplier: 0.000
+		}
+		{
+			type: undefined
+			role: passenger
+			flags: none
+			tags: sedentary
+			color: "0x00000000"
+			multiplier: 0.000
+		}
+	]
+	characters_capacity: 4
+}

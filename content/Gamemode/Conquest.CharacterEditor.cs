@@ -9,6 +9,9 @@ namespace TC2.Conquest
 		{
 			public CustomCharacter.Vars vars;
 
+			public Entity ent_character_out;
+			public ICharacter.Handle h_character_out;
+
 #if SERVER
 			public void Invoke(ref NetConnection connection, ref Conquest.Gamemode data)
 			{
@@ -38,7 +41,7 @@ namespace TC2.Conquest
 				character.prefab = props.h_prefab;
 				character.players = [connection.GetPlayerHandle()];
 
-				character.money = props.money;
+				//character.money = props.money;
 				character.age = props.age;
 				character.flags = this.vars.character_flags;
 				character.experience = props.experience;
@@ -54,22 +57,37 @@ namespace TC2.Conquest
 				var identifier = Asset.GenerateRandomIdentifier();
 				//App.WriteLine(identifier);
 
-				var asset = ICharacter.Database.RegisterOrUpdate(identifier,
+				var character_asset = ICharacter.Database.RegisterOrUpdate(identifier,
 					index: null,
 					scope: Asset.Scope.World,
 					h_prefab: "unit.guy",
 					h_prefab_region: "region.character",
 					region_id: 0,
 					data: ref character);
-				
-				asset.Sync(true);
+
+				character_asset.Sync(true);
 
 				var h_location = this.vars.h_location;
 
 				var ent_location = h_location.GetGlobalEntity();
-				var ent_asset = asset.GetGlobalEntity();
+				var ent_character = character_asset.GetGlobalEntity();
 
-				asset.Spawn(0).ContinueWith((ent) =>
+				var h_recipe_vehicle = this.vars.h_recipe_vehicle;
+				var h_character = character_asset.GetHandle();
+				var h_prefab_vehicle = default(Prefab.Handle);
+
+				if (h_recipe_vehicle.TryGetDefinition(out var recipe_vehicle) && recipe_vehicle.data.flags.HasAny(Crafting.Recipe.Flags.Overworld))
+				{
+					var product = recipe_vehicle.data.products.FirstOrDefault(x => x.type == Crafting.Product.Type.Prefab);
+					if (Assert.Check(product.IsValid(), level: Assert.Level.Warn))
+					{
+						h_prefab_vehicle = product.prefab;
+					}
+				}
+
+				var money = props.money;
+
+				character_asset.Spawn(0).ContinueWith((ent) =>
 				{
 					ref var transform = ref ent.GetComponent<Transform.Data>();
 					if (transform.IsNotNull())
@@ -80,17 +98,48 @@ namespace TC2.Conquest
 							if (h_location.TryGetRoad(out var road))
 							{
 								pos = road.GetNearestPosition(pos, out _);
+
+
+								//Crafting.Context.NewFromCharacter(ref World.GetGlobalRegion().AsCommon(), h_character, ent_producer: ent_location_global, out var context, search_radius: 0.00f);
+								//if (h_recipe_vehicle.TryGetDefinition(out var recipe_vehicle) && recipe_vehicle.data.flags.HasAny(Crafting.Recipe.Flags.Overworld))
+								//{
+								//	var product = recipe_vehicle.data.products.FirstOrDefault(x => x.type == Crafting.Product.Type.Prefab);
+								//	Assert.Check(product.IsValid());
+
+								//	var h_prefab_vehicle = 
+
+								//	//Crafting.Produce()
+								//}
 							}
 
+							ref var region_global = ref World.GetGlobalRegion();
+							region_global.SpawnPrefab(h_prefab_vehicle, position: pos).ContinueWith((ent_vehicle) =>
+							{
+								ref var enterable = ref ent_vehicle.GetComponent<WorldMap.Enterable.Data>();
+								if (enterable.IsNotNull())
+								{
+									WorldMap.Unit.TryEnter(ent_character, ent_vehicle);
+								}
+
+								if (ent_vehicle.TryGetInventory(Inventory.Type.Storage, out var h_inventory))
+								{
+									var resource_money = Money.GetResource(money);
+									h_inventory.Deposit(ref resource_money, resource_money.quantity);
+								}
+							});
+
 							transform.SetPosition(pos);
-						} 
+						}
 					}
 				});
 
 				//ent_asset.AddRelation(ent_location, Relation.Type.Child);
 
-				player.h_character_main = asset;
+				player.h_character_main = character_asset;
 				player_asset.Sync();
+
+				this.ent_character_out = ent_character;
+				this.h_character_out = h_character;
 			}
 #endif
 		}
@@ -118,6 +167,8 @@ namespace TC2.Conquest
 				public float age_ratio;
 
 				public uint name_seed;
+
+				public IRecipe.Handle h_recipe_vehicle;
 
 				public Organic.Gender gender = Organic.Gender.Male;
 
@@ -190,10 +241,13 @@ namespace TC2.Conquest
 				public int age_max = 1;
 				public int age = 0;
 
+				public ImperialDateTime date_birth;
+
 				public float visual_age_mult = 1.00f;
 
 				public float money = 0.00f;
 				public float cost = 0.00f;
+				public float cooldown = 0.00f;
 
 				public ISpecies.Flags species_flags;
 
@@ -589,7 +643,7 @@ namespace TC2.Conquest
 							{
 								group_mid.DrawBackground(GUI.tex_window_menu);
 
-								using (var group_a = GUI.Group.New(size: new(GUI.RmX, 400), padding: new(4)))
+								using (var group_a = GUI.Group.New(size: new(GUI.RmX, 0), padding: new(4)))
 								{
 									using (var group_b = GUI.Group.New(size: new(GUI.RmX, 48)))
 									{
@@ -630,6 +684,39 @@ namespace TC2.Conquest
 										}
 									}
 								}
+
+								GUI.SeparatorThick();
+
+								using (var group_loadout = GUI.Group.New(GUI.Rm))
+								{
+									if (GUI.AssetInput2("edit.vehicle"u8, ref vars.h_recipe_vehicle, size: new(GUI.RmX * 0.50f, 64), show_label: false, tab_height: 64.00f, close_on_select: true,
+									filter: static (x) => x.data.tags.HasAll(Crafting.Recipe.Tags.Overworld | Crafting.Recipe.Tags.Vehicle) && x.data.flags.HasAll(Crafting.Recipe.Flags.Overworld),
+									draw: (asset, group, is_title) =>
+									{
+										if (asset != null)
+										{
+											using (var group_icon = GUI.Group.New(size: new(80, GUI.RmY)))
+											{
+												using (GUI.Clip.Push(group_icon.GetInnerRect()))
+												{
+													GUI.DrawSpriteCentered(asset.data.icon, group_icon.GetInnerRect(), GUI.Layer.Window, scale: 3.00f);
+												}
+												group_icon.DrawBackground(GUI.tex_frame);
+											}
+
+											GUI.SameLine();
+
+											GUI.TitleCentered(asset.data.name, pivot: new(0.00f, 0.00f), offset: new(4, 4), size: 24);
+										}
+										else
+										{
+											GUI.TitleCentered("<vehicle>"u8, pivot: new(0.00f, 0.50f), offset: new(4, 0), size: 24);
+										}
+									}))
+									{
+										//reset = true;
+									}
+								}
 							}
 						}
 
@@ -647,14 +734,20 @@ namespace TC2.Conquest
 								}
 
 								GUI.SeparatorThick();
+
+								
 							}
 
-							var is_valid = vars.h_origin.IsValid() && vars.h_species.IsValid() && vars.h_location.IsValid();
+							var is_valid = vars.h_origin.IsValid() && vars.h_species.IsValid() && vars.h_location.IsValid() && vars.h_recipe_vehicle.IsValid();
 							if (GUI.DrawConfirmButton("character.create"u8, "Create Character"u8, "Do you want to create\n    this character?"u8, size: GUI.Rm, font_size: 24, color: GUI.col_button_ok, enabled: is_valid))
 							{
 								var rpc = new Conquest.CreateCharacterRPC();
 								rpc.vars = vars;
-								rpc.Send();
+								rpc.SendAsTask().ContinueWith((x) =>
+								{
+									//WorldMap.FocusEntity(x.ent_character_out);
+									WorldMap.SelectEntity(x.ent_character_out);
+								});
 							}
 						}
 

@@ -31,7 +31,7 @@
 			}
 			{
 				type: resource
-				material: "ammo_musket.motion"
+				material: "ammo_musket.emt"
 				quantity: 30.000
 				flags: none
 			}
