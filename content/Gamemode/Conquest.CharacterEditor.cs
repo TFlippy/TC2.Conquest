@@ -237,7 +237,6 @@ namespace TC2.Conquest
 				public Color32BGRA hair_color;
 
 				public Prefab.Handle h_prefab;
-
 				public Experience.Levels experience;
 
 				public int age_min = 0;
@@ -265,7 +264,6 @@ namespace TC2.Conquest
 
 				public IMap.Crime crime_flags_default;
 				public IMap.Crime crime_flags_optional;
-
 
 				public Props()
 				{
@@ -369,6 +367,11 @@ namespace TC2.Conquest
 		{
 
 		}
+
+		//public interface ICharacterStatus: IModifier<ICharacterStatus, CustomCharacter.Props, CustomCharacter.Vars, ILocation.Statistics>
+		//{
+
+		//}
 
 		public static class Modifiers
 		{
@@ -476,7 +479,7 @@ namespace TC2.Conquest
 								group_b.DrawBackground(GUI.tex_window);
 
 								if (GUI.AssetInput2("edit.location"u8, ref vars.h_location, size: new(GUI.RmX, GUI.RmY), show_label: false, tab_height: 40.00f, close_on_select: false,
-								filter: static (x) => x.data.flags.HasNone(ILocation.Flags.Hidden | ILocation.Flags.Restricted) && x.data.buildings.HasAny(ILocation.Buildings.Train_Station | ILocation.Buildings.Trainyard) && x.data.flags.HasAny(ILocation.Flags.Spawn),
+								filter: static (x) => x.data.flags.HasNone(ILocation.Flags.Hidden | ILocation.Flags.Restricted) && x.data.buildings.HasAny(ILocation.Buildings.Train_Station | ILocation.Buildings.Trainyard | ILocation.Buildings.Fuel_Depot | ILocation.Buildings.Docks | ILocation.Buildings.Hotel | ILocation.Buildings.Apartments | ILocation.Buildings.Barracks) && x.data.flags.HasAny(ILocation.Flags.Spawn),
 								draw: (asset, group, is_title) =>
 								{
 									if (asset != null)

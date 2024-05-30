@@ -60,7 +60,7 @@ interactable:
 {
 	window_size: [592.000, 408.000]
 	window_size_min: [592.000, 408.000]
-	window_size_misc: [118.000, 312.000]
+	window_size_misc: [214.000, 320.000]
 	window_offset: [0.000, 0.000]
 	flags: none
 }
@@ -87,9 +87,9 @@ storage:
 {
 	@inventory16:
 	{
-		stack_size_multiplier: 8.000
+		stack_size_multiplier: 16.000
 		type: storage
-		flags: standalone, ignore_mass, faction, vertical
+		flags: standalone, ignore_mass, faction
 	}
 }
 

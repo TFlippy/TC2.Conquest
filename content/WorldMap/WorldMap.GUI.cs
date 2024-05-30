@@ -1153,14 +1153,14 @@ namespace TC2.Conquest
 							var is_filtering = !edit_units_search.IsNullOrEmpty();
 							using (var scroll = GUI.Scrollbox.New("units.scroll"u8, size: new(GUI.RmX, GUI.RmY - 48)))
 							{
-								using (var collapsible = GUI.Collapsible2.New("locations.collapsible"u8, new Vector2(GUI.RmX, 32), default_open: true))
+								using (var collapsible = GUI.Collapsible2.New("locations.collapsible"u8, new Vector2(GUI.RmX, 32), default_open: false))
 								{
 									GUI.TitleCentered("Locations"u8, size: 24, pivot: new(0.00f, 0.50f));
 
 									if (collapsible.Inner(padding: new Vector4(12, 0, 0, 0)))
 									{
 										//var ts = Timestamp.Now();
-										foreach (ref var row in region.IterateQuery<WorldMap.Marker.GetAllMarkersQuery>().HasComponent<Location.Data>(false))
+										foreach (ref var row in region.IterateQuery<WorldMap.Marker.GetAllMarkersQuery>().HasComponent<Location.Data>(true))
 										{
 											row.Run((ISystem.Info.Global info, ref Region.Data.Global region, Entity entity,
 											in WorldMap.Marker.Data marker,
@@ -1344,7 +1344,7 @@ namespace TC2.Conquest
 									}
 								}
 
-								using (var collapsible = GUI.Collapsible2.New("units.collapsible"u8, new Vector2(GUI.RmX, 32), default_open: true))
+								using (var collapsible = GUI.Collapsible2.New("units.collapsible"u8, new Vector2(GUI.RmX, 32), default_open: false))
 								{
 									GUI.TitleCentered("Units"u8, size: 24, pivot: new(0.00f, 0.50f));
 

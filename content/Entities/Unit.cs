@@ -323,6 +323,7 @@ namespace TC2.Conquest
 				[Asset.Ignore] public Vector2 pos_target;
 				[Asset.Ignore] public Vector2 dir_last;
 				[Asset.Ignore] public Entity ent_target;
+				[Asset.Ignore] public float target_interact_distance;
 
 				// speed in km/h
 				public float speed = 10.00f;
@@ -341,6 +342,7 @@ namespace TC2.Conquest
 				[Net.Ignore, Save.Ignore] public int current_branch_index;
 				[Net.Ignore, Save.Ignore] public FixedArray32<Road.Junction.Branch> branches;
 				[Net.Ignore, Save.Ignore] public int branches_count;
+				[Net.Ignore, Save.Ignore] public float t_next_action;
 				[Net.Ignore, Save.Ignore] public EntRef<Transform.Data> ref_target_transform;
 
 				public Data()
@@ -374,7 +376,7 @@ namespace TC2.Conquest
 				return ent_nearest;
 			}
 
-	
+
 
 			public struct ActionRPC: Net.IRPC<Unit.Data>
 			{
@@ -409,6 +411,7 @@ namespace TC2.Conquest
 
 							data.pos_target = this.pos_target;
 							data.ent_target = this.ent_target;
+							data.target_interact_distance = enterable.radius;
 							data.flags.AddFlag(Unit.Flags.Wants_Repath);
 						}
 						break;
@@ -431,6 +434,7 @@ namespace TC2.Conquest
 					if (ok)
 					{
 						data.action = this.action;
+						data.t_next_action = 0.00f;
 						data.Sync(entity, true);
 					}
 
@@ -486,6 +490,7 @@ namespace TC2.Conquest
 			[ISystem.Update.A(ISystem.Mode.Single, ISystem.Scope.Global)]
 			public static void UpdateActions(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Global] ref World.Global world_global, [Source.Owned] ref WorldMap.Unit.Data unit, [Source.Owned] ref Transform.Data transform)
 			{
+				var time = info.WorldTime;
 				switch (unit.action)
 				{
 					case Unit.Action.None:
@@ -502,38 +507,50 @@ namespace TC2.Conquest
 
 					case Unit.Action.Enter:
 					{
-						ref var transform_target = ref unit.ref_target_transform.GetValueOrNullRef(unit.ent_target, out var target_changed);
-						if (transform_target.IsNotNull())
+						if (time >= unit.t_next_action)
 						{
-							unit.pos_target = transform_target.position;
+							ref var transform_target = ref unit.ref_target_transform.GetValueOrNullRef(unit.ent_target, out var target_changed);
+							if (transform_target.IsNotNull())
+							{
+								unit.pos_target = transform_target.position;
 
 #if SERVER
-							if (unit.pos_target.IsInRadius(transform.position, 0.125f))
-							{
-								if (Unit.TryEnter(entity, unit.ent_target))
+								if (unit.pos_target.IsInRadius(transform.position, unit.target_interact_distance))
 								{
-									unit.action = default;
-									unit.ent_target = default;
-									unit.Sync(entity);
+									if (Unit.TryEnter(entity, unit.ent_target))
+									{
+										unit.action = default;
+										unit.ent_target = default;
+										unit.target_interact_distance = 0.00f;
+										unit.Sync(entity);
+									}
 								}
-							}
 #endif
+
+								unit.t_next_action = time + 1.00f;
+							}
 						}
 					}
 					break;
 
 					case Unit.Action.Exit:
 					{
-#if SERVER
-						if (Unit.TryExit(entity))
+						if (time >= unit.t_next_action)
 						{
+#if SERVER
+							if (Unit.TryExit(entity))
+							{
 
-						}
+							}
 
-						unit.action = default;
-						unit.ent_target = default;
-						unit.Sync(entity);
+							unit.action = default;
+							unit.ent_target = default;
+							unit.target_interact_distance = 0.00f;
+							unit.Sync(entity);
 #endif
+
+							unit.t_next_action = time + 1.00f;
+						}
 					}
 					break;
 				}

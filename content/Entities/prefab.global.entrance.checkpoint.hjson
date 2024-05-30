@@ -46,8 +46,8 @@ nameable:
 worldmap.enterable:
 {
     type: entrance
-	mask_units: character, vehicle
-    radius: 0.750
+	mask_units: character
+    radius: 0.375
 }
 
 faction.colorable:
