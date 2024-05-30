@@ -963,6 +963,8 @@ namespace TC2.Conquest
 					WorldMap.selected_entity = entity;
 				}
 
+				hs_selected_entities.Add(entity);
+
 				if (focus)
 				{
 					ref var transform = ref entity.GetComponent<Transform.Data>();

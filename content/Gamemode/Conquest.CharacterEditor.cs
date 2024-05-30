@@ -36,6 +36,7 @@ namespace TC2.Conquest
 				//character.h_location_current = this.vars.h_location;
 				character.faction = player.h_faction;
 				character.species = this.vars.h_species;
+				character.h_location_home = this.vars.h_location;
 
 				character.gender = this.vars.gender;
 				character.prefab = props.h_prefab;
@@ -72,17 +73,19 @@ namespace TC2.Conquest
 				var ent_location = h_location.GetGlobalEntity();
 				var ent_character = character_asset.GetGlobalEntity();
 
-				var h_recipe_vehicle = this.vars.h_recipe_vehicle;
+				var h_kit_vehicle = this.vars.h_kit_vehicle;
 				var h_character = character_asset.GetHandle();
 				var h_prefab_vehicle = default(Prefab.Handle);
 
-				if (h_recipe_vehicle.TryGetDefinition(out var recipe_vehicle) && recipe_vehicle.data.flags.HasAny(Crafting.Recipe.Flags.Overworld))
+				if (h_kit_vehicle.TryGetDefinition(out var kit_vehicle) && kit_vehicle.data.slot == Kit.Slot.Vehicle)
 				{
-					var product = recipe_vehicle.data.products.FirstOrDefault(x => x.type == Crafting.Product.Type.Prefab);
-					if (Assert.Check(product.IsValid(), level: Assert.Level.Warn))
-					{
-						h_prefab_vehicle = product.prefab;
-					}
+					h_prefab_vehicle = kit_vehicle.data.shipment.items[0].prefab;
+
+					//var product = kit_vehicle.data.shipment.items[0].prefab;
+					//if (Assert.Check(product.IsValid(), level: Assert.Level.Warn))
+					//{
+					//	h_prefab_vehicle = product.prefab;
+					//}
 				}
 
 				var money = props.money;
@@ -168,7 +171,7 @@ namespace TC2.Conquest
 
 				public uint name_seed;
 
-				public IRecipe.Handle h_recipe_vehicle;
+				public IKit.Handle h_kit_vehicle;
 
 				public Organic.Gender gender = Organic.Gender.Male;
 
@@ -276,12 +279,14 @@ namespace TC2.Conquest
 			{
 				ref var species_data = ref vars.h_species.GetData();
 				ref var origin_data = ref vars.h_origin.GetData();
+				ref var location_data = ref vars.h_location.GetData();
 
 				ref var h_selected_hair = ref (vars.gender == Organic.Gender.Female ? ref vars.h_hair_female : ref vars.h_hair_male);
 				ref var h_selected_beard = ref (vars.gender == Organic.Gender.Female ? ref vars.h_beard_female : ref vars.h_beard_male);
 
 				ref var hair_data = ref h_selected_hair.GetData();
 				ref var beard_data = ref h_selected_beard.GetData();
+				ref var vehicle_data = ref vars.h_kit_vehicle.GetData();
 
 				if (species_data.IsNotNull())
 				{
@@ -335,6 +340,17 @@ namespace TC2.Conquest
 					props.sprite_beard = beard_data.sprite;
 				}
 
+				if (vehicle_data.IsNotNull())
+				{
+					props.cost += vehicle_data.cost;
+				}
+
+				if (location_data.IsNotNull())
+				{
+					ref var stats = ref location_data.statistics;
+					props.money += ((props.money * Maths.Avg(stats.economy, stats.wealth)) * stats.urbanization) * 0.25f;
+				}
+
 				ICharacterModifier.Apply(ref props, in vars, (x, flags) => x.args.character_flags.HasAny(flags));
 
 				if (species_data.IsNotNull())
@@ -343,6 +359,9 @@ namespace TC2.Conquest
 					props.hair_color = Color32BGRA.Lerp(props.hair_color, Color32BGRA.White.WithAlpha(40), Maths.InvLerp01(Maths.Lerp(species_data.lifecycle.age_mature, species_data.lifecycle.age_elder, 0.70f), species_data.lifecycle.age_elder * 1.40f, props.age * props.visual_age_mult));
 				}
 				//props.hair_color.a = 255;
+
+				props.money = props.money.SnapCeil(11);
+				props.cooldown = (MathF.Pow(props.cost + MathF.Pow(props.money, 0.86f), 1.10f)).SnapCeil(60.00f * 5);
 			}
 		}
 
@@ -692,8 +711,8 @@ namespace TC2.Conquest
 								{
 									using (var group_row = GUI.Group.New(size: new(GUI.RmX, 64 + 8)))
 									{
-										if (GUI.AssetInput2("edit.vehicle"u8, ref vars.h_recipe_vehicle, size: new(GUI.RmX * 0.50f, GUI.RmY), show_label: false, tab_height: 64.00f, close_on_select: true,
-										filter: static (x) => x.data.tags.HasAll(Crafting.Recipe.Tags.Overworld | Crafting.Recipe.Tags.Vehicle) && x.data.flags.HasAll(Crafting.Recipe.Flags.Overworld),
+										if (GUI.AssetInput2("edit.vehicle"u8, ref vars.h_kit_vehicle, size: new(GUI.RmX * 0.50f, GUI.RmY), show_label: false, tab_height: 64.00f, close_on_select: true,
+										filter: static (x) => x.data.slot == Kit.Slot.Vehicle && x.data.flags.HasAll(Kit.Flags.Overworld),
 										draw: (asset, group, is_title) =>
 										{
 											if (asset != null)
@@ -717,11 +736,11 @@ namespace TC2.Conquest
 
 													GUI.TitleCentered(asset.data.name, rect: group_right.GetInnerRect(), pivot: new(0.00f, 0.00f), offset: new(4, 4), size: 24);
 
-													using (var group_reqs =group_right.Split(size: new(group_right.size.X, 36), align_x: GUI.AlignX.Center, align_y: GUI.AlignY.Bottom))
-													{
-														//GUI.NewLine(4);
-														GUI.DrawMoneyRequirement(custom_character.props.money, asset.data.requirements[0].amount);
-													}
+													//using (var group_reqs =group_right.Split(size: new(group_right.size.X, 36), align_x: GUI.AlignX.Center, align_y: GUI.AlignY.Bottom))
+													//{
+													//	//GUI.NewLine(4);
+													//	GUI.DrawMoneyRequirement(custom_character.props.money, asset.data.requirements[0].amount);
+													//}
 
 												}
 											}
@@ -757,17 +776,21 @@ namespace TC2.Conquest
 							{
 								group_top.DrawBackground(GUI.tex_window);
 
-								using (var scrollbox = GUI.Scrollbox.New("scroll.experience"u8, size: new(GUI.RmX, GUI.RmY - 244)))
+								using (var scrollbox = GUI.Scrollbox.New("scroll.experience"u8, size: new(GUI.RmX, GUI.RmY - 64)))
 								{
 									Experience.DrawTableSmall2(ref props.experience);
 								}
 
 								GUI.SeparatorThick();
 
-
+								using (var group_bottom = GUI.Group.New(size: new(GUI.RmX, GUI.RmY), padding: new(4)))
+								{
+									GUI.TitleCentered("Cooldown"u8, pivot: new(0.50f, 0.00f), offset: new(0, 0), size: 32);
+									GUI.TitleCentered(GUI.FormatTime(props.cooldown), pivot: new(0.50f, 1.00f), offset: new(0, 0), size: 24);
+								}
 							}
 
-							var is_valid = vars.h_origin.IsValid() && vars.h_species.IsValid() && vars.h_location.IsValid() && vars.h_recipe_vehicle.IsValid();
+							var is_valid = vars.h_origin.IsValid() && vars.h_species.IsValid() && vars.h_location.IsValid() && vars.h_kit_vehicle.IsValid();
 							if (GUI.DrawConfirmButton("character.create"u8, "Create Character"u8, "Do you want to create\n    this character?"u8, size: GUI.Rm, font_size: 24, color: GUI.col_button_ok, enabled: is_valid))
 							{
 								var rpc = new Conquest.CreateCharacterRPC();
@@ -813,7 +836,7 @@ namespace TC2.Conquest
 				if (character_data.IsNotNull())
 				{
 					var color = GUI.col_button_yellow;
-					using (var widget = Sidebar.Widget.New("character.main", character_data.name, character_data.sprite_head, size: new Vector2(48 * 6, 48 * 4), has_window: false, show_as_selected: h_character_current == h_character, color: color, order: (10.00f - 0.10f)))
+					using (var widget = Sidebar.Widget.New("character.main", character_data.name, character_data.sprite_head, size: new Vector2(48 * 6, 48 * 4), has_window: false, show_as_selected: h_character_current == h_character || WorldMap.hs_selected_entities.Contains(h_character.GetGlobalEntity()), color: color, order: (10.00f - 0.10f)))
 					{
 						widget.func_draw = (widget, group, icon_color) =>
 						{
@@ -821,18 +844,19 @@ namespace TC2.Conquest
 							GUI.FocusableAsset(h_character);
 						};
 
-						//var kb = GUI.GetKeyboard();
-						//if (widget.state_flags.HasAny(Sidebar.Widget.StateFlags.Show) && h_character_current != h_character)
-						//{
-						//	App.WriteLine("switch");
+						var kb = GUI.GetKeyboard();
+						if (widget.state_flags.HasAny(Sidebar.Widget.StateFlags.Show) && h_character_current != h_character)
+						{
+							App.WriteLine("switch");
+							var rpc = new Character.SwitchRPC()
+							{
+								h_character = h_character
+							};
+							rpc.Send();
 
-						//	Client.connection_meta->h_character_current_cached = h_character;
-						//	var rpc = new SwitchRPC()
-						//	{
-						//		h_character = h_character
-						//	};
-						//	rpc.Send();
-						//}
+
+							WorldMap.SelectEntity(h_character.GetGlobalEntity(), interact: false);
+						}
 
 						//if (widget.IsHovered())
 						//{

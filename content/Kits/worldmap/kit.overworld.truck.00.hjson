@@ -1,0 +1,50 @@
+﻿{
+	$version: "0.1.60.7"
+	name: "Truck"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	icon:
+	{
+		texture: "worldmap.unit.truck.00"
+		size: [24, 24]
+		frame: [4, 0]
+	}
+	
+	flags: selectable, overworld
+	slot: vehicle
+	categories: vehicle, heavy, advanced, machine, storage, civilian, industrial, slow
+	faction: "null"
+	species: "human"
+	
+	character_flags:
+	{
+		require: none
+		include: construction, criminal, medical, artisan, laborer, civillian, commerce, technician, engineer, nomad, outdoor, strong, thief, lower_middle_class, middle_class
+		exclude: none
+		weight: 1.000
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	cost: 1150.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: "unit.truck.00"
+				quantity: 1.000
+				flags: despawn, no_consume
+			}
+			null
+			null
+			null
+		]
+		flags: dirty, unpack
+	}
+}

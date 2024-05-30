@@ -85,7 +85,7 @@ nameable:
 
 storage:
 {
-	@inventory4:
+	@inventory8:
 	{
 		stack_size_multiplier: 2.000
 		type: storage
