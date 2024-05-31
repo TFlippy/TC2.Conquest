@@ -43,6 +43,11 @@ nameable:
 	flags: no_rename, use_asset_name
 }
 
+address:
+{
+	
+}
+
 stockpile:
 {
 	flags: auto_create

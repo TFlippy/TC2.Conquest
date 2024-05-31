@@ -20,6 +20,11 @@ transform:
 	
 }
 
+address:
+{
+	
+}
+
 // worldmap.enterable:
 // {
 //     type: location
