@@ -36,6 +36,6 @@
 			null
 			null
 		]
-		flags: dirty, unpack
+		flags: unpack
 	}
 }

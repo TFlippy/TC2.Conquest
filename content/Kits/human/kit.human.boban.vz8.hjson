@@ -34,6 +34,6 @@
 			null
 			null
 		]
-		flags: dirty, allow_withdraw, allow_deposit, storable
+		flags: allow_withdraw, allow_deposit, storable
 	}
 }
