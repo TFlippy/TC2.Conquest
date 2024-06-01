@@ -466,6 +466,7 @@ namespace TC2.Conquest
 
 						ref var vars = ref custom_character.vars;
 						ref var props = ref custom_character.props;
+						props = new();
 
 						ref var h_selected_hair = ref (vars.gender == Organic.Gender.Female ? ref vars.h_hair_female : ref vars.h_hair_male);
 						ref var h_selected_beard = ref (vars.gender == Organic.Gender.Female ? ref vars.h_beard_female : ref vars.h_beard_male);
@@ -839,7 +840,9 @@ namespace TC2.Conquest
 				if (character_data.IsNotNull())
 				{
 					var color = GUI.col_button_yellow;
-					using (var widget = Sidebar.Widget.New("character.main", character_data.name, character_data.sprite_head, size: new Vector2(48 * 6, 48 * 4), has_window: false, show_as_selected: h_character_current == h_character || WorldMap.hs_selected_entities.Contains(h_character.GetGlobalEntity()), color: color, order: (10.00f - 0.10f)))
+
+					var is_selected = h_character_current == h_character && (!WorldMap.IsOpen || WorldMap.hs_selected_entities.Contains(h_character.GetGlobalEntity()));
+					using (var widget = Sidebar.Widget.New("character.main", character_data.name, character_data.sprite_head, size: new Vector2(48 * 6, 48 * 4), has_window: false, show_as_selected: is_selected, color: color, order: (10.00f - 0.10f)))
 					{
 						widget.func_draw = (widget, group, icon_color) =>
 						{
@@ -848,7 +851,7 @@ namespace TC2.Conquest
 						};
 
 						var kb = GUI.GetKeyboard();
-						if (widget.state_flags.HasAny(Sidebar.Widget.StateFlags.Show) && h_character_current != h_character)
+						if (widget.state_flags.HasAny(Sidebar.Widget.StateFlags.Show) && !is_selected)
 						{
 							App.WriteLine("switch");
 							var rpc = new Character.SwitchRPC()
@@ -857,8 +860,37 @@ namespace TC2.Conquest
 							};
 							rpc.Send();
 
+							var ent_character_global = h_character.GetGlobalEntity();
+							if (ent_character_global.IsAlive())
+							{
+								if (ent_character_global.TryGetParent(Relation.Type.Child, out var ent_character_parent))
+								{
+									if (ent_character_parent.TryGetAssetHandle(out ILocation.Handle h_location))
+									{
+										if (h_location.TryGetRegionID(out var region_id_location) && region_id_location == Client.GetRegionID())
+										{
 
-							WorldMap.SelectEntity(h_character.GetGlobalEntity(), interact: false);
+										}
+										else
+										{
+											WorldMap.SelectEntity(ent_character_global, interact: false);
+										}
+									}
+									else if (ent_character_parent.TryGetAssetHandle(out IEntrance.Handle h_entrance))
+									{
+										WorldMap.FocusEntity(h_entrance.GetGlobalEntity(), interact: true);
+										WorldMap.SelectEntity(ent_character_global, focus: false, interact: false);
+									}
+									else
+									{
+										WorldMap.SelectEntity(ent_character_global, interact: false);
+									}
+								}
+								else
+								{
+									WorldMap.SelectEntity(ent_character_global, interact: false);
+								}
+							}
 						}
 
 						//if (widget.IsHovered())
