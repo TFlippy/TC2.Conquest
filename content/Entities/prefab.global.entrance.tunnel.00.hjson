@@ -52,14 +52,14 @@ stockpile:
 {
 	flags: auto_create
 	grid_column_count: 6
-	capacity_items: 16
-	capacity_shipments: 16
+	capacity_items: 8
+	capacity_shipments: 12
 }
 
 worldmap.enterable:
 {
     type: entrance
-	mask_units: character
+	mask_units: character, vehicle
     radius: 0.375
 }
 
