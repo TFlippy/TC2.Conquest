@@ -50,10 +50,11 @@ worldmap.marker:
 
 stockpile:
 {
+	request_types: pack, unpack, move, send, load
+	flags: auto_create
 	grid_column_count: 2
 	capacity_items: 2
 	capacity_shipments: 1
-	capacity_characters: 2
 }
 
 interactable:

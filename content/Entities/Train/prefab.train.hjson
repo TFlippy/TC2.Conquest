@@ -54,9 +54,10 @@ faction:
 
 stockpile:
 {
+	request_types: pack, unpack, move, send, load
+	flags: auto_create
 	capacity_items: 16
 	capacity_shipments: 8
-	capacity_characters: 8
 }
 
 market:

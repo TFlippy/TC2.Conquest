@@ -51,7 +51,7 @@ nameable:
 stockpile:
 {
 	flags: auto_create
-	grid_column_count: 6
+	grid_column_count: 8
 	capacity_items: 16
 	capacity_shipments: 32
 }
