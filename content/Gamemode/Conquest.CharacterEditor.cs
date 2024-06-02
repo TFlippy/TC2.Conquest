@@ -841,7 +841,7 @@ namespace TC2.Conquest
 				{
 					var color = GUI.col_button_yellow;
 
-					var is_selected = h_character_current == h_character && (!WorldMap.IsOpen || WorldMap.hs_selected_entities.Contains(h_character.GetGlobalEntity()));
+					var is_selected = h_character_current == h_character && ((Client.GetRegionID() == character_asset.region_id && character_asset.region_id > 0) || !WorldMap.IsOpen || WorldMap.hs_selected_entities.Contains(h_character.GetGlobalEntity()));
 					using (var widget = Sidebar.Widget.New("character.main", character_data.name, character_data.sprite_head, size: new Vector2(48 * 6, 48 * 4), has_window: false, show_as_selected: is_selected, color: color, order: (10.00f - 0.10f)))
 					{
 						widget.func_draw = (widget, group, icon_color) =>
@@ -851,14 +851,17 @@ namespace TC2.Conquest
 						};
 
 						var kb = GUI.GetKeyboard();
-						if (widget.state_flags.HasAny(Sidebar.Widget.StateFlags.Show) && !is_selected)
+						if (widget.state_flags.HasAny(Sidebar.Widget.StateFlags.Show)) // && !is_selected)
 						{
 							App.WriteLine("switch");
-							var rpc = new Character.SwitchRPC()
+							if (h_character_current != h_character | !is_selected)
 							{
-								h_character = h_character
-							};
-							rpc.Send();
+								var rpc = new Character.SwitchRPC()
+								{
+									h_character = h_character
+								};
+								rpc.Send();
+							}
 
 							var ent_character_global = h_character.GetGlobalEntity();
 							if (ent_character_global.IsAlive())
@@ -871,7 +874,11 @@ namespace TC2.Conquest
 										//if (h_location.TryGetRegionID(out var region_id_location) && region_id_location == Client.GetRegionID())
 										if (region_id_location != 0 && region_id_location == Client.GetRegionID())
 										{
-
+											if (WorldMap.IsOpen)
+											{
+												WorldMap.FocusLocation(h_location);
+												WorldMap.SelectEntity(ent_character_global, focus: false, interact: false);
+											}
 										}
 										else
 										{

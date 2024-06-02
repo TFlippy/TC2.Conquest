@@ -1347,7 +1347,7 @@ namespace TC2.Conquest
 									}
 								}
 
-								using (var collapsible = GUI.Collapsible2.New("units.collapsible"u8, new Vector2(GUI.RmX, 32), default_open: false))
+								using (var collapsible = GUI.Collapsible2.New("units.collapsible"u8, new Vector2(GUI.RmX, 32), default_open: true))
 								{
 									GUI.TitleCentered("Units"u8, size: 24, pivot: new(0.00f, 0.50f));
 
@@ -2265,9 +2265,8 @@ namespace TC2.Conquest
 
 											if (WorldMap.IsHovered())
 											{
-												if (unit.IsNotNull())
+												if (unit.IsNotNull() && !ent_parent.IsAsset<ILocation.Handle>())
 												{
-
 													var rpc = new Unit.ActionRPC();
 													rpc.action = Unit.Action.Move;
 
