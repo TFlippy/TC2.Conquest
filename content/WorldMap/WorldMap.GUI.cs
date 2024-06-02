@@ -656,6 +656,7 @@ namespace TC2.Conquest
 											}
 										}
 
+										// TODO: big shitcode
 										ref var enterable = ref entity.GetComponent<WorldMap.Enterable.Data>();
 										if (enterable.IsNotNull())
 										{
@@ -677,10 +678,12 @@ namespace TC2.Conquest
 
 														//GUI.DrawRectFilled(rect_child, color: GUI.col_black.WithAlpha(150), layer: GUI.Layer.Window);
 
+														var child_color = color.WithRGB(child_marker.color_override.IsVisible() ? child_marker.color_override : child_marker.color);
+
 														GUI.DrawSpriteCentered(
 															child_icon, rect_child,
 															layer: GUI.Layer.Window, scale: 0.125f * Maths.Max(region.GetWorldToCanvasScale() * child_marker.scale * 0.75f, 16),
-															color: color.WithAlphaMult(alpha_mult), pivot: new Vector2(0.50f, 0.50f));
+															color: child_color.WithAlphaMult(alpha_mult), pivot: new Vector2(0.50f, 0.50f));
 
 														child_i++;
 													}
@@ -1610,7 +1613,7 @@ namespace TC2.Conquest
 										//var ts_elapsed = ts.GetMilliseconds();
 										//GUI.DrawTextCentered($"{ts_elapsed:0.0000} ms", GUI.CanvasSize * 0.50f, layer: GUI.Layer.Foreground);
 									}
-								}							
+								}
 							}
 						}
 					}
@@ -2277,29 +2280,46 @@ namespace TC2.Conquest
 													rpc.action = Unit.Action.Move;
 
 													var ent_hovered = WorldMap.hovered_entity;
-													if (ent_hovered.IsAlive() && ent_hovered != ent_unit)
+													if (ent_hovered != ent_unit)
 													{
-														ref var enterable = ref ent_hovered.GetComponent<Enterable.Data>();
-														if (enterable.IsNotNull() && enterable.mask_units.Has(unit.type))
+														if (ent_hovered.IsAlive())
 														{
-															if (has_parent && ent_hovered == ent_parent)
+															ref var enterable = ref ent_hovered.GetComponent<Enterable.Data>();
+															if (enterable.IsNotNull() && enterable.mask_units.Has(unit.type))
 															{
-																GUI.SetCursor(App.CursorType.Remove, 200);
-																rpc.action = Unit.Action.Exit;
-																rpc.ent_target = ent_hovered;
+																if (has_parent && ent_hovered == ent_parent)
+																{
+																	GUI.SetCursor(App.CursorType.Remove, 200);
+																	rpc.action = Unit.Action.Exit;
+																	rpc.ent_target = ent_hovered;
+																}
+																else
+																{
+																	GUI.SetCursor(App.CursorType.Add, 200);
+																	rpc.action = Unit.Action.Enter;
+																	rpc.ent_target = ent_hovered;
+																}
 															}
-															else
+														}
+														else
+														{
+															if (has_parent && hs_selected_entities.Count == 1)
 															{
-																GUI.SetCursor(App.CursorType.Add, 200);
-																rpc.action = Unit.Action.Enter;
-																rpc.ent_target = ent_hovered;
+																ref var enterable = ref ent_parent.GetComponent<Enterable.Data>();
+																if (enterable.IsNotNull() && enterable.mask_units.Has(unit.type) && transform.position.IsInRadius(wpos_mouse_snapped, enterable.radius * 2))
+																{
+																	GUI.SetCursor(App.CursorType.Remove, 200);
+																	rpc.action = Unit.Action.Exit;
+																	rpc.ent_target = ent_parent;
+																	rpc.pos_target = wpos_mouse_snapped;
+																}
 															}
 														}
 													}
 
 													if (mouse.GetKeyDown(Mouse.Key.Right) && unit.CanPlayerControlUnit(ent_unit, Client.GetPlayerHandle()))
 													{
-														rpc.pos_target = wpos_mouse_snapped + ((transform.position - wpos_mouse_snapped).GetNormalized(out var dist) * Maths.Min((unit_index++) * 0.30f, dist * 0.50f));
+														if (rpc.pos_target == Vector2.Zero) rpc.pos_target = wpos_mouse_snapped + ((transform.position - wpos_mouse_snapped).GetNormalized(out var dist) * Maths.Min((unit_index++) * 0.30f, dist * 0.50f));
 														rpc.Send(ent_unit);
 													}
 												}

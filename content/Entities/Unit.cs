@@ -565,7 +565,7 @@ namespace TC2.Conquest
 						if (time >= unit.t_next_action)
 						{
 #if SERVER
-							if (Unit.TryExit(entity))
+							if (Unit.TryExit(entity, unit.pos_target, true))
 							{
 
 							}
@@ -613,7 +613,7 @@ namespace TC2.Conquest
 				}
 			}
 
-			public static bool TryExit(Entity ent_unit)
+			public static bool TryExit(Entity ent_unit, Vector2? pos_target = null, bool clamp_pos_target = true)
 			{
 				try
 				{
@@ -636,15 +636,26 @@ namespace TC2.Conquest
 					//if (pos == default) pos = (Vector2)location_data.point + random.NextUnitVector2Range(0.25f, 0.50f);
 
 					var pos = transform.position;
-
-					var road = WorldMap.GetNearestRoad(Road.Type.Road, pos, out var dist_sq);
-					if (road.IsValid())
+					if (pos_target.TryGetValue(out var pos_target_v))
 					{
-						var pos_tmp = road.GetNearestPosition(pos, out dist_sq);
-
-						if (dist_sq <= enterable.radius.Pow2())
+						if (clamp_pos_target)
 						{
-							pos = pos_tmp;
+							pos_target_v = Maths.ClampRadius(pos_target_v, transform.position, enterable.radius);
+						}
+
+						pos = pos_target_v;
+					}
+					else
+					{
+						var road = WorldMap.GetNearestRoad(Road.Type.Road, pos, out var dist_sq);
+						if (road.IsValid())
+						{
+							var pos_tmp = road.GetNearestPosition(pos, out dist_sq);
+
+							if (dist_sq <= enterable.radius.Pow2())
+							{
+								pos = pos_tmp;
+							}
 						}
 					}
 
