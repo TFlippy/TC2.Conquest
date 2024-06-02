@@ -465,7 +465,7 @@ namespace TC2.Conquest
 				Spawn.RespawnGUI.window_offset = new Vector2(0, 90);
 				Spawn.RespawnGUI.window_pivot = new Vector2(0, 0);
 
-				if (ScoreboardGUI.show || (!player.flags.HasAny(Player.Flags.Alive) && Editor.show_respawn_menu))
+				if (!WorldMap.IsOpen && (ScoreboardGUI.show || (!player.flags.HasAny(Player.Flags.Alive) && Editor.show_respawn_menu)))
 				{
 					var gui = new ScoreboardGUI()
 					{

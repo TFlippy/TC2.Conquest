@@ -1481,10 +1481,9 @@ namespace TC2.Conquest
 																	//GUI.TextShadedCentered(entity.GetFaction().GetName(), size: 14, pivot: new(0.00f, 1.00f), color: GUI.font_color_desc);
 																}
 
-																//var selected = asset == h_selected_location; // selected_region_id == i;
 																if (GUI.Selectable3(entity.GetShortID(), group_row.GetOuterRect(), contains, is_readonly: !is_selectable))
 																{
-																	var result = WorldMap.SelectUnitBehavior(entity, SelectUnitMode.Single, SelectUnitFlags.Multiselect | SelectUnitFlags.Hold_Shift | SelectUnitFlags.Toggle);
+																	var result = WorldMap.SelectUnitBehavior(entity, SelectUnitMode.Single, SelectUnitFlags.Multiselect | SelectUnitFlags.Hold_Shift | SelectUnitFlags.Toggle, selected: is_selected);
 																	if (result.HasAny(SelectUnitResults.Changed))
 																	{
 																		if (result.HasAny(SelectUnitResults.Removed))
@@ -1902,9 +1901,10 @@ namespace TC2.Conquest
 		public static SelectUnitResults SelectUnitBehavior(Entity ent_unit, SelectUnitMode mode, SelectUnitFlags flags, bool? selected = null)
 		{
 			if (ent_unit.id == 0) return SelectUnitResults.None;
+			var is_unit = ent_unit.HasComponent<WorldMap.Unit.Data>();
+			//if (!is_unit) return SelectUnitResults.None;
 
 			var hs = WorldMap.hs_selected_entities;
-
 			var selected_count = hs.Count;
 			var contains = hs.Contains(ent_unit);
 			var is_selected = selected ?? contains;
@@ -1914,7 +1914,7 @@ namespace TC2.Conquest
 			{
 				if (is_selected || contains)
 				{
-					if (hs.Remove(ent_unit)) results |= SelectUnitResults.Removed | SelectUnitResults.Changed;
+					if (hs.Remove(ent_unit) || is_selected) results |= SelectUnitResults.Removed | SelectUnitResults.Changed;
 				}
 				else
 				{
@@ -1943,14 +1943,14 @@ namespace TC2.Conquest
 								else
 								{
 									//if (contains) results |= SelectUnitResults.Removed;
-									if (contains) results |= SelectUnitResults.Removed;
+									if (contains || is_selected) results |= SelectUnitResults.Removed;
 								}
 							}
 							break;
 
 							case SelectUnitMode.Multiple:
 							{
-								if (hs.Remove(ent_unit)) results |= SelectUnitResults.Removed | SelectUnitResults.Changed;
+								if (hs.Remove(ent_unit) || is_selected) results |= SelectUnitResults.Removed | SelectUnitResults.Changed;
 							}
 							break;
 						}
@@ -1970,7 +1970,7 @@ namespace TC2.Conquest
 
 							case SelectUnitMode.Multiple:
 							{
-								if (hs.Remove(ent_unit)) results |= SelectUnitResults.Removed | SelectUnitResults.Changed;
+								if (hs.Remove(ent_unit) || is_selected) results |= SelectUnitResults.Removed | SelectUnitResults.Changed;
 							}
 							break;
 						}
@@ -1985,7 +1985,7 @@ namespace TC2.Conquest
 				{
 					if (is_selected)
 					{
-						if (hs.Remove(ent_unit)) results |= SelectUnitResults.Removed | SelectUnitResults.Changed;
+						if (hs.Remove(ent_unit) || is_selected) results |= SelectUnitResults.Removed | SelectUnitResults.Changed;
 					}
 					else
 					{
@@ -1995,6 +1995,12 @@ namespace TC2.Conquest
 						if (!contains && hs.Add(ent_unit)) results |= SelectUnitResults.Added;
 					}
 				}
+			}
+
+			// TODO: shithack
+			if (!is_unit)
+			{
+				hs.Remove(ent_unit);
 			}
 
 			if (flags.HasAny(SelectUnitFlags.Include_Children) && results.HasAny(SelectUnitResults.Added | SelectUnitResults.Removed))

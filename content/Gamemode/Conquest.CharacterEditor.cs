@@ -854,14 +854,16 @@ namespace TC2.Conquest
 						if (widget.state_flags.HasAny(Sidebar.Widget.StateFlags.Show)) // && !is_selected)
 						{
 							App.WriteLine("switch");
-							if (h_character_current != h_character | !is_selected)
-							{
-								var rpc = new Character.SwitchRPC()
-								{
-									h_character = h_character
-								};
-								rpc.Send();
-							}
+							Client.SetCharacter(h_character, true, force: !is_selected);
+							//if (h_character_current != h_character | !is_selected)
+							//{
+							//	Client.SetCharacter(h_character, true);
+							//	//var rpc = new Character.SwitchRPC()
+							//	//{
+							//	//	h_character = h_character
+							//	//};
+							//	//rpc.Send();
+							//}
 
 							var ent_character_global = h_character.GetGlobalEntity();
 							if (ent_character_global.IsAlive())
@@ -886,9 +888,11 @@ namespace TC2.Conquest
 											WorldMap.SelectEntity(ent_character_global, focus: false, interact: false);
 										}
 									}
-									else if (ent_character_parent.TryGetAssetHandle(out IEntrance.Handle h_entrance))
+									else if (ent_character_parent.TryGetAsset(out IEntrance.Definition entrance_asset))
 									{
-										WorldMap.FocusEntity(h_entrance.GetGlobalEntity(), interact: true);
+										h_location = entrance_asset.data.h_location_parent;
+										WorldMap.FocusLocation(h_location);
+										WorldMap.FocusEntity(entrance_asset.GetGlobalEntity(), interact: true);
 										WorldMap.SelectEntity(ent_character_global, focus: false, interact: false);
 									}
 									else

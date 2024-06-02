@@ -557,9 +557,9 @@ namespace TC2.Conquest
 		{
 			Spawn.RespawnGUI.enabled = false;
 
-			if (player.IsLocal())
+			//if (player.IsLocal())
 			{
-				if (player.flags.HasNone(Player.Flags.Alive) && !(player.flags.HasAny(Player.Flags.Editor) && !Editor.show_respawn_menu))
+				if (!WorldMap.IsOpen && player.flags.HasNone(Player.Flags.Alive) && !(player.flags.HasAny(Player.Flags.Editor) && !Editor.show_respawn_menu))
 				{
 					var gui = new RespawnGUI
 					{
