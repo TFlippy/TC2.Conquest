@@ -5,6 +5,33 @@ namespace TC2.Conquest
 {
 	public static partial class WorldMap
 	{
+		//public static ILocation.Handle GetCurrentLocation(this ICharacter.Handle h_character)
+		//{
+
+
+		//	//if (h_character.TryGetDefinition(out var character_asset))
+		//	//{
+		//	//	if (character_asset.RegionID == 0)
+		//	//	{
+		//	//		var ent_character_global = character_asset.GetGlobalEntity();
+		//	//		if (ent_character_global.IsAlive())
+		//	//		{
+		//	//			var ent_location_owner = ent_character_global.GetComponentOwner<Location.Data>(Relation.Type.Child);
+		//	//			if (ent_location_owner.TryGetAssetHandle(out ILocation.Handle h_location))
+		//	//			{
+		//	//				//h_location.TryGetRegionID
+		//	//				return h_location;
+		//	//			}
+		//	//		}
+		//	//	}
+		//	//	else
+		//	//	{
+		//	//	}
+		//	//}
+
+		//	//return ILocation.Handle.None;
+		//}
+
 		public static bool CanPlayerControlUnit(this Entity ent_unit, IPlayer.Handle h_player)
 		{
 			if (ent_unit.IsAlive())

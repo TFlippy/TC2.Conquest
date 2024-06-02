@@ -765,7 +765,7 @@ namespace TC2.Conquest
 
 											GUI.DrawMoney(props.money, size: new(GUI.RmX, 24));
 										}
-									} 
+									}
 								}
 
 
@@ -867,13 +867,16 @@ namespace TC2.Conquest
 								{
 									if (ent_character_parent.TryGetAssetHandle(out ILocation.Handle h_location))
 									{
-										if (h_location.TryGetRegionID(out var region_id_location) && region_id_location == Client.GetRegionID())
+										var region_id_location = h_location.GetRegionID();
+										//if (h_location.TryGetRegionID(out var region_id_location) && region_id_location == Client.GetRegionID())
+										if (region_id_location != 0 && region_id_location == Client.GetRegionID())
 										{
 
 										}
 										else
 										{
-											WorldMap.SelectEntity(ent_character_global, interact: false);
+											WorldMap.FocusLocation(h_location);
+											WorldMap.SelectEntity(ent_character_global, focus: false, interact: false);
 										}
 									}
 									else if (ent_character_parent.TryGetAssetHandle(out IEntrance.Handle h_entrance))

@@ -2189,13 +2189,29 @@ namespace TC2.Conquest
 												{
 													if (has_parent)
 													{
-														if (GUI.DrawButton("Exit", size: GUI.Rm, color: GUI.col_remove))
+														var can_exit = true;
+														if (ent_parent.TryGetAsset(out ILocation.Definition location_asset) && location_asset.data.flags.HasAny(ILocation.Flags.Region))
 														{
-															var rpc = new Unit.ActionRPC();
-															rpc.action = Unit.Action.Exit;
-															rpc.ent_target = ent_parent;
-															rpc.pos_target = wpos_mouse_snapped + ((transform.position - wpos_mouse_snapped).GetNormalized(out var dist) * Maths.Min((unit_index++) * 0.30f, dist * 0.50f));
-															rpc.Send(ent_unit);
+															if (GUI.DrawButton("Region", size: GUI.Rm, color: GUI.col_button, enabled: true))
+															{
+																WorldMap.FocusLocation(location_asset);
+																//var rpc = new Unit.ActionRPC();
+																//rpc.action = Unit.Action.Exit;
+																//rpc.ent_target = ent_parent;
+																//rpc.pos_target = wpos_mouse_snapped + ((transform.position - wpos_mouse_snapped).GetNormalized(out var dist) * Maths.Min((unit_index++) * 0.30f, dist * 0.50f));
+																//rpc.Send(ent_unit);
+															}
+														}
+														else
+														{
+															if (GUI.DrawButton("Exit", size: GUI.Rm, color: GUI.col_remove, enabled: can_exit))
+															{
+																var rpc = new Unit.ActionRPC();
+																rpc.action = Unit.Action.Exit;
+																rpc.ent_target = ent_parent;
+																rpc.pos_target = wpos_mouse_snapped + ((transform.position - wpos_mouse_snapped).GetNormalized(out var dist) * Maths.Min((unit_index++) * 0.30f, dist * 0.50f));
+																rpc.Send(ent_unit);
+															}
 														}
 													}
 													else
