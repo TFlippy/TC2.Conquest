@@ -447,7 +447,7 @@ namespace TC2.Conquest
 						{
 							data.pos_target = this.pos_target;
 							data.ent_target = default;
-							data.flags.AddFlag(Unit.Flags.Wants_Repath);
+							data.flags.RemoveFlag(Unit.Flags.Wants_Repath);
 						}
 						break;
 
@@ -638,6 +638,7 @@ namespace TC2.Conquest
 					var pos = transform.position;
 					if (pos_target.TryGetValue(out var pos_target_v))
 					{
+						//App.WriteLine(pos_target_v);
 						if (clamp_pos_target)
 						{
 							pos_target_v = Maths.ClampRadius(pos_target_v, transform.position, enterable.radius);
@@ -665,22 +666,22 @@ namespace TC2.Conquest
 					if (ent_unit.IsAlive())
 					{
 						ent_unit.RemoveRelation(ent_enterable, Relation.Type.Child);
-						ref var transform_unit = ref ent_unit.GetComponent<Transform.Data>();
-						if (transform_unit.IsNotNull())
-						{
-							transform_unit.SetPosition(pos);
-							transform_unit.Sync(ent_unit);
-						}
-
-						//region.Schedule((ref Region.Data.Global region) =>
+						//ref var transform_unit = ref ent_unit.GetComponent<Transform.Data>();
+						//if (transform_unit.IsNotNull())
 						//{
-						//	ref var transform_unit = ref ent_unit.GetComponent<Transform.Data>();
-						//	if (transform_unit.IsNotNull())
-						//	{
-						//		transform_unit.SetPosition(pos);
-						//		transform_unit.Sync(ent_unit);
-						//	}
-						//});
+						//	transform_unit.SetPosition(pos);
+						//	transform_unit.Sync(ent_unit);
+						//}
+
+						region.Schedule((ref Region.Data.Global region) =>
+						{
+							ref var transform_unit = ref ent_unit.GetComponent<Transform.Data>();
+							if (transform_unit.IsNotNull())
+							{
+								transform_unit.SetPosition(pos);
+								transform_unit.Sync(ent_unit);
+							}
+						});
 					}
 					return true;
 				}
