@@ -161,7 +161,7 @@ namespace TC2.Conquest
 				public IHair.Handle h_hair_female;
 				public IHair.Handle h_beard_female;
 
-				public Character.Flags character_flags;
+				public Character.Traits character_flags;
 				public IMap.Industry industry_flags;
 				public IMap.Services service_flags;
 				public IMap.Crime crime_flags;
@@ -253,8 +253,8 @@ namespace TC2.Conquest
 
 				public ISpecies.Flags species_flags;
 
-				public Character.Flags character_flags_default;
-				public Character.Flags character_flags_optional;
+				public Character.Traits character_flags_default;
+				public Character.Traits character_flags_optional;
 
 				public IMap.Industry industry_flags_default;
 				public IMap.Industry industry_flags_optional;
@@ -363,7 +363,7 @@ namespace TC2.Conquest
 			}
 		}
 
-		public interface ICharacterModifier: IModifier<ICharacterModifier, CustomCharacter.Props, CustomCharacter.Vars, Character.Flags>
+		public interface ICharacterModifier: IModifier<ICharacterModifier, CustomCharacter.Props, CustomCharacter.Vars, Character.Traits>
 		{
 
 		}
@@ -376,7 +376,7 @@ namespace TC2.Conquest
 		public static class Modifiers
 		{
 			public static ICharacterModifier.Function modifier_alcoholic =
-			[ICharacterModifier.Info(Character.Flags.Alcoholic, order: -1)] static (x) =>
+			[ICharacterModifier.Info(Character.Traits.Alcoholic, order: -1)] static (x) =>
 			{
 				x.value.bias_health -= 0.32f; // liver doesn't like booze
 				x.value.bias_loser += 0.21f; // sleeps in a ditch
@@ -388,7 +388,7 @@ namespace TC2.Conquest
 			};
 
 			public static ICharacterModifier.Function modifier_strong =
-			[ICharacterModifier.Info(Character.Flags.Strong, order: 1)] static (x) =>
+			[ICharacterModifier.Info(Character.Traits.Strong, order: 1)] static (x) =>
 			{
 				x.value.experience[Experience.Type.Strength].MulS(1.14f);
 				x.value.experience[Experience.Type.Strength].AddS(3);
@@ -396,7 +396,7 @@ namespace TC2.Conquest
 			};
 
 			public static ICharacterModifier.Function modifier_brawler =
-			[ICharacterModifier.Info(Character.Flags.Brawler, order: 5)] static (x) =>
+			[ICharacterModifier.Info(Character.Traits.Brawler, order: 5)] static (x) =>
 			{
 				x.value.experience[Experience.Type.Intellect].AddS(-3); // brain damage
 				x.value.experience[Experience.Type.Strength].AddS(3);
