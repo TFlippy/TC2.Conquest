@@ -239,7 +239,7 @@ namespace TC2.Conquest
 		//					ref var character_data = ref spawn_info.character.GetData();
 		//					if (character_data.IsNotNull())
 		//					{
-		//						var character_flags = character_data.flags;
+		//						var character_flags = character_data.traits;
 
 		//						// old
 		//						//var kits = IKit.Database.GetAssets().Where(x => x.id != 0 && character_flags.HasAll(x.data.character_flags)).ToArray();

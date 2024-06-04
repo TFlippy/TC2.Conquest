@@ -44,7 +44,7 @@ namespace TC2.Conquest
 
 				//character.money = props.money;
 				character.age = props.age;
-				character.flags = this.vars.character_flags;
+				character.traits = this.vars.character_flags;
 				character.experience = props.experience;
 
 				character.hair_color = props.hair_color;
@@ -52,7 +52,7 @@ namespace TC2.Conquest
 				character.beard = this.vars.gender == Organic.Gender.Female ? this.vars.h_beard_female : this.vars.h_beard_male;
 				character.sprite_head = props.sprite_head;
 
-				var name = Spawner.GenerateName(ref random, props.species_flags, character.flags, character.gender);
+				var name = Spawner.GenerateName(ref random, props.species_flags, character.traits, character.gender);
 				character.name = name;
 
 				var identifier = Asset.GenerateRandomIdentifier();
