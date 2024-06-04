@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.60.5"
+	$version: "0.1.60.7"
 	name: "Krumpel Charter Crisis"
 	desc: ""
 	
@@ -11843,6 +11843,142 @@
 			rotation: 0.000
 			z: 0.363
 			color: "0xffb3b3b3"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [64, 24]
+				frame: [0, 4]
+			}
+			
+			position: [29.38315, -8.674041]
+			scale: [0.349828, -0.474996]
+			rotation: -3.050
+			z: -0.274
+			color: "0xffffffff"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [0, 1]
+			}
+			
+			position: [27.94683, -9.773371]
+			scale: [0.262108, 0.575162]
+			rotation: 0.087266
+			z: 0.044
+			color: "0xffc2b5b5"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [0, 4]
+			}
+			
+			position: [28.4502, -9.253783]
+			scale: [0.715937, -0.377431]
+			rotation: 2.879794
+			z: 0.062
+			color: "0xffc2ab9d"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [0, 1]
+			}
+			
+			position: [28.80699, -9.125643]
+			scale: [-0.400865, 0.575606]
+			rotation: 0.034907
+			z: -0.027
+			color: "0xff999191"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [0, 1]
+			}
+			
+			position: [28.24122, -9.230562]
+			scale: [0.375868, 0.500609]
+			rotation: -0.488692
+			z: -0.027
+			color: "0xff999191"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [0, 1]
+			}
+			
+			position: [30.53455, -8.605885]
+			scale: [0.313892, 0.798417]
+			rotation: 3.141593
+			z: 0.044
+			color: "0xffc2b5b5"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 24]
+				frame: [0, 1]
+			}
+			
+			position: [29.92762, -8.386842]
+			scale: [0.550866, 0.975608]
+			rotation: -0.488692
+			z: -0.027
+			color: "0xff999191"
+		}
+		{
+			sprite:
+			{
+				texture: "worldmap.doodads.00"
+				mask: "missing"
+				fps: 0.000
+				count: 0
+				size: [48, 48]
+				frame: [0, 4]
+			}
+			
+			position: [29.84953, -8.624763]
+			scale: [-0.565936, -0.652432]
+			rotation: 0.261799
+			z: 0.062
+			color: "0xffc2ab9d"
 		}
 	]
 }
