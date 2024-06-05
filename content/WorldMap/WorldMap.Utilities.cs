@@ -217,7 +217,7 @@ namespace TC2.Conquest
 
 							if (road_segment_to_junction_index_tmp.ContainsKey(nearest_segment))
 							{
-								App.WriteLine($"Location \"{asset.identifier}\"'s nearest road is a junction - this may cause issues!", App.Color.Yellow);
+								if (App.log_filter.HasAny(App.LogFlags.Debug)) App.WriteLine($"- Location \"{asset.identifier}\"'s nearest road is a junction - this may cause issues!", App.Color.DarkYellow);
 							}
 						}
 					}
@@ -232,7 +232,7 @@ namespace TC2.Conquest
 
 							if (road_segment_to_junction_index_tmp.ContainsKey(nearest_segment))
 							{
-								App.WriteLine($"Location \"{asset.identifier}\"'s nearest rail is a junction - this may cause issues!", App.Color.Yellow);
+								if (App.log_filter.HasAny(App.LogFlags.Debug)) App.WriteLine($"- Location \"{asset.identifier}\"'s nearest rail is a junction - this may cause issues!", App.Color.DarkYellow);
 							}
 						}
 					}
