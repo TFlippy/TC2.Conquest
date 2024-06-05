@@ -1639,20 +1639,21 @@ namespace TC2.Conquest
 							if (location_data.IsNotNull())
 							{
 								var ent_asset = location_asset.GetGlobalEntity();
+								selected_region_id = h_selected_location.GetRegionID();
 
-								for (var i = 0; i < Region.max_count; i++)
-								{
-									ref var region_info = ref World.GetRegionInfo((byte)i);
-									if (region_info.IsNotNull())
-									{
-										ref var map_info = ref region_info.map_info.GetRefOrNull();
-										if (map_info.IsNotNull() && map_info.h_location == h_selected_location)
-										{
-											selected_region_id = (byte)i;
-											break;
-										}
-									}
-								}
+								//for (var i = 0; i < Region.max_count; i++)
+								//{
+								//	ref var region_info = ref World.GetRegionInfo((byte)i);
+								//	if (region_info.IsNotNull())
+								//	{
+								//		ref var map_info = ref region_info.map_info.GetRefOrNull();
+								//		if (map_info.IsNotNull() && map_info.h_location == h_selected_location)
+								//		{
+								//			selected_region_id = (byte)i;
+								//			break;
+								//		}
+								//	}
+								//}
 
 								using (GUI.Group.New(size: GUI.Rm))
 								{
@@ -1700,6 +1701,13 @@ namespace TC2.Conquest
 												var color = GUI.col_button_ok;
 												var alpha = 1.00f;
 
+												if (GUI.DrawIconButton("info"u8, new(GUI.tex_icons_widget, 16, 16, 6, 1), size: new(48, 48)))
+												{
+
+												}
+
+												GUI.SameLine();
+
 												if (Client.GetRegionID() != selected_region_id)
 												{
 													if (GUI.DrawButton("Join"u8, size: new(GUI.RmX, 48), font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
@@ -1723,10 +1731,10 @@ namespace TC2.Conquest
 											}
 											else
 											{
-												if (GUI.DrawButton("Button"u8, size: new(GUI.RmX, 48), font_size: 24, enabled: false, color: GUI.col_button, text_color: GUI.font_color_button_text))
-												{
+												//if (GUI.DrawButton("Button"u8, size: new(GUI.RmX, 48), font_size: 24, enabled: false, color: GUI.col_button, text_color: GUI.font_color_button_text))
+												//{
 
-												}
+												//}
 											}
 										}
 

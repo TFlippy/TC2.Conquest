@@ -45,6 +45,7 @@ namespace TC2.Conquest
 				//character.money = props.money;
 				character.age = props.age;
 				character.traits = this.vars.character_flags;
+				character.flags = Character.Flags.Main;
 				character.experience = props.experience;
 
 				character.hair_color = props.hair_color;
