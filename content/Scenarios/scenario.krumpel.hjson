@@ -1,7 +1,6 @@
 ﻿{
 	$version: "0.1.60.7"
 	name: "Krumpel Charter Crisis"
-	desc: ""
 	
 	governorates:
 	[

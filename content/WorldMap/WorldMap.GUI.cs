@@ -318,7 +318,7 @@ namespace TC2.Conquest
 
 									for (var i = 1; i < Region.max_count; i++)
 									{
-										using (GUI.ID.Push(i + 10000))
+										using (GUI.ID<WorldMap.LocationGUI, Region.Data>.Push(i))
 										{
 											//ref var map_info = ref world_info.[i];
 
@@ -1690,7 +1690,7 @@ namespace TC2.Conquest
 												else
 												{
 													//GUI.DrawSpriteCentered(location_data.thumbnail, group_thumbnail.GetInnerRect(), GUI.Layer.Window, scale: 1.00f);
-													GUI.DrawSpriteCentered(location_data.thumbnail, group_thumbnail.GetInnerRect(), GUI.Layer.Window, scale: 0.50f);
+													GUI.DrawSpriteCentered(location_data.thumbnail, group_thumbnail.GetInnerRect(), GUI.Layer.Window, scale: 1.00f);
 												}
 
 												GUI.DrawBackground(GUI.tex_frame_white, rect: group_thumbnail.GetOuterRect(), padding: new(4), color: GUI.col_button);

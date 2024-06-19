@@ -1,5 +1,5 @@
 ﻿{
-	name: "Arcane Actuators"
+	name: "Magitronic Actuators"
 	desc:
 		'''
 		TODO: Desc
@@ -28,7 +28,7 @@
 		[
 			{
 				type: resource
-				material: "arcane_actuator"
+				material: "actuator"
 				quantity: 7.000
 				flags: no_consume
 			}
