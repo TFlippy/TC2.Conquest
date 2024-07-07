@@ -12,10 +12,10 @@
 	gender_ratio: 0.090
 	species: human
 	faction: "null"
-	cost: 210.000
+	cost: 480.000
 	flags: selectable, special
 	
-	character_flags: military, professional, armed, soldier, outdoor, upper_middle_class
+	character_flags: bureaucrat, military, professional, armed, technician, hunter, soldier, sedentary, outdoor, strong, upper_middle_class
 	character_flags_optional: bureaucrat, criminal, educated, nobility, law, technician, hunter, insane, alcoholic, sedentary, brawler, strong, evil, politician, murderer, terrorist, fanatic
 	
 	industry_flags: military, training, intel

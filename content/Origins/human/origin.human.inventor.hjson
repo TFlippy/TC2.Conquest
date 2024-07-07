@@ -12,11 +12,11 @@
 	gender_ratio: 0.320
 	species: human
 	faction: "null"
-	cost: 0.000
+	cost: 400.000
 	flags: selectable, special
 	
-	character_flags: none
-	character_flags_optional: none
+	character_flags: construction, scientist, educated, artisan, civillian, technician, engineer, arcane, middle_class
+	character_flags_optional: slave, criminal, military, medical, nobility, lowlife, miner, chemist, culinary, insane, alcoholic, nomad, naval, pet, artist, feral, sedentary, brawler, outdoor, strong, junkie, evil, thief, murderer, terrorist, fanatic, clumsy, huge
 	
 	industry_flags: none
 	industry_flags_optional: none
@@ -25,7 +25,7 @@
 	service_flags_optional: none
 	
 	crime_flags: none
-	crime_flags_optional: none
+	crime_flags_optional: theft, murder, drugs, prostitution, vandalism, bribery, corruption, fraud, terrorism, smuggling, forgery, arson, espionage, tax_evasion, jaywalking, vagrancy, counterfeiting, begging, religion, treason, impersonation, dissent, misconduct
 	
 	conditions:
 	{
