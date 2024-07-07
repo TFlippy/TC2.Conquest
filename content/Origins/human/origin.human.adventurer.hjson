@@ -57,9 +57,9 @@
 		
 		urbanization:
 		{
-			min: 0.200
-			mid: 0.900
-			max: 0.000
+			min: 0.000
+			mid: 0.000
+			max: 0.860
 			weight: 10.000
 		}
 		

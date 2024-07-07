@@ -57,9 +57,9 @@
 		
 		urbanization:
 		{
-			min: 0.200
-			mid: 0.900
-			max: 0.000
+			min: 0.070
+			mid: 0.500
+			max: 1.430
 			weight: 10.000
 		}
 		
@@ -73,7 +73,7 @@
 		
 		education:
 		{
-			min: 0.100
+			min: 0.190
 			mid: 0.500
 			max: 0.000
 			weight: 15.000

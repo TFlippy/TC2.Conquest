@@ -73,10 +73,10 @@
 		
 		education:
 		{
-			min: 0.100
-			mid: 0.500
+			min: 0.330
+			mid: 0.840
 			max: 0.000
-			weight: 15.000
+			weight: 35.000
 		}
 		
 		wealth:

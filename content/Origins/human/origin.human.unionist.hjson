@@ -15,7 +15,7 @@
 	cost: 180.000
 	flags: selectable, special
 	
-	character_flags: laborer, civillian, law, social, sedentary, politician, middle_class
+	character_flags: laborer, civillian, law, social, sedentary, politician, lower_middle_class, middle_class
 	character_flags_optional: construction, scientist, criminal, educated, medical, farmer, law, commerce, technician, engineer, miner, chemist, insane, alcoholic, nomad, illiterate, brawler, strong, junkie, evil, thief, murderer, terrorist, fanatic, dumb, clumsy
 	
 	industry_flags: none

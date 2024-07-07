@@ -73,8 +73,8 @@
 		
 		education:
 		{
-			min: 0.100
-			mid: 0.500
+			min: 0.170
+			mid: 0.570
 			max: 0.000
 			weight: 15.000
 		}
