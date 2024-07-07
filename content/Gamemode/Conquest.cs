@@ -58,7 +58,7 @@ namespace TC2.Conquest
 
 				var random = XorRandom.New(true);
 
-				this.h_character = Spawner.CreateCharacter(ref region, ref random, "human.scout", h_faction: h_faction, scope: Asset.Scope.World);
+				this.h_character = Spawner.CreateCharacter(ref region.AsCommon(), ref random, "human.scout", h_faction: h_faction, scope: Asset.Scope.World);
 				if (this.h_character.IsValid())
 				{
 					faction_data.scout_count--;

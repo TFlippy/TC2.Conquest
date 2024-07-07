@@ -28,7 +28,7 @@
 		[
 			{
 				type: resource
-				material: "scrap"
+				material: "scrap.mixed"
 				quantity: 25.000
 				flags: despawn, no_consume
 			}

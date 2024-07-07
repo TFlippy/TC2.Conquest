@@ -287,6 +287,9 @@ namespace TC2.Conquest
 				ref var beard_data = ref h_selected_beard.GetData();
 				ref var vehicle_data = ref vars.h_kit_vehicle.GetData();
 
+				vars.age_ratio.Clamp01Ref();
+				vars.hair_color_ratio.Clamp01Ref();
+
 				if (species_data.IsNotNull())
 				{
 					props.sprite_head = vars.gender == Organic.Gender.Female ? species_data.sprite_head_female : species_data.sprite_head_male;
@@ -488,15 +491,15 @@ namespace TC2.Conquest
 									{
 										using (var group_icon = GUI.Group.New(size: new(GUI.RmY)))
 										{
-											using (GUI.Clip.Push(group_icon.GetInnerRect()))
+											using (var clip = GUI.Clip.Push(group_icon.GetInnerRect()))
 											{
 												if (asset.data.thumbnail.texture.id != 0)
 												{
-													GUI.DrawSpriteCentered(asset.data.thumbnail, group_icon.GetInnerRect(), GUI.Layer.Window, scale: 0.25f);
+													GUI.DrawSpriteCentered(asset.data.thumbnail, clip.rect, GUI.Layer.Window, scale: 0.25f);
 												}
 												else
 												{
-													GUI.DrawSpriteCentered(asset.data.icon, group_icon.GetInnerRect(), GUI.Layer.Window, scale: 2.00f, color: asset.data.color.WithAlpha(255));
+													GUI.DrawSpriteCentered(asset.data.icon, clip.rect, GUI.Layer.Window, scale: 2.00f, color: asset.data.color.WithAlpha(255));
 												}
 											}
 											group_icon.DrawBackground(GUI.tex_frame);
@@ -552,7 +555,7 @@ namespace TC2.Conquest
 										group_b.DrawBackground(GUI.tex_window);
 
 										if (GUI.AssetInput2("edit.species"u8, ref vars.h_species, size: new(160, GUI.RmY), show_label: false, tab_height: 24.00f, close_on_select: true,
-										filter: static (x) => x.data.flags.HasAny(ISpecies.Flags.Sapient),
+										filter: static (x) => x.data.flags.HasAny(ISpecies.Flags.Sapient) && x.data.flags.HasNone(ISpecies.Flags.Feral | ISpecies.Flags.Wild),
 										draw: (asset, group, is_title) =>
 										{
 											if (asset != null)
@@ -724,9 +727,9 @@ namespace TC2.Conquest
 											{
 												using (var group_icon = GUI.Group.New(size: new(80, GUI.RmY)))
 												{
-													using (GUI.Clip.Push(group_icon.GetInnerRect()))
+													using (var clip = GUI.Clip.Push(group_icon.GetInnerRect()))
 													{
-														GUI.DrawSpriteCentered(asset.data.icon, group_icon.GetInnerRect(), GUI.Layer.Window, scale: 3.00f);
+														GUI.DrawSpriteCentered(asset.data.icon, clip.rect, GUI.Layer.Window, scale: 3.00f);
 													}
 													group_icon.DrawBackground(GUI.tex_frame);
 												}
@@ -811,6 +814,7 @@ namespace TC2.Conquest
 						if (reset)
 						{
 							vars.h_origin = default;
+							vars.h_kit_vehicle = default;
 
 							vars.character_flags = default;
 							vars.industry_flags = default;
