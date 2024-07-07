@@ -6,7 +6,7 @@
 		TODO: Desc
 		'''
 	
-	money: 1200.000
+	money: 890.000
 	age: [22.000, 25.000, 28.000, 31.000, 35.000, 39.000, 48.000, 60.000]
 	genders: male, female
 	gender_ratio: 0.250

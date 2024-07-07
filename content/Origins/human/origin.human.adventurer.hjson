@@ -24,7 +24,7 @@
 	service_flags: none
 	service_flags_optional: entertainment, recruitment, espionage, security, gambling, mercenary, advertising, extortion, sabotage
 	
-	crime_flags: theft, jaywalking, vagrancy
+	crime_flags: theft, tax_evasion, jaywalking, vagrancy
 	crime_flags_optional: piracy, theft, murder, drugs, prostitution, vandalism, fraud, terrorism, smuggling, arson, extortion, raiding, pillaging, espionage
 	
 	conditions:

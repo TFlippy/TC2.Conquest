@@ -6,7 +6,7 @@
 		TODO: Desc
 		'''
 	
-	money: 400.000
+	money: 300.000
 	age: [18.000, 23.000, 26.000, 30.000, 32.000]
 	genders: male, female
 	gender_ratio: 0.120
@@ -24,7 +24,7 @@
 	service_flags: none
 	service_flags_optional: none
 	
-	crime_flags: vagrancy, treason, mutiny, dissent, insubordination, misconduct
+	crime_flags: tax_evasion, vagrancy, treason, mutiny, dissent, insubordination, misconduct
 	crime_flags_optional: piracy, theft, murder, embezzlement, drugs, slavery, prostitution, trafficking, vandalism, bribery, corruption, fraud, terrorism, smuggling, forgery, arson, extortion, raiding, pillaging, espionage, tax_evasion, jaywalking, vagrancy, counterfeiting, begging, religion, treason, mutiny, impersonation, dissent, insubordination, misconduct
 	
 	conditions:
