@@ -1,35 +1,35 @@
 ﻿{
 	$version: "0.1.60.7"
-	name: "Adventurer"
+	name: "Pirate"
 	desc:
 		'''
 		TODO: Desc
 		'''
 	
-	money: 700.000
-	age: [18.000, 20.000, 23.000, 25.000, 30.000, 48.000, 54.000]
+	money: 0.000
+	age: [20.000, 29.000, 32.000, 40.000, 43.000, 45.000, 48.000, 53.000, 57.000, 60.000]
 	genders: male, female
-	gender_ratio: 0.100
+	gender_ratio: 0.080
 	species: human
 	faction: "null"
-	cost: 50.000
+	cost: 0.000
 	flags: selectable, special
 	
-	character_flags: armed, nomad, outdoor, strong
-	character_flags_optional: criminal, educated, nobility, hunter, culinary, soldier, insane, alcoholic, naval, entertainer, artist, brawler, junkie, evil, thief, murderer, terrorist, fanatic
+	character_flags: none
+	character_flags_optional: none
 	
-	industry_flags: exploration, mercenary
-	industry_flags_optional: hunting, entertainment, colonization, security, criminal, trading, commerce, aviation, naval, intel, alcohol
+	industry_flags: none
+	industry_flags_optional: none
 	
 	service_flags: none
-	service_flags_optional: entertainment, recruitment, espionage, security, gambling, mercenary, advertising, extortion, sabotage
+	service_flags_optional: none
 	
 	crime_flags: none
-	crime_flags_optional: piracy, theft, murder, drugs, prostitution, vandalism, fraud, terrorism, smuggling, arson, extortion, raiding, pillaging, espionage
+	crime_flags_optional: none
 	
 	conditions:
 	{
-		weight_mult: 0.540
+		weight_mult: 0.560
 		
 		industry:
 		{
@@ -188,34 +188,34 @@
 	
 	experience:
 	{
-		handguns: 10
-		rifles: 14
-		explosives: 6
-		mining: 7
-		woodcutting: 7
-		construction: 5
-		masonry: 3
-		carpentry: 4
-		engineering: 4
-		blacksmithing: 3
-		arcanology: 3
-		strength: 11
-		dexterity: 15
-		endurance: 11
-		intellect: 8
-		geology: 8
-		metallurgy: 3
-		medicine: 4
+		handguns: 4
+		rifles: 2
+		explosives: 7
+		mining: 4
+		woodcutting: 2
+		construction: 7
+		masonry: 5
+		carpentry: 2
+		engineering: 14
+		blacksmithing: 4
+		arcanology: 4
+		strength: 3
+		dexterity: 4
+		endurance: 3
+		intellect: 11
+		geology: 5
+		metallurgy: 9
+		medicine: 3
 		commerce: 5
-		charisma: 4
-		leadership: 3
-		blades: 11
-		axes: 7
-		clubs: 6
-		chemistry: 3
-		farming: 6
-		animals: 11
-		scavenging: 12
-		law: 3
+		charisma: 6
+		leadership: 8
+		blades: 2
+		axes: 1
+		clubs: 3
+		chemistry: 7
+		farming: 0
+		animals: 1
+		scavenging: 5
+		law: 5
 	}
 }
