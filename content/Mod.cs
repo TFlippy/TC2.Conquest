@@ -129,7 +129,7 @@ namespace TC2.Conquest
 
 						GUI.DrawTexture(GUI.tex_white, rect, layer: GUI.Layer.Foreground, color: Color32BGRA.Black.WithAlphaMult(1.00f * overlay_alpha));
 						GUI.DrawTexture(GUI.tex_vignette, rect, layer: GUI.Layer.Foreground, color: Color32BGRA.Black.WithAlphaMult(0.50f * overlay_alpha));
-						GUI.DrawTextCentered("Loading...", position: rect.GetPosition(), pivot: new(0.50f, 0.50f), font: GUI.Font.Superstar, size: 32, layer: GUI.Layer.Foreground, color: GUI.font_color_title.WithAlphaMult(overlay_alpha));
+						GUI.DrawTextCentered("Loading..."u8, position: rect.GetPosition(), pivot: new(0.50f, 0.50f), font: GUI.Font.Superstar, size: 32, layer: GUI.Layer.Foreground, color: GUI.font_color_title.WithAlphaMult(overlay_alpha));
 					}
 				}
 			}

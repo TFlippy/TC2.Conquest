@@ -453,6 +453,7 @@ namespace TC2.Conquest
 			//public static Organic.Gender selected_gender = Organic.Gender.Male;
 
 			public static CustomCharacter custom_character = new();
+			public static Sprite icons_gender = new Sprite("ui_icons_gender", 16, 16, 0, 0);
 
 			public void Draw()
 			{
@@ -594,14 +595,14 @@ namespace TC2.Conquest
 
 									using (var group_b = GUI.Group.New(size: new(GUI.RmX, 48)))
 									{
-										if (GUI.DrawIconButton("edit.gender.male"u8, new Sprite("ui_icons_gender", 16, 16, 1, 0), size: new(GUI.RmY), color: vars.gender == Organic.Gender.Male ? GUI.col_button_highlight : null))
+										if (GUI.DrawIconButton("edit.gender.male"u8, icons_gender.WithFrame(1, 0), size: new(GUI.RmY), color: vars.gender == Organic.Gender.Male ? GUI.col_button_highlight : null))
 										{
 											vars.gender = Organic.Gender.Male;
 										}
 
 										GUI.SameLine();
 
-										if (GUI.DrawIconButton("edit.gender.female"u8, new Sprite("ui_icons_gender", 16, 16, 2, 0), size: new(GUI.RmY), color: vars.gender == Organic.Gender.Female ? GUI.col_button_highlight : null))
+										if (GUI.DrawIconButton("edit.gender.female"u8, icons_gender.WithFrame(2, 0), size: new(GUI.RmY), color: vars.gender == Organic.Gender.Female ? GUI.col_button_highlight : null))
 										{
 											vars.gender = Organic.Gender.Female;
 										}
@@ -625,6 +626,7 @@ namespace TC2.Conquest
 														GUI.DrawTextCentered(asset.data.name, position: group.GetInnerRect().GetPosition(new Vector2(0.00f, 1.00f), new Vector2(8.00f, -4.00f)), pivot: new(0.00f, 1.00f), layer: GUI.Layer.Window, color: GUI.font_color_desc);
 														GUI.DrawCharacterHead(custom_character.props.sprite_head, asset.data.sprite, custom_character.props.sprite_beard, custom_character.props.hair_color, group.size, scale: 3.00f, draw_frame: true);
 													}
+													group.DrawHoverTooltip(in asset.data, static x => GUI.TextShaded(x.arg.desc));
 													//GUI.DrawSpriteCentered(asset.data.sprite, AABB.Simple(group.a, new Vector2(group.size.Y)), layer: GUI.Layer.Window, scale: 3.00f, color: hair_color);
 												}
 												else
@@ -652,6 +654,7 @@ namespace TC2.Conquest
 														GUI.DrawTextCentered(asset.data.name, position: group.GetInnerRect().GetPosition(new Vector2(0.00f, 1.00f), new Vector2(8.00f, -4.00f)), pivot: new(0.00f, 1.00f), layer: GUI.Layer.Window, color: GUI.font_color_desc);
 														GUI.DrawCharacterHead(custom_character.props.sprite_head, custom_character.props.sprite_hair, asset.data.sprite, custom_character.props.hair_color, group.size, scale: 3.00f, draw_frame: true);
 													}
+													group.DrawHoverTooltip(in asset.data, static x => GUI.TextShaded(x.arg.desc));
 													//GUI.DrawSpriteCentered(asset.data.sprite, AABB.Simple(group.a, new Vector2(group.size.Y)), layer: GUI.Layer.Window, scale: 3.00f, color: hair_color);
 												}
 												else
