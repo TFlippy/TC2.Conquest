@@ -693,9 +693,8 @@ namespace TC2.Conquest
 			}
 #endif
 
-#if SERVER
 			[ISystem.Monitor(ISystem.Mode.Single, ISystem.Scope.Global)]
-			public static void OnDriverEnter(ISystem.Info.Global info, ref Region.Data.Global region,
+			public static void OnUnitEnter(ISystem.Info.Global info, ref Region.Data.Global region,
 			Entity ent_unit_parent, Entity ent_unit_child, Entity ent_enterable,
 			[Source.Parent] ref WorldMap.Unit.Data unit_parent, [Source.Parent] ref WorldMap.Enterable.Data enterable,
 			[Source.Owned] ref WorldMap.Unit.Data unit_child)
@@ -707,21 +706,42 @@ namespace TC2.Conquest
 					{
 						case ISystem.EventType.Add:
 						{
+#if SERVER
 							unit_parent.h_character_driver = character_asset;
 							unit_parent.Sync(ent_unit_parent, true);
+#endif
+
+#if CLIENT
+							// TODO: hack
+							if (ent_unit_child == WorldMap.selected_entity_cached || (WorldMap.hs_selected_entities.Count == 1 && WorldMap.hs_selected_entities.Contains(ent_unit_child)))
+							{
+								WorldMap.hs_selected_entities.Add(ent_unit_parent);
+								if (!WorldMap.selected_entity_cached.IsAlive()) WorldMap.SelectEntity(ent_unit_parent); 
+							}
+#endif
 						}
 						break;
 
 						case ISystem.EventType.Remove:
 						{
+#if SERVER
 							unit_parent.h_character_driver = default;
 							unit_parent.Sync(ent_unit_parent, true);
+#endif
+
+#if CLIENT
+							// TODO: hack
+							if (ent_unit_child == WorldMap.selected_entity_cached || (WorldMap.hs_selected_entities.Contains(ent_unit_child) && (WorldMap.hs_selected_entities.Count == 2 ? WorldMap.hs_selected_entities.Contains(ent_unit_parent) : WorldMap.hs_selected_entities.Count == 1)))
+							{
+								WorldMap.hs_selected_entities.Remove(ent_unit_parent);
+								//if (WorldMap.selected_entity_cached == ent_unit_parent) WorldMap.SelectEntity(default);
+							}
+#endif
 						}
 						break;
 					}
 				}
 			}
-#endif
 
 			// TODO: probably make this serverside + skip if not moving
 			[ISystem.Update.B(ISystem.Mode.Single, ISystem.Scope.Global), HasRelation(Source.Modifier.Owned, Relation.Type.Child, false)]
@@ -819,6 +839,7 @@ namespace TC2.Conquest
 				}
 			}
 
+			[Shitcode]
 			public static bool Repath(Road.Type road_type, Vector2 pos_a, Vector2 pos_b, out Vector2 pos_end, ref Road.Segment segment_start, ref Road.Segment segment_end, ref Span<Road.Junction.Branch> branches_span)
 			{
 				if (!enable_pathfinding)
@@ -962,6 +983,7 @@ namespace TC2.Conquest
 				//public static AABB? mouse_drag_rect;
 				//public static bool is_mouse_dragging;
 
+				[Shitcode]
 				public void Draw()
 				{
 					//using (var window = GUI.Window.InteractionMisc("unit"u8, this.ent_unit, size: new(0, 0)))
