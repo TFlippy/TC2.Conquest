@@ -1,0 +1,48 @@
+﻿{
+	$version: "0.1.61.0"
+	name: "Phlogiston Sprayer"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+	slot: tool
+	categories: tools, short_range, advanced, machine, construction, device, industrial, arcane, tech
+	faction: "null"
+	species: human
+	
+	character_flags:
+	{
+		require: none
+		include: construction, scientist, educated, artisan, professional, technician, engineer, chemist, culinary, insane, arcane, evil, middle_class, upper_middle_class
+		exclude: none
+		weight: 1.000
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	cost: 0.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: welder.00
+				quantity: 1.000
+				flags: pickup, no_consume
+			}
+			{
+				type: resource
+				material: phlogiston
+				quantity: 15.000
+				flags: no_consume
+			}
+			null
+			null
+		]
+		flags: unpack
+	}
+}

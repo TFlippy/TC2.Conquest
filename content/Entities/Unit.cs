@@ -713,10 +713,10 @@ namespace TC2.Conquest
 
 #if CLIENT
 							// TODO: hack
-							if (ent_unit_child == WorldMap.selected_entity_cached || (WorldMap.hs_selected_entities.Count == 1 && WorldMap.hs_selected_entities.Contains(ent_unit_child)))
+							if (ent_unit_child == WorldMap.selected_entity || (WorldMap.hs_selected_entities.Count == 1 && WorldMap.hs_selected_entities.Contains(ent_unit_child)))
 							{
 								WorldMap.hs_selected_entities.Add(ent_unit_parent);
-								if (!WorldMap.selected_entity_cached.IsAlive()) WorldMap.SelectEntity(ent_unit_parent); 
+								if (!WorldMap.selected_entity.IsAlive()) WorldMap.SelectEntity(ent_unit_parent); 
 							}
 #endif
 						}
