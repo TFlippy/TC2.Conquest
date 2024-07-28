@@ -35,7 +35,7 @@
 			{
 				type: resource
 				material: "ammo_hc"
-				quantity: 12.000
+				quantity: 24.000
 				flags: no_consume
 			}
 			null

@@ -9,13 +9,13 @@
 	slot: secondary
 	categories: weapon, junk, gun, short_range, weak, inaccurate, small, cheap
 	faction: "null"
-	species: "null"
+	species: kobold
 	
 	character_flags:
 	{
 		require: none
 		include: criminal, unskilled, laborer, civillian, armed, lowlife, poor, sedentary
-		exclude: unarmed, middle_class, upper_middle_class, upper_class, elite_class
+		exclude: none
 		weight: 1.500
 	}
 	
@@ -35,7 +35,7 @@
 			{
 				type: resource
 				material: "ammo_musket"
-				quantity: 16.000
+				quantity: 35.000
 				flags: despawn, no_consume
 			}
 			null

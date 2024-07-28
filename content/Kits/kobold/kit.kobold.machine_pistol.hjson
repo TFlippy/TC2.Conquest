@@ -9,14 +9,14 @@
 	slot: secondary
 	categories: weapon, gun, short_range, small, fancy
 	faction: "null"
-	species: "human"
+	species: "kobold"
 	
 	character_flags:
 	{
 		require: none
-		include: bureaucrat, educated, professional, civillian, armed, law, social, commerce, rich, entertainer, sedentary, middle_class, upper_middle_class
-		exclude: slave, unskilled, laborer, unarmed, poor, lower_class
-		weight: 0.700
+		include: armed, evil, soldier, insane
+		exclude: none
+		weight: 0.800
 	}
 	
 	amount_multiplier_min: 1.000
@@ -35,7 +35,7 @@
 			{
 				type: resource
 				material: "ammo_lc"
-				quantity: 40.000
+				quantity: 150.000
 				flags: no_consume
 			}
 			null

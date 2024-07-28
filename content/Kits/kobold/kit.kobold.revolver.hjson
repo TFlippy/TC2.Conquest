@@ -1,19 +1,19 @@
 ﻿{
-	name: "Musket"
+	name: "Revolver"
 	desc: ""
 	
 	flags: none
-	slot: primary
-	categories: weapon, junk, gun, long_range, primitive, weak
+	slot: secondary
+	categories: weapon, gun, short_range
 	faction: "null"
 	species: "kobold"
 	
 	character_flags:
 	{
-		require: lowlife
-		include: slave, unskilled, lowlife, poor, hunter, outdoor
+		require: none
+		include: slave, unskilled, lowlife, poor, armed, evil, technician
 		exclude: none
-		weight: 1.500
+		weight: 1.400
 	}
 	
 	amount_multiplier_min: 1.000
@@ -25,15 +25,15 @@
 		[
 			{
 				type: prefab
-				prefab: "musket"
+				prefab: "revolver"
 				quantity: 1.000
-				flags: pickup, despawn
+				flags: pickup, despawn, no_consume
 			}
 			{
 				type: resource
-				material: "ammo_musket"
-				quantity: 30.000
-				flags: none
+				material: "ammo_hc"
+				quantity: 50.000
+				flags: no_consume
 			}
 			null
 			null

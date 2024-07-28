@@ -32,7 +32,7 @@
 			{
 				type: resource
 				material: "ammo_musket.scrapshot"
-				quantity: 20.000
+				quantity: 30.000
 				flags: no_consume
 			}
 			null

@@ -1,19 +1,19 @@
 ﻿{
-	name: "SMG"
+	name: "Handcannon"
 	desc: ""
 	
 	flags: none
 	slot: primary
-	categories: weapon, gun
+	categories: weapon, junk, gun, short_range
 	faction: "null"
 	species: "kobold"
 	
 	character_flags:
 	{
-		require: none
-		include: criminal, armed, lowlife, poor
+		require: insane
+		include: slave, unskilled, lowlife, poor, hunter, outdoor, insane, strong
 		exclude: none
-		weight: 1.000
+		weight: 1.800
 	}
 	
 	amount_multiplier_min: 1.000
@@ -25,18 +25,22 @@
 		[
 			{
 				type: prefab
-				prefab: "smg"
+				prefab: "handcannon.00"
 				quantity: 1.000
 				flags: pickup, despawn
 			}
 			{
 				type: resource
-				material: "ammo_lc"
-				quantity: 120.000
+				material: "ammo_mg"
+				quantity: 20.000
 				flags: none
 			}
-			null
-			null
+			{
+				type: resource
+				material: "ammo_musket"
+				quantity: 30.000
+				flags: none
+			}
 		]
 		flags: unpack
 	}
