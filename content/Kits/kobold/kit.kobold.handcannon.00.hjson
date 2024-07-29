@@ -10,10 +10,10 @@
 	
 	character_flags:
 	{
-		require: insane
-		include: slave, unskilled, lowlife, poor, hunter, outdoor, insane, strong
+		require: none
+		include: slave, unskilled, lowlife, poor, hunter, outdoor, insane, strong, alcoholic
 		exclude: none
-		weight: 1.800
+		weight: 2.800
 	}
 	
 	amount_multiplier_min: 1.000

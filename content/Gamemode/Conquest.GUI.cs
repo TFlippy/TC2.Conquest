@@ -520,16 +520,16 @@ namespace TC2.Conquest
 									{
 										using (GUI.Group.New(size: GUI.Rm, padding: new(8)))
 										{
-											GUI.Title("Your faction has no established presence in this region.", size: 20);
+											GUI.Title("Your faction has no established presence in this region."u8, size: 20);
 
-											if (GUI.DrawButton($"Deploy a Scout ({faction_data.scout_count} available)", size: new(300, 40), font_size: 20, color: GUI.col_button_yellow, enabled: faction_data.scout_count > 0))
-											{
-												var rpc = new Conquest.DeployInfiltratorRPC()
-												{
-													h_character = 0
-												};
-												rpc.Send();
-											}
+											//if (GUI.DrawButton($"Deploy a Scout ({faction_data.scout_count} available)", size: new(300, 40), font_size: 20, color: GUI.col_button_yellow, enabled: faction_data.scout_count > 0))
+											//{
+											//	var rpc = new Conquest.DeployInfiltratorRPC()
+											//	{
+											//		h_character = 0
+											//	};
+											//	rpc.Send();
+											//}
 										}
 									}
 								}

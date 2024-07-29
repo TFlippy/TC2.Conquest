@@ -11,9 +11,9 @@
 	character_flags:
 	{
 		require: none
-		include: slave, unskilled, lowlife, poor, armed, evil, technician
+		include: slave, unskilled, lowlife, poor, armed, evil, technician, alcoholic, insane
 		exclude: none
-		weight: 1.400
+		weight: 1.600
 	}
 	
 	amount_multiplier_min: 1.000
