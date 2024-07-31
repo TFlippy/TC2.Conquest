@@ -7,7 +7,7 @@
 		'''
 	
 	flags: none
-	slot: primary
+	slot: secondary
 	categories: weapon, junk, long_range, primitive, weak, cheap, civilian, slow
 	faction: "null"
 	species: human

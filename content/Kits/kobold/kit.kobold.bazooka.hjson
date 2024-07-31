@@ -11,8 +11,8 @@
 	character_flags:
 	{
 		require: insane, terrorist
-		include: construction, armed, technician, miner, insane, strong, terrorist, fanatic
-		exclude: slave, unskilled
+		include: construction, armed, technician, miner, insane, strong, terrorist, fanatic, evil
+		exclude: slave
 		weight: 1.100
 	}
 	

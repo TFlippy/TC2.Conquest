@@ -1,10 +1,10 @@
 ﻿{
 	$version: "0.1.60.7"
-	name: "Krumpel Charter Crisis"
+	name: "Krumpelsuter Charter Crisis"
 	
 	governorates:
 	[
-		krumpelsutr
+		krumpelsuter
 		kapuca
 		spargl
 	]

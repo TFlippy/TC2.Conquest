@@ -35,7 +35,7 @@
 			{
 				type: resource
 				material: "ammo_lc"
-				quantity: 40.000
+				quantity: 60.000
 				flags: no_consume
 			}
 			null

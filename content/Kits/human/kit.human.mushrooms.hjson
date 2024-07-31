@@ -9,7 +9,7 @@
 	slot: resources
 	categories: food, materials, junk, primitive, cheap
 	faction: "null"
-	species: "null"
+	species: "human"
 	
 	character_flags:
 	{

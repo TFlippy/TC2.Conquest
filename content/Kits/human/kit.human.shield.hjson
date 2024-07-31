@@ -13,7 +13,7 @@
 	
 	character_flags:
 	{
-		require: none
+		require: brawler
 		include: military, artisan, unarmed, insane, nomad, entertainer, brawler, outdoor, strong, junkie, politician, lower_class, lower_middle_class, middle_class
 		exclude: none
 		weight: 1.000

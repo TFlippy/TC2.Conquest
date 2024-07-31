@@ -6,7 +6,7 @@
 		'''
 	
 	flags: none
-	slot: secondary
+	slot: primary
 	categories: weapon, gun, short_range, small, fancy
 	faction: "null"
 	species: "kobold"
@@ -16,7 +16,7 @@
 		require: none
 		include: armed, evil, soldier, insane
 		exclude: none
-		weight: 0.800
+		weight: 1.400
 	}
 	
 	amount_multiplier_min: 1.000

@@ -9,13 +9,13 @@
 	slot: resources
 	categories: materials, advanced, machine, device, expensive, fancy
 	faction: "null"
-	species: "null"
+	species: "human"
 	
 	character_flags:
 	{
 		require: none
 		include: scientist, educated, professional, engineer, rich, arcane, sedentary, middle_class, upper_middle_class, upper_class, elite_class
-		exclude: unskilled, farmer, hunter, illiterate, outdoor
+		exclude: unskilled, farmer, hunter, illiterate, outdoor, dumb
 		weight: 0.800
 	}
 	

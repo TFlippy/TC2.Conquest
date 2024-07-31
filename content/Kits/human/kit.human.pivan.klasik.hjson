@@ -9,7 +9,7 @@
 	slot: utility
 	categories: food, junk, small, consumable, cheap
 	faction: "null"
-	species: "null"
+	species: "human"
 	
 	character_flags:
 	{

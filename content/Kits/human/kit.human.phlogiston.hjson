@@ -9,13 +9,13 @@
 	slot: resources
 	categories: materials, dangerous, rare, heavy, explosive, advanced, powerful, chemical, construction, expensive
 	faction: "null"
-	species: "null"
+	species: "human"
 	
 	character_flags:
 	{
 		require: technician
 		include: educated, professional, technician, engineer, chemist, lower_class, lower_middle_class, middle_class, upper_middle_class
-		exclude: culinary, insane, nomad, sedentary, upper_class, elite_class
+		exclude: none
 		weight: 1.200
 	}
 	

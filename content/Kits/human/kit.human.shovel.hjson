@@ -13,7 +13,7 @@
 	
 	character_flags:
 	{
-		require: none
+		require: laborer
 		include: construction, laborer, miner, nomad, lower_class, lower_middle_class
 		exclude: professional, upper_middle_class, upper_class, elite_class
 		weight: 2.500

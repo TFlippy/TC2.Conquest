@@ -9,7 +9,7 @@
 	slot: tool
 	categories: tools, melee, destructive, mining, gathering, cheap
 	faction: "null"
-	species: "null"
+	species: "human"
 	
 	character_flags:
 	{

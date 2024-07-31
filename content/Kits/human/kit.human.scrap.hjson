@@ -9,7 +9,7 @@
 	slot: resources
 	categories: materials, junk, construction, gathering
 	faction: "null"
-	species: "null"
+	species: "human"
 	
 	character_flags:
 	{

@@ -9,7 +9,7 @@
 	slot: utility
 	categories: food, dangerous, small, drug, chemical, consumable, healing
 	faction: "null"
-	species: "null"
+	species: "human"
 	
 	character_flags:
 	{

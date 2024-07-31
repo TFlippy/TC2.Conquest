@@ -9,7 +9,7 @@
 	slot: resources
 	categories: materials, small, chemical, construction
 	faction: "null"
-	species: "null"
+	species: "human"
 	
 	character_flags:
 	{

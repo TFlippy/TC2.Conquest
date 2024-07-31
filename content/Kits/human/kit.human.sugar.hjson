@@ -9,13 +9,13 @@
 	slot: resources
 	categories: food, materials
 	faction: "null"
-	species: "null"
+	species: "human"
 	
 	character_flags:
 	{
 		require: none
 		include: scientist, civillian, technician, engineer, chemist, culinary, insane, arcane, entertainer, sedentary, lower_middle_class, middle_class, upper_middle_class
-		exclude: upper_middle_class, upper_class, elite_class
+		exclude: none
 		weight: 1.200
 	}
 	

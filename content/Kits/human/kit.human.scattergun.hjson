@@ -9,7 +9,7 @@
 	slot: primary
 	categories: weapon, gun, short_range, inaccurate
 	faction: "null"
-	species: "null"
+	species: "human"
 	
 	character_flags:
 	{

@@ -14,8 +14,8 @@
 	character_flags:
 	{
 		require: none
-		include: bureaucrat, scientist, educated, professional, civillian, law, social, commerce, sedentary, politician, lower_middle_class, middle_class, upper_middle_class
-		exclude: illiterate
+		include: bureaucrat, scientist, educated, professional, civillian, law, social, commerce, sedentary, politician, lower_middle_class, middle_class, upper_middle_class, illiterate
+		exclude: none
 		weight: 1.300
 	}
 	

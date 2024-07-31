@@ -9,11 +9,11 @@
 	slot: secondary
 	categories: weapon, junk, melee, primitive, weak, destructive, gathering, cheap
 	faction: "null"
-	species: "null"
+	species: "human"
 	
 	character_flags:
 	{
-		require: none
+		require: dumb
 		include: slave, criminal, unskilled, farmer, laborer, lowlife, poor, insane, alcoholic, nomad, illiterate, brawler, outdoor, strong, junkie, evil, lower_class
 		exclude: unarmed, sedentary, lower_middle_class, middle_class, upper_middle_class, upper_class, elite_class
 		weight: 1.500

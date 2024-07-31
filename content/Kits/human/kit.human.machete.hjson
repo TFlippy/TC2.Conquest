@@ -9,7 +9,7 @@
 	slot: secondary
 	categories: tools, weapon, melee, powerful, small, cheap
 	faction: "null"
-	species: "null"
+	species: "human"
 	
 	character_flags:
 	{

@@ -9,7 +9,7 @@
 	slot: resources
 	categories: materials, rare, advanced, machine, construction, device, expensive, fancy
 	faction: "null"
-	species: "null"
+	species: human
 	
 	character_flags:
 	{

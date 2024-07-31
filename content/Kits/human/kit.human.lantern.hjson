@@ -9,7 +9,7 @@
 	slot: utility
 	categories: tools, small, mining, construction, device, cheap
 	faction: "null"
-	species: "null"
+	species: "human"
 	
 	character_flags:
 	{

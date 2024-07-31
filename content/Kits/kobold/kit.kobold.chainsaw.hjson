@@ -3,7 +3,7 @@
 	desc: ""
 	
 	flags: none
-	slot: primary
+	slot: secondary
 	categories: tools, weapon, dangerous, heavy, melee, short_range, advanced, powerful, machine
 	faction: "null"
 	species: "kobold"

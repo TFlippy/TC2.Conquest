@@ -9,11 +9,11 @@
 	slot: tool
 	categories: tools, weapon, melee, mining, construction, gathering, cheap
 	faction: "null"
-	species: "null"
+	species: "human"
 	
 	character_flags:
 	{
-		require: none
+		require: strong
 		include: construction, scientist, artisan, laborer, technician, engineer
 		exclude: medical, nobility, social
 		weight: 1.200

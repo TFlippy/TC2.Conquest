@@ -9,7 +9,7 @@
 	slot: resources
 	categories: food, materials, small, healing, civilian
 	faction: "null"
-	species: "null"
+	species: "human"
 	
 	character_flags:
 	{
