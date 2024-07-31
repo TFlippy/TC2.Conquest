@@ -1,5 +1,6 @@
 ﻿{
-	name: "Derringer"
+	$version: "0.1.61.2"
+	name: "Pocket Breechloader"
 	desc:
 		'''
 		TODO: Desc
@@ -7,20 +8,21 @@
 	
 	flags: none
 	slot: secondary
-	categories: weapon, junk, gun, short_range, weak, inaccurate, small, cheap
+	categories: weapon, junk, gun, short_range, weak, inaccurate, small, cheap, civilian, slow
 	faction: "null"
 	species: kobold
 	
 	character_flags:
 	{
 		require: none
-		include: criminal, unskilled, laborer, civillian, armed, lowlife, poor, sedentary
+		include: slave, criminal, unskilled, laborer, civillian, armed, lowlife, poor, strong, evil, dumb
 		exclude: none
-		weight: 1.500
+		weight: 1.350
 	}
 	
 	amount_multiplier_min: 1.000
 	amount_multiplier_max: 1.000
+	cost: 0.000
 	
 	shipment:
 	{
@@ -28,14 +30,14 @@
 		[
 			{
 				type: prefab
-				prefab: "derringer"
+				prefab: breechloader.pocket
 				quantity: 1.000
 				flags: despawn, no_consume
 			}
 			{
 				type: resource
-				material: "ammo_musket"
-				quantity: 35.000
+				material: ammo_sg.slug
+				quantity: 40.000
 				flags: despawn, no_consume
 			}
 			null

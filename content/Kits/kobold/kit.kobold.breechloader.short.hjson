@@ -1,23 +1,28 @@
 ﻿{
-	name: "Handcannon"
-	desc: ""
+	$version: "0.1.61.2"
+	name: "Short Breechloader"
+	desc:
+		'''
+		TODO: Desc
+		'''
 	
 	flags: none
 	slot: primary
-	categories: weapon, junk, gun, short_range
+	categories: weapon, junk, gun, short_range, inaccurate, cheap, civilian, industrial, slow, unstable
 	faction: "null"
-	species: "kobold"
+	species: kobold
 	
 	character_flags:
 	{
 		require: none
-		include: slave, unskilled, lowlife, poor, hunter, outdoor, insane, strong, alcoholic
+		include: slave, unskilled, lowlife, poor, hunter, insane, alcoholic, outdoor, strong
 		exclude: none
 		weight: 2.800
 	}
 	
 	amount_multiplier_min: 1.000
 	amount_multiplier_max: 1.000
+	cost: 0.000
 	
 	shipment:
 	{
@@ -25,22 +30,23 @@
 		[
 			{
 				type: prefab
-				prefab: "handcannon.00"
+				prefab: breechloader.short
 				quantity: 1.000
 				flags: pickup, despawn
 			}
 			{
 				type: resource
-				material: "ammo_mg"
+				material: ammo_mg
 				quantity: 20.000
 				flags: none
 			}
 			{
 				type: resource
-				material: "ammo_musket"
+				material: ammo_musket
 				quantity: 30.000
 				flags: none
 			}
+			null
 		]
 		flags: unpack
 	}

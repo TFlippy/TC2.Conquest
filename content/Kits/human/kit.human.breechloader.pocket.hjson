@@ -1,0 +1,48 @@
+﻿{
+	$version: "0.1.61.2"
+	name: "Pocket Breechloader"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+	slot: secondary
+	categories: weapon, junk, gun, short_range, weak, inaccurate, small, cheap, civilian, slow
+	faction: "null"
+	species: human
+	
+	character_flags:
+	{
+		require: strong
+		include: criminal, farmer, civillian, insane, nomad, outdoor, junkie, evil, murderer
+		exclude: none
+		weight: 1.350
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	cost: 0.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: breechloader.pocket
+				quantity: 1.000
+				flags: despawn, no_consume
+			}
+			{
+				type: resource
+				material: ammo_sg.buck
+				quantity: 24.000
+				flags: despawn, no_consume
+			}
+			null
+			null
+		]
+		flags: unpack
+	}
+}

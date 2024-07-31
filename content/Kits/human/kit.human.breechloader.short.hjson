@@ -1,0 +1,48 @@
+﻿{
+	$version: "0.1.61.2"
+	name: "Short Breechloader"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+	slot: secondary
+	categories: weapon, junk, gun, short_range, inaccurate, cheap, civilian, industrial, slow, unstable
+	faction: "null"
+	species: human
+	
+	character_flags:
+	{
+		require: strong
+		include: criminal, artisan, farmer, laborer, civillian, armed, hunter, soldier, insane, alcoholic, nomad, brawler, outdoor, strong, junkie, evil, murderer, terrorist, lower_class, lower_middle_class
+		exclude: military, unarmed, sedentary, upper_middle_class, upper_class, elite_class
+		weight: 1.350
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	cost: 0.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: breechloader.short
+				quantity: 1.000
+				flags: despawn, no_consume
+			}
+			{
+				type: resource
+				material: ammo_mg
+				quantity: 24.000
+				flags: despawn, no_consume
+			}
+			null
+			null
+		]
+		flags: unpack
+	}
+}

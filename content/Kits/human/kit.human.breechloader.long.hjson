@@ -1,0 +1,48 @@
+﻿{
+	$version: "0.1.61.2"
+	name: "Long Breechloader"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+	slot: primary
+	categories: weapon, dangerous, heavy, gun, long_range, short_range, powerful, inaccurate, cheap, civilian, industrial, arcane, slow, unstable
+	faction: "null"
+	species: human
+	
+	character_flags:
+	{
+		require: strong
+		include: criminal, farmer, laborer, armed, lowlife, hunter, insane, alcoholic, nomad, brawler, outdoor, strong, evil, murderer, terrorist, fanatic
+		exclude: bureaucrat, unarmed, sedentary
+		weight: 1.350
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	cost: 0.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: breechloader.long
+				quantity: 1.000
+				flags: despawn, no_consume
+			}
+			{
+				type: resource
+				material: ammo_mg
+				quantity: 24.000
+				flags: despawn, no_consume
+			}
+			null
+			null
+		]
+		flags: unpack
+	}
+}
