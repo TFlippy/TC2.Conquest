@@ -780,7 +780,7 @@ namespace TC2.Conquest
 													&& kit_data.species.IsSameOrEmpty(vars.h_species)
 													&& kit_data.faction == 0
 													&& kit_data.flags.HasNone(Kit.Flags.Hidden)
-													&& (skip_flags || kit_data.character_flags.Evaluate(props.character_flags_default) > 0.00f);
+													&& (skip_flags || kit_data.character_flags.Evaluate(props.character_flags_default | vars.character_flags) > 0.00f);
 											}
 
 											static void DrawKit(IKit.Definition asset, GUI.Group group, bool is_title)

@@ -14,9 +14,9 @@
 	
 	character_flags:
 	{
-		require: strong
+		require: none
 		include: criminal, artisan, farmer, laborer, civillian, armed, hunter, soldier, insane, alcoholic, nomad, brawler, outdoor, strong, junkie, evil, murderer, terrorist, lower_class, lower_middle_class
-		exclude: military, unarmed, sedentary, upper_middle_class, upper_class, elite_class
+		exclude: unarmed, sedentary, upper_class, elite_class
 		weight: 1.350
 	}
 	
