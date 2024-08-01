@@ -56,6 +56,21 @@ namespace TC2.Conquest
 				var name = Spawner.GenerateName(ref random, props.species_flags, character.traits, character.gender);
 				character.name = name;
 
+				var kits_span = FixedArray.CreateSpan16<IKit.Handle>(out var kits_buffer);
+				var kits_count = 0;
+
+				kits_span.AddIfValid(vars.h_kit_primary, ref kits_count);
+				kits_span.AddIfValid(vars.h_kit_secondary, ref kits_count);
+				kits_span.AddIfValid(vars.h_kit_tool, ref kits_count);
+				kits_span.AddIfValid(vars.h_kit_utility, ref kits_count);
+				kits_span.AddIfValid(vars.h_kit_resources, ref kits_count);
+				kits_span.AddIfValid(vars.h_kit_harness, ref kits_count);
+				kits_span.AddIfValid(vars.h_kit_head, ref kits_count);
+				kits_span.AddIfValid(vars.h_kit_torso, ref kits_count);
+
+				var kits_span_sliced = kits_span.WithLength(kits_count);
+				character.kits = kits_span_sliced.ToArray();
+
 				var identifier = Asset.GenerateRandomIdentifier();
 				//App.WriteLine(identifier);
 
@@ -172,6 +187,14 @@ namespace TC2.Conquest
 
 				public uint name_seed;
 
+				public IKit.Handle h_kit_primary;
+				public IKit.Handle h_kit_secondary;
+				public IKit.Handle h_kit_tool;
+				public IKit.Handle h_kit_utility;
+				public IKit.Handle h_kit_head;
+				public IKit.Handle h_kit_torso;
+				public IKit.Handle h_kit_resources;
+				public IKit.Handle h_kit_harness;
 				public IKit.Handle h_kit_vehicle;
 
 				public Organic.Gender gender = Organic.Gender.Male;
@@ -286,6 +309,7 @@ namespace TC2.Conquest
 				this.vars.h_location = h_location;
 				this.vars.h_species = h_species;
 				this.vars.h_origin = h_origin;
+				this.vars.h_kit_vehicle = "overworld.car.00";
 				this.vars.gender = gender;
 
 				this.vars.h_hair_male = h_hair_male;
@@ -294,7 +318,7 @@ namespace TC2.Conquest
 				this.vars.h_beard_male = h_beard_male;
 				this.vars.h_beard_female = h_beard_female;
 
-				this.vars.age_ratio = random.NextFloat01();			
+				this.vars.age_ratio = random.NextFloat01();
 				this.vars.hair_color_ratio = random.NextFloat01();
 
 				this.vars.name_seed = random.NextUInt();
@@ -719,25 +743,25 @@ namespace TC2.Conquest
 										{
 											var max_flag_count = props.character_flags_default.GetCount() + Math.Min(4, props.character_flags_optional.GetCount());
 											GUI.EnumInput("flags.character"u8, ref vars.character_flags, size: new(w, 32), show_label: false, height: 256,
-												max_flags: max_flag_count, mask: props.character_flags_optional, required: props.character_flags_default);
+												max_flags: max_flag_count, mask: props.character_flags_optional, required: props.character_flags_default, columns: 5);
 										}
 
 										{
 											var max_flag_count = props.industry_flags_default.GetCount() + Math.Min(4, props.industry_flags_optional.GetCount());
 											GUI.EnumInput("flags.industry"u8, ref vars.industry_flags, size: new(w, 32), show_label: false, height: 256,
-												max_flags: max_flag_count, mask: props.industry_flags_optional, required: props.industry_flags_default);
+												max_flags: max_flag_count, mask: props.industry_flags_optional, required: props.industry_flags_default, columns: 5);
 										}
 
 										{
 											var max_flag_count = props.service_flags_default.GetCount() + Math.Min(4, props.service_flags_optional.GetCount());
 											GUI.EnumInput("flags.service"u8, ref vars.service_flags, size: new(w, 32), show_label: false, height: 256,
-												max_flags: max_flag_count, mask: props.service_flags_optional, required: props.service_flags_default);
+												max_flags: max_flag_count, mask: props.service_flags_optional, required: props.service_flags_default, columns: 5);
 										}
 
 										{
 											var max_flag_count = props.crime_flags_default.GetCount() + Math.Min(4, props.crime_flags_optional.GetCount());
 											GUI.EnumInput("flags.crime"u8, ref vars.crime_flags, size: new(w, 32), show_label: false, height: 256,
-												max_flags: max_flag_count, mask: props.crime_flags_optional, required: props.crime_flags_default);
+												max_flags: max_flag_count, mask: props.crime_flags_optional, required: props.crime_flags_default, columns: 5);
 										}
 									}
 								}
@@ -746,48 +770,53 @@ namespace TC2.Conquest
 
 								using (var group_loadout = GUI.Group.New(GUI.Rm))
 								{
-									using (var group_row = GUI.Group.New(size: new(GUI.RmX, 64 + 8)))
+									using (var group_row = GUI.Group.New(size: new(GUI.RmX, GUI.RmY)))
 									{
-										if (GUI.AssetInput2("edit.vehicle"u8, ref vars.h_kit_vehicle, size: new(GUI.RmX * 0.50f, GUI.RmY), show_label: false, tab_height: 64.00f, close_on_select: true,
-										filter: static (x) => x.data.slot == Kit.Slot.Vehicle && x.data.flags.HasAll(Kit.Flags.Overworld),
-										draw: (asset, group, is_title) =>
+										using (var group_kits = GUI.Group.New(size: new(GUI.RmX * 0.60f, GUI.RmY)))
 										{
-											if (asset != null)
+											if (GUI.AssetInput2("edit.h_kit_primary"u8, ref vars.h_kit_primary, size: new(GUI.RmX, 48), show_label: false, tab_height: 48.00f, close_on_select: true,
+											filter: static (x) => x.data.slot == Kit.Slot.Primary && x.data.species.IsSameOrEmpty(custom_character.vars.h_species) && x.data.faction == 0 && x.data.flags.HasNone(Kit.Flags.Hidden) && x.data.character_flags.Evaluate(custom_character.props.character_flags_default) > 0.00f,
+											draw: (asset, group, is_title) =>
 											{
-												using (var group_icon = GUI.Group.New(size: new(80, GUI.RmY)))
-												{
-													using (var clip = GUI.Clip.Push(group_icon.GetInnerRect()))
-													{
-														GUI.DrawSpriteCentered(asset.data.icon, clip.rect, GUI.Layer.Window, scale: 3.00f);
-													}
-													group_icon.DrawBackground(GUI.tex_frame);
-												}
-
-												GUI.SameLine();
-
-												using (var group_right = GUI.Group.New(size: GUI.Rm))
-												{
-													//GUI.TitleCentered(asset.data.name, pivot: new(0.00f, 0.00f), offset: new(4, 4), size: 24);
-
-													//GUI.NewLine(16);
-
-													GUI.TitleCentered(asset.data.name, rect: group_right.GetInnerRect(), pivot: new(0.00f, 0.00f), offset: new(4, 4), size: 24);
-
-													//using (var group_reqs =group_right.Split(size: new(group_right.size.X, 36), align_x: GUI.AlignX.Center, align_y: GUI.AlignY.Bottom))
-													//{
-													//	//GUI.NewLine(4);
-													//	GUI.DrawMoneyRequirement(custom_character.props.money, asset.data.requirements[0].amount);
-													//}
-
-												}
-											}
-											else
+												var h_kit = asset?.GetHandle() ?? default;
+												Dormitory.DrawKit(h_kit, valid: true, selected: false, force_readonly: true, ignore_requirements: true);
+											}))
 											{
-												GUI.TitleCentered("<vehicle>"u8, pivot: new(0.00f, 0.50f), offset: new(4, 0), size: 24);
+												//reset = true;
 											}
-										}))
-										{
-											//reset = true;
+
+											if (GUI.AssetInput2("edit.h_kit_secondary"u8, ref vars.h_kit_secondary, size: new(GUI.RmX, 48), show_label: false, tab_height: 48.00f, close_on_select: true,
+											filter: static (x) => x.data.slot == Kit.Slot.Secondary && x.data.species.IsSameOrEmpty(custom_character.vars.h_species) && x.data.faction == 0 && x.data.flags.HasNone(Kit.Flags.Hidden) && x.data.character_flags.Evaluate(custom_character.props.character_flags_default) > 0.00f,
+											draw: (asset, group, is_title) =>
+											{
+												var h_kit = asset?.GetHandle() ?? default;
+												Dormitory.DrawKit(h_kit, valid: true, selected: false, force_readonly: true, ignore_requirements: true);
+											}))
+											{
+												//reset = true;
+											}
+
+											if (GUI.AssetInput2("edit.h_kit_tool"u8, ref vars.h_kit_tool, size: new(GUI.RmX, 48), show_label: false, tab_height: 48.00f, close_on_select: true,
+											filter: static (x) => x.data.slot == Kit.Slot.Tool && x.data.species.IsSameOrEmpty(custom_character.vars.h_species) && x.data.faction == 0 && x.data.flags.HasNone(Kit.Flags.Hidden) && x.data.character_flags.Evaluate(custom_character.props.character_flags_default) > 0.00f,
+											draw: (asset, group, is_title) =>
+											{
+												var h_kit = asset?.GetHandle() ?? default;
+												Dormitory.DrawKit(h_kit, valid: true, selected: false, force_readonly: true, ignore_requirements: true);
+											}))
+											{
+												//reset = true;
+											}
+
+											if (GUI.AssetInput2("edit.h_kit_utility"u8, ref vars.h_kit_utility, size: new(GUI.RmX, 48), show_label: false, tab_height: 48.00f, close_on_select: true,
+											filter: static (x) => x.data.slot == Kit.Slot.Utility && x.data.species.IsSameOrEmpty(custom_character.vars.h_species) && x.data.faction == 0 && x.data.flags.HasNone(Kit.Flags.Hidden) && x.data.character_flags.Evaluate(custom_character.props.character_flags_default) > 0.00f,
+											draw: (asset, group, is_title) =>
+											{
+												var h_kit = asset?.GetHandle() ?? default;
+												Dormitory.DrawKit(h_kit, valid: true, selected: false, force_readonly: true, ignore_requirements: true);
+											}))
+											{
+												//reset = true;
+											}
 										}
 
 										GUI.SameLine();
@@ -795,6 +824,39 @@ namespace TC2.Conquest
 										using (var group_items = GUI.Group.New(size: GUI.Rm, padding: new(4)))
 										{
 											group_items.DrawBackground(GUI.tex_panel);
+
+											if (GUI.AssetInput2("edit.vehicle"u8, ref vars.h_kit_vehicle, size: new(GUI.RmX, 64), show_label: false, tab_height: 64.00f, close_on_select: true,
+											filter: static (x) => x.data.slot == Kit.Slot.Vehicle && x.data.flags.HasAll(Kit.Flags.Overworld),
+											draw: (asset, group, is_title) =>
+											{
+												if (asset != null)
+												{
+													using (var group_icon = GUI.Group.New(size: new(80, GUI.RmY)))
+													{
+														using (var clip = GUI.Clip.Push(group_icon.GetInnerRect()))
+														{
+															GUI.DrawSpriteCentered(asset.data.icon, clip.rect, GUI.Layer.Window, scale: 3.00f);
+														}
+														group_icon.DrawBackground(GUI.tex_frame);
+													}
+
+													GUI.SameLine();
+
+													using (var group_right = GUI.Group.New(size: GUI.Rm))
+													{
+														GUI.TitleCentered(asset.data.name, rect: group_right.GetInnerRect(), pivot: new(0.00f, 0.00f), offset: new(4, 4), size: 24);
+													}
+												}
+												else
+												{
+													GUI.TitleCentered("<vehicle>"u8, pivot: new(0.00f, 0.50f), offset: new(4, 0), size: 24);
+												}
+											}))
+											{
+												//reset = true;
+											}
+
+											GUI.SeparatorThick();
 
 											GUI.DrawMoney(props.money, size: new(GUI.RmX, 24));
 										}
