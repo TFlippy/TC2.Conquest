@@ -59,7 +59,7 @@ stockpile:
 worldmap.enterable:
 {
     type: entrance
-	mask_units: character, vehicle
+	mask_units: character
     radius: 0.375
 }
 
