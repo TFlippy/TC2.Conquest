@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.60.7"
+	$version: "0.1.61.2"
 	name: "Revolutionary"
 	desc:
 		'''
@@ -9,7 +9,7 @@
 	money: 300.000
 	age: [18.000, 23.000, 26.000, 30.000, 32.000]
 	genders: male, female
-	gender_ratio: 0.120
+	gender_ratio: 0.210
 	species: human
 	faction: "null"
 	cost: 120.000

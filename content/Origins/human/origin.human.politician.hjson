@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.60.7"
+	$version: "0.1.61.2"
 	name: "Politician"
 	desc:
 		'''
@@ -9,7 +9,7 @@
 	money: 3450.000
 	age: [30.000, 35.000, 38.000, 40.000, 43.000, 45.000, 48.000, 53.000, 57.000, 63.000, 68.000, 70.000, 80.000]
 	genders: male, female
-	gender_ratio: 0.350
+	gender_ratio: 0.270
 	species: human
 	faction: "null"
 	cost: 450.000

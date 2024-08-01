@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.60.7"
+	$version: "0.1.61.2"
 	name: "Entrepreneur"
 	desc:
 		'''
@@ -9,7 +9,7 @@
 	money: 6600.000
 	age: [23.000, 28.000, 34.000, 38.000, 42.000, 45.000, 51.000, 58.000]
 	genders: male, female
-	gender_ratio: 0.200
+	gender_ratio: 0.260
 	species: human
 	faction: "null"
 	cost: 550.000

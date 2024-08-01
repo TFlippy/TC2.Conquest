@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.60.7"
+	$version: "0.1.61.2"
 	name: "Mafioso"
 	desc:
 		'''
@@ -9,7 +9,7 @@
 	money: 7500.000
 	age: [30.000, 32.000, 38.000, 40.000, 43.000, 45.000, 48.000, 56.000, 65.000, 70.000]
 	genders: male, female
-	gender_ratio: 0.080
+	gender_ratio: 0.090
 	species: human
 	faction: "null"
 	cost: 650.000

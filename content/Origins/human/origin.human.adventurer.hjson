@@ -1,15 +1,15 @@
 ﻿{
-	$version: "0.1.60.7"
+	$version: "0.1.61.2"
 	name: "Adventurer"
 	desc:
 		'''
 		TODO: Desc
 		'''
 	
-	money: 700.000
+	money: 850.000
 	age: [18.000, 20.000, 23.000, 25.000, 30.000, 48.000, 54.000]
 	genders: male, female
-	gender_ratio: 0.100
+	gender_ratio: 0.130
 	species: human
 	faction: "null"
 	cost: 100.000

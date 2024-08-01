@@ -274,6 +274,32 @@ namespace TC2.Conquest
 			public CustomCharacter.Vars vars = new();
 			public CustomCharacter.Props props = new();
 
+			public CustomCharacter()
+			{
+
+			}
+
+			public CustomCharacter(ILocation.Handle h_location, ISpecies.Handle h_species, IOrigin.Handle h_origin, Organic.Gender gender, IHair.Handle h_hair_male, IHair.Handle h_hair_female, IHair.Handle h_beard_male, IHair.Handle h_beard_female)
+			{
+				var random = XorRandom.New(true);
+
+				this.vars.h_location = h_location;
+				this.vars.h_species = h_species;
+				this.vars.h_origin = h_origin;
+				this.vars.gender = gender;
+
+				this.vars.h_hair_male = h_hair_male;
+				this.vars.h_hair_female = h_hair_female;
+
+				this.vars.h_beard_male = h_beard_male;
+				this.vars.h_beard_female = h_beard_female;
+
+				this.vars.age_ratio = random.NextFloat01();			
+				this.vars.hair_color_ratio = random.NextFloat01();
+
+				this.vars.name_seed = random.NextUInt();
+			}
+
 			public static void Apply(ref Vars vars, ref Props props)
 			{
 				ref var species_data = ref vars.h_species.GetData();
@@ -452,7 +478,7 @@ namespace TC2.Conquest
 			//public static IOrigin.Handle h_selected_origin;
 			//public static Organic.Gender selected_gender = Organic.Gender.Male;
 
-			public static CustomCharacter custom_character = new();
+			public static CustomCharacter custom_character = new("krachtel", "human", "human.adventurer", Organic.Gender.Male, "human.male.wings", "human.female.updo", "human.male.beard.bartender", default);
 			public static Sprite icons_gender = new Sprite("ui_icons_gender", 16, 16, 0, 0);
 
 			public void Draw()
