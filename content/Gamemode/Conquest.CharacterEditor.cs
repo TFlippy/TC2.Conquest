@@ -66,7 +66,7 @@ namespace TC2.Conquest
 				kits_span.AddIfValid(vars.h_kit_resources, ref kits_count);
 				kits_span.AddIfValid(vars.h_kit_harness, ref kits_count);
 				kits_span.AddIfValid(vars.h_kit_head, ref kits_count);
-				kits_span.AddIfValid(vars.h_kit_torso, ref kits_count);
+				kits_span.AddIfValid(vars.h_kit_chest, ref kits_count);
 
 				var kits_span_sliced = kits_span.WithLength(kits_count);
 				character.kits = kits_span_sliced.ToArray();
@@ -192,7 +192,7 @@ namespace TC2.Conquest
 				public IKit.Handle h_kit_tool;
 				public IKit.Handle h_kit_utility;
 				public IKit.Handle h_kit_head;
-				public IKit.Handle h_kit_torso;
+				public IKit.Handle h_kit_chest;
 				public IKit.Handle h_kit_resources;
 				public IKit.Handle h_kit_harness;
 				public IKit.Handle h_kit_vehicle;
@@ -720,7 +720,7 @@ namespace TC2.Conquest
 								}
 							}
 
-							using (var group_mid = GUI.Group.New(size: new(GUI.RmX, GUI.RmY - 64), padding: new(4)))
+							using (var group_mid = GUI.Group.New(size: new(GUI.RmX, GUI.RmY), padding: new(4)))
 							{
 								group_mid.DrawBackground(GUI.tex_window_menu);
 
@@ -774,49 +774,55 @@ namespace TC2.Conquest
 									{
 										using (var group_kits = GUI.Group.New(size: new(GUI.RmX * 0.60f, GUI.RmY)))
 										{
-											if (GUI.AssetInput2("edit.h_kit_primary"u8, ref vars.h_kit_primary, size: new(GUI.RmX, 48), show_label: false, tab_height: 48.00f, close_on_select: true,
-											filter: static (x) => x.data.slot == Kit.Slot.Primary && x.data.species.IsSameOrEmpty(custom_character.vars.h_species) && x.data.faction == 0 && x.data.flags.HasNone(Kit.Flags.Hidden) && x.data.character_flags.Evaluate(custom_character.props.character_flags_default) > 0.00f,
-											draw: (asset, group, is_title) =>
+											static bool ValidateKit(ref IKit.Data kit_data, Kit.Slot slot, ref CustomCharacter.Vars vars, ref CustomCharacter.Props props, bool skip_flags = false)
 											{
-												var h_kit = asset?.GetHandle() ?? default;
-												Dormitory.DrawKit(h_kit, valid: true, selected: false, force_readonly: true, ignore_requirements: true);
-											}))
-											{
-												//reset = true;
+												return kit_data.slot == slot
+													&& kit_data.species.IsSameOrEmpty(vars.h_species)
+													&& kit_data.faction == 0
+													&& kit_data.flags.HasNone(Kit.Flags.Hidden)
+													&& (skip_flags || kit_data.character_flags.Evaluate(props.character_flags_default) > 0.00f);
 											}
 
-											if (GUI.AssetInput2("edit.h_kit_secondary"u8, ref vars.h_kit_secondary, size: new(GUI.RmX, 48), show_label: false, tab_height: 48.00f, close_on_select: true,
-											filter: static (x) => x.data.slot == Kit.Slot.Secondary && x.data.species.IsSameOrEmpty(custom_character.vars.h_species) && x.data.faction == 0 && x.data.flags.HasNone(Kit.Flags.Hidden) && x.data.character_flags.Evaluate(custom_character.props.character_flags_default) > 0.00f,
-											draw: (asset, group, is_title) =>
+											static void DrawKit(IKit.Definition asset, GUI.Group group, bool is_title)
 											{
-												var h_kit = asset?.GetHandle() ?? default;
-												Dormitory.DrawKit(h_kit, valid: true, selected: false, force_readonly: true, ignore_requirements: true);
-											}))
-											{
-												//reset = true;
+												Dormitory.DrawKit(h_kit: asset?.GetHandle() ?? default,
+													rect: group.GetOuterRect(),
+													valid: true, //asset?.data.character_flags.Evaluate(custom_character.props.character_flags_default) > 0.00f,
+													selected: false,
+													force_readonly: true,
+													ignore_requirements: true,
+													no_select: true,
+													show_type: true,
+													show_background: true);
 											}
 
-											if (GUI.AssetInput2("edit.h_kit_tool"u8, ref vars.h_kit_tool, size: new(GUI.RmX, 48), show_label: false, tab_height: 48.00f, close_on_select: true,
-											filter: static (x) => x.data.slot == Kit.Slot.Tool && x.data.species.IsSameOrEmpty(custom_character.vars.h_species) && x.data.faction == 0 && x.data.flags.HasNone(Kit.Flags.Hidden) && x.data.character_flags.Evaluate(custom_character.props.character_flags_default) > 0.00f,
-											draw: (asset, group, is_title) =>
-											{
-												var h_kit = asset?.GetHandle() ?? default;
-												Dormitory.DrawKit(h_kit, valid: true, selected: false, force_readonly: true, ignore_requirements: true);
-											}))
-											{
-												//reset = true;
-											}
+											GUI.AssetInput2("edit.h_kit_primary"u8, ref vars.h_kit_primary, size: new(GUI.RmX, 48), show_label: false, tab_height: 40, close_on_select: true,
+												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Primary, ref custom_character.vars, ref custom_character.props, skip_flags: false),
+												draw: DrawKit);
 
-											if (GUI.AssetInput2("edit.h_kit_utility"u8, ref vars.h_kit_utility, size: new(GUI.RmX, 48), show_label: false, tab_height: 48.00f, close_on_select: true,
-											filter: static (x) => x.data.slot == Kit.Slot.Utility && x.data.species.IsSameOrEmpty(custom_character.vars.h_species) && x.data.faction == 0 && x.data.flags.HasNone(Kit.Flags.Hidden) && x.data.character_flags.Evaluate(custom_character.props.character_flags_default) > 0.00f,
-											draw: (asset, group, is_title) =>
-											{
-												var h_kit = asset?.GetHandle() ?? default;
-												Dormitory.DrawKit(h_kit, valid: true, selected: false, force_readonly: true, ignore_requirements: true);
-											}))
-											{
-												//reset = true;
-											}
+											GUI.AssetInput2("edit.h_kit_secondary"u8, ref vars.h_kit_secondary, size: new(GUI.RmX, 48), show_label: false, tab_height: 40, close_on_select: true,
+												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Secondary, ref custom_character.vars, ref custom_character.props, skip_flags: false),
+												draw: DrawKit);
+
+											GUI.AssetInput2("edit.h_kit_tool"u8, ref vars.h_kit_tool, size: new(GUI.RmX, 48), show_label: false, tab_height: 40, close_on_select: true,
+												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Tool, ref custom_character.vars, ref custom_character.props, skip_flags: false),
+												draw: DrawKit);
+
+											GUI.AssetInput2("edit.h_kit_utility"u8, ref vars.h_kit_utility, size: new(GUI.RmX, 48), show_label: false, tab_height: 40, close_on_select: true,
+												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Utility, ref custom_character.vars, ref custom_character.props, skip_flags: false),
+												draw: DrawKit);
+
+											GUI.AssetInput2("edit.h_kit_head"u8, ref vars.h_kit_head, size: new(GUI.RmX, 48), show_label: false, tab_height: 40, close_on_select: true,
+												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Head, ref custom_character.vars, ref custom_character.props, skip_flags: false),
+												draw: DrawKit);
+
+											GUI.AssetInput2("edit.h_kit_chest"u8, ref vars.h_kit_chest, size: new(GUI.RmX, 48), show_label: false, tab_height: 40, close_on_select: true,
+												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Chest, ref custom_character.vars, ref custom_character.props, skip_flags: false),
+												draw: DrawKit);
+
+											GUI.AssetInput2("edit.h_kit_harness"u8, ref vars.h_kit_harness, size: new(GUI.RmX, 48), show_label: false, tab_height: 40, close_on_select: true,
+												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Harness, ref custom_character.vars, ref custom_character.props, skip_flags: false),
+												draw: DrawKit);
 										}
 
 										GUI.SameLine();
@@ -857,6 +863,8 @@ namespace TC2.Conquest
 											}
 
 											GUI.SeparatorThick();
+
+											GUI.NewLine(8);
 
 											GUI.DrawMoney(props.money, size: new(GUI.RmX, 24));
 										}
@@ -1024,7 +1032,7 @@ namespace TC2.Conquest
 				}
 				else
 				{
-					using (var widget = Sidebar.Widget.New("character.main", "New Main Character", new Sprite(GUI.tex_icons_widget, 16, 16, 2, 0), size: new Vector2(48 * 18, 600), order: (10.00f - 0.10f), flags: Sidebar.Widget.Flags.Starts_Open))
+					using (var widget = Sidebar.Widget.New("character.main", "New Main Character", new Sprite(GUI.tex_icons_widget, 16, 16, 2, 0), size: new Vector2(48 * 18, 680), order: (10.00f - 0.10f), flags: Sidebar.Widget.Flags.Starts_Open))
 					{
 						widget.func_draw = null;
 
