@@ -70,7 +70,7 @@ namespace TC2.Conquest
 
 								if (spawn.IsNotNull() && dormitory.IsNotNull())
 								{
-									var h_faction_spawn = ent_selected_spawn.GetFaction();
+									var h_faction_spawn = ent_selected_spawn.GetFactionHandle();
 									var is_visible = false;
 									var has_characters = false;
 

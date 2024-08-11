@@ -1784,7 +1784,7 @@ namespace TC2.Conquest
 																	{
 																		var color_frame = Color32BGRA.GUI;
 
-																		ref var faction_data = ref ent_child.GetFaction().GetData();
+																		ref var faction_data = ref ent_child.GetFactionHandle().GetData();
 																		if (faction_data.IsNotNull())
 																		{
 																			color_frame = faction_data.color_a;
