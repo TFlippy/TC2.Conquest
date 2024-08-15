@@ -554,7 +554,7 @@ namespace TC2.Conquest
 		}
 #endif
 
-		[ISystem.Update(ISystem.Mode.Single, ISystem.Scope.Global)]
+		[ISystem.Update.A(ISystem.Mode.Single, ISystem.Scope.Global)]
 		public static void OnUpdate(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] ref Train.Data train, [Source.Owned] ref Transform.Data transform)
 		{
 			if (!train.segment_a.IsValid()) return;

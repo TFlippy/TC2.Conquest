@@ -858,7 +858,7 @@ namespace TC2.Conquest
 									//}
 								}
 
-								var move_speed = (1.00f / MathF.Sqrt(worldmap_zoom_current)) * 10.00f;
+								var move_speed = (1.00f / MathF.Sqrt(worldmap_zoom_current)) * 500.00f * (float)App.FrameDeltaTime;
 
 								if (hovered_any && !kb.GetKey(Keyboard.Key.LeftControl))
 								{

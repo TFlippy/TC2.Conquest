@@ -22,7 +22,7 @@ namespace TC2.Conquest
 			}
 		}
 
-		[ISystem.Update(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region)]
+		[ISystem.Update.A(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region)]
 		public static void OnUpdate(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity, [Source.Owned] ref Station.Data station, [Source.Owned] ref Transform.Data transform)
 		{
 
