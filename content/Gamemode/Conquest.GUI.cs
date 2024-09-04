@@ -48,10 +48,8 @@ namespace TC2.Conquest
 
 				Spawn.RespawnGUI.window_size = new Vector2(600, 600);
 
-
 				using (var window = GUI.Window.Standalone("Respawn"u8, position: new Vector2(GUI.CanvasSize.X * 0.40f, 0) + Spawn.RespawnGUI.window_offset, pivot: Spawn.RespawnGUI.window_pivot, size: Spawn.RespawnGUI.window_size, flags: GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.No_Click_Focus))
 				{
-
 					this.StoreCurrentWindowTypeID();
 					if (window.show)
 					{
@@ -143,7 +141,7 @@ namespace TC2.Conquest
 											var map_frame_size = minimap.GetFrameSize(2);
 											map_frame_size = map_frame_size.ScaleToSize(new Vector2(GUI.RmX, 80));
 
-											using (group.Split(size: map_frame_size, GUI.AlignX.Center, GUI.AlignY.Top))
+											using (group.Split(size: map_frame_size, GUI.AlignX.Left, GUI.AlignY.Top))
 											{
 												using (var map = GUI.Map.New(ref region, minimap, size: map_frame_size, map_scale: 1.00f, draw_markers: false))
 												{
@@ -476,6 +474,7 @@ namespace TC2.Conquest
 												var rpc = new Spawn.SpawnRPC()
 												{
 													h_character = h_selected_character_tmp,
+													h_component = IComponent.Handle.FromComponent<Dormitory.Data>(),
 													control = true
 												};
 
@@ -485,7 +484,7 @@ namespace TC2.Conquest
 												}
 
 												//rpc.Send(ent_selected_spawn);
-												rpc.SendAsTask<Spawn.SpawnRPC, Dormitory.Data>(ent_selected_spawn).ContinueWith((result) =>
+												rpc.SendAsTask(ent_selected_spawn).ContinueWith((result) =>
 												{
 													App.WriteLine(result.out_ent_spawned);
 												});
