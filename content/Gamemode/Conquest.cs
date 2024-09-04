@@ -284,8 +284,8 @@ namespace TC2.Conquest
 			{
 				var alive = this.player.flags.HasAny(Player.Flags.Alive);
 
-				var window_pos = (GUI.CanvasSize * new Vector2(0.50f, 0.00f)) + new Vector2(000, 48);
-				using (var window = GUI.Window.Standalone("Scoreboard"u8, position: alive ? null : window_pos, size: new Vector2(600, 400), pivot: alive ? new Vector2(0.50f, 0.00f) : new(1.00f, 0.00f), flags: GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.No_Click_Focus))
+				var window_pos = (GUI.CanvasSize * new Vector2(0.40f, 0.00f)) + new Vector2(0, 64);
+				using (var window = GUI.Window.Standalone("Scoreboard"u8, position: alive ? null : window_pos, size: new Vector2(500, 400), pivot: alive ? new Vector2(0.50f, 0.00f) : new(1.00f, 0.00f), flags: GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.No_Click_Focus))
 				{
 					this.StoreCurrentWindowTypeID();
 					if (window.show)
@@ -316,7 +316,7 @@ namespace TC2.Conquest
 								{
 									GUI.LabelShaded("Players:"u8, $"{game_info.player_count}/{game_info.player_count_max}", font_a: GUI.Font.Superstar, size_a: 16);
 									//GUI.Label("Map:", game_info.map, font: GUI.Font.Superstar, size: 16);
-									GUI.LabelShaded("Gamemode:"u8, game_info.gamemode, font_a: GUI.Font.Superstar, size_a: 16);
+									//GUI.LabelShaded("Gamemode:"u8, game_info.gamemode, font_a: GUI.Font.Superstar, size_a: 16);
 								}
 							}
 
@@ -393,102 +393,6 @@ namespace TC2.Conquest
 												}
 											}
 										}
-
-										//foreach (ref var row in region.IterateQuery<Region.GetPlayersQuery>())
-										//{
-										//	row.Run((ISystem.Info info, Entity entity, in Player.Data player) =>
-										//	{
-										//		var is_online = player.flags.HasAny(Player.Flags.Online);
-										//		if (!is_online) return;
-
-										//		using (var row = GUI.Table.Row.New(size: new(GUI.RmX, 16)))
-										//		{
-										//			using (GUI.ID.Push(entity))
-										//			{
-										//				var alpha = is_online ? 1.00f : 0.50f;
-
-										//				using (row.Column(0))
-										//				{
-										//					GUI.Text(player.h_player.GetName(), color: GUI.font_color_default.WithAlphaMult(alpha));
-										//				}
-
-										//				using (row.Column(1))
-										//				{
-										//					if (player.faction_id.TryGetData(out var ref_faction))
-										//					{
-										//						GUI.Title(ref_faction.value.name, color: ref_faction.value.color_a.WithAlphaMult(alpha));
-										//					}
-										//				}
-
-										//				//ref var money = ref player.GetMoneyReadOnly().Value;
-										//				//if (!money.IsNull())
-										//				//{
-										//				//	using (row.Column(2))
-										//				//	{
-										//				//		GUI.Text($"{money.amount:0}", color: GUI.font_color_default.WithAlphaMult(alpha));
-										//				//	}
-										//				//}
-
-										//				using (row.Column(2))
-										//				{
-										//					GUI.Text(is_online ? "Online"u8 : "Offline"u8, color: GUI.font_color_default.WithAlphaMult(alpha));
-										//				}
-
-										//				GUI.SameLine();
-										//				GUI.Selectable2(false, play_sound: false, enabled: false, size: new Vector2(0, 0), is_readonly: true);
-										//			}
-										//		}
-										//	});
-										//}
-
-										//region.Query<Region.GetPlayersQuery>(Func).Execute(ref this);
-										//static void Func(ISystem.Info info, Entity entity, in Player.Data player)
-										//{
-										//	var is_online = player.flags.HasAny(Player.Flags.Online);
-										//	if (!is_online) return;
-
-										//	ref var arg = ref info.GetParameter<ScoreboardGUI>();
-										//	if (!arg.IsNull())
-										//	{
-										//		using (var row = GUI.Table.Row.New(size: new(GUI.RmX, 16)))
-										//		{
-										//			using (GUI.ID.Push(entity))
-										//			{
-										//				var alpha = is_online ? 1.00f : 0.50f;
-
-										//				using (row.Column(0))
-										//				{
-										//					GUI.Text(player.GetName(), color: GUI.font_color_default.WithAlphaMult(alpha));
-										//				}
-
-										//				using (row.Column(1))
-										//				{
-										//					if (player.faction_id.TryGetData(out var ref_faction))
-										//					{
-										//						GUI.Title(ref_faction.value.name, color: ref_faction.value.color_a.WithAlphaMult(alpha));
-										//					}
-										//				}
-
-										//				//ref var money = ref player.GetMoneyReadOnly().Value;
-										//				//if (!money.IsNull())
-										//				//{
-										//				//	using (row.Column(2))
-										//				//	{
-										//				//		GUI.Text($"{money.amount:0}", color: GUI.font_color_default.WithAlphaMult(alpha));
-										//				//	}
-										//				//}
-
-										//				using (row.Column(2))
-										//				{
-										//					GUI.Text(is_online ? "Online" : "Offline", color: GUI.font_color_default.WithAlphaMult(alpha));
-										//				}
-
-										//				GUI.SameLine();
-										//				GUI.Selectable2(false, play_sound: false, enabled: false, size: new Vector2(0, 0), is_readonly: true);
-										//			}
-										//		}
-										//	}
-										//}
 									}
 								}
 							}
@@ -498,32 +402,30 @@ namespace TC2.Conquest
 			}
 		}
 
-		[ISystem.EarlyGUI(ISystem.Mode.Single, ISystem.Scope.Region)]
+		[Shitcode]
+		[ISystem.EarlyGUI(ISystem.Mode.Single, ISystem.Scope.Region), HasTag("local", true, Source.Modifier.Owned)]
 		public static void OnEarlyGUI(Entity entity, [Source.Owned] in Player.Data player, [Source.Singleton] in Conquest.Gamemode gamemode)
 		{
-			if (player.IsLocal())
+			if (!GUI.IsHovered || ScoreboardGUI.show)
 			{
-				if (!GUI.IsHovered || ScoreboardGUI.show)
+				ref readonly var kb = ref Control.GetKeyboard();
+				if (kb.GetKeyDown(Keyboard.Key.Tab))
 				{
-					ref readonly var kb = ref Control.GetKeyboard();
-					if (kb.GetKeyDown(Keyboard.Key.Tab))
-					{
-						ScoreboardGUI.show.Toggle();
-					}
+					ScoreboardGUI.show.Toggle();
 				}
+			}
 
-				Spawn.RespawnGUI.window_offset = new Vector2(0, 90);
-				Spawn.RespawnGUI.window_pivot = new Vector2(0, 0);
+			Spawn.RespawnGUI.window_offset = new Vector2(0, 90);
+			Spawn.RespawnGUI.window_pivot = new Vector2(0, 0);
 
-				if (!WorldMap.IsOpen && (ScoreboardGUI.show || (!player.flags.HasAny(Player.Flags.Alive) && Editor.show_respawn_menu)))
+			if (!WorldMap.IsOpen && (ScoreboardGUI.show || (!player.flags.HasAny(Player.Flags.Alive) && Editor.show_respawn_menu)))
+			{
+				var gui = new ScoreboardGUI()
 				{
-					var gui = new ScoreboardGUI()
-					{
-						player = player,
-						gamemode = gamemode,
-					};
-					gui.Submit();
-				}
+					player = player,
+					gamemode = gamemode,
+				};
+				gui.Submit();
 			}
 		}
 #endif

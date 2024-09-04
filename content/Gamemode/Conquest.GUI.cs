@@ -5,6 +5,7 @@ namespace TC2.Conquest
 	public static partial class Conquest
 	{
 #if CLIENT
+		[Shitcode]
 		public struct RespawnGUI: IGUICommand
 		{
 			public static readonly Texture.Handle tex_icons_minimap = "ui_icons_minimap";
@@ -45,9 +46,11 @@ namespace TC2.Conquest
 
 				var h_faction = this.faction_id;
 
-				using (var window = GUI.Window.Standalone("Respawn"u8, position: new Vector2(GUI.CanvasSize.X * 0.50f, 0) + Spawn.RespawnGUI.window_offset, pivot: Spawn.RespawnGUI.window_pivot, size: Spawn.RespawnGUI.window_size, flags: GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.No_Click_Focus))
+				Spawn.RespawnGUI.window_size = new Vector2(600, 600);
+
+
+				using (var window = GUI.Window.Standalone("Respawn"u8, position: new Vector2(GUI.CanvasSize.X * 0.40f, 0) + Spawn.RespawnGUI.window_offset, pivot: Spawn.RespawnGUI.window_pivot, size: Spawn.RespawnGUI.window_size, flags: GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.No_Click_Focus))
 				{
-					Spawn.RespawnGUI.window_size = new Vector2(632, 700);
 
 					this.StoreCurrentWindowTypeID();
 					if (window.show)
@@ -316,7 +319,7 @@ namespace TC2.Conquest
 
 									//GUI.SeparatorThick();
 
-									using (var scrollable = GUI.Scrollbox.New("characters", size: GUI.GetRemainingSpace(y: (has_storage ? -96 - 8 - 8 : 0)), padding: new(4, 4), force_scrollbar: true))
+									using (var scrollable = GUI.Scrollbox.New("characters"u8, size: GUI.GetRemainingSpace(y: (has_storage ? -96 - 8 - 8 : 0)), padding: new(4, 4), force_scrollbar: true))
 									{
 										if (dormitory.IsNotNull())
 										{
@@ -346,7 +349,7 @@ namespace TC2.Conquest
 														Dormitory.DrawCharacterSmall(h_character);
 
 														var selected = h_selected_character_tmp.id != 0 && h_character == h_selected_character_tmp; // selected_index;
-														if (GUI.Selectable3("selectable", group_row.GetOuterRect(), selected))
+														if (GUI.Selectable3("selectable"u8, group_row.GetOuterRect(), selected))
 														{
 															h_selected_character = h_character;
 														}
@@ -411,7 +414,7 @@ namespace TC2.Conquest
 										}
 										else
 										{
-											GUI.TitleCentered("<no character selected>", size: 24, pivot: new(0.00f, 0.00f));
+											GUI.TitleCentered("<no character selected>"u8, size: 24, pivot: new(0.00f, 0.00f));
 										}
 									}
 
@@ -421,7 +424,7 @@ namespace TC2.Conquest
 
 										using (var group_title = GUI.Group.New(size: GUI.GetRemainingSpace(y: -300), padding: new(2, 4)))
 										{
-											using (var scrollbox = GUI.Scrollbox.New("scrollbox_xp", size: GUI.Rm))
+											using (var scrollbox = GUI.Scrollbox.New("scrollbox_xp"u8, size: GUI.Rm))
 											{
 												GUI.DrawBackground(GUI.tex_panel, scrollbox.group_frame.GetOuterRect(), new(8, 8, 8, 8));
 
@@ -446,7 +449,7 @@ namespace TC2.Conquest
 										{
 											GUI.DrawBackground(GUI.tex_panel, group_kits.GetOuterRect(), new(8, 8, 8, 8));
 
-											using (var scrollable = GUI.Scrollbox.New("kits", size: GUI.Rm, padding: new(4, 4), force_scrollbar: true))
+											using (var scrollable = GUI.Scrollbox.New("kits"u8, size: GUI.Rm, padding: new(4, 4), force_scrollbar: true))
 											{
 												Dormitory.DrawKits(ref dormitory, ref crafting_context, ref character_data, h_inventory, has_storage, available_items, selected_items);
 											}
@@ -457,20 +460,20 @@ namespace TC2.Conquest
 									//{
 									if (is_empty)
 									{
-										if (GUI.DrawButton("No characters available.", size: new Vector2(GUI.RmX, 48), color: GUI.col_button_error, error: true))
+										if (GUI.DrawButton("No characters available."u8, size: new Vector2(GUI.RmX, 48), color: GUI.col_button_error, error: true))
 										{
 
 										}
-										GUI.DrawHoverTooltip("This spawnpoint doesn't have any more characters left.\n\nSelect another spawnpoint on the map.");
+										GUI.DrawHoverTooltip("This spawnpoint doesn't have any more characters left.\n\nSelect another spawnpoint on the map."u8);
 									}
 									else
 									{
 										var is_selected_character_spawnable = h_selected_character_tmp.CanSpawnAsCharacter(h_faction: h_faction, h_faction_spawn: faction.id, h_player: player_asset, spawn_flags: spawn.flags);
 										if (is_selected_character_spawnable)
 										{
-											if (GUI.DrawButton("Spawn", size: new Vector2(GUI.RmX, 48), color: GUI.col_button_ok))
+											if (GUI.DrawButton("Spawn"u8, size: new Vector2(GUI.RmX, 48), color: GUI.col_button_ok))
 											{
-												var rpc = new Dormitory.DEV_SpawnRPC()
+												var rpc = new Spawn.SpawnRPC()
 												{
 													h_character = h_selected_character_tmp,
 													control = true
@@ -481,18 +484,22 @@ namespace TC2.Conquest
 													rpc.kits.TryAdd(in h_kit);
 												}
 
-												rpc.Send(ent_selected_spawn);
+												//rpc.Send(ent_selected_spawn);
+												rpc.SendAsTask(ent_selected_spawn).ContinueWith((result) =>
+												{
+		
+												});
 
 												h_selected_character = default;
 											}
 										}
 										else
 										{
-											if (GUI.DrawButton("Cannot spawn as this character.", size: new Vector2(GUI.RmX, 48), color: GUI.col_button_error, error: true))
+											if (GUI.DrawButton("Cannot spawn as this character."u8, size: new Vector2(GUI.RmX, 48), color: GUI.col_button_error, error: true))
 											{
 
 											}
-											GUI.DrawHoverTooltip("Character belongs to another faction.");
+											GUI.DrawHoverTooltip("Character belongs to another faction."u8);
 										}
 									}
 
@@ -502,7 +509,7 @@ namespace TC2.Conquest
 							{
 								using (var group_title = GUI.Group.New(size: new(GUI.RmX, 40), padding: new(4, 0)))
 								{
-									GUI.TitleCentered("No Spawns Available", size: 32, pivot: new(0.50f, 1.00f));
+									GUI.TitleCentered("No Spawns Available"u8, size: 32, pivot: new(0.50f, 1.00f));
 
 									//if (is_empty)
 									//{
@@ -515,7 +522,7 @@ namespace TC2.Conquest
 								{
 									GUI.SeparatorThick();
 
-									ref var faction_data = ref this.faction_id.GetData(out IFaction.Definition s_faction);
+									ref var faction_data = ref this.faction_id.GetData();
 									if (faction_data.IsNotNull())
 									{
 										using (GUI.Group.New(size: GUI.Rm, padding: new(8)))

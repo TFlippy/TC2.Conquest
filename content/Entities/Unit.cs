@@ -151,9 +151,9 @@ namespace TC2.Conquest
 				public Entity ent_enterable;
 
 #if SERVER
-				public void Invoke(ref NetConnection connection, Entity entity, ref WorldMap.Unit.Data data)
+				public void Invoke(Net.IRPC.Context rpc, ref WorldMap.Unit.Data data)
 				{
-					Unit.TryEnter(entity, this.ent_enterable);
+					Unit.TryEnter(rpc.entity, this.ent_enterable);
 
 					//Assert.Check(this.ent_enterable != entity);
 					//Assert.Check(this.ent_enterable.IsAlive());
@@ -177,9 +177,9 @@ namespace TC2.Conquest
 				//public Entity ent_unit;
 
 #if SERVER
-				public void Invoke(ref NetConnection connection, Entity entity, ref WorldMap.Unit.Data data)
+				public void Invoke(Net.IRPC.Context rpc, ref WorldMap.Unit.Data data)
 				{
-					Unit.TryExit(entity);
+					Unit.TryExit(rpc.entity);
 					//var ent_enterable = entity.GetParent(Relation.Type.Child);
 
 					//Assert.Check(ent_enterable != entity);
@@ -412,9 +412,9 @@ namespace TC2.Conquest
 				public Vector2 pos_target;
 
 #if SERVER
-				public void Invoke(ref NetConnection connection, Entity entity, ref Unit.Data data)
+				public void Invoke(Net.IRPC.Context rpc, ref Unit.Data data)
 				{
-					Assert.Check(data.CanPlayerControlUnit(entity, connection.GetPlayerHandle()));
+					Assert.Check(data.CanPlayerControlUnit(rpc.entity, rpc.connection.GetPlayerHandle()));
 
 					var ok = true;
 					switch (this.action)
@@ -462,7 +462,7 @@ namespace TC2.Conquest
 					{
 						data.action = this.action;
 						data.t_next_action = 0.00f;
-						data.Sync(entity, true);
+						data.Sync(rpc.entity, true);
 					}
 
 					//Sound.PlayGUI(ref connection, "ui.misc.03", volume: 0.35f, pitch: 1.30f);
