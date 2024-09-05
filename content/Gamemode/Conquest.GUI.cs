@@ -46,7 +46,7 @@ namespace TC2.Conquest
 
 				var h_faction = this.faction_id;
 
-				Spawn.RespawnGUI.window_size = new Vector2(600, 600);
+				Spawn.RespawnGUI.window_size = new Vector2(580, 480);
 
 				using (var window = GUI.Window.Standalone("Respawn"u8, position: new Vector2(GUI.CanvasSize.X * 0.40f, 0) + Spawn.RespawnGUI.window_offset, pivot: Spawn.RespawnGUI.window_pivot, size: Spawn.RespawnGUI.window_size, flags: GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.No_Click_Focus))
 				{
@@ -416,28 +416,28 @@ namespace TC2.Conquest
 										}
 									}
 
-									if (dormitory.flags.HasNone(Dormitory.Flags.Hide_XP))
-									{
-										GUI.SeparatorThick();
+									//if (dormitory.flags.HasNone(Dormitory.Flags.Hide_XP))
+									//{
+									//	GUI.SeparatorThick();
 
-										using (var group_title = GUI.Group.New(size: GUI.GetRemainingSpace(y: -300), padding: new(2, 4)))
-										{
-											using (var scrollbox = GUI.Scrollbox.New("scrollbox_xp"u8, size: GUI.Rm))
-											{
-												GUI.DrawBackground(GUI.tex_panel, scrollbox.group_frame.GetOuterRect(), new(8, 8, 8, 8));
+									//	using (var group_xp = GUI.Group.New(size: GUI.GetRemainingSpace(y: -300), padding: new(2, 4)))
+									//	{
+									//		using (var scrollbox = GUI.Scrollbox.New("scrollbox_xp"u8, size: GUI.Rm))
+									//		{
+									//			GUI.DrawBackground(GUI.tex_panel, scrollbox.group_frame.GetOuterRect(), new(8, 8, 8, 8));
 
-												if (character_data.IsNotNull())
-												{
-													Experience.DrawTableSmall2(ref character_data.experience);
-												}
+									//			if (character_data.IsNotNull())
+									//			{
+									//				Experience.DrawTableSmall2(ref character_data.experience);
+									//			}
 
-												//if (origin_data.IsNotNull())
-												//{
-												//	Experience.DrawTableSmall(ref origin_data.experience);
-												//}
-											}
-										}
-									}
+									//			//if (origin_data.IsNotNull())
+									//			//{
+									//			//	Experience.DrawTableSmall(ref origin_data.experience);
+									//			//}
+									//		}
+									//	}
+									//}
 
 									if (dormitory.flags.HasNone(Dormitory.Flags.Hide_Kits))
 									{
