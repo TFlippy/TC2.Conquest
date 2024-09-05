@@ -168,7 +168,7 @@ namespace TC2.Conquest
 			ref var region = ref context.GetRegion();
 			ref var player = ref context.GetPlayerData();
 
-			ref var faction_data = ref player.faction_id.GetData(out IFaction.Definition faction_asset);
+			ref var faction_data = ref player.faction_id.GetData(out var faction_asset);
 			if (faction_data.IsNotNull())
 			{
 				faction_data.scout_count += count;
@@ -275,14 +275,23 @@ namespace TC2.Conquest
 #if CLIENT
 		public struct ScoreboardGUI: IGUICommand
 		{
-			public Player.Data player;
-			public Conquest.Gamemode gamemode;
+			//public Player.Data player;
+
+			public Player.Flags player_flags;
+			//public Conquest.Gamemode gamemode;
 
 			public static bool show;
 
 			public void Draw()
 			{
-				var alive = this.player.flags.HasAny(Player.Flags.Alive);
+				//var alive = this.player.flags.HasAny(Player.Flags.Alive);
+
+				//ref var local_player_data = ref Client.GetPlayerData(out var local_player_asset);
+				//if (local_player_data.IsNull()) return;
+
+				var alive = player_flags.HasAny(Player.Flags.Alive);
+
+				//ref var local_character_data = ref Client.GetCharacter(out var local_character_asset);
 
 				var window_pos = (GUI.CanvasSize * new Vector2(0.40f, 0.00f)) + new Vector2(0, 64);
 				using (var window = GUI.Window.Standalone("Scoreboard"u8, position: alive ? null : window_pos, size: new Vector2(500, 400), pivot: alive ? new Vector2(0.50f, 0.00f) : new(1.00f, 0.00f), flags: GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.No_Click_Focus))
@@ -362,12 +371,12 @@ namespace TC2.Conquest
 
 														using (row.Column(0))
 														{
-															GUI.Text(player.h_player.GetName(), color: GUI.font_color_default.WithAlphaMult(alpha));
+															GUI.Text(player_data.GetName(), color: GUI.font_color_default.WithAlphaMult(alpha));
 														}
 
 														using (row.Column(1))
 														{
-															if (player.faction_id.TryGetData(out var ref_faction))
+															if (player_data.h_faction.TryGetData(out var ref_faction))
 															{
 																GUI.Title(ref_faction.value.name, color: ref_faction.value.color_a.WithAlphaMult(alpha));
 															}
@@ -422,8 +431,9 @@ namespace TC2.Conquest
 			{
 				var gui = new ScoreboardGUI()
 				{
-					player = player,
-					gamemode = gamemode,
+					//player = player,
+					player_flags = player.flags,
+					//gamemode = gamemode,
 				};
 				gui.Submit();
 			}
