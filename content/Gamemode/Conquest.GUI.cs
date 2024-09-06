@@ -404,17 +404,17 @@ namespace TC2.Conquest
 									//	}
 									//}
 
-									using (var group_title = GUI.Group.New(size: new(GUI.RmX, 24), padding: new(8, 8)))
-									{
-										if (character_data.IsNotNull())
-										{
-											GUI.TitleCentered(character_data.name, size: 24, pivot: new(0.00f, 0.00f));
-										}
-										else
-										{
-											GUI.TitleCentered("<no character selected>"u8, size: 24, pivot: new(0.00f, 0.00f));
-										}
-									}
+									//using (var group_title = GUI.Group.New(size: new(GUI.RmX, 24), padding: new(8, 8)))
+									//{
+									//	if (character_data.IsNotNull())
+									//	{
+									//		GUI.TitleCentered(character_data.name, size: 24, pivot: new(0.00f, 0.00f));
+									//	}
+									//	else
+									//	{
+									//		GUI.TitleCentered("<no character selected>"u8, size: 24, pivot: new(0.00f, 0.00f));
+									//	}
+									//}
 
 									//if (dormitory.flags.HasNone(Dormitory.Flags.Hide_XP))
 									//{
@@ -441,7 +441,7 @@ namespace TC2.Conquest
 
 									if (dormitory.flags.HasNone(Dormitory.Flags.Hide_Kits))
 									{
-										GUI.SeparatorThick();
+										//GUI.SeparatorThick();
 
 										using (var group_kits = GUI.Group.New(size: GUI.GetRemainingSpace(y: -48), padding: new(2, 4)))
 										{

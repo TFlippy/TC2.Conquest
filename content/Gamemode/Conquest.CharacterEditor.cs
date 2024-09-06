@@ -737,30 +737,30 @@ namespace TC2.Conquest
 
 										GUI.SliderIntLerp("Age"u8, ref vars.age_ratio, props.age_min, props.age_max, size: new(128, 24), show_label: true);
 
-										GUI.NewLine();
+										// GUI.NewLine();
 										GUI.SeparatorThick();
 
 										{
 											var max_flag_count = props.character_flags_default.GetCount() + Math.Min(4, props.character_flags_optional.GetCount());
-											GUI.EnumInput("flags.character"u8, ref vars.character_flags, size: new(w, 32), show_label: false, height: 256,
+											GUI.EnumInput("flags.character"u8, ref vars.character_flags, size: new(w * 0.50f, 32), show_label: false, height: 256,
 												max_flags: max_flag_count, mask: props.character_flags_optional, required: props.character_flags_default, columns: 5);
 										}
-
+										GUI.SameLine();
 										{
 											var max_flag_count = props.industry_flags_default.GetCount() + Math.Min(4, props.industry_flags_optional.GetCount());
-											GUI.EnumInput("flags.industry"u8, ref vars.industry_flags, size: new(w, 32), show_label: false, height: 256,
+											GUI.EnumInput("flags.industry"u8, ref vars.industry_flags, size: new(w * 0.50f, 32), show_label: false, height: 256,
 												max_flags: max_flag_count, mask: props.industry_flags_optional, required: props.industry_flags_default, columns: 5);
 										}
 
 										{
 											var max_flag_count = props.service_flags_default.GetCount() + Math.Min(4, props.service_flags_optional.GetCount());
-											GUI.EnumInput("flags.service"u8, ref vars.service_flags, size: new(w, 32), show_label: false, height: 256,
+											GUI.EnumInput("flags.service"u8, ref vars.service_flags, size: new(w * 0.50f, 32), show_label: false, height: 256,
 												max_flags: max_flag_count, mask: props.service_flags_optional, required: props.service_flags_default, columns: 5);
 										}
-
+										GUI.SameLine();
 										{
 											var max_flag_count = props.crime_flags_default.GetCount() + Math.Min(4, props.crime_flags_optional.GetCount());
-											GUI.EnumInput("flags.crime"u8, ref vars.crime_flags, size: new(w, 32), show_label: false, height: 256,
+											GUI.EnumInput("flags.crime"u8, ref vars.crime_flags, size: new(w * 0.50f, 32), show_label: false, height: 256,
 												max_flags: max_flag_count, mask: props.crime_flags_optional, required: props.crime_flags_default, columns: 5);
 										}
 									}
@@ -774,6 +774,8 @@ namespace TC2.Conquest
 									{
 										using (var group_kits = GUI.Group.New(size: new(GUI.RmX * 0.60f, GUI.RmY)))
 										{
+											var w = group_kits.size.X;
+
 											static bool ValidateKit(ref IKit.Data kit_data, Kit.Slot slot, ref CustomCharacter.Vars vars, ref CustomCharacter.Props props, bool skip_flags = false)
 											{
 												return kit_data.slot == slot
@@ -786,7 +788,7 @@ namespace TC2.Conquest
 											static void DrawKit(IKit.Definition asset, GUI.Group group, bool is_title)
 											{
 												Dormitory.DrawKit(h_kit: asset?.GetHandle() ?? default,
-													rect: group.GetOuterRect(),
+													rect: group.GetInnerRect(),
 													valid: true, //asset?.data.character_flags.Evaluate(custom_character.props.character_flags_default) > 0.00f,
 													selected: false,
 													force_readonly: true,
@@ -796,31 +798,33 @@ namespace TC2.Conquest
 													show_background: true);
 											}
 
-											GUI.AssetInput2("edit.h_kit_primary"u8, ref vars.h_kit_primary, size: new(GUI.RmX, 48), show_label: false, tab_height: 40, close_on_select: true,
+											GUI.AssetInput2("edit.h_kit_primary"u8, ref vars.h_kit_primary, size: new(w, 48), show_label: false, tab_height: 40, close_on_select: true, show_null: true,
 												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Primary, ref custom_character.vars, ref custom_character.props, skip_flags: false),
 												draw: DrawKit);
 
-											GUI.AssetInput2("edit.h_kit_secondary"u8, ref vars.h_kit_secondary, size: new(GUI.RmX, 48), show_label: false, tab_height: 40, close_on_select: true,
+											GUI.AssetInput2("edit.h_kit_secondary"u8, ref vars.h_kit_secondary, size: new(w, 48), show_label: false, tab_height: 40, close_on_select: true, show_null: true,
 												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Secondary, ref custom_character.vars, ref custom_character.props, skip_flags: false),
 												draw: DrawKit);
 
-											GUI.AssetInput2("edit.h_kit_tool"u8, ref vars.h_kit_tool, size: new(GUI.RmX, 48), show_label: false, tab_height: 40, close_on_select: true,
+											GUI.AssetInput2("edit.h_kit_tool"u8, ref vars.h_kit_tool, size: new(w, 48), show_label: false, tab_height: 40, close_on_select: true, show_null: true,
 												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Tool, ref custom_character.vars, ref custom_character.props, skip_flags: false),
 												draw: DrawKit);
 
-											GUI.AssetInput2("edit.h_kit_utility"u8, ref vars.h_kit_utility, size: new(GUI.RmX, 48), show_label: false, tab_height: 40, close_on_select: true,
+											GUI.AssetInput2("edit.h_kit_utility"u8, ref vars.h_kit_utility, size: new(w, 48), show_label: false, tab_height: 40, close_on_select: true, show_null: true,
 												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Utility, ref custom_character.vars, ref custom_character.props, skip_flags: false),
 												draw: DrawKit);
 
-											GUI.AssetInput2("edit.h_kit_head"u8, ref vars.h_kit_head, size: new(GUI.RmX, 48), show_label: false, tab_height: 40, close_on_select: true,
+											GUI.AssetInput2("edit.h_kit_head"u8, ref vars.h_kit_head, size: new(w * 0.50f, 48), show_label: false, tab_height: 40, close_on_select: true, show_null: true,
 												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Head, ref custom_character.vars, ref custom_character.props, skip_flags: false),
 												draw: DrawKit);
 
-											GUI.AssetInput2("edit.h_kit_chest"u8, ref vars.h_kit_chest, size: new(GUI.RmX, 48), show_label: false, tab_height: 40, close_on_select: true,
+											GUI.SameLine();
+
+											GUI.AssetInput2("edit.h_kit_chest"u8, ref vars.h_kit_chest, size: new(w * 0.50f, 48), show_label: false, tab_height: 40, close_on_select: true, show_null: true,
 												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Chest, ref custom_character.vars, ref custom_character.props, skip_flags: false),
 												draw: DrawKit);
 
-											GUI.AssetInput2("edit.h_kit_harness"u8, ref vars.h_kit_harness, size: new(GUI.RmX, 48), show_label: false, tab_height: 40, close_on_select: true,
+											GUI.AssetInput2("edit.h_kit_harness"u8, ref vars.h_kit_harness, size: new(w, 48), show_label: false, tab_height: 40, close_on_select: true, show_null: true,
 												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Harness, ref custom_character.vars, ref custom_character.props, skip_flags: false),
 												draw: DrawKit);
 										}
@@ -1032,7 +1036,7 @@ namespace TC2.Conquest
 				}
 				else
 				{
-					using (var widget = Sidebar.Widget.New("character.main", "New Main Character", new Sprite(GUI.tex_icons_widget, 16, 16, 2, 0), size: new Vector2(48 * 18, 680), order: (10.00f - 0.10f), flags: Sidebar.Widget.Flags.Starts_Open))
+					using (var widget = Sidebar.Widget.New("character.main", "New Main Character", new Sprite(GUI.tex_icons_widget, 16, 16, 2, 0), size: new Vector2(48 * 18, 540), order: (10.00f - 0.10f), flags: Sidebar.Widget.Flags.Starts_Open))
 					{
 						widget.func_draw = null;
 

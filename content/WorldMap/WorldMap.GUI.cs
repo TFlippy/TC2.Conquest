@@ -99,7 +99,7 @@ namespace TC2.Conquest
 
 				using (GUI.ID.Push("worldmap"u8))
 				{
-					GUI.DrawWindowBackground(GUI.tex_window_character);
+					//GUI.DrawWindowBackground(GUI.tex_window_character);
 					//sb.Clear();
 
 					ref var scenario_data = ref h_scenario.GetData(out var scenario_asset);
