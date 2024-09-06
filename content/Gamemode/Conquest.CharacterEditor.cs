@@ -798,19 +798,23 @@ namespace TC2.Conquest
 													show_background: true);
 											}
 
-											GUI.AssetInput2("edit.h_kit_primary"u8, ref vars.h_kit_primary, size: new(w, 48), show_label: false, tab_height: 40, close_on_select: true, show_null: true,
+											GUI.AssetInput2("edit.h_kit_primary"u8, ref vars.h_kit_primary, size: new(w * 0.50f, 48), show_label: false, tab_height: 40, close_on_select: true, show_null: true,
 												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Primary, ref custom_character.vars, ref custom_character.props, skip_flags: false),
 												draw: DrawKit);
 
-											GUI.AssetInput2("edit.h_kit_secondary"u8, ref vars.h_kit_secondary, size: new(w, 48), show_label: false, tab_height: 40, close_on_select: true, show_null: true,
+											GUI.SameLine();
+
+											GUI.AssetInput2("edit.h_kit_secondary"u8, ref vars.h_kit_secondary, size: new(w * 0.50f, 48), show_label: false, tab_height: 40, close_on_select: true, show_null: true,
 												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Secondary, ref custom_character.vars, ref custom_character.props, skip_flags: false),
 												draw: DrawKit);
 
-											GUI.AssetInput2("edit.h_kit_tool"u8, ref vars.h_kit_tool, size: new(w, 48), show_label: false, tab_height: 40, close_on_select: true, show_null: true,
+											GUI.AssetInput2("edit.h_kit_tool"u8, ref vars.h_kit_tool, size: new(w * 0.50f, 48), show_label: false, tab_height: 40, close_on_select: true, show_null: true,
 												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Tool, ref custom_character.vars, ref custom_character.props, skip_flags: false),
 												draw: DrawKit);
 
-											GUI.AssetInput2("edit.h_kit_utility"u8, ref vars.h_kit_utility, size: new(w, 48), show_label: false, tab_height: 40, close_on_select: true, show_null: true,
+											GUI.SameLine();
+
+											GUI.AssetInput2("edit.h_kit_utility"u8, ref vars.h_kit_utility, size: new(w * 0.50f, 48), show_label: false, tab_height: 40, close_on_select: true, show_null: true,
 												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Utility, ref custom_character.vars, ref custom_character.props, skip_flags: false),
 												draw: DrawKit);
 
@@ -1036,7 +1040,7 @@ namespace TC2.Conquest
 				}
 				else
 				{
-					using (var widget = Sidebar.Widget.New("character.main", "New Main Character", new Sprite(GUI.tex_icons_widget, 16, 16, 2, 0), size: new Vector2(48 * 18, 540), order: (10.00f - 0.10f), flags: Sidebar.Widget.Flags.Starts_Open))
+					using (var widget = Sidebar.Widget.New("character.main", "New Main Character", new Sprite(GUI.tex_icons_widget, 16, 16, 2, 0), size: new Vector2(48 * 18, 500), order: (10.00f - 0.10f), flags: Sidebar.Widget.Flags.Starts_Open))
 					{
 						widget.func_draw = null;
 
