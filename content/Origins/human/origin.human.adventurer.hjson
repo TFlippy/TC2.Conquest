@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.61.2"
+	$version: "0.1.61.4"
 	name: "Adventurer"
 	desc:
 		'''
@@ -15,8 +15,8 @@
 	cost: 100.000
 	flags: selectable, special
 	
-	character_flags: civillian, armed, technician, hunter, culinary, soldier, nomad, brawler, outdoor, strong, thief, middle_class
-	character_flags_optional: scientist, criminal, educated, military, medical, nobility, artisan, farmer, social, commerce, engineer, rich, miner, hunter, culinary, soldier, insane, alcoholic, naval, entertainer, illiterate, artist, brawler, junkie, evil, thief, murderer, terrorist, fanatic, dumb, clumsy, huge
+	character_flags: civillian, armed, nomad, outdoor, thief, middle_class
+	character_flags_optional: scientist, criminal, educated, military, medical, nobility, artisan, farmer, social, commerce, lowlife, technician, engineer, rich, miner, hunter, culinary, soldier, insane, alcoholic, naval, entertainer, illiterate, artist, pest, brawler, strong, junkie, evil, politician, thief, murderer, terrorist, fanatic, dumb, clumsy, huge
 	
 	industry_flags: exploration, mercenary
 	industry_flags_optional: hunting, entertainment, colonization, security, criminal, trading, commerce, aviation, naval, intel, alcohol

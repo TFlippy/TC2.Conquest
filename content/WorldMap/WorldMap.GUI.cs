@@ -1132,7 +1132,7 @@ namespace TC2.Conquest
 		internal static string edit_units_search = string.Empty;
 		private static void DrawLeftWindow(ref AABB rect)
 		{
-			using (var window = GUI.Window.Standalone("worldmap.side.left"u8, position: new Vector2(rect.a.X, rect.a.Y) + new Vector2(6, 12), size: new(284, Maths.Min(rect.GetHeight() - 8, 550)), pivot: new(0.00f, 0.00f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus | GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.Child))
+			using (var window = GUI.Window.Standalone("worldmap.side.left"u8, position: rect.a + new Vector2(6, 80), size: new(284, Maths.Min(rect.GetHeight() - 8, 550)), pivot: new(0.00f, 0.00f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus | GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.Child))
 			{
 				if (window.show)
 				{
