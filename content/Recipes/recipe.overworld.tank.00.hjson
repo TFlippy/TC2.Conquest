@@ -1,19 +1,18 @@
 ﻿{
-	$version: "0.1.60.7"
+	$version: "0.1.61.4"
 	name: "Tank"
 	desc:
 		'''
 		TODO: Desc
 		'''
+	tips: []
 	
 	icon:
 	{
-		texture: "worldmap.unit.tank.00"
+		texture: worldmap.unit.tank.00
 		size: [24, 24]
 		frame: [4, 0]
 	}
-	
-	color_button: "0xffaeb59a"
 	
 	min: 1
 	max: 1
@@ -22,14 +21,18 @@
 	type: buy
 	flags: overworld
 	tags: vehicle, overworld
+	
+	color_button: "0xffaeb59a"
 	rank: 0.000
 	
 	requirements:
 	[
 		{
 			type: resource
-			material: "money"
+			material: money
 			amount: 84477.990
+			group: 0
+			flags: prerequisite
 		}
 	]
 	
@@ -37,8 +40,9 @@
 	[
 		{
 			type: prefab
-			prefab: "unit.tank.00"
+			prefab: unit.tank.00
 			amount: 1.000
+			group: 0
 		}
 	]
 }
