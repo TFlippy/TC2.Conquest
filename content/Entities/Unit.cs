@@ -69,7 +69,7 @@ namespace TC2.Conquest
 				[Source.Owned, Optional(false)] in Faction.Data faction, [HasRelation(Source.Modifier.Owned, Relation.Type.Child, true)] bool has_parent);
 
 			[IComponent.Data(Net.SendType.Reliable)]
-			public partial struct Data: IComponent
+			public partial struct Data(): IComponent
 			{
 				public enum Type: uint
 				{
@@ -94,10 +94,6 @@ namespace TC2.Conquest
 				public BitField<Unit.Type> mask_units;
 
 				public float radius = 0.50f;
-
-				public Data()
-				{
-				}
 			}
 
 			[MethodImpl(MethodImplOptions.NoInlining)]
@@ -336,7 +332,7 @@ namespace TC2.Conquest
 
 
 			[IComponent.Data(Net.SendType.Reliable)]
-			public partial struct Data: IComponent
+			public partial struct Data(): IComponent
 			{
 				public Unit.Flags flags;
 				public Unit.Type type;
@@ -371,10 +367,6 @@ namespace TC2.Conquest
 				[Net.Ignore, Save.Ignore] public int branches_count;
 				[Net.Ignore, Save.Ignore] public float t_next_action;
 				[Net.Ignore, Save.Ignore] public EntRef<Transform.Data> ref_target_transform;
-
-				public Data()
-				{
-				}
 			}
 
 			public static Entity GetNearest(Vector2 pos, out float dist_sq, IFaction.Handle h_faction = default)

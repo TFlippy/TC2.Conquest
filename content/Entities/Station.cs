@@ -6,7 +6,7 @@ namespace TC2.Conquest
 	public static partial class Station
 	{
 		[IComponent.Data(Net.SendType.Reliable)]
-		public partial struct Data: IComponent
+		public partial struct Data(): IComponent
 		{
 			[Flags]
 			public enum Flags: uint
@@ -16,10 +16,6 @@ namespace TC2.Conquest
 
 			public Station.Data.Flags flags;
 			public Road.Type road_type;
-
-			public Data()
-			{
-			}
 		}
 
 		[ISystem.Update.A(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region)]
