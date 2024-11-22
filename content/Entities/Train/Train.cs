@@ -875,10 +875,10 @@ namespace TC2.Conquest
 						var rot_rem = Maths.DeltaAngle(rot, rot_snapped);
 
 						var rot_invlerp = Maths.InvLerp01(-MathF.PI, MathF.PI, rot_snapped);
-						sprite.frame.X = (uint)(rot_invlerp * 8);
+						sprite.frame.x = (uint)(rot_invlerp * 8);
 
 						// the sprites aren't 45°
-						switch (sprite.frame.X)
+						switch (sprite.frame.x)
 						{
 							case 1:
 							{
