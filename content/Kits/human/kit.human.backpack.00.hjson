@@ -1,0 +1,43 @@
+﻿{
+	$version: "0.1.62.0"
+	name: "Backpack"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: none
+	slot: harness
+	categories: tools, storage, civilian
+	faction: "null"
+	species: human
+	
+	character_flags:
+	{
+		require: none
+		include: construction, military, artisan, farmer, laborer, civillian, commerce, hunter, soldier, nomad, brawler, outdoor, strong, thief, lower_class, lower_middle_class, middle_class
+		exclude: none
+		weight: 1.250
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	cost: 0.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: backpack.00
+				quantity: 1.000
+				flags: equip
+			}
+			null
+			null
+			null
+		]
+		flags: unpack
+	}
+}
