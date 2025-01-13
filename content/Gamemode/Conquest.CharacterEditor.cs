@@ -497,6 +497,8 @@ namespace TC2.Conquest
 			public static CustomCharacter custom_character = new("krachtel", "human", "human.adventurer", Organic.Gender.Male, "human.male.wings", "human.female.updo", "human.male.beard.bartender", default);
 			public static Sprite icons_gender = new Sprite("ui_icons_gender", 16, 16, 0, 0);
 
+			public static bool pending_focus_character = true;
+
 			public void Draw()
 			{
 				//var size = new Vector2(48 * 18, 600);
@@ -946,7 +948,7 @@ namespace TC2.Conquest
 					var color = GUI.col_button_yellow;
 
 					var is_selected = h_character_current == h_character && ((Client.GetRegionID() == character_asset.region_id && character_asset.region_id > 0) || !WorldMap.IsOpen || WorldMap.hs_selected_entities.Contains(h_character.GetGlobalEntity()));
-					using (var widget = Sidebar.Widget.New("character.main", character_data.name, character_data.sprite_head, size: new Vector2(48 * 6, 48 * 4), has_window: false, show_as_selected: is_selected, color: color, order: (10.00f - 0.10f)))
+					using (var widget = Sidebar.Widget.New("character.main", character_data.name, character_data.sprite_head, size: new Vector2(48 * 6, 48 * 4), has_window: false, show_as_selected: is_selected, color: color, order: (10.00f - 0.10f), flags: Sidebar.Widget.Flags.Starts_Open))
 					{
 						widget.func_draw = (widget, group, icon_color) =>
 						{
@@ -957,6 +959,8 @@ namespace TC2.Conquest
 						var kb = GUI.GetKeyboard();
 						if (widget.state_flags.HasAny(Sidebar.Widget.StateFlags.Show)) // && !is_selected)
 						{
+							//if (widget.IsAppearing()) WorldMap.FocusLocation(Conquest.CreationGUI.custom_character.vars.h_location);
+
 							App.WriteLine("switch");
 							Client.SetCharacter(h_character, true, force: !is_selected);
 							//if (h_character_current != h_character | !is_selected)
@@ -1001,6 +1005,7 @@ namespace TC2.Conquest
 									}
 									else
 									{
+										if (WorldMap.CanPlayerControlUnit(ent_character_parent, player_asset)) WorldMap.hs_selected_entities.Add(ent_character_parent);
 										WorldMap.SelectEntity(ent_character_global, interact: false);
 									}
 								}
@@ -1038,10 +1043,19 @@ namespace TC2.Conquest
 
 						if (widget.state_flags.HasAny(Sidebar.Widget.StateFlags.Show))
 						{
+							if (widget.IsAppearing()) WorldMap.FocusLocation(Conquest.CreationGUI.custom_character.vars.h_location);
+
 							var gui = new Conquest.CreationGUI();
 							gui.Draw();
 							//selected_slot = selected_slot == -1 ? null : -1;
 						}
+
+						//// TODO: add some hook or ECS event for when the client has finished joining the server 
+						//if (Conquest.CreationGUI.pending_focus_character)
+						//{
+						//	WorldMap.FocusLocation(Conquest.CreationGUI.custom_character.vars.h_location);
+						//	Conquest.CreationGUI.pending_focus_character = false;
+						//}
 					}
 				}
 			}

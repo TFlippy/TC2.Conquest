@@ -14,7 +14,9 @@ namespace TC2.Conquest
 				None = 0,
 
 				Active = 1 << 0,
-				Paused = 1 << 1
+				Paused = 1 << 1,
+
+
 			}
 
 			public float elapsed;
@@ -27,7 +29,7 @@ namespace TC2.Conquest
 
 			public static void Init()
 			{
-				//App.WriteLine("Conquest Init!", App.Color.Magenta);
+				App.WriteLine("Conquest Init!", App.Color.Magenta);
 
 				//App.WriteLine(System.IO.File.Exists("derp"), App.Color.Green);
 			}
