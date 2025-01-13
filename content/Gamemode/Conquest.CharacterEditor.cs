@@ -165,7 +165,7 @@ namespace TC2.Conquest
 
 		public sealed class CustomCharacter
 		{
-			public struct Vars
+			public struct Vars()
 			{
 				public ISpecies.Handle h_species;
 				public ILocation.Handle h_location;
@@ -203,13 +203,9 @@ namespace TC2.Conquest
 				{
 					return HashCode.Combine(this.h_species, this.h_origin, this.gender);
 				}
-
-				public Vars()
-				{
-				}
 			}
 
-			public struct Props
+			public struct Props()
 			{
 				public float mult_tech = 1.00f;
 				public float mult_social = 1.00f;
@@ -288,10 +284,6 @@ namespace TC2.Conquest
 
 				public IMap.Crime crime_flags_default;
 				public IMap.Crime crime_flags_optional;
-
-				public Props()
-				{
-				}
 			}
 
 			public CustomCharacter.Vars vars = new();

@@ -6,7 +6,7 @@ namespace TC2.Conquest
 	public static partial class Conquest
 	{
 		[IGamemode.Data("Conquest", "")]
-		public partial struct Gamemode: IGamemode
+		public partial struct Gamemode(): IGamemode
 		{
 			[Flags]
 			public enum Flags: uint
@@ -19,11 +19,6 @@ namespace TC2.Conquest
 
 			public float elapsed;
 			public Conquest.Gamemode.Flags flags;
-
-			public Gamemode()
-			{
-
-			}
 
 			public static void Configure()
 			{
@@ -179,99 +174,6 @@ namespace TC2.Conquest
 		}
 #endif
 
-		//#if SERVER
-		//		[ISystem.AddFirst(ISystem.Mode.Single, ISystem.Scope.Region)]
-		//		public static void OnAdd(ISystem.Info info, ref Region.Data region, [Source.Owned] ref MapCycle.Global mapcycle)
-		//		{
-		//			mapcycle.AddMaps(ref region, "conquest");
-		//		}
-		//#endif
-
-		//		[ISystem.VeryLateUpdate(ISystem.Mode.Single, ISystem.Scope.Region)]
-		//		public static void OnUpdate(ISystem.Info info, [Source.Global] ref Conquest.Gamemode conquest, [Source.Global] in MapCycle.Global mapcycle, [Source.Global] ref MapCycle.Voting voting)
-		//		{
-		//			if (true)
-		//			{
-		//				if (!conquest.flags.HasAny(Conquest.Gamemode.Flags.Paused))
-		//				{
-		//					conquest.elapsed += info.DeltaTime;
-		//				}
-		//			}
-		//		}
-
-		//#if SERVER
-		//		[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Region, interval: 5.00f)]
-		//		public static void OnUpdate(ISystem.Info info, Entity entity, ref XorRandom random, [Source.Owned] in Player.Data player, [Source.Owned] ref Respawn.Data respawn)
-		//		{
-		//			ref var region = ref info.GetRegion();
-
-		//			if (player.ent_controlled.IsValid()) return;
-
-		//			var time = info.WorldTime;
-		//			var sync = false;
-
-		//			//App.WriteLine($"tick {time}; {info.DeltaTime}");
-
-		//			var index = 0;
-		//			foreach (ref var spawn_info in respawn.spawns_values)
-		//			{
-		//				//if (spawn_info.character.id == 0 || (time >= spawn_info.next_reroll && respawn.spawns_keys[index].id != 0))
-		//				//if (spawn_info.character.id == 0 && time >= spawn_info.next_reroll)
-		//				if (((player.faction_id == 0 && respawn.spawns_keys[index].IsValid()) || spawn_info.character.id == 0) && time >= spawn_info.next_reroll)
-		//				{
-		//					var map_info_copy = region.GetMapInfo();
-
-		//					var species_tmp = new ISpecies.Handle("human");
-		//					var origins = new WeightedList<IOrigin.Handle>(IOrigin.Database.GetAssets().Where(x => x.id != 0 && x.data.species == species_tmp).Select(x => new WeightedList<IOrigin.Handle>.Item(x.data.conditions.CalculateWeight(map_info_copy), x)));
-
-		//					var h_character = Dormitory.CreateCharacter(ref region, ref random, origins.GetRandom(ref random), spawn_info.character);
-		//					spawn_info = default;
-
-		//					var definition = h_character.GetDefinition();
-		//					if (definition != null)
-		//					{
-		//						definition.Flags.SetFlag(Asset.Flags.No_Save, true);
-		//					}
-
-		//					spawn_info.character = h_character;
-		//					spawn_info.kits.TryAdd("survival");
-
-		//					ref var character_data = ref spawn_info.character.GetData();
-		//					if (character_data.IsNotNull())
-		//					{
-		//						var character_flags = character_data.traits;
-
-		//						// old
-		//						//var kits = IKit.Database.GetAssets().Where(x => x.id != 0 && character_flags.HasAll(x.data.character_flags)).ToArray();
-		//						//spawn_info.kits.TryAdd(kits.GetRandom(ref random)?.GetHandle() ?? default);
-
-		//						// new
-		//						Span<IKit.Handle> kits = stackalloc IKit.Handle[16];
-		//						//IKit.Database.GetHandles(ref kits, (x) => character_flags.HasAll(x.data.character_flags));
-		//						IKit.Database.GetHandles(ref kits, (x) => x.data.character_flags.Evaluate(character_flags) >= 0.50f);
-		//						//App.WriteLine($"{kits.Length}; {character_flags}");
-
-		//						spawn_info.kits.TryAdd(kits.GetRandom(ref random));
-		//						//if (random.NextBool(0.50f)) spawn_info.kits.TryAdd(kits.GetRandom(ref random));
-		//					}
-
-		//					spawn_info.next_reroll = time + 120.00f;
-
-		//					//App.WriteLine($"rerolled character {spawn_info.character}");
-
-		//					sync = true;
-		//				}
-
-		//				index++;
-		//			}
-
-		//			if (sync)
-		//			{
-		//				respawn.Sync(entity);
-		//			}
-		//		}
-		//#endif
-
 #if CLIENT
 		public struct ScoreboardGUI: IGUICommand
 		{
@@ -289,7 +191,7 @@ namespace TC2.Conquest
 				//ref var local_player_data = ref Client.GetPlayerData(out var local_player_asset);
 				//if (local_player_data.IsNull()) return;
 
-				var alive = player_flags.HasAny(Player.Flags.Alive);
+				var alive = this.player_flags.HasAny(Player.Flags.Alive);
 
 				//ref var local_character_data = ref Client.GetCharacter(out var local_character_asset);
 

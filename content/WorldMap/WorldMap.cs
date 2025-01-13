@@ -54,12 +54,10 @@ namespace TC2.Conquest
 			return h_prefecture;
 		}
 
-
-
 		public static partial class Marker
 		{
 			[IComponent.Data(Net.SendType.Reliable, sync_table_capacity: 128)]
-			public partial struct Data: IComponent
+			public partial struct Data(): IComponent
 			{
 				[Flags]
 				public enum Flags: uint
@@ -90,10 +88,6 @@ namespace TC2.Conquest
 
 				public Vector2 icon_offset;
 				public Sprite icon;
-
-				public Data()
-				{
-				}
 			}
 
 			[Query(ISystem.Scope.Global)]
@@ -788,8 +782,8 @@ namespace TC2.Conquest
 			}
 		}
 
-		public static HashSet<ulong> segments_visited = new(128);
-		public static Queue<RoadConnection> junctions_queue = new(64);
+		public static readonly HashSet<ulong> segments_visited = new(128);
+		public static readonly Queue<RoadConnection> junctions_queue = new(64);
 
 		public static void Init()
 		{
@@ -806,7 +800,7 @@ namespace TC2.Conquest
 		public static float worldmap_zoom_target = 6.00f;
 
 		public static Vector2 worldmap_window_size = new Vector2(1024, 1024);
-		public static Vector2 worldmap_window_offset = new Vector2(0, 0);
+		public static Vector2 worldmap_window_offset;
 
 		public static Vector2 worldmap_mouse_position;
 		public static Vector2 worldmap_mouse_position_snapped;
@@ -839,7 +833,7 @@ namespace TC2.Conquest
 		public static Vector2 mouse_pos_old;
 		public static Vector2 mouse_pos_new;
 
-		public static HashSet<IAsset.IDefinition> hs_pending_asset_saves = new HashSet<IAsset.IDefinition>(64);
+		public static readonly HashSet<IAsset.IDefinition> hs_pending_asset_saves = new(64);
 
 		public static byte selected_region_id;
 

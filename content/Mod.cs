@@ -54,69 +54,7 @@ namespace TC2.Conquest
 			else
 			{
 				overlay_alpha = Maths.Lerp(overlay_alpha, 0.00f, 0.10f); // App.fixed_update_interval_s * 2.00f);
-
-				//GUI.RegionMenu.enabled = false;
 				GUI.Menu.enable_background = true;
-
-				// TODO: move this elsewhere
-				//using (var widget = Sidebar.Widget.New("menu.worldmap", "World Map", new Sprite(GUI.tex_icons_widget, 16, 16, 9, 1), size: GUI.worldmenu_widget_size_override ?? new Vector2(600, 700), order: -10.00f))
-				//{
-				//	ref readonly var kb = ref Control.GetKeyboard();
-				//	if (kb.GetKeyDown(Keyboard.Key.M) || GUI.GameMenu.widget_toggle_open.HasValue)
-				//	{
-				//		if (widget.state_flags.HasAny(Sidebar.Widget.StateFlags.Show) && (!GUI.GameMenu.widget_toggle_open ?? true))
-				//		{
-				//			Sound.PlayGUI(GUI.sound_window_close, volume: 0.40f);
-				//			widget.SetActive(false);
-				//		}
-				//		else if (GUI.GameMenu.widget_toggle_open ?? true)
-				//		{
-				//			Sound.PlayGUI(GUI.sound_window_open, volume: 0.40f);
-				//			widget.SetActive(true);
-				//		}
-
-				//		GUI.GameMenu.widget_toggle_open = null;
-				//	}
-
-				//	//App.WriteLine("hi");
-
-				//	if (widget.state_flags.HasAny(Sidebar.Widget.StateFlags.Show) && !Client.IsLoadingRegion())
-				//	{
-				//		//App.WriteLine("hi");
-
-				//		using (var group = GUI.Group.New(GUI.GetAvailableSize()))
-				//		{
-				//			group.DrawRect(Color32BGRA.Magenta);
-
-				//			//group.DrawBackground(GUI.tex_panel);
-				//			//GUI.Text("yes");
-
-				//			//WorldMap.Draw();
-				//		}
-				//	}
-				//}
-
-				//using (var window = GUI.Window.Standalone("test", size: new(100, 200)))
-				//{
-				//	window.group.DrawBackground(GUI.tex_panel);
-				//}
-
-				//{
-				//	ref var player = ref Client.GetPlayer();
-				//	if (player.IsNotNull())
-				//	{
-				//		ref var region = ref Client.GetRegion();
-				//		if (region.IsNotNull())
-				//		{
-
-				//			var pos_tmp = GUI.GetMouse().GetInterpolatedPosition();
-				//			GUI.DrawCircleFilled(region.WorldToCanvas(pos_tmp), 16.00f, color: Color32BGRA.Yellow, layer: GUI.Layer.Foreground);
-				//			GUI.DrawLine(GUI.CanvasSize * 0.50f, region.WorldToCanvas(pos_tmp), color: Color32BGRA.Yellow, layer: GUI.Layer.Foreground);
-
-				//			//GUI.DrawTextCentered($"{region.GetWorldToCanvasMatrix():0.0000}\n{region.WorldToCanvas(pos_tmp)}\n{GUI.WorldToCanvas(pos_tmp)}\n{pos_tmp}\n{Vulkan.v_lerp}", GUI.CanvasSize * 0.50f);
-				//		}
-				//	}
-				//}
 			}
 
 			if (overlay_alpha > 0.01f)
@@ -135,6 +73,7 @@ namespace TC2.Conquest
 			}
 		}
 
+		[Ugly]
 		[ISystem.VeryEarlyGUI(ISystem.Mode.Single, ISystem.Scope.Global, order: -50)]
 		public static void UpdateWorldmap(ISystem.Info.Global info)
 		{
@@ -186,32 +125,14 @@ namespace TC2.Conquest
 					widget.SetActive(true);
 				}
 
-				//App.WriteLine("hi");
-
-
-
-
 				if (widget.state_flags.HasAny(Sidebar.Widget.StateFlags.Show) && !Client.IsLoadingRegion())
 				{
-					//App.WriteLine("hi");
-
 					using (var group = GUI.Group.New(GUI.Av))
 					{
-						//group.DrawRect(Color32BGRA.Magenta);
-
-						//group.DrawBackground(GUI.tex_panel);
-						//GUI.Text("yes");
-
 						WorldMap.Draw();
 					}
 				}
 			}
-
-			//var gui = new SidebarHUD()
-			//{
-
-			//};
-			//gui.Submit();
 		}
 
 		protected override void OnDrawRegionMenu()
