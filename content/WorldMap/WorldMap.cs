@@ -123,29 +123,25 @@ namespace TC2.Conquest
 			}
 
 			// TODO: temporary workaround, make it update when the asset is modified
-			[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global, interval: 1.00f)]
-			public static void UpdateMarkerEntrance(ISystem.Info.Common info, Entity entity,
+			//[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global, interval: 1.00f)]
+			[ISystem.Event<IEntrance.UpdateEvent>(ISystem.Mode.Single, ISystem.Scope.Global)]
+			public static void UpdateMarkerEntrance(ISystem.Info.Common info, Entity entity, ref IEntrance.UpdateEvent ev,
 			[Source.Owned] ref WorldMap.Marker.Data marker, [Source.Owned] in Entrance.Data entrance)
 			{
-				if (entity.TryGetAsset(out IEntrance.Definition entrance_asset))
-				{
-					marker.relative_offset = entrance_asset.data.relative_offset;
-					marker.icon = entrance_asset.data.icon;
-				}
+				marker.relative_offset = ev.data.relative_offset;
+				marker.icon = ev.data.icon;
 			}
 
 			// TODO: temporary workaround, make it update when the asset is modified
-			[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global, interval: 1.00f)]
-			public static void UpdateMarkerLocation(ISystem.Info.Common info, Entity entity,
+			//[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global, interval: 1.00f)]
+			[ISystem.Event<ILocation.UpdateEvent>(ISystem.Mode.Single, ISystem.Scope.Global)]
+			public static void UpdateMarkerLocation(ISystem.Info.Common info, Entity entity, ref ILocation.UpdateEvent ev,
 			[Source.Owned] ref WorldMap.Marker.Data marker, [Source.Owned] in Location.Data location)
 			{
-				if (location.h_location.TryGetDefinition(out var location_asset))
-				{
-					marker.icon = location_asset.data.icon;
-					marker.icon_offset = location_asset.data.icon_offset;
-					marker.text_offset = location_asset.data.text_offset;
-					marker.color = location_asset.data.color;
-				}
+				marker.icon = ev.data.icon;
+				marker.icon_offset = ev.data.icon_offset;
+				marker.text_offset = ev.data.text_offset;
+				marker.color = ev.data.color;
 			}
 
 			// TODO: temporary workaround, make it update when the asset is modified
@@ -155,35 +151,38 @@ namespace TC2.Conquest
 			{
 				entity.TryGetAssetIcon(ref marker.icon);
 			}
-//#endif
+
+			//[ISystem.Event<ILocation.UpdateEvent>(ISystem.Mode.Single, ISystem.Scope.Global)]
+			//public static void OnLocationModified(ISystem.Info.Common info, Entity entity, ref XorRandom random, ref ILocation.UpdateEvent ev,
+			//[Source.Owned] ref Transform.Data transform)
+			//{
+			//	App.WriteLine($"OnLocationModified(): {entity.GetName()}; {ev.h_asset}; {ev.data}");
+			//}
+			//#endif
 
 #if SERVER
-			[ISystem.Modified(ISystem.Mode.Single, ISystem.Scope.Global)]
-			[ISystem.Add(ISystem.Mode.Single, ISystem.Scope.Global)]
-			public static void OnLocationModified(ISystem.Info.Common info, Entity entity, [Source.Owned] ref Location.Data location, [Source.Owned] ref WorldMap.Marker.Data marker, [Source.Owned, Optional(true)] ref Nameable.Data nameable)
+			//[ISystem.Modified(ISystem.Mode.Single, ISystem.Scope.Global)]
+			//[ISystem.Add(ISystem.Mode.Single, ISystem.Scope.Global)]
+			[ISystem.Event<ILocation.UpdateEvent>(ISystem.Mode.Single, ISystem.Scope.Global)]
+			public static void OnLocationModified(ISystem.Info.Common info, Entity entity, ref ILocation.UpdateEvent ev,
+			[Source.Owned] ref Location.Data location, [Source.Owned] ref WorldMap.Marker.Data marker,
+			[Source.Owned, Optional(true)] ref Nameable.Data nameable)
 			{
-				if (ILocation.TryGetAsset(entity, out var h_location))
+				marker.icon = ev.data.icon;
+				marker.icon_offset = ev.data.icon_offset;
+				marker.text_offset = ev.data.text_offset;
+				marker.color = ev.data.color;
+				marker.scale = ev.data.size;
+
+				marker.flags.SetFlag(Data.Flags.Hidden, ev.data.flags.HasAny(ILocation.Flags.Hidden));
+				marker.Sync(entity, true);
+
+				if (nameable.IsNotNull())
 				{
-					ref var location_data = ref h_location.GetData();
-					if (location_data.IsNotNull())
-					{
-						marker.icon = location_data.icon;
-						marker.icon_offset = location_data.icon_offset;
-						marker.text_offset = location_data.text_offset;
-						marker.color = location_data.color;
-						marker.scale = location_data.size;
-
-						marker.flags.SetFlag(Data.Flags.Hidden, location_data.flags.HasAny(ILocation.Flags.Hidden));
-						marker.Sync(entity, true);
-
-						if (nameable.IsNotNull())
-						{
-							nameable.name = location_data.name_short;
-							nameable.type = Nameable.Kind.Location;
-							nameable.flags = Nameable.Flags.No_Export | Nameable.Flags.No_Rename;
-							nameable.Sync(entity, true);
-						}
-					}
+					nameable.name = ev.data.name_short;
+					nameable.type = Nameable.Kind.Location;
+					nameable.flags = Nameable.Flags.No_Export | Nameable.Flags.No_Rename;
+					nameable.Sync(entity, true);
 				}
 			}
 #endif

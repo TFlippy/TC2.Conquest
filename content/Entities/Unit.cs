@@ -691,7 +691,7 @@ namespace TC2.Conquest
 			[Source.Parent] ref WorldMap.Unit.Data unit_parent, [Source.Parent] ref WorldMap.Enterable.Data enterable,
 			[Source.Owned] ref WorldMap.Unit.Data unit_child)
 			{
-				App.WriteLine($"driver {info.EventType}");
+				//App.WriteLine($"driver {info.EventType}");
 				if (unit_child.type == WorldMap.Unit.Type.Character && ent_unit_child.TryGetAsset(out ICharacter.Definition character_asset))
 				{
 					switch (info.EventType)
