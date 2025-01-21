@@ -590,7 +590,7 @@ namespace TC2.Conquest
 					//Assert.Check(!this.ent_enterable.TryGetParent(Relation.Type.Child, out var ent_enterable_parent));
 
 					ref var enterable = ref ent_enterable.GetComponent<WorldMap.Enterable.Data>();
-					Assert.NotNull(ref enterable);
+					Assert.IsNotNull(ref enterable);
 
 					Assert.Check(enterable.flags.HasNone(Enterable.Data.Flags.Hide_If_Parented) || !ent_enterable.GetParent(Relation.Type.Child).IsValid());
 
@@ -616,10 +616,10 @@ namespace TC2.Conquest
 					Assert.Check(ent_enterable.GetRegionID() == ent_unit.GetRegionID());
 
 					ref var enterable = ref ent_enterable.GetComponent<WorldMap.Enterable.Data>();
-					Assert.NotNull(ref enterable);
+					Assert.IsNotNull(ref enterable);
 
 					ref var transform = ref ent_enterable.GetComponent<Transform.Data>();
-					Assert.NotNull(ref transform);
+					Assert.IsNotNull(ref transform);
 
 					//var road = WorldMap.GetNearestRoad(location_data.h_prefecture, Road.Type.Road, (Vector2)location_data.point, out var dist_sq);
 					//var pos = road.GetPosition().GetRefValueOrDefault();
@@ -688,47 +688,77 @@ namespace TC2.Conquest
 			[ISystem.Monitor(ISystem.Mode.Single, ISystem.Scope.Global)]
 			public static void OnUnitEnter(ISystem.Info.Global info, ref Region.Data.Global region,
 			Entity ent_unit_parent, Entity ent_unit_child, Entity ent_enterable,
-			[Source.Parent] ref WorldMap.Unit.Data unit_parent, [Source.Parent] ref WorldMap.Enterable.Data enterable,
-			[Source.Owned] ref WorldMap.Unit.Data unit_child)
+			[Source.Parent] ref WorldMap.Enterable.Data enterable,
+			[Source.Parent, Optional(true)] ref WorldMap.Unit.Data unit_parent, [Source.Owned] ref WorldMap.Unit.Data unit_child)
 			{
-				//App.WriteLine($"driver {info.EventType}");
+				App.WriteLine($"OnUnitEnter() {info.EventType}");
+				App.WriteValue(ent_unit_parent);
+				App.WriteValue(ent_unit_child);
+				App.WriteValue(ent_enterable);
+
 				if (unit_child.type == WorldMap.Unit.Type.Character && ent_unit_child.TryGetAsset(out ICharacter.Definition character_asset))
 				{
 					switch (info.EventType)
 					{
 						case ISystem.EventType.Add:
 						{
+							if (unit_parent.IsNotNull())
+							{
 #if SERVER
-							unit_parent.h_character_driver = character_asset;
-							unit_parent.Sync(ent_unit_parent, true);
+								unit_parent.h_character_driver = character_asset;
+								unit_parent.Sync(ent_unit_parent, true);
 #endif
 
 #if CLIENT
-							// TODO: hack
-							if (ent_unit_child == WorldMap.selected_entity || (WorldMap.hs_selected_entities.Count == 1 && WorldMap.hs_selected_entities.Contains(ent_unit_child)))
-							{
-								WorldMap.hs_selected_entities.Add(ent_unit_parent);
-								if (!WorldMap.selected_entity.IsAlive()) WorldMap.SelectEntity(ent_unit_parent); 
-							}
+								// TODO: hack
+								if (ent_unit_child == WorldMap.selected_entity || (WorldMap.hs_selected_entities.Count == 1 && WorldMap.hs_selected_entities.Contains(ent_unit_child)))
+								{
+									WorldMap.hs_selected_entities.Add(ent_unit_parent);
+									if (!WorldMap.selected_entity.IsAlive()) WorldMap.SelectEntity(ent_unit_parent);
+								}
 #endif
+							}
+							else
+							{
+#if CLIENT
+								// TODO: hack
+								if (ent_unit_child == WorldMap.selected_entity || (WorldMap.hs_selected_entities.Count == 1 && WorldMap.hs_selected_entities.Contains(ent_unit_child)))
+								{
+									WorldMap.FocusEntity(ent_enterable, interact: true);
+								}
+#endif
+							}
 						}
 						break;
 
 						case ISystem.EventType.Remove:
 						{
+							if (unit_parent.IsNotNull())
+							{
 #if SERVER
-							unit_parent.h_character_driver = default;
-							unit_parent.Sync(ent_unit_parent, true);
+								unit_parent.h_character_driver = default;
+								unit_parent.Sync(ent_unit_parent, true);
 #endif
 
 #if CLIENT
-							// TODO: hack
-							if (ent_unit_child == WorldMap.selected_entity_cached || (WorldMap.hs_selected_entities.Contains(ent_unit_child) && (WorldMap.hs_selected_entities.Count == 2 ? WorldMap.hs_selected_entities.Contains(ent_unit_parent) : WorldMap.hs_selected_entities.Count == 1)))
-							{
-								WorldMap.hs_selected_entities.Remove(ent_unit_parent);
-								//if (WorldMap.selected_entity_cached == ent_unit_parent) WorldMap.SelectEntity(default);
-							}
+								// TODO: hack
+								if (ent_unit_child == WorldMap.selected_entity_cached || (WorldMap.hs_selected_entities.Contains(ent_unit_child) && (WorldMap.hs_selected_entities.Count == 2 ? WorldMap.hs_selected_entities.Contains(ent_unit_parent) : WorldMap.hs_selected_entities.Count == 1)))
+								{
+									WorldMap.hs_selected_entities.Remove(ent_unit_parent);
+									//if (WorldMap.selected_entity_cached == ent_unit_parent) WorldMap.SelectEntity(default);
+								}
 #endif
+							}
+							else
+							{
+#if CLIENT
+								// TODO: hack
+								if (ent_enterable == WorldMap.selected_entity_cached || (WorldMap.hs_selected_entities.Contains(ent_unit_child) && WorldMap.hs_selected_entities.Count == 1))
+								{
+									WorldMap.FocusEntity(ent_unit_child, interact: true);
+								}
+#endif
+							}
 						}
 						break;
 					}

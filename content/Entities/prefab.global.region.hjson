@@ -1,0 +1,52 @@
+$tags: []
+
+location:
+{
+
+}
+
+faction:
+{
+
+}
+
+company:
+{
+    
+}
+
+transform:
+{
+	
+}
+
+zone:
+{
+	
+}
+
+// address:
+// {
+	
+// }
+
+// worldmap.enterable:
+// {
+//     type: location
+//     radius: 0.500
+// }
+
+// interactable:
+// {
+//     window_size: [456.000, 336.000]
+// }
+
+worldmap.marker:
+{
+	radius: 0.375
+}
+
+nameable:
+{
+    
+}

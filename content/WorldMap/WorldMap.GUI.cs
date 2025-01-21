@@ -1126,7 +1126,19 @@ namespace TC2.Conquest
 		//public static readonly List<UnitInfo> unit_infos_cached = new(32);
 
 
+		[Flags]
+		public enum UnitSearchFilter: uint
+		{
+			None = 0u,
+
+			Units = 1u << 0,
+			Regions = 1u << 1,
+			Locations = 1u << 2,
+		}
+
+		internal static UnitSearchFilter edit_unit_search_filter;
 		internal static string edit_units_search = string.Empty;
+
 		[Shitcode]
 		private static void DrawLeftWindow(ref AABB rect)
 		{
@@ -1145,13 +1157,20 @@ namespace TC2.Conquest
 					//{
 					using (var group_list = GUI.Group.New(size: GUI.Rm, padding: new(4, 4)))
 					{
+						//if (GUI.TextInput("worldmap.left.search"u8, "<search>"u8, ref edit_units_search, size: new(GUI.RmX * 0.50f, 32), max_length: 32))
 						if (GUI.TextInput("worldmap.left.search"u8, "<search>"u8, ref edit_units_search, size: new(GUI.RmX, 32), max_length: 32))
 						{
 
 						}
 						GUI.FocusOnCtrlF();
 
+						//GUI.SameLine();
+
+						//GUI.EnumInput("worldmap.left.filter"u8, ref edit_unit_search_filter, size: new(GUI.RmX, 32), show_label: false);
+						GUI.EnumInput("worldmap.left.filter"u8, ref edit_unit_search_filter, size: new(GUI.RmX, 32), show_label: false);
+
 						var is_filtering = !edit_units_search.IsNullOrEmpty();
+
 						using (var scroll = GUI.Scrollbox.New("units.scroll"u8, size: new(GUI.RmX, GUI.RmY - 48)))
 						{
 							if (false)
@@ -1163,7 +1182,10 @@ namespace TC2.Conquest
 									if (collapsible.Inner(padding: new Vector4(12, 0, 0, 0)))
 									{
 										//var ts = Timestamp.Now();
-										foreach (ref var row in region.IterateQuery<WorldMap.Marker.GetAllMarkersQuery>().HasComponent<Location.Data>(true))
+										var rows = region.IterateQuery<WorldMap.Marker.GetAllMarkersQuery>().HasComponent<Location.Data>(true);
+										if (edit_unit_search_filter.HasAny(UnitSearchFilter.Regions)) rows = rows.HasComponent<Zone.Data>(true);
+
+										foreach (ref var row in rows)
 										{
 											row.Run((ISystem.Info.Global info, ref Region.Data.Global region, Entity entity,
 											in WorldMap.Marker.Data marker,
@@ -1354,83 +1376,11 @@ namespace TC2.Conquest
 
 								if (collapsible.Inner(padding: new Vector4(12, 0, 0, 0)))
 								{
-									//foreach (ref var row in region.IterateQuery<WorldMap.Marker.GetUnitsQuery>())
-									//{
-									//	row.Run((ISystem.Info.Global info, ref Region.Data.Global region,
-									//	Entity ent_marker, Entity ent_transform,
-									//	[Source.Owned] in WorldMap.Marker.Data marker,
-									//	[Source.Owned] in Transform.Data transform) =>
-									//	{
-									//		using (var group_row = GUI.Group.New(size: new(GUI.RmX, 40), padding: new(4, 4)))
-									//		{
-									//			if (group_row.IsVisible())
-									//			{
-									//				using (GUI.ID.Push(ent_marker))
-									//				{
-									//					var is_selected = WorldMap.selected_entity == ent_marker;
-									//					var contains = WorldMap.hs_selected_entities.Contains(ent_marker);
-									//					var is_selectable = WorldMap.CanPlayerControlUnit(ent_marker, Client.GetPlayerHandle());
+									var rows = region.IterateQuery<WorldMap.Marker.GetAllMarkersQuery>().HasParent(Relation.Type.Child, false);
+									if (edit_unit_search_filter.HasNone(UnitSearchFilter.Units)) rows = rows.HasComponent<Unit.Data>(false);
+									if (edit_unit_search_filter.HasNone(UnitSearchFilter.Regions)) rows = rows.HasComponent<Zone.Data>(false);
 
-									//					using (GUI.Alpha.Begin(GUI.GetEnabledAlpha(is_selectable)))
-									//					{
-									//						group_row.DrawBackground(GUI.tex_panel);
-
-									//						GUI.DrawSpriteCentered(marker.icon, group_row.GetInnerRect(), layer: GUI.Layer.Window, pivot: new(1.00f, 0.50f), scale: 2.00f, color: marker.color_override.IsVisible() ? marker.color_override : marker.color);
-									//						GUI.TitleCentered(ent_marker.GetName(), size: 16, pivot: new(0.00f, 0.00f), offset: new(0, 0));
-
-									//						var ent_parent = ent_marker.GetParent(Relation.Type.Child);
-									//						if (ent_parent.IsValid() && ent_parent.TryGetAssetName(out var name_parent))
-									//						{
-									//							GUI.TextShadedCentered(name_parent, size: 14, pivot: new(0.00f, 1.00f), color: GUI.font_color_desc);
-									//						}
-									//						else
-									//						{
-									//							//GUI.TextShadedCentered(entity.GetFaction().GetName(), size: 14, pivot: new(0.00f, 1.00f), color: GUI.font_color_desc);
-									//						}
-
-									//						//var selected = asset == h_selected_location; // selected_region_id == i;
-									//						if (GUI.Selectable3(ent_marker.GetShortID(), group_row.GetOuterRect(), contains, is_readonly: !is_selectable))
-									//						{
-									//							var result = WorldMap.SelectUnitBehavior(ent_marker, SelectUnitMode.Single, SelectUnitFlags.Multiselect | SelectUnitFlags.Hold_Shift | SelectUnitFlags.Toggle);
-									//							if (result.HasAny(SelectUnitResults.Changed))
-									//							{
-									//								if (result.HasAny(SelectUnitResults.Removed))
-									//								{
-									//									WorldMap.selected_entity = default;
-									//								}
-									//								else
-									//								{
-									//									WorldMap.selected_entity.Toggle(ent_marker, true);
-									//								}
-									//							}
-
-									//							if (WorldMap.selected_entity == ent_marker && (ent_marker.TryGetAsset(out ILocation.Definition location_asset) || ent_parent.TryGetAsset(out location_asset)))
-									//							{
-									//								WorldMap.h_selected_location = location_asset;
-									//							}
-									//							else
-									//							{
-									//								WorldMap.h_selected_location = default;
-									//							}
-									//						}
-									//					}
-
-									//					if (GUI.IsItemHovered())
-									//					{
-									//						if (GUI.GetMouse().GetKeyDown(Mouse.Key.Right))
-									//						{
-									//							WorldMap.FocusEntity(ent_marker, interact: false);
-									//						}
-									//						GUI.DrawEntityMarker(ent_marker, cross_size: 0.125f, layer: GUI.Layer.Foreground);
-									//					}
-									//				}
-									//			}
-									//		}
-									//	});
-									//}
-
-									//var ts = Timestamp.Now();
-									foreach (ref var row in region.IterateQuery<WorldMap.Marker.GetAllMarkersQuery>().HasComponent<Location.Data>(false))
+									foreach (ref var row in rows) //.HasComponent<Location.Data>(false))
 									{
 										row.Run((ISystem.Info.Global info, ref Region.Data.Global region, Entity entity,
 										in WorldMap.Marker.Data marker,
@@ -1439,19 +1389,21 @@ namespace TC2.Conquest
 										bool has_parent) =>
 										{
 											//return;
+											//if (has_parent) return;
 											if (marker.flags.HasAny(Marker.Data.Flags.Hidden)) return;
 
 											var pos = transform.GetInterpolatedPosition();
 											var asset_scale = Maths.Clamp(marker.scale, 0.250f, 1.00f);
 
-											if ((has_parent && marker.flags.HasAny(Marker.Data.Flags.Hide_If_Parented)))
-											{
-												return;
-											}
-											else
-											{
+											////if ((has_parent && marker.flags.HasAny(Marker.Data.Flags.Hide_If_Parented)))
+											//if (has_parent)
+											//{
+											//	return;
+											//}
+											//else
+											//{
 
-											}
+											//}
 
 											if (is_filtering && !nameable.name.ToString().Contains(edit_units_search, StringComparison.OrdinalIgnoreCase)) return;
 
@@ -1465,7 +1417,8 @@ namespace TC2.Conquest
 														var contains = WorldMap.hs_selected_entities.Contains(entity);
 														var is_selectable = WorldMap.CanPlayerControlUnit(entity, Client.GetPlayerHandle());
 
-														using (GUI.Alpha.Begin(GUI.GetEnabledAlpha(is_selectable)))
+														using (GUI.Alpha.Push(GUI.GetEnabledAlpha(is_selectable)))
+														//using (GUI.Disabled.Push(true, !is_selectable))
 														{
 															group_row.DrawBackground(GUI.tex_panel);
 
@@ -1520,8 +1473,8 @@ namespace TC2.Conquest
 												}
 											}
 
-											ref var enterable = ref entity.GetComponent<Enterable.Data>();
-											if (enterable.IsNotNull())
+											//ref var enterable = ref entity.GetComponent<Enterable.Data>();
+											//if (enterable.IsNotNull())
 											{
 												Span<Entity> children = FixedArray.CreateSpan8<Entity>(out var buffer);
 												entity.GetChildren(ref children, Relation.Type.Child);
