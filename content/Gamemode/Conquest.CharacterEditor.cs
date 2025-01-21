@@ -106,7 +106,7 @@ namespace TC2.Conquest
 
 				var money = props.money;
 
-				character_asset.Spawn(0).ContinueWith((ent) =>
+				character_asset.SpawnEntity(0).ContinueWith((ent) =>
 				{
 					ref var transform = ref ent.GetComponent<Transform.Data>();
 					if (transform.IsNotNull())

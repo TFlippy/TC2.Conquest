@@ -80,7 +80,7 @@ namespace TC2.Conquest
 								}
 							}
 
-							if (!is_selected_spawn_valid)
+							if (!is_selected_spawn_valid && false)
 							{
 								ent_selected_spawn = default;
 

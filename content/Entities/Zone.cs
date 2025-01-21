@@ -19,7 +19,8 @@ namespace TC2.Conquest
 		}
 
 		[ISystem.Update.A(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region)]
-		public static void OnUpdate(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity, [Source.Owned] ref Zone.Data zone, [Source.Owned] ref Transform.Data transform)
+		public static void OnUpdate(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity, 
+		[Source.Owned] ref Zone.Data zone, [Source.Owned] ref Transform.Data transform)
 		{
 
 		}
@@ -46,7 +47,8 @@ namespace TC2.Conquest
 		}
 
 		[ISystem.LateGUI(ISystem.Mode.Single, ISystem.Scope.Global)]
-		public static void OnGUI(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] ref Zone.Data zone, [Source.Owned] ref Transform.Data transform)
+		public static void OnGUI(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, 
+		[Source.Owned] ref Zone.Data zone, [Source.Owned] ref Transform.Data transform)
 		{
 			if (WorldMap.IsOpen)
 			{

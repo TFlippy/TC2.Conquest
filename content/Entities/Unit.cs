@@ -338,6 +338,7 @@ namespace TC2.Conquest
 				public Unit.Type type;
 				[Asset.Ignore] public Unit.Action action;
 
+				[Shitcode]
 				[Asset.Ignore] public ICharacter.Handle h_character_driver;
 
 				public Road.Type road_type;
@@ -685,16 +686,18 @@ namespace TC2.Conquest
 			}
 #endif
 
+			// TODO: doesn't trigger when jumping between two enterables at the same time (e.g. as character from vehicle to region entrance)
+			[Shitcode]
 			[ISystem.Monitor(ISystem.Mode.Single, ISystem.Scope.Global)]
 			public static void OnUnitEnter(ISystem.Info.Global info, ref Region.Data.Global region,
 			Entity ent_unit_parent, Entity ent_unit_child, Entity ent_enterable,
 			[Source.Parent] ref WorldMap.Enterable.Data enterable,
 			[Source.Parent, Optional(true)] ref WorldMap.Unit.Data unit_parent, [Source.Owned] ref WorldMap.Unit.Data unit_child)
 			{
-				App.WriteLine($"OnUnitEnter() {info.EventType}");
-				App.WriteValue(ent_unit_parent);
-				App.WriteValue(ent_unit_child);
-				App.WriteValue(ent_enterable);
+				//App.WriteLine($"OnUnitEnter() {info.EventType}");
+				//App.WriteValue(ent_unit_parent);
+				//App.WriteValue(ent_unit_child);
+				//App.WriteValue(ent_enterable);
 
 				if (unit_child.type == WorldMap.Unit.Type.Character && ent_unit_child.TryGetAsset(out ICharacter.Definition character_asset))
 				{

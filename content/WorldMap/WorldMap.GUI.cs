@@ -319,7 +319,7 @@ namespace TC2.Conquest
 
 									for (var i = 1; i < Region.max_count; i++)
 									{
-										using (GUI.ID<WorldMap.LocationGUI, Region.Data>.Push(i))
+										using (GUI.ID<WorldMap.Marker.Data, Region.Data>.Push(i))
 										{
 											//ref var map_info = ref world_info.[i];
 
@@ -1393,8 +1393,8 @@ namespace TC2.Conquest
 											//if (has_parent) return;
 											if (marker.flags.HasAny(Marker.Data.Flags.Hidden)) return;
 
-											var pos = transform.GetInterpolatedPosition();
-											var asset_scale = Maths.Clamp(marker.scale, 0.250f, 1.00f);
+											//var pos = transform.GetInterpolatedPosition();
+											//var asset_scale = Maths.Clamp(marker.scale, 0.250f, 1.00f);
 
 											////if ((has_parent && marker.flags.HasAny(Marker.Data.Flags.Hide_If_Parented)))
 											//if (has_parent)
@@ -1423,18 +1423,46 @@ namespace TC2.Conquest
 														{
 															group_row.DrawBackground(GUI.tex_panel);
 
-															GUI.DrawSpriteCentered(marker.icon, group_row.GetInnerRect(), layer: GUI.Layer.Window, pivot: new(1.00f, 0.50f), scale: 2.00f, color: marker.color_override.IsVisible() ? marker.color_override : marker.color);
+															//if (location_data.IsNotNull())
+															//{
+															//	icon = location_data.thumbnail;
+															//}
+
+															var map_asset = default(MapAsset);
+															using (var group_thumbnail = GUI.Group.New(size: new(GUI.RmY)))
+															{
+																ref var location_data = ref entity.GetAssetData<ILocation.Data>();
+																if (map_asset != null)
+																{
+																	GUI.DrawMapThumbnail(map_asset, size: GUI.Rm, show_frame: false);
+																}
+																else if (location_data.IsNotNull())
+																{
+																	GUI.DrawSpriteCentered(location_data.thumbnail, group_thumbnail.GetInnerRect(), GUI.Layer.Window, scale: 0.25f);
+																}
+																else
+																{
+																	var icon = marker.icon;
+																	GUI.DrawSpriteCentered(icon, group_row.GetInnerRect(), layer: GUI.Layer.Window, pivot: new(1.00f, 0.50f), scale: 2.00f, color: marker.color_override.IsVisible() ? marker.color_override : marker.color);
+																	//GUI.DrawSpriteCentered(location_data.thumbnail, group_thumbnail.GetInnerRect(), GUI.Layer.Window, scale: 1.00f);
+																}
+
+																GUI.DrawBackground(GUI.tex_frame_white, rect: group_thumbnail.GetOuterRect(), padding: new(4), color: GUI.col_button);
+															}
+
+															GUI.SameLine();
+
 															GUI.TitleCentered(nameable.name, size: 16, pivot: new(0.00f, 0.00f), offset: new(0, 0));
 
-															var ent_parent = entity.GetParent(Relation.Type.Child);
-															if (ent_parent.IsValid() && ent_parent.TryGetAssetName(out var name_parent))
-															{
-																GUI.TextShadedCentered(name_parent, size: 14, pivot: new(0.00f, 1.00f), color: GUI.font_color_desc);
-															}
-															else
-															{
-																//GUI.TextShadedCentered(entity.GetFaction().GetName(), size: 14, pivot: new(0.00f, 1.00f), color: GUI.font_color_desc);
-															}
+															//var ent_parent = entity.GetParent(Relation.Type.Child);
+															//if (ent_parent.IsValid() && ent_parent.TryGetAssetName(out var name_parent))
+															//{
+															//	GUI.TextShadedCentered(name_parent, size: 14, pivot: new(0.00f, 1.00f), color: GUI.font_color_desc);
+															//}
+															//else
+															//{
+															//	//GUI.TextShadedCentered(entity.GetFaction().GetName(), size: 14, pivot: new(0.00f, 1.00f), color: GUI.font_color_desc);
+															//}
 
 															if (GUI.Selectable3(entity.GetShortID(), group_row.GetOuterRect(), contains, is_readonly: !is_selectable))
 															{
@@ -1451,7 +1479,7 @@ namespace TC2.Conquest
 																	}
 																}
 
-																if (WorldMap.selected_entity == entity && (entity.TryGetAsset(out ILocation.Definition location_asset) || ent_parent.TryGetAsset(out location_asset)))
+																if (WorldMap.selected_entity == entity && (entity.TryGetAsset(out ILocation.Definition location_asset))) // || ent_parent.TryGetAsset(out location_asset)))
 																{
 																	WorldMap.h_selected_location = location_asset;
 																}
@@ -2306,160 +2334,160 @@ namespace TC2.Conquest
 			}
 		}
 
-		public partial struct LocationGUI: IGUICommand
-		{
-			public Entity ent_location;
-			public Location.Data location;
+		//public partial struct LocationGUI: IGUICommand
+		//{
+		//	public Entity ent_location;
+		//	public Location.Data location;
 
-			public static int selected_tab;
+		//	public static int selected_tab;
 
-			public void Draw()
-			{
-				using (var window = GUI.Window.Interaction("Location###location.gui"u8, this.ent_location))
-				{
-					this.StoreCurrentWindowTypeID(order: -150);
-					if (window.show)
-					{
-						ref var player = ref Client.GetPlayer();
-						ref var region = ref this.ent_location.GetRegionCommon();
-						//ref var map_info = ref region.GetMapInfo();
-						ref var location_data = ref this.location.h_location.GetData(out var s_location);
+		//	public void Draw()
+		//	{
+		//		using (var window = GUI.Window.Interaction("Location###location.gui"u8, this.ent_location))
+		//		{
+		//			this.StoreCurrentWindowTypeID(order: -150);
+		//			if (window.show)
+		//			{
+		//				ref var player = ref Client.GetPlayer();
+		//				ref var region = ref this.ent_location.GetRegionCommon();
+		//				//ref var map_info = ref region.GetMapInfo();
+		//				ref var location_data = ref this.location.h_location.GetData(out var s_location);
 
-						using (GUI.Group.New(size: GUI.Rm, padding: new(0)))
-						{
-							if (location_data.IsNotNull())
-							{
-								using (GUI.Group.New(new(GUI.RmX, 40), new(0, 0)))
-								{
-									using (var group_header = GUI.Group.New(new(GUI.RmX, 40), new(8, 0)))
-									{
+		//				using (GUI.Group.New(size: GUI.Rm, padding: new(0)))
+		//				{
+		//					if (location_data.IsNotNull())
+		//					{
+		//						using (GUI.Group.New(new(GUI.RmX, 40), new(0, 0)))
+		//						{
+		//							using (var group_header = GUI.Group.New(new(GUI.RmX, 40), new(8, 0)))
+		//							{
 
-									}
-								}
+		//							}
+		//						}
 
-								GUI.SeparatorThick(margin: new(4, 4));
+		//						GUI.SeparatorThick(margin: new(4, 4));
 
-								using (var group_main = GUI.Group.New(size: new Vector2(GUI.RmX, GUI.RmY), padding: new(4)))
-								{
-									group_main.DrawBackground(GUI.tex_panel);
+		//						using (var group_main = GUI.Group.New(size: new Vector2(GUI.RmX, GUI.RmY), padding: new(4)))
+		//						{
+		//							group_main.DrawBackground(GUI.tex_panel);
 
-									//var materials_filtered = IMaterial.Database.GetAssets().Where(x => x.data.commodity?.flags.HasAny(IMaterial.Commodity.Flags.Marketable) ?? false).ToArray();
-									//var materials_filtered_span = materials_filtered.AsSpan();
+		//							//var materials_filtered = IMaterial.Database.GetAssets().Where(x => x.data.commodity?.flags.HasAny(IMaterial.Commodity.Flags.Marketable) ?? false).ToArray();
+		//							//var materials_filtered_span = materials_filtered.AsSpan();
 
-									//Span<(float buy, float sell, float produce)> weights_span = stackalloc (float buy, float sell, float produce)[materials_filtered_span.Length];
+		//							//Span<(float buy, float sell, float produce)> weights_span = stackalloc (float buy, float sell, float produce)[materials_filtered_span.Length];
 
-									//using (var scrollbox = GUI.Scrollbox.New("scroll.economy"u8, size: GUI.Rm))
-									//{
-									//	// BUY
-									//	using (var group_buy = GUI.Group.New(size: new Vector2(GUI.RmX * 0.50f, GUI.RmY), padding: new(4)))
-									//	{
-									//		for (var i = 0; i < materials_filtered_span.Length; i++)
-									//		{
-									//			var material_asset = materials_filtered_span[i];
-									//			weights_span[i].buy = Market.CalculateBuyScore(material_asset, ref location_data);
-									//			weights_span[i].sell = Market.CalculateSellScore(material_asset, ref location_data);
-									//			weights_span[i].produce = Market.CalculateProductionScore(material_asset, ref location_data);
-									//		}
-									//		weights_span.Sort(materials_filtered_span, (x, y) => y.produce.CompareTo(x.produce));
-									//		//weights_span = weights_span.OrderByDescending(x => x.produce);
+		//							//using (var scrollbox = GUI.Scrollbox.New("scroll.economy"u8, size: GUI.Rm))
+		//							//{
+		//							//	// BUY
+		//							//	using (var group_buy = GUI.Group.New(size: new Vector2(GUI.RmX * 0.50f, GUI.RmY), padding: new(4)))
+		//							//	{
+		//							//		for (var i = 0; i < materials_filtered_span.Length; i++)
+		//							//		{
+		//							//			var material_asset = materials_filtered_span[i];
+		//							//			weights_span[i].buy = Market.CalculateBuyScore(material_asset, ref location_data);
+		//							//			weights_span[i].sell = Market.CalculateSellScore(material_asset, ref location_data);
+		//							//			weights_span[i].produce = Market.CalculateProductionScore(material_asset, ref location_data);
+		//							//		}
+		//							//		weights_span.Sort(materials_filtered_span, (x, y) => y.produce.CompareTo(x.produce));
+		//							//		//weights_span = weights_span.OrderByDescending(x => x.produce);
 
-									//		for (var i = 0; i < materials_filtered_span.Length; i++)
-									//		{
-									//			using (var group_row = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(8, 0)))
-									//			{
-									//				if (group_row.IsVisible())
-									//				{
-									//					group_row.DrawBackground(GUI.tex_panel);
+		//							//		for (var i = 0; i < materials_filtered_span.Length; i++)
+		//							//		{
+		//							//			using (var group_row = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(8, 0)))
+		//							//			{
+		//							//				if (group_row.IsVisible())
+		//							//				{
+		//							//					group_row.DrawBackground(GUI.tex_panel);
 
-									//					var material_asset = materials_filtered_span[i];
-									//					ref var material_data = ref material_asset.GetData();
+		//							//					var material_asset = materials_filtered_span[i];
+		//							//					ref var material_data = ref material_asset.GetData();
 
-									//					GUI.DrawMaterialSmall(material_asset, new(GUI.RmY));
+		//							//					GUI.DrawMaterialSmall(material_asset, new(GUI.RmY));
 
-									//					GUI.SameLine(8);
+		//							//					GUI.SameLine(8);
 
-									//					GUI.TitleCentered(material_data.name, pivot: new(0.00f, 0.50f));
-									//					GUI.TextCentered($"{weights_span[i].buy:0.00}", pivot: new(1.00f, 0.50f), offset: new(-96, 0));
-									//					GUI.DrawHoverTooltip("Buy"u8);
+		//							//					GUI.TitleCentered(material_data.name, pivot: new(0.00f, 0.50f));
+		//							//					GUI.TextCentered($"{weights_span[i].buy:0.00}", pivot: new(1.00f, 0.50f), offset: new(-96, 0));
+		//							//					GUI.DrawHoverTooltip("Buy"u8);
 
-									//					GUI.TextCentered($"{weights_span[i].sell:0.00}", pivot: new(1.00f, 0.50f), offset: new(-48, 0));
-									//					GUI.DrawHoverTooltip("Sell"u8);
+		//							//					GUI.TextCentered($"{weights_span[i].sell:0.00}", pivot: new(1.00f, 0.50f), offset: new(-48, 0));
+		//							//					GUI.DrawHoverTooltip("Sell"u8);
 
-									//					GUI.TextCentered($"{weights_span[i].produce:0.00}", pivot: new(1.00f, 0.50f), offset: new(0, 0));
-									//					GUI.DrawHoverTooltip("Produce"u8);
+		//							//					GUI.TextCentered($"{weights_span[i].produce:0.00}", pivot: new(1.00f, 0.50f), offset: new(0, 0));
+		//							//					GUI.DrawHoverTooltip("Produce"u8);
 
-									//					//App.WriteLine($"BUY [{i:00}]: {materials_filtered_span[i].data.name,-32}{weights_span[i]:0.00}");
-									//				}
-									//			}
+		//							//					//App.WriteLine($"BUY [{i:00}]: {materials_filtered_span[i].data.name,-32}{weights_span[i]:0.00}");
+		//							//				}
+		//							//			}
 
-									//			GUI.NewLine(4);
-									//		}
-									//	}
+		//							//			GUI.NewLine(4);
+		//							//		}
+		//							//	}
 
-									//	//GUI.SameLine();
+		//							//	//GUI.SameLine();
 
-									//	//using (var group_sell = GUI.Group.New(size: new Vector2(GUI.RmX, GUI.RmY), padding: new(4)))
-									//	//{
-									//	//	for (var i = 0; i < materials_filtered_span.Length; i++)
-									//	//	{
-									//	//		var material_asset = materials_filtered_span[i];
-									//	//		weights_span[i] = Market.CalculateSellWeights(material_asset, ref location_data);
-									//	//		//weights_span[i] = Market.CalculateProduceWeights(material_asset, ref location_data);
-									//	//	}
-									//	//	weights_span.Sort(materials_filtered_span);
+		//							//	//using (var group_sell = GUI.Group.New(size: new Vector2(GUI.RmX, GUI.RmY), padding: new(4)))
+		//							//	//{
+		//							//	//	for (var i = 0; i < materials_filtered_span.Length; i++)
+		//							//	//	{
+		//							//	//		var material_asset = materials_filtered_span[i];
+		//							//	//		weights_span[i] = Market.CalculateSellWeights(material_asset, ref location_data);
+		//							//	//		//weights_span[i] = Market.CalculateProduceWeights(material_asset, ref location_data);
+		//							//	//	}
+		//							//	//	weights_span.Sort(materials_filtered_span);
 
-									//	//	for (var i = materials_filtered_span.Length - 1; i >= 0; i--)
-									//	//	{
-									//	//		using (var group_row = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(8, 0)))
-									//	//		{
-									//	//			if (group_row.IsVisible())
-									//	//			{
-									//	//				group_row.DrawBackground(GUI.tex_panel);
+		//							//	//	for (var i = materials_filtered_span.Length - 1; i >= 0; i--)
+		//							//	//	{
+		//							//	//		using (var group_row = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(8, 0)))
+		//							//	//		{
+		//							//	//			if (group_row.IsVisible())
+		//							//	//			{
+		//							//	//				group_row.DrawBackground(GUI.tex_panel);
 
-									//	//				var material_asset = materials_filtered_span[i];
-									//	//				ref var material_data = ref material_asset.GetData();
+		//							//	//				var material_asset = materials_filtered_span[i];
+		//							//	//				ref var material_data = ref material_asset.GetData();
 
-									//	//				GUI.DrawMaterialSmall(material_asset, new(GUI.RmY));
+		//							//	//				GUI.DrawMaterialSmall(material_asset, new(GUI.RmY));
 
-									//	//				GUI.SameLine(8);
+		//							//	//				GUI.SameLine(8);
 
-									//	//				GUI.TitleCentered(material_data.name, pivot: new(0.00f, 0.50f));
-									//	//				GUI.TextCentered($"{weights_span[i]:0.00}", pivot: new(1.00f, 0.50f));
-									//	//				//App.WriteLine($"BUY [{i:00}]: {materials_filtered_span[i].data.name,-32}{weights_span[i]:0.00}");
-									//	//			}
-									//	//		}
+		//							//	//				GUI.TitleCentered(material_data.name, pivot: new(0.00f, 0.50f));
+		//							//	//				GUI.TextCentered($"{weights_span[i]:0.00}", pivot: new(1.00f, 0.50f));
+		//							//	//				//App.WriteLine($"BUY [{i:00}]: {materials_filtered_span[i].data.name,-32}{weights_span[i]:0.00}");
+		//							//	//			}
+		//							//	//		}
 
-									//	//		GUI.NewLine(4);
-									//	//	}
-									//	//}
+		//							//	//		GUI.NewLine(4);
+		//							//	//	}
+		//							//	//}
 
-									//}
-								
-								
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+		//							//}
 
 
-		[ISystem.EarlyGUI(ISystem.Mode.Single, ISystem.Scope.Global)]
-		public static void OnGUI(Entity entity,
-		[Source.Owned] in Location.Data location,
-		[Source.Owned] in Interactable.Data interactable)
-		{
-			if (interactable.IsActive())
-			{
-				var gui = new LocationGUI()
-				{
-					ent_location = entity,
-					location = location,
-				};
-				gui.Submit();
-			}
-		}
+		//						}
+		//					}
+		//				}
+		//			}
+		//		}
+		//	}
+		//}
+
+
+		//[ISystem.EarlyGUI(ISystem.Mode.Single, ISystem.Scope.Global)]
+		//public static void OnGUI(Entity entity,
+		//[Source.Owned] in Location.Data location,
+		//[Source.Owned] in Interactable.Data interactable)
+		//{
+		//	if (interactable.IsActive())
+		//	{
+		//		var gui = new LocationGUI()
+		//		{
+		//			ent_location = entity,
+		//			location = location,
+		//		};
+		//		gui.Submit();
+		//	}
+		//}
 #endif
 	}
 }

@@ -1,3 +1,4 @@
+$prefab: "g.settlement"
 $tags: []
 
 location:
@@ -15,9 +16,9 @@ company:
     
 }
 
-transform:
+address:
 {
-	
+	flags: no_editing
 }
 
 settlement:
@@ -25,25 +26,7 @@ settlement:
 	
 }
 
-interactable:
+office:
 {
-	flags: no_tab
-	window_size: [600.000, 422.000]
-	// window_size_misc: [216.000, 0.000]
-	window_offset: [0.000, 0.000]
-}
 
-worldmap.marker:
-{
-	radius: 0.375
-}
-
-nameable:
-{
-	flags: no_rename, use_asset_name
-}
-
-address:
-{
-	
 }

@@ -124,8 +124,8 @@ namespace TC2.Conquest
 
 			// TODO: temporary workaround, make it update when the asset is modified
 			//[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global, interval: 1.00f)]
-			[ISystem.Event<IEntrance.UpdateEvent>(ISystem.Mode.Single, ISystem.Scope.Global)]
-			public static void UpdateMarkerEntrance(ISystem.Info.Common info, Entity entity, ref IEntrance.UpdateEvent ev,
+			[ISystem.Event<IEntrance.RefreshEvent>(ISystem.Mode.Single, ISystem.Scope.Global)]
+			public static void UpdateMarkerEntrance(ISystem.Info.Common info, Entity entity, ref IEntrance.RefreshEvent ev,
 			[Source.Owned] ref WorldMap.Marker.Data marker, [Source.Owned] in Entrance.Data entrance)
 			{
 				marker.relative_offset = ev.data.relative_offset;
@@ -134,8 +134,8 @@ namespace TC2.Conquest
 
 			// TODO: temporary workaround, make it update when the asset is modified
 			//[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global, interval: 1.00f)]
-			[ISystem.Event<ILocation.UpdateEvent>(ISystem.Mode.Single, ISystem.Scope.Global)]
-			public static void UpdateMarkerLocation(ISystem.Info.Common info, Entity entity, ref ILocation.UpdateEvent ev,
+			[ISystem.Event<ILocation.RefreshEvent>(ISystem.Mode.Single, ISystem.Scope.Global)]
+			public static void UpdateMarkerLocation(ISystem.Info.Common info, Entity entity, ref ILocation.RefreshEvent ev,
 			[Source.Owned] ref WorldMap.Marker.Data marker, [Source.Owned] in Location.Data location)
 			{
 				marker.icon = ev.data.icon;
@@ -163,8 +163,8 @@ namespace TC2.Conquest
 #if SERVER
 			//[ISystem.Modified(ISystem.Mode.Single, ISystem.Scope.Global)]
 			//[ISystem.Add(ISystem.Mode.Single, ISystem.Scope.Global)]
-			[ISystem.Event<ILocation.UpdateEvent>(ISystem.Mode.Single, ISystem.Scope.Global)]
-			public static void OnLocationModified(ISystem.Info.Common info, Entity entity, ref ILocation.UpdateEvent ev,
+			[ISystem.Event<ILocation.RefreshEvent>(ISystem.Mode.Single, ISystem.Scope.Global)]
+			public static void OnLocationModified(ISystem.Info.Common info, Entity entity, ref ILocation.RefreshEvent ev,
 			[Source.Owned] ref Location.Data location, [Source.Owned] ref WorldMap.Marker.Data marker,
 			[Source.Owned, Optional(true)] ref Nameable.Data nameable)
 			{

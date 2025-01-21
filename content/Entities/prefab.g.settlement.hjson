@@ -1,26 +1,6 @@
 $tags: []
 
-location:
-{
-
-}
-
-faction:
-{
-
-}
-
-company:
-{
-    
-}
-
 transform:
-{
-	
-}
-
-settlement:
 {
 	
 }
@@ -28,9 +8,8 @@ settlement:
 interactable:
 {
 	flags: no_tab
-	window_size: [600.000, 422.000]
-	// window_size_misc: [216.000, 0.000]
-	window_offset: [0.000, 0.000]
+	window_size: [672.000, 438.000]
+	window_size_misc: [112.000, 0.000]
 }
 
 worldmap.marker:
@@ -43,7 +22,7 @@ nameable:
 	flags: no_rename, use_asset_name
 }
 
-address:
+settlement:
 {
 	
 }
