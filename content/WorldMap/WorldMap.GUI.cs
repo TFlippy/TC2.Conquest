@@ -412,7 +412,7 @@ namespace TC2.Conquest
 										//GUI.DrawRect(rect_icon, layer: GUI.Layer.Foreground);
 										//GUI.DrawRect(rect_text, layer: GUI.Layer.Foreground);
 
-										var is_selected = WorldMap.selected_entity == entity;
+										var is_selected = WorldMap.interacted_entity == entity;
 										var is_pressed = GUI.ButtonBehavior(entity, rect_button, out var is_hovered, out var is_held);
 										var is_interactable = marker.flags.HasNone(Marker.Data.Flags.No_Interact);
 										var is_selectable = marker.flags.HasNone(Marker.Data.Flags.No_Select);
@@ -501,7 +501,7 @@ namespace TC2.Conquest
 
 												if (is_selected)
 												{
-													WorldMap.selected_entity = default;
+													WorldMap.interacted_entity = default;
 													if (unit.IsNotNull())
 													{
 														var select_results = WorldMap.SelectUnitBehavior(entity, SelectUnitMode.Single, SelectUnitFlags.Multiselect | SelectUnitFlags.Hold_Shift | SelectUnitFlags.Toggle | SelectUnitFlags.Include_Children, selected: is_selected);
@@ -561,7 +561,7 @@ namespace TC2.Conquest
 
 													if (is_interactable)
 													{
-														WorldMap.selected_entity = entity;
+														WorldMap.interacted_entity = entity;
 														GUI.selected_entity = entity;
 
 														if (location_asset != null) WorldMap.h_selected_location = location_asset;
@@ -766,7 +766,7 @@ namespace TC2.Conquest
 
 								if (GUI.IsMouseDoubleClicked())
 								{
-									WorldMap.selected_entity = default;
+									WorldMap.interacted_entity = default;
 								}
 							}
 
@@ -926,7 +926,7 @@ namespace TC2.Conquest
 		internal static bool is_worldmap_hovered;
 		public static bool IsHovered() => is_worldmap_hovered;
 
-		public static void FocusLocation(ILocation.Handle h_location)
+		public static void FocusLocation(ILocation.Handle h_location, bool interact = true)
 		{
 			GUI.RegionMenu.ToggleWidget(true);
 			WorldMap.h_selected_location = h_location;
@@ -938,13 +938,13 @@ namespace TC2.Conquest
 				if (location_parent_data.IsNotNull())
 				{
 					WorldMap.h_selected_location = location_parent_asset;
-					WorldMap.selected_entity = location_parent_asset.GetGlobalEntity();
+					if (interact) WorldMap.interacted_entity = location_parent_asset.GetGlobalEntity();
 					WorldMap.worldmap_offset_target = (Vector2)location_parent_data.point;
 				}
 				else
 				{
 					WorldMap.h_selected_location = location_asset;
-					WorldMap.selected_entity = location_asset.GetGlobalEntity();
+					if (interact) WorldMap.interacted_entity = location_asset.GetGlobalEntity();
 					WorldMap.worldmap_offset_target = (Vector2)location_data.point;
 				}
 			}
@@ -964,7 +964,7 @@ namespace TC2.Conquest
 
 				if (interact)
 				{
-					WorldMap.selected_entity = entity;
+					WorldMap.interacted_entity = entity;
 				}
 
 				hs_selected_entities.Add(entity);
@@ -983,7 +983,7 @@ namespace TC2.Conquest
 				WorldMap.selected_region_id = 0;
 				if (interact)
 				{
-					WorldMap.selected_entity = default;
+					WorldMap.interacted_entity = default;
 					WorldMap.h_selected_location = default;
 				}
 			}
@@ -997,7 +997,7 @@ namespace TC2.Conquest
 
 				if (interact)
 				{
-					WorldMap.selected_entity = entity;
+					WorldMap.interacted_entity = entity;
 				}
 
 				ref var transform = ref entity.GetComponent<Transform.Data>();
@@ -1009,24 +1009,24 @@ namespace TC2.Conquest
 			else
 			{
 				WorldMap.selected_region_id = 0;
-				WorldMap.selected_entity = default;
+				WorldMap.interacted_entity = default;
 				WorldMap.h_selected_location = default;
 			}
 		}
 
 		public static void DrawInteractionWindow()
 		{
-			if (WorldMap.selected_entity.id != 0)
+			if (WorldMap.interacted_entity.id != 0)
 			{
-				WorldMap.selected_entity_cached = WorldMap.selected_entity;
+				WorldMap.interacted_entity_cached = WorldMap.interacted_entity;
 			}
 
-			if (WorldMap.selected_entity_cached.IsAlive() && WorldMap.IsOpen)
+			if (WorldMap.interacted_entity_cached.IsAlive() && WorldMap.IsOpen)
 			{
-				ref var interactable = ref WorldMap.selected_entity_cached.GetComponent<Interactable.Data>();
+				ref var interactable = ref WorldMap.interacted_entity_cached.GetComponent<Interactable.Data>();
 				if (interactable.IsNotNull())
 				{
-					using (var dock = GUI.Dock.New((uint)WorldMap.selected_entity_cached.id))
+					using (var dock = GUI.Dock.New((uint)WorldMap.interacted_entity_cached.id))
 					{
 						var sub_size = interactable.window_size;
 						//using (var window_sub = window.BeginChildWindow("worldmap.side.right.sub", GUI.AlignX.Left, GUI.AlignY.Top, pivot: new(1.00f, 0.00f), size: sub_size + new Vector2(16, 16), padding: new(8, 8), open: WorldMap.selected_entity.IsValid(), tex_bg: GUI.tex_window_popup_b))
@@ -1064,7 +1064,7 @@ namespace TC2.Conquest
 										if (GUI.DrawSpriteButton("close"u8, new("ui_icons_window", 16, 16, 0, 0), size: GUI.Rm, color: GUI.font_color_red_b.WithColorMult(0.75f), color_hover: GUI.font_color_red_b.WithColorMult(1.00f), play_sound: false))
 										{
 											//window.Close();
-											WorldMap.selected_entity = default;
+											WorldMap.interacted_entity = default;
 										}
 										GUI.DrawHoverTooltip("Close"u8);
 									}
@@ -1076,12 +1076,12 @@ namespace TC2.Conquest
 
 								if (GUI.GetKeyboard().GetKeyDown(Keyboard.Key.Escape | Keyboard.Key.E) && window.Close())
 								{
-									WorldMap.selected_entity = default;
+									WorldMap.interacted_entity = default;
 									//Sound.PlayGUI(GUI.sound_window_open, volume: 0.40f);
 
 								}
 
-								if (WorldMap.selected_entity_cached != 0 && WorldMap.selected_entity == 0)
+								if (WorldMap.interacted_entity_cached != 0 && WorldMap.interacted_entity == 0)
 								{
 									//App.WriteLine("close");
 									//Sound.PlayGUI(GUI.sound_window_close, volume: 0.30f);
@@ -1112,7 +1112,7 @@ namespace TC2.Conquest
 					}
 				}
 			}
-			WorldMap.selected_entity_cached = WorldMap.selected_entity;
+			WorldMap.interacted_entity_cached = WorldMap.interacted_entity;
 		}
 
 		//public struct UnitInfo
@@ -1216,7 +1216,7 @@ namespace TC2.Conquest
 													{
 														using (GUI.ID.Push(entity))
 														{
-															var is_selected = WorldMap.selected_entity == entity;
+															var is_selected = WorldMap.interacted_entity == entity;
 															var contains = WorldMap.hs_selected_entities.Contains(entity);
 															var is_selectable = WorldMap.CanPlayerControlUnit(entity, Client.GetPlayerHandle());
 
@@ -1245,15 +1245,15 @@ namespace TC2.Conquest
 																	{
 																		if (result.HasAny(SelectUnitResults.Removed))
 																		{
-																			WorldMap.selected_entity = default;
+																			WorldMap.interacted_entity = default;
 																		}
 																		else
 																		{
-																			WorldMap.selected_entity.Toggle(entity, true);
+																			WorldMap.interacted_entity.Toggle(entity, true);
 																		}
 																	}
 
-																	if (WorldMap.selected_entity == entity && (entity.TryGetAsset(out ILocation.Definition location_asset) || ent_parent.TryGetAsset(out location_asset)))
+																	if (WorldMap.interacted_entity == entity && (entity.TryGetAsset(out ILocation.Definition location_asset) || ent_parent.TryGetAsset(out location_asset)))
 																	{
 																		WorldMap.h_selected_location = location_asset;
 																	}
@@ -1295,7 +1295,7 @@ namespace TC2.Conquest
 																{
 																	using (GUI.ID.Push(ent_child))
 																	{
-																		var is_selected = WorldMap.selected_entity == ent_child; // || WorldMap.hs_selected_entities.Contains(ent_child);
+																		var is_selected = WorldMap.interacted_entity == ent_child; // || WorldMap.hs_selected_entities.Contains(ent_child);
 																		var contains = WorldMap.hs_selected_entities.Contains(ent_child);
 																		var is_selectable = WorldMap.CanPlayerControlUnit(ent_child, Client.GetPlayerHandle());
 
@@ -1319,10 +1319,10 @@ namespace TC2.Conquest
 																				var result = WorldMap.SelectUnitBehavior(ent_child, SelectUnitMode.Single, SelectUnitFlags.Multiselect | SelectUnitFlags.Hold_Shift | SelectUnitFlags.Toggle);
 																				if (result.HasAny(SelectUnitResults.Changed))
 																				{
-																					if (result.HasAny(SelectUnitResults.Removed)) WorldMap.selected_entity = default;
+																					if (result.HasAny(SelectUnitResults.Removed)) WorldMap.interacted_entity = default;
 																					else
 																					{
-																						WorldMap.selected_entity.Toggle(ent_child, true);
+																						WorldMap.interacted_entity.Toggle(ent_child, true);
 																					}
 																				}
 																				//if (WorldMap.hs_selected_entities.Count <= 1 || GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
@@ -1339,7 +1339,7 @@ namespace TC2.Conquest
 
 
 																				var ent_parent = entity.GetParent(Relation.Type.Child);
-																				if (WorldMap.selected_entity == ent_child && (ent_child.TryGetAsset(out ILocation.Definition location_asset) || entity.TryGetAsset(out location_asset) || ent_parent.TryGetAsset(out location_asset)))
+																				if (WorldMap.interacted_entity == ent_child && (ent_child.TryGetAsset(out ILocation.Definition location_asset) || entity.TryGetAsset(out location_asset) || ent_parent.TryGetAsset(out location_asset)))
 																				{
 																					WorldMap.h_selected_location = location_asset;
 																				}
@@ -1414,7 +1414,7 @@ namespace TC2.Conquest
 												{
 													using (GUI.ID.Push(entity))
 													{
-														var is_selected = WorldMap.selected_entity == entity;
+														var is_selected = WorldMap.interacted_entity == entity;
 														var contains = WorldMap.hs_selected_entities.Contains(entity);
 														var is_selectable = WorldMap.CanPlayerControlUnit(entity, Client.GetPlayerHandle());
 
@@ -1471,15 +1471,15 @@ namespace TC2.Conquest
 																{
 																	if (result.HasAny(SelectUnitResults.Removed))
 																	{
-																		WorldMap.selected_entity = default;
+																		WorldMap.interacted_entity = default;
 																	}
 																	else
 																	{
-																		WorldMap.selected_entity.Toggle(entity, true);
+																		WorldMap.interacted_entity.Toggle(entity, true);
 																	}
 																}
 
-																if (WorldMap.selected_entity == entity && (entity.TryGetAsset(out ILocation.Definition location_asset))) // || ent_parent.TryGetAsset(out location_asset)))
+																if (WorldMap.interacted_entity == entity && (entity.TryGetAsset(out ILocation.Definition location_asset))) // || ent_parent.TryGetAsset(out location_asset)))
 																{
 																	WorldMap.h_selected_location = location_asset;
 																}
@@ -1521,7 +1521,7 @@ namespace TC2.Conquest
 															{
 																using (GUI.ID.Push(ent_child))
 																{
-																	var is_selected = WorldMap.selected_entity == ent_child; // || WorldMap.hs_selected_entities.Contains(ent_child);
+																	var is_selected = WorldMap.interacted_entity == ent_child; // || WorldMap.hs_selected_entities.Contains(ent_child);
 																	var contains = WorldMap.hs_selected_entities.Contains(ent_child);
 																	var is_selectable = WorldMap.CanPlayerControlUnit(ent_child, Client.GetPlayerHandle());
 
@@ -1545,10 +1545,10 @@ namespace TC2.Conquest
 																			var result = WorldMap.SelectUnitBehavior(ent_child, SelectUnitMode.Single, SelectUnitFlags.Multiselect | SelectUnitFlags.Hold_Shift | SelectUnitFlags.Toggle);
 																			if (result.HasAny(SelectUnitResults.Changed))
 																			{
-																				if (result.HasAny(SelectUnitResults.Removed)) WorldMap.selected_entity = default;
+																				if (result.HasAny(SelectUnitResults.Removed)) WorldMap.interacted_entity = default;
 																				else
 																				{
-																					WorldMap.selected_entity.Toggle(ent_child, true);
+																					WorldMap.interacted_entity.Toggle(ent_child, true);
 																				}
 																			}
 																			//if (WorldMap.hs_selected_entities.Count <= 1 || GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
@@ -1565,7 +1565,7 @@ namespace TC2.Conquest
 
 
 																			var ent_parent = entity.GetParent(Relation.Type.Child);
-																			if (WorldMap.selected_entity == ent_child && (ent_child.TryGetAsset(out ILocation.Definition location_asset) || entity.TryGetAsset(out location_asset) || ent_parent.TryGetAsset(out location_asset)))
+																			if (WorldMap.interacted_entity == ent_child && (ent_child.TryGetAsset(out ILocation.Definition location_asset) || entity.TryGetAsset(out location_asset) || ent_parent.TryGetAsset(out location_asset)))
 																			{
 																				WorldMap.h_selected_location = location_asset;
 																			}
@@ -1814,10 +1814,10 @@ namespace TC2.Conquest
 																	//group_right.DrawBackground(GUI.tex_window_popup);
 																}
 
-																var is_selected = WorldMap.selected_entity == ent_child;
+																var is_selected = WorldMap.interacted_entity == ent_child;
 																if (GUI.Selectable3(ent_child.GetShortID(), group_row.GetInnerRect(), selected: is_selected))
 																{
-																	WorldMap.selected_entity.Toggle(ent_child, !is_selected);
+																	WorldMap.interacted_entity.Toggle(ent_child, !is_selected);
 																	GUI.SetDebugEntity(ent_child);
 																}
 															}
@@ -1836,7 +1836,7 @@ namespace TC2.Conquest
 							{
 								WorldMap.selected_region_id = 0;
 								WorldMap.h_selected_location = 0;
-								if (location_asset.GetGlobalEntity() == WorldMap.selected_entity) WorldMap.selected_entity = default;
+								if (location_asset.GetGlobalEntity() == WorldMap.interacted_entity) WorldMap.interacted_entity = default;
 							}
 
 							if (WorldMap.h_selected_location == 0 && WorldMap.selected_region_id == 0)
@@ -2234,7 +2234,7 @@ namespace TC2.Conquest
 												}
 											}
 
-											var is_selected = WorldMap.selected_entity == ent_unit;
+											var is_selected = WorldMap.interacted_entity == ent_unit;
 
 											using (var group_icon = GUI.Group.New(size: new(GUI.RmX)))
 											{
@@ -2251,7 +2251,7 @@ namespace TC2.Conquest
 													//App.WriteLine("click");
 													//WorldMap.FocusEntity(ent_unit);
 
-													WorldMap.selected_entity.Toggle(ent_unit, !is_selected);
+													WorldMap.interacted_entity.Toggle(ent_unit, !is_selected);
 													if (!is_selected) WorldMap.FocusEntity(ent_unit);
 												}
 											}

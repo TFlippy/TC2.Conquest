@@ -929,7 +929,7 @@ namespace TC2.Conquest
 
 						if (is_pressed)
 						{
-							WorldMap.selected_entity.Toggle(this.ent_train);
+							WorldMap.interacted_entity.Toggle(this.ent_train);
 
 							App.WriteLine("press");
 

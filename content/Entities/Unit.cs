@@ -714,10 +714,10 @@ namespace TC2.Conquest
 
 #if CLIENT
 								// TODO: hack
-								if (ent_unit_child == WorldMap.selected_entity || (WorldMap.hs_selected_entities.Count == 1 && WorldMap.hs_selected_entities.Contains(ent_unit_child)))
+								if (ent_unit_child == WorldMap.interacted_entity || (WorldMap.hs_selected_entities.Count == 1 && WorldMap.hs_selected_entities.Contains(ent_unit_child)))
 								{
 									WorldMap.hs_selected_entities.Add(ent_unit_parent);
-									if (!WorldMap.selected_entity.IsAlive()) WorldMap.SelectEntity(ent_unit_parent);
+									if (!WorldMap.interacted_entity.IsAlive()) WorldMap.SelectEntity(ent_unit_parent);
 								}
 #endif
 							}
@@ -725,7 +725,7 @@ namespace TC2.Conquest
 							{
 #if CLIENT
 								// TODO: hack
-								if (ent_unit_child == WorldMap.selected_entity || (WorldMap.hs_selected_entities.Count == 1 && WorldMap.hs_selected_entities.Contains(ent_unit_child)))
+								if (ent_unit_child == WorldMap.interacted_entity || (WorldMap.hs_selected_entities.Count == 1 && WorldMap.hs_selected_entities.Contains(ent_unit_child)))
 								{
 									WorldMap.FocusEntity(ent_enterable, interact: true);
 								}
@@ -745,7 +745,7 @@ namespace TC2.Conquest
 
 #if CLIENT
 								// TODO: hack
-								if (ent_unit_child == WorldMap.selected_entity_cached || (WorldMap.hs_selected_entities.Contains(ent_unit_child) && (WorldMap.hs_selected_entities.Count == 2 ? WorldMap.hs_selected_entities.Contains(ent_unit_parent) : WorldMap.hs_selected_entities.Count == 1)))
+								if (ent_unit_child == WorldMap.interacted_entity_cached || (WorldMap.hs_selected_entities.Contains(ent_unit_child) && (WorldMap.hs_selected_entities.Count == 2 ? WorldMap.hs_selected_entities.Contains(ent_unit_parent) : WorldMap.hs_selected_entities.Count == 1)))
 								{
 									WorldMap.hs_selected_entities.Remove(ent_unit_parent);
 									//if (WorldMap.selected_entity_cached == ent_unit_parent) WorldMap.SelectEntity(default);
@@ -756,7 +756,7 @@ namespace TC2.Conquest
 							{
 #if CLIENT
 								// TODO: hack
-								if (ent_enterable == WorldMap.selected_entity_cached || (WorldMap.hs_selected_entities.Contains(ent_unit_child) && WorldMap.hs_selected_entities.Count == 1))
+								if (ent_enterable == WorldMap.interacted_entity_cached || (WorldMap.hs_selected_entities.Contains(ent_unit_child) && WorldMap.hs_selected_entities.Count == 1))
 								{
 									WorldMap.FocusEntity(ent_unit_child, interact: true);
 								}
@@ -1310,7 +1310,7 @@ namespace TC2.Conquest
 			{
 				//return;
 
-				if (WorldMap.IsOpen && WorldMap.selected_entity == entity && unit.CanPlayerControlUnit(entity, Client.GetPlayerHandle()))
+				if (WorldMap.IsOpen && WorldMap.interacted_entity == entity && unit.CanPlayerControlUnit(entity, Client.GetPlayerHandle()))
 				{
 					var gui = new Unit.UnitGUI()
 					{

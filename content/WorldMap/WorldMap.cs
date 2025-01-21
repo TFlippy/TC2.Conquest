@@ -16,8 +16,8 @@ namespace TC2.Conquest
 
 		public static Entity hovered_entity;
 
-		public static Entity selected_entity;
-		public static Entity selected_entity_cached;
+		public static Entity interacted_entity;
+		public static Entity interacted_entity_cached;
 
 		public static readonly Dictionary<ILocation.Handle, Road.Segment> location_to_road = new();
 		public static readonly Dictionary<ILocation.Handle, Road.Segment> location_to_rail = new();
@@ -855,7 +855,7 @@ namespace TC2.Conquest
 		{
 			//if (WorldMap.IsOpen)
 			{
-				interactable.show = WorldMap.selected_entity == entity
+				interactable.show = WorldMap.interacted_entity == entity
 				&& WorldMap.IsOpen
 				//&& WorldMap.ts_last_draw.GetMilliseconds() <= 50 // TODO: shithack
 				&& interactable.flags.HasNone(Interactable.Flags.No_Window)

@@ -497,8 +497,6 @@ namespace TC2.Conquest
 			public static CustomCharacter custom_character = new("krachtel", "human", "human.adventurer", Organic.Gender.Male, "human.male.wings", "human.female.updo", "human.male.beard.bartender", default);
 			public static Sprite icons_gender = new Sprite("ui_icons_gender", 16, 16, 0, 0);
 
-			public static bool pending_focus_character = true;
-
 			public void Draw()
 			{
 				//var size = new Vector2(48 * 18, 600);
@@ -577,7 +575,7 @@ namespace TC2.Conquest
 									}
 								}))
 								{
-									WorldMap.FocusLocation(vars.h_location);
+									WorldMap.FocusLocation(vars.h_location, interact: false);
 									//reset = true;
 								}
 							}
@@ -986,20 +984,20 @@ namespace TC2.Conquest
 										{
 											if (WorldMap.IsOpen)
 											{
-												WorldMap.FocusLocation(h_location);
+												WorldMap.FocusLocation(h_location, interact: false);
 												WorldMap.SelectEntity(ent_character_global, focus: false, interact: false);
 											}
 										}
 										else
 										{
-											WorldMap.FocusLocation(h_location);
+											WorldMap.FocusLocation(h_location, interact: false);
 											WorldMap.SelectEntity(ent_character_global, focus: false, interact: false);
 										}
 									}
 									else if (ent_character_parent.TryGetAsset(out IEntrance.Definition entrance_asset))
 									{
 										h_location = entrance_asset.data.h_location_parent;
-										WorldMap.FocusLocation(h_location);
+										WorldMap.FocusLocation(h_location, interact: false);
 										WorldMap.FocusEntity(entrance_asset.GetGlobalEntity(), interact: true);
 										WorldMap.SelectEntity(ent_character_global, focus: false, interact: false);
 									}
@@ -1043,7 +1041,7 @@ namespace TC2.Conquest
 
 						if (widget.state_flags.HasAny(Sidebar.Widget.StateFlags.Show))
 						{
-							if (widget.IsAppearing()) WorldMap.FocusLocation(Conquest.CreationGUI.custom_character.vars.h_location);
+							if (widget.IsAppearing()) WorldMap.FocusLocation(Conquest.CreationGUI.custom_character.vars.h_location, interact: false);
 
 							var gui = new Conquest.CreationGUI();
 							gui.Draw();
