@@ -1133,10 +1133,10 @@ namespace TC2.Conquest
 
 			Units = 1u << 0,
 			Regions = 1u << 1,
-			Locations = 1u << 2,
+			Settlements = 1u << 2,
 		}
 
-		internal static UnitSearchFilter edit_unit_search_filter;
+		internal static UnitSearchFilter edit_unit_search_filter = UnitSearchFilter.Units | UnitSearchFilter.Regions | UnitSearchFilter.Settlements;
 		internal static string edit_units_search = string.Empty;
 
 		[Shitcode]
@@ -1379,6 +1379,7 @@ namespace TC2.Conquest
 									var rows = region.IterateQuery<WorldMap.Marker.GetAllMarkersQuery>().HasParent(Relation.Type.Child, false);
 									if (edit_unit_search_filter.HasNone(UnitSearchFilter.Units)) rows = rows.HasComponent<Unit.Data>(false);
 									if (edit_unit_search_filter.HasNone(UnitSearchFilter.Regions)) rows = rows.HasComponent<Zone.Data>(false);
+									if (edit_unit_search_filter.HasNone(UnitSearchFilter.Settlements)) rows = rows.HasComponent<Settlement.Data>(false);
 
 									foreach (ref var row in rows) //.HasComponent<Location.Data>(false))
 									{
