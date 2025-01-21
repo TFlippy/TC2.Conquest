@@ -5,7 +5,7 @@ namespace TC2.Conquest
 {
 	public static partial class Settlement
 	{
-		[IComponent.Data(Net.SendType.Reliable)]
+		[IComponent.Data(Net.SendType.Reliable, IComponent.Scope.Global)]
 		public partial struct Data(): IComponent
 		{
 			[Flags]

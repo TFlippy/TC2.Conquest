@@ -68,7 +68,7 @@ namespace TC2.Conquest
 				[Source.Owned] in Enterable.Data enterable, [Source.Owned] in Transform.Data transform,
 				[Source.Owned, Optional(false)] in Faction.Data faction, [HasRelation(Source.Modifier.Owned, Relation.Type.Child, true)] bool has_parent);
 
-			[IComponent.Data(Net.SendType.Reliable)]
+			[IComponent.Data(Net.SendType.Reliable, IComponent.Scope.Global)]
 			public partial struct Data(): IComponent
 			{
 				public enum Type: uint
@@ -331,7 +331,7 @@ namespace TC2.Conquest
 			}
 
 
-			[IComponent.Data(Net.SendType.Reliable)]
+			[IComponent.Data(Net.SendType.Reliable, IComponent.Scope.Global)]
 			public partial struct Data(): IComponent
 			{
 				public Unit.Flags flags;

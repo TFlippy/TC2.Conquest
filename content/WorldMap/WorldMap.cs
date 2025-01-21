@@ -56,7 +56,7 @@ namespace TC2.Conquest
 
 		public static partial class Marker
 		{
-			[IComponent.Data(Net.SendType.Reliable, sync_table_capacity: 128)]
+			[IComponent.Data(Net.SendType.Reliable, IComponent.Scope.Global, sync_table_capacity: 128)]
 			public partial struct Data(): IComponent
 			{
 				[Flags]
@@ -164,9 +164,8 @@ namespace TC2.Conquest
 			//[ISystem.Modified(ISystem.Mode.Single, ISystem.Scope.Global)]
 			//[ISystem.Add(ISystem.Mode.Single, ISystem.Scope.Global)]
 			[ISystem.Event<ILocation.RefreshEvent>(ISystem.Mode.Single, ISystem.Scope.Global)]
-			public static void OnLocationModified(ISystem.Info.Common info, Entity entity, ref ILocation.RefreshEvent ev,
-			[Source.Owned] ref Location.Data location, [Source.Owned] ref WorldMap.Marker.Data marker,
-			[Source.Owned, Optional(true)] ref Nameable.Data nameable)
+			public static void OnLocationRefreshEvent(ISystem.Info.Common info, Entity entity, ref ILocation.RefreshEvent ev,
+			[Source.Owned] ref Location.Data location, [Source.Owned] ref WorldMap.Marker.Data marker)
 			{
 				marker.icon = ev.data.icon;
 				marker.icon_offset = ev.data.icon_offset;
@@ -176,14 +175,6 @@ namespace TC2.Conquest
 
 				marker.flags.SetFlag(Data.Flags.Hidden, ev.data.flags.HasAny(ILocation.Flags.Hidden));
 				marker.Sync(entity, true);
-
-				if (nameable.IsNotNull())
-				{
-					nameable.name = ev.data.name_short;
-					nameable.type = Nameable.Kind.Location;
-					nameable.flags = Nameable.Flags.No_Export | Nameable.Flags.No_Rename;
-					nameable.Sync(entity, true);
-				}
 			}
 #endif
 

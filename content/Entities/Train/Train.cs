@@ -407,7 +407,7 @@ namespace TC2.Conquest
 			out_indices.Sort();
 		}
 
-		[IComponent.Data(Net.SendType.Reliable)]
+		[IComponent.Data(Net.SendType.Reliable, IComponent.Scope.Global)]
 		public partial struct Data: IComponent
 		{
 			[Flags]
