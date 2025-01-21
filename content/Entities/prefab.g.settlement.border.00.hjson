@@ -40,5 +40,10 @@ worldmap.marker:
 
 nameable:
 {
-    
+	flags: no_rename, use_asset_name
+}
+
+address:
+{
+	
 }

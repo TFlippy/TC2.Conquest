@@ -2343,97 +2343,99 @@ namespace TC2.Conquest
 								{
 									group_main.DrawBackground(GUI.tex_panel);
 
-									var materials_filtered = IMaterial.Database.GetAssets().Where(x => x.data.commodity?.flags.HasAny(IMaterial.Commodity.Flags.Marketable) ?? false).ToArray();
-									var materials_filtered_span = materials_filtered.AsSpan();
+									//var materials_filtered = IMaterial.Database.GetAssets().Where(x => x.data.commodity?.flags.HasAny(IMaterial.Commodity.Flags.Marketable) ?? false).ToArray();
+									//var materials_filtered_span = materials_filtered.AsSpan();
 
-									Span<(float buy, float sell, float produce)> weights_span = stackalloc (float buy, float sell, float produce)[materials_filtered_span.Length];
+									//Span<(float buy, float sell, float produce)> weights_span = stackalloc (float buy, float sell, float produce)[materials_filtered_span.Length];
 
-									using (var scrollbox = GUI.Scrollbox.New("scroll.economy"u8, size: GUI.Rm))
-									{
-										// BUY
-										using (var group_buy = GUI.Group.New(size: new Vector2(GUI.RmX * 0.50f, GUI.RmY), padding: new(4)))
-										{
-											for (var i = 0; i < materials_filtered_span.Length; i++)
-											{
-												var material_asset = materials_filtered_span[i];
-												weights_span[i].buy = Market.CalculateBuyScore(material_asset, ref location_data);
-												weights_span[i].sell = Market.CalculateSellScore(material_asset, ref location_data);
-												weights_span[i].produce = Market.CalculateProductionScore(material_asset, ref location_data);
-											}
-											weights_span.Sort(materials_filtered_span, (x, y) => y.produce.CompareTo(x.produce));
-											//weights_span = weights_span.OrderByDescending(x => x.produce);
+									//using (var scrollbox = GUI.Scrollbox.New("scroll.economy"u8, size: GUI.Rm))
+									//{
+									//	// BUY
+									//	using (var group_buy = GUI.Group.New(size: new Vector2(GUI.RmX * 0.50f, GUI.RmY), padding: new(4)))
+									//	{
+									//		for (var i = 0; i < materials_filtered_span.Length; i++)
+									//		{
+									//			var material_asset = materials_filtered_span[i];
+									//			weights_span[i].buy = Market.CalculateBuyScore(material_asset, ref location_data);
+									//			weights_span[i].sell = Market.CalculateSellScore(material_asset, ref location_data);
+									//			weights_span[i].produce = Market.CalculateProductionScore(material_asset, ref location_data);
+									//		}
+									//		weights_span.Sort(materials_filtered_span, (x, y) => y.produce.CompareTo(x.produce));
+									//		//weights_span = weights_span.OrderByDescending(x => x.produce);
 
-											for (var i = 0; i < materials_filtered_span.Length; i++)
-											{
-												using (var group_row = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(8, 0)))
-												{
-													if (group_row.IsVisible())
-													{
-														group_row.DrawBackground(GUI.tex_panel);
+									//		for (var i = 0; i < materials_filtered_span.Length; i++)
+									//		{
+									//			using (var group_row = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(8, 0)))
+									//			{
+									//				if (group_row.IsVisible())
+									//				{
+									//					group_row.DrawBackground(GUI.tex_panel);
 
-														var material_asset = materials_filtered_span[i];
-														ref var material_data = ref material_asset.GetData();
+									//					var material_asset = materials_filtered_span[i];
+									//					ref var material_data = ref material_asset.GetData();
 
-														GUI.DrawMaterialSmall(material_asset, new(GUI.RmY));
+									//					GUI.DrawMaterialSmall(material_asset, new(GUI.RmY));
 
-														GUI.SameLine(8);
+									//					GUI.SameLine(8);
 
-														GUI.TitleCentered(material_data.name, pivot: new(0.00f, 0.50f));
-														GUI.TextCentered($"{weights_span[i].buy:0.00}", pivot: new(1.00f, 0.50f), offset: new(-96, 0));
-														GUI.DrawHoverTooltip("Buy"u8);
+									//					GUI.TitleCentered(material_data.name, pivot: new(0.00f, 0.50f));
+									//					GUI.TextCentered($"{weights_span[i].buy:0.00}", pivot: new(1.00f, 0.50f), offset: new(-96, 0));
+									//					GUI.DrawHoverTooltip("Buy"u8);
 
-														GUI.TextCentered($"{weights_span[i].sell:0.00}", pivot: new(1.00f, 0.50f), offset: new(-48, 0));
-														GUI.DrawHoverTooltip("Sell"u8);
+									//					GUI.TextCentered($"{weights_span[i].sell:0.00}", pivot: new(1.00f, 0.50f), offset: new(-48, 0));
+									//					GUI.DrawHoverTooltip("Sell"u8);
 
-														GUI.TextCentered($"{weights_span[i].produce:0.00}", pivot: new(1.00f, 0.50f), offset: new(0, 0));
-														GUI.DrawHoverTooltip("Produce"u8);
+									//					GUI.TextCentered($"{weights_span[i].produce:0.00}", pivot: new(1.00f, 0.50f), offset: new(0, 0));
+									//					GUI.DrawHoverTooltip("Produce"u8);
 
-														//App.WriteLine($"BUY [{i:00}]: {materials_filtered_span[i].data.name,-32}{weights_span[i]:0.00}");
-													}
-												}
+									//					//App.WriteLine($"BUY [{i:00}]: {materials_filtered_span[i].data.name,-32}{weights_span[i]:0.00}");
+									//				}
+									//			}
 
-												GUI.NewLine(4);
-											}
-										}
+									//			GUI.NewLine(4);
+									//		}
+									//	}
 
-										//GUI.SameLine();
+									//	//GUI.SameLine();
 
-										//using (var group_sell = GUI.Group.New(size: new Vector2(GUI.RmX, GUI.RmY), padding: new(4)))
-										//{
-										//	for (var i = 0; i < materials_filtered_span.Length; i++)
-										//	{
-										//		var material_asset = materials_filtered_span[i];
-										//		weights_span[i] = Market.CalculateSellWeights(material_asset, ref location_data);
-										//		//weights_span[i] = Market.CalculateProduceWeights(material_asset, ref location_data);
-										//	}
-										//	weights_span.Sort(materials_filtered_span);
+									//	//using (var group_sell = GUI.Group.New(size: new Vector2(GUI.RmX, GUI.RmY), padding: new(4)))
+									//	//{
+									//	//	for (var i = 0; i < materials_filtered_span.Length; i++)
+									//	//	{
+									//	//		var material_asset = materials_filtered_span[i];
+									//	//		weights_span[i] = Market.CalculateSellWeights(material_asset, ref location_data);
+									//	//		//weights_span[i] = Market.CalculateProduceWeights(material_asset, ref location_data);
+									//	//	}
+									//	//	weights_span.Sort(materials_filtered_span);
 
-										//	for (var i = materials_filtered_span.Length - 1; i >= 0; i--)
-										//	{
-										//		using (var group_row = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(8, 0)))
-										//		{
-										//			if (group_row.IsVisible())
-										//			{
-										//				group_row.DrawBackground(GUI.tex_panel);
+									//	//	for (var i = materials_filtered_span.Length - 1; i >= 0; i--)
+									//	//	{
+									//	//		using (var group_row = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(8, 0)))
+									//	//		{
+									//	//			if (group_row.IsVisible())
+									//	//			{
+									//	//				group_row.DrawBackground(GUI.tex_panel);
 
-										//				var material_asset = materials_filtered_span[i];
-										//				ref var material_data = ref material_asset.GetData();
+									//	//				var material_asset = materials_filtered_span[i];
+									//	//				ref var material_data = ref material_asset.GetData();
 
-										//				GUI.DrawMaterialSmall(material_asset, new(GUI.RmY));
+									//	//				GUI.DrawMaterialSmall(material_asset, new(GUI.RmY));
 
-										//				GUI.SameLine(8);
+									//	//				GUI.SameLine(8);
 
-										//				GUI.TitleCentered(material_data.name, pivot: new(0.00f, 0.50f));
-										//				GUI.TextCentered($"{weights_span[i]:0.00}", pivot: new(1.00f, 0.50f));
-										//				//App.WriteLine($"BUY [{i:00}]: {materials_filtered_span[i].data.name,-32}{weights_span[i]:0.00}");
-										//			}
-										//		}
+									//	//				GUI.TitleCentered(material_data.name, pivot: new(0.00f, 0.50f));
+									//	//				GUI.TextCentered($"{weights_span[i]:0.00}", pivot: new(1.00f, 0.50f));
+									//	//				//App.WriteLine($"BUY [{i:00}]: {materials_filtered_span[i].data.name,-32}{weights_span[i]:0.00}");
+									//	//			}
+									//	//		}
 
-										//		GUI.NewLine(4);
-										//	}
-										//}
+									//	//		GUI.NewLine(4);
+									//	//	}
+									//	//}
 
-									}
+									//}
+								
+								
 								}
 							}
 						}
