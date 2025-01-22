@@ -617,7 +617,7 @@ namespace TC2.Conquest
 										GUI.SameLine();
 
 										if (GUI.AssetInput2("edit.origin"u8, ref vars.h_origin, size: new(GUI.RmX, GUI.RmY), show_label: false, tab_height: 40.00f, close_on_select: true,
-										filter: static (x) => x.data.species == custom_character.vars.h_species && x.data.flags.HasAny(IOrigin.Flags.Special),
+										filter: static (x) => x.data.species == custom_character.vars.h_species && x.data.flags.HasAny(IOrigin.Flags.Special | IOrigin.Flags.Selectable),
 										draw: (asset, group, is_title) =>
 										{
 											if (asset != null)
