@@ -484,10 +484,11 @@ namespace TC2.Conquest
 												}
 
 												//rpc.Send(ent_selected_spawn);
-												rpc.SendAsTask(ent_selected_spawn).ContinueWith((result) =>
-												{
-													//App.WriteLine(result.out_ent_spawned);
-												});
+												rpc.Send(ent_selected_spawn);
+												//AsTask(ent_selected_spawn).ContinueWith((result) =>
+												//{
+												//	//App.WriteLine(result.out_ent_spawned);
+												//});
 
 												h_selected_character = default;
 											}

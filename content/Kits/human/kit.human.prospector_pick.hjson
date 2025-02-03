@@ -13,10 +13,10 @@
 	
 	character_flags:
 	{
-		require: none
-		include: scientist, educated, professional, laborer, engineer, miner, nomad, outdoor, lower_middle_class, middle_class, upper_middle_class
+		require: miner, educated
+		include: scientist, educated, professional, technician, miner, nomad, outdoor, lower_middle_class, middle_class, upper_middle_class
 		exclude: none
-		weight: 1.000
+		weight: 0.800
 	}
 	
 	amount_multiplier_min: 1.000
