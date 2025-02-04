@@ -267,7 +267,7 @@ namespace TC2.Conquest
 								if (dormitory.IsNotNull())
 								{
 									var characters = dormitory.GetCharacterSpan();
-									if (h_selected_character_tmp.id != 0 && !characters.Contains(h_selected_character_tmp))
+									if (h_selected_character_tmp && !characters.Contains(h_selected_character_tmp))
 									{
 										h_selected_character_tmp = default;
 									}
@@ -335,18 +335,18 @@ namespace TC2.Conquest
 														var h_character = characters[i];
 														ref var character_data = ref h_character.GetData();
 
-														if (h_character.id != 0 && h_selected_character_tmp.id == 0)
+														if (h_character && !h_selected_character_tmp)
 														{
 															h_selected_character_tmp = h_character;
 															h_selected_character = h_character;
 														}
 
-														is_empty &= h_character.id == 0;
+														is_empty &= !h_character;
 														//var selectable = h_character.CanSpawnAsCharacter(faction_id, faction.id, spawn.flags); //  character_data.IsNotNull() && character_data.faction == faction_id;
 
 														Dormitory.DrawCharacterSmall(h_character);
 
-														var selected = h_selected_character_tmp.id != 0 && h_character == h_selected_character_tmp; // selected_index;
+														var selected = h_selected_character_tmp && h_character == h_selected_character_tmp; // selected_index;
 														if (GUI.Selectable3("selectable"u8, group_row.GetOuterRect(), selected))
 														{
 															h_selected_character = h_character;

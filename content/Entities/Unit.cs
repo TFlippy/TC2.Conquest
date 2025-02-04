@@ -116,7 +116,7 @@ namespace TC2.Conquest
 						//region.DrawDebugText(transform.position, $"{entity} != {ent_exclude}; {index}/{info.Count}/{count}; {info.Offset}; {info.TableCount}", Color32BGRA.White);
 #endif
 
-						if ((enterable.flags.HasNone(Data.Flags.Hide_If_Parented) ? has_parent : true) && entity != ent_exclude && (h_faction.id == 0 || h_faction == faction.id) && (type == Enterable.Data.Type.Undefined || enterable.type == type))
+						if ((enterable.flags.HasNone(Data.Flags.Hide_If_Parented) ? has_parent : true) && entity != ent_exclude && (!h_faction || h_faction == faction.id) && (type == Enterable.Data.Type.Undefined || enterable.type == type))
 						{
 							var dist_sq_tmp = Vector2.DistanceSquared(pos, transform.position); // - enterable.radius.Pow2();
 							if (dist_sq_tmp < dist_sq_current)
@@ -380,7 +380,7 @@ namespace TC2.Conquest
 				{
 					row.Run((ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] in Unit.Data unit, [Source.Owned] in Transform.Data transform, [Source.Owned, Optional(false)] in Faction.Data faction) =>
 					{
-						if (h_faction.id == 0 || h_faction == faction.id)
+						if (!h_faction || h_faction == faction.id)
 						{
 							var dist_sq_tmp = Vector2.DistanceSquared(pos, transform.position);
 							if (dist_sq_tmp < dist_sq_current)

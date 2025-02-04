@@ -200,7 +200,7 @@ namespace TC2.Conquest
 				{
 					if (asset.id == 0) continue;
 					ref var asset_data = ref asset.GetData();
-					if (asset_data.flags.HasAny(ILocation.Flags.Hidden) || asset_data.h_location_parent.id != 0) continue;
+					if (asset_data.flags.HasAny(ILocation.Flags.Hidden) || asset_data.h_location_parent) continue;
 
 					var pos_grid = asset_data.point;
 					var pos_key = Maths.ToInt32BitCast(pos_grid);
