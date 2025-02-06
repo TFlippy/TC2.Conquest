@@ -1,19 +1,20 @@
 ﻿{
+	$version: "0.1.62.0"
 	name: "Prospector Pick"
 	desc:
 		'''
 		TODO: Desc
 		'''
 	
-	flags: none
+	flags: selectable
 	slot: tool
 	categories: tools, mining
 	faction: "null"
-	species: "human"
+	species: human
 	
 	character_flags:
 	{
-		require: miner, educated
+		require: educated, miner
 		include: scientist, educated, professional, technician, miner, nomad, outdoor, lower_middle_class, middle_class, upper_middle_class
 		exclude: none
 		weight: 0.800
@@ -21,6 +22,7 @@
 	
 	amount_multiplier_min: 1.000
 	amount_multiplier_max: 1.000
+	cost: 0.000
 	
 	shipment:
 	{
@@ -28,7 +30,7 @@
 		[
 			{
 				type: prefab
-				prefab: "prospector_pick"
+				prefab: prospector_pick
 				quantity: 1.000
 				flags: despawn, no_consume
 			}

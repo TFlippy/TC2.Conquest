@@ -1,23 +1,24 @@
 ﻿{
+	$version: "0.1.62.0"
 	name: "Revolver"
-	desc: ""
 	
-	flags: none
+	flags: selectable
 	slot: secondary
 	categories: weapon, gun, short_range
 	faction: "null"
-	species: "kobold"
+	species: kobold
 	
 	character_flags:
 	{
 		require: none
-		include: slave, unskilled, lowlife, poor, armed, evil, technician, alcoholic, insane
+		include: slave, unskilled, armed, lowlife, technician, poor, insane, alcoholic, evil
 		exclude: none
 		weight: 1.600
 	}
 	
 	amount_multiplier_min: 1.000
 	amount_multiplier_max: 1.000
+	cost: 0.000
 	
 	shipment:
 	{
@@ -25,13 +26,13 @@
 		[
 			{
 				type: prefab
-				prefab: "revolver"
+				prefab: revolver
 				quantity: 1.000
 				flags: pickup, despawn, no_consume
 			}
 			{
 				type: resource
-				material: "ammo_hc"
+				material: ammo_hc
 				quantity: 50.000
 				flags: no_consume
 			}

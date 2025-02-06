@@ -1,8 +1,8 @@
 ﻿{
-	$version: "0.1.61.2"
+	$version: "0.1.62.0"
 	name: "Helmet"
 	
-	flags: none
+	flags: selectable
 	slot: head
 	categories: armor, defensive, cheap
 	faction: "null"

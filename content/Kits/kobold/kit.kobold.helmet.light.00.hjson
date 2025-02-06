@@ -1,12 +1,12 @@
 ﻿{
+	$version: "0.1.62.0"
 	name: "Helmet (Light)"
-	desc: ""
 	
-	flags: none
+	flags: selectable
 	slot: head
 	categories: armor, weak, defensive
 	faction: "null"
-	species: "kobold"
+	species: kobold
 	
 	character_flags:
 	{
@@ -18,6 +18,7 @@
 	
 	amount_multiplier_min: 1.000
 	amount_multiplier_max: 1.000
+	cost: 0.000
 	
 	shipment:
 	{
@@ -25,7 +26,7 @@
 		[
 			{
 				type: prefab
-				prefab: "helmet.03"
+				prefab: helmet.03
 				quantity: 1.000
 				flags: equip, despawn
 			}

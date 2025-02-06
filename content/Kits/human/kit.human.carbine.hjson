@@ -1,15 +1,16 @@
 ﻿{
+	$version: "0.1.62.0"
 	name: "Carbine"
 	desc:
 		'''
 		TODO: Desc
 		'''
 	
-	flags: none
+	flags: selectable
 	slot: primary
 	categories: weapon, gun, long_range, small, cheap
 	faction: "null"
-	species: "human"
+	species: human
 	
 	character_flags:
 	{
@@ -21,6 +22,7 @@
 	
 	amount_multiplier_min: 1.000
 	amount_multiplier_max: 1.000
+	cost: 0.000
 	
 	shipment:
 	{
@@ -28,13 +30,13 @@
 		[
 			{
 				type: prefab
-				prefab: "carbine"
+				prefab: carbine
 				quantity: 1.000
 				flags: despawn, no_consume
 			}
 			{
 				type: resource
-				material: "ammo_hc"
+				material: ammo_hc
 				quantity: 16.000
 				flags: no_consume
 			}

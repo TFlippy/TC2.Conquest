@@ -1,15 +1,16 @@
 ﻿{
+	$version: "0.1.62.0"
 	name: "Codeine (20mg, IR)"
 	desc:
 		'''
 		TODO: Desc
 		'''
 	
-	flags: none
+	flags: selectable
 	slot: utility
 	categories: food, dangerous, small, drug, chemical, consumable, healing
 	faction: "null"
-	species: "human"
+	species: human
 	
 	character_flags:
 	{
@@ -21,6 +22,7 @@
 	
 	amount_multiplier_min: 1.000
 	amount_multiplier_max: 1.000
+	cost: 0.000
 	
 	shipment:
 	{
@@ -28,7 +30,7 @@
 		[
 			{
 				type: prefab
-				prefab: "bp.codeine.20mg.ir"
+				prefab: bp.codeine.20mg.ir
 				quantity: 1.000
 				flags: despawn, no_consume
 			}

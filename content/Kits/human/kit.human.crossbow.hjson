@@ -1,12 +1,12 @@
 ﻿{
-	$version: "0.1.61.2"
+	$version: "0.1.62.0"
 	name: "Crossbow"
 	desc:
 		'''
 		TODO: Desc
 		'''
 	
-	flags: none
+	flags: selectable
 	slot: secondary
 	categories: weapon, junk, long_range, primitive, weak, cheap, civilian, slow
 	faction: "null"

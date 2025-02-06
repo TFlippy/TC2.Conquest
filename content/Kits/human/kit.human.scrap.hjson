@@ -1,15 +1,16 @@
 ﻿{
+	$version: "0.1.62.0"
 	name: "Scrap Metal"
 	desc:
 		'''
 		TODO: Desc
 		'''
 	
-	flags: none
+	flags: selectable
 	slot: resources
 	categories: materials, junk, construction, gathering
 	faction: "null"
-	species: "human"
+	species: human
 	
 	character_flags:
 	{
@@ -21,6 +22,7 @@
 	
 	amount_multiplier_min: 0.400
 	amount_multiplier_max: 1.400
+	cost: 0.000
 	
 	shipment:
 	{
@@ -28,7 +30,7 @@
 		[
 			{
 				type: resource
-				material: "scrap.mixed"
+				material: scrap.mixed
 				quantity: 25.000
 				flags: despawn, no_consume
 			}

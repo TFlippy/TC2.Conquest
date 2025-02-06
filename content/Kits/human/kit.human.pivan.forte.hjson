@@ -1,26 +1,28 @@
 ﻿{
+	$version: "0.1.62.0"
 	name: "Pivan Forte"
 	desc:
 		'''
 		TODO: Desc
 		'''
 	
-	flags: none
+	flags: selectable
 	slot: utility
 	categories: food, dangerous, small, drug, chemical, consumable, healing, fancy
 	faction: "null"
-	species: "human"
+	species: human
 	
 	character_flags:
 	{
 		require: none
 		include: scientist, educated, military, medical, artisan, professional, law, commerce, technician, engineer, rich, chemist, culinary, alcoholic, arcane, entertainer, artist, sedentary, junkie, politician, thief, middle_class, upper_middle_class
-		exclude: poor, lower_class, upper_class, elite_class, dumb
+		exclude: poor, dumb, lower_class, upper_class, elite_class
 		weight: 1.200
 	}
 	
 	amount_multiplier_min: 1.000
 	amount_multiplier_max: 1.000
+	cost: 0.000
 	
 	shipment:
 	{
@@ -28,7 +30,7 @@
 		[
 			{
 				type: prefab
-				prefab: "bp.pivan.forte"
+				prefab: bp.pivan.forte
 				quantity: 1.000
 				flags: despawn, no_consume
 			}

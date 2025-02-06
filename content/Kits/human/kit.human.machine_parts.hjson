@@ -1,15 +1,16 @@
 ﻿{
+	$version: "0.1.62.0"
 	name: "Spare Parts"
 	desc:
 		'''
 		TODO: Desc
 		'''
 	
-	flags: none
+	flags: selectable
 	slot: resources
 	categories: materials, machine, small, construction
 	faction: "null"
-	species: "human"
+	species: human
 	
 	character_flags:
 	{
@@ -21,6 +22,7 @@
 	
 	amount_multiplier_min: 0.700
 	amount_multiplier_max: 1.200
+	cost: 0.000
 	
 	shipment:
 	{
@@ -28,7 +30,7 @@
 		[
 			{
 				type: resource
-				material: "machine_parts"
+				material: machine_parts
 				quantity: 8.000
 				flags: no_consume
 			}

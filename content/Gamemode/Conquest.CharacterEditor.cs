@@ -616,7 +616,7 @@ namespace TC2.Conquest
 
 										GUI.SameLine();
 
-										if (GUI.AssetInput2("edit.origin"u8, ref vars.h_origin, size: new(GUI.RmX, GUI.RmY), show_label: false, tab_height: 40.00f, close_on_select: true,
+										if (GUI.AssetInput2("edit.origin"u8, ref vars.h_origin, size: new(GUI.RmX, GUI.RmY), show_label: false, tab_height: 40.00f, close_on_select: false,
 										filter: static (x) => x.data.species == custom_character.vars.h_species && x.data.flags.HasAny(IOrigin.Flags.Special | IOrigin.Flags.Selectable),
 										draw: (asset, group, is_title) =>
 										{
@@ -771,9 +771,9 @@ namespace TC2.Conquest
 											static bool ValidateKit(ref IKit.Data kit_data, Kit.Slot slot, ref CustomCharacter.Vars vars, ref CustomCharacter.Props props, bool skip_flags = false)
 											{
 												return kit_data.slot == slot
-													&& kit_data.species.IsSameOrEmpty(vars.h_species)
-													&& kit_data.faction == 0
-													&& kit_data.flags.HasNone(Kit.Flags.Hidden)
+													&& !kit_data.faction
+													&& kit_data.flags.HasAnyExcept(Kit.Flags.Selectable, Kit.Flags.Hidden)
+													&& kit_data.species.IsSameOrEmpty(vars.h_species)			
 													&& (skip_flags || kit_data.character_flags.Evaluate(props.character_flags_default | vars.character_flags) > 0.00f);
 											}
 

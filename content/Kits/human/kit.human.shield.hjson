@@ -1,12 +1,12 @@
 ﻿{
-	$version: "0.1.61.2"
+	$version: "0.1.62.0"
 	name: "Shield"
 	desc:
 		'''
 		TODO: Desc
 		'''
 	
-	flags: none
+	flags: selectable
 	slot: utility
 	categories: armor, weapon, melee, defensive, small
 	faction: "null"

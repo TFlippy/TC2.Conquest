@@ -1,15 +1,16 @@
 ﻿{
+	$version: "0.1.62.0"
 	name: "Pivan Klasik"
 	desc:
 		'''
 		TODO: Desc
 		'''
 	
-	flags: none
+	flags: selectable
 	slot: utility
 	categories: food, junk, small, consumable, cheap
 	faction: "null"
-	species: "human"
+	species: human
 	
 	character_flags:
 	{
@@ -21,6 +22,7 @@
 	
 	amount_multiplier_min: 1.000
 	amount_multiplier_max: 1.000
+	cost: 0.000
 	
 	shipment:
 	{
@@ -28,7 +30,7 @@
 		[
 			{
 				type: prefab
-				prefab: "bp.pivan.klasik"
+				prefab: bp.pivan.klasik
 				quantity: 1.000
 				flags: despawn, no_consume
 			}

@@ -1,15 +1,16 @@
 ﻿{
+	$version: "0.1.62.0"
 	name: "Scattergun"
 	desc:
 		'''
 		TODO: Desc
 		'''
 	
-	flags: none
+	flags: selectable
 	slot: primary
 	categories: weapon, gun, short_range, inaccurate
 	faction: "null"
-	species: "human"
+	species: human
 	
 	character_flags:
 	{
@@ -21,6 +22,7 @@
 	
 	amount_multiplier_min: 1.000
 	amount_multiplier_max: 1.000
+	cost: 0.000
 	
 	shipment:
 	{
@@ -28,13 +30,13 @@
 		[
 			{
 				type: prefab
-				prefab: "scattergun"
+				prefab: scattergun
 				quantity: 1.000
 				flags: despawn, no_consume
 			}
 			{
 				type: resource
-				material: "ammo_sg.buck"
+				material: ammo_sg.buck
 				quantity: 12.000
 				flags: despawn, no_consume
 			}

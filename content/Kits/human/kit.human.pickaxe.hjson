@@ -6,7 +6,7 @@
 		TODO: Desc
 		'''
 	
-	flags: none
+	flags: selectable
 	slot: tool
 	categories: tools, melee, destructive, mining, gathering, cheap
 	faction: "null"

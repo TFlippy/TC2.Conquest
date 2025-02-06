@@ -1,12 +1,12 @@
 ﻿{
-	$version: "0.1.61.2"
+	$version: "0.1.62.0"
 	name: "Long Breechloader"
 	desc:
 		'''
 		TODO: Desc
 		'''
 	
-	flags: none
+	flags: selectable
 	slot: primary
 	categories: weapon, dangerous, heavy, gun, long_range, short_range, powerful, inaccurate, cheap, civilian, industrial, arcane, slow, unstable
 	faction: "null"

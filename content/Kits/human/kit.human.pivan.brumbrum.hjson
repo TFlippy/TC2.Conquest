@@ -1,26 +1,28 @@
 ﻿{
+	$version: "0.1.62.0"
 	name: "Pivan Brum-Brum"
 	desc:
 		'''
 		TODO: Desc
 		'''
 	
-	flags: none
+	flags: selectable
 	slot: utility
 	categories: food, small, drug, consumable, healing
 	faction: "null"
-	species: "human"
+	species: human
 	
 	character_flags:
 	{
 		require: none
-		include: slave, construction, criminal, unskilled, military, artisan, farmer, laborer, poor, miner, insane, alcoholic, nomad, feral, brawler, strong, junkie, lower_class, lower_middle_class, middle_class, dumb
+		include: slave, construction, criminal, unskilled, military, artisan, farmer, laborer, poor, miner, insane, alcoholic, nomad, feral, brawler, strong, junkie, dumb, lower_class, lower_middle_class, middle_class
 		exclude: scientist, nobility, professional, upper_class, elite_class
 		weight: 1.300
 	}
 	
 	amount_multiplier_min: 1.000
 	amount_multiplier_max: 1.000
+	cost: 0.000
 	
 	shipment:
 	{
@@ -28,7 +30,7 @@
 		[
 			{
 				type: prefab
-				prefab: "bp.pivan.brumbrum"
+				prefab: bp.pivan.brumbrum
 				quantity: 1.000
 				flags: despawn, no_consume
 			}

@@ -6,7 +6,7 @@
 		TODO: Desc
 		'''
 	
-	flags: none
+	flags: selectable
 	slot: harness
 	categories: tools, small, storage, cheap
 	faction: "null"

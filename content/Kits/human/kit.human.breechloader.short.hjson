@@ -1,12 +1,12 @@
 ﻿{
-	$version: "0.1.61.2"
+	$version: "0.1.62.0"
 	name: "Short Breechloader"
 	desc:
 		'''
 		TODO: Desc
 		'''
 	
-	flags: none
+	flags: selectable
 	slot: secondary
 	categories: weapon, junk, gun, short_range, inaccurate, cheap, civilian, industrial, slow, unstable
 	faction: "null"
