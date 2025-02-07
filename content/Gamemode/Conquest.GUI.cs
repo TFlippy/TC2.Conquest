@@ -328,11 +328,11 @@ namespace TC2.Conquest
 											{
 												//DrawCharacter(characters[i].GetHandle());
 
-												using (GUI.ID.Push(i - 100))
+												var h_character = characters[i];
+												using (GUI.ID<Conquest.RespawnGUI, Character.Data>.Push(h_character))
 												{
 													using (var group_row = GUI.Group.New(size: new(GUI.RmX, 40)))
 													{
-														var h_character = characters[i];
 														ref var character_data = ref h_character.GetData();
 
 														if (h_character && !h_selected_character_tmp)
@@ -393,64 +393,72 @@ namespace TC2.Conquest
 									var selected_items = Spawn.RespawnGUI.character_id_to_selected_items.GetOrAdd(h_selected_character_tmp);
 
 									ref var character_data = ref h_selected_character_tmp.GetData();
-									//if (character_data.IsNotNull())
-									//{
-									//	if (selected_items != null)
-									//	{
-									//		foreach (var h_kit in character_data.kits)
-									//		{
-									//			selected_items.Add(h_kit);
-									//		}
-									//	}
-									//}
-
-									//using (var group_title = GUI.Group.New(size: new(GUI.RmX, 24), padding: new(8, 8)))
-									//{
-									//	if (character_data.IsNotNull())
-									//	{
-									//		GUI.TitleCentered(character_data.name, size: 24, pivot: new(0.00f, 0.00f));
-									//	}
-									//	else
-									//	{
-									//		GUI.TitleCentered("<no character selected>"u8, size: 24, pivot: new(0.00f, 0.00f));
-									//	}
-									//}
-
-									//if (dormitory.flags.HasNone(Dormitory.Flags.Hide_XP))
-									//{
-									//	GUI.SeparatorThick();
-
-									//	using (var group_xp = GUI.Group.New(size: GUI.GetRemainingSpace(y: -300), padding: new(2, 4)))
-									//	{
-									//		using (var scrollbox = GUI.Scrollbox.New("scrollbox_xp"u8, size: GUI.Rm))
-									//		{
-									//			GUI.DrawBackground(GUI.tex_panel, scrollbox.group_frame.GetOuterRect(), new(8, 8, 8, 8));
-
-									//			if (character_data.IsNotNull())
-									//			{
-									//				Experience.DrawTableSmall2(ref character_data.experience);
-									//			}
-
-									//			//if (origin_data.IsNotNull())
-									//			//{
-									//			//	Experience.DrawTableSmall(ref origin_data.experience);
-									//			//}
-									//		}
-									//	}
-									//}
-
-									if (dormitory.flags.HasNone(Dormitory.Flags.Hide_Kits))
+									using (var group_kits = GUI.Group.New(size: GUI.GetRemainingSpace(y: -48), padding: new(2, 4)))
 									{
-										//GUI.SeparatorThick();
+										GUI.DrawBackground(GUI.tex_panel, group_kits.GetOuterRect(), new(8, 8, 8, 8));
 
-										using (var group_kits = GUI.Group.New(size: GUI.GetRemainingSpace(y: -48), padding: new(2, 4)))
+										//if (character_data.IsNotNull())
+										//{
+										//	if (selected_items != null)
+										//	{
+										//		foreach (var h_kit in character_data.kits)
+										//		{
+										//			selected_items.Add(h_kit);
+										//		}
+										//	}
+										//}
+
+										//using (var group_title = GUI.Group.New(size: new(GUI.RmX, 24), padding: new(8, 8)))
+										//{
+										//	if (character_data.IsNotNull())
+										//	{
+										//		GUI.TitleCentered(character_data.name, size: 24, pivot: new(0.00f, 0.00f));
+										//	}
+										//	else
+										//	{
+										//		GUI.TitleCentered("<no character selected>"u8, size: 24, pivot: new(0.00f, 0.00f));
+										//	}
+										//}
+
+										if (dormitory.flags.HasNone(Dormitory.Flags.Hide_XP))
 										{
-											GUI.DrawBackground(GUI.tex_panel, group_kits.GetOuterRect(), new(8, 8, 8, 8));
+											using (var group_xp = GUI.Group.New(size: GUI.GetRemainingSpace(y: -128)))
+											{
+												using (var scrollbox = GUI.Scrollbox.New("scrollbox_xp"u8, size: GUI.Rm))
+												{
+													GUI.DrawBackground(GUI.tex_panel, scrollbox.group_frame.GetOuterRect(), new(8, 8, 8, 8));
+
+													if (character_data.IsNotNull())
+													{
+														Experience.DrawTableSmall2(ref character_data.experience);
+													}
+
+													//if (origin_data.IsNotNull())
+													//{
+													//	Experience.DrawTableSmall(ref origin_data.experience);
+													//}
+												}
+											}
+
+											GUI.SeparatorThick();
+										}
+
+										if (dormitory.flags.HasNone(Dormitory.Flags.Hide_Kits))
+										{
+											//GUI.SeparatorThick();
+
+											//using (var group_kits = GUI.Group.New(size: GUI.GetRemainingSpace(y: -48), padding: new(2, 4)))
+											//{
+											//	GUI.DrawBackground(GUI.tex_panel, group_kits.GetOuterRect(), new(8, 8, 8, 8));
 
 											using (var scrollable = GUI.Scrollbox.New("kits"u8, size: GUI.Rm, padding: new(4, 4), force_scrollbar: true))
 											{
 												Dormitory.DrawKits(ref dormitory, ref crafting_context, ref character_data, h_inventory, has_storage, available_items, selected_items);
 											}
+											//}
+
+											//GUI.SeparatorThick();
+
 										}
 									}
 
