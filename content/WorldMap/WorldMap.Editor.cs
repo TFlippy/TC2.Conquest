@@ -63,7 +63,7 @@ namespace TC2.Conquest
 					var index = int.MaxValue;
 
 					var ts = Timestamp.Now();
-					foreach (var asset in IGovernorate.Database.GetAssets())
+					foreach (var asset in IGovernorate.Database.GetAssetsSpan())
 					{
 						if (asset.id == 0) continue;
 						ref var asset_data = ref asset.GetData();
@@ -157,7 +157,7 @@ namespace TC2.Conquest
 					}
 
 					var ts = Timestamp.Now();
-					foreach (var asset in IPrefecture.Database.GetAssets())
+					foreach (var asset in IPrefecture.Database.GetAssetsSpan())
 					{
 						if (asset.id == 0) continue;
 						ref var asset_data = ref asset.GetData();
@@ -361,7 +361,7 @@ namespace TC2.Conquest
 					var ts = Timestamp.Now();
 					//if (!edit_points_index.HasValue)
 					{
-						foreach (var asset in IPrefecture.Database.GetAssets())
+						foreach (var asset in IPrefecture.Database.GetAssetsSpan())
 						{
 							if (asset.id == 0) continue;
 							ref var asset_data = ref asset.GetData();

@@ -195,7 +195,7 @@ namespace TC2.Conquest
 						DrawPrefectures(ref region);
 						static void DrawPrefectures(ref Region.Data.Global region)
 						{
-							foreach (var asset in IPrefecture.Database.GetAssets())
+							foreach (var asset in IPrefecture.Database.GetAssetsSpan())
 							{
 								//if (asset.id == 0) continue;
 								if (asset.data.bb.OverlapsRect(WorldMap.camera_rect_world))
@@ -274,7 +274,7 @@ namespace TC2.Conquest
 						DrawGovernorates(ref region);
 						static void DrawGovernorates(ref Region.Data.Global region)
 						{
-							foreach (var asset in IGovernorate.Database.GetAssets())
+							foreach (var asset in IGovernorate.Database.GetAssetsSpan())
 							{
 								if (asset.id == 0) continue;
 								ref var asset_data = ref asset.GetData();

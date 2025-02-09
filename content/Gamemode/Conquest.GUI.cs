@@ -254,7 +254,7 @@ namespace TC2.Conquest
 								ref var spawn = ref ent_selected_spawn.GetComponent<Spawn.Data>();
 
 								var oc_shipment = ent_selected_spawn.GetComponentWithOwner<Shipment.Data>(Relation.Type.Instance);
-								if (oc_shipment.IsValid())
+								if (oc_shipment.IsValid() && oc_shipment.data.flags.HasAnyExcept(Shipment.Flags.Allow_Withdraw, Shipment.Flags.No_GUI | Shipment.Flags.Staging | Shipment.Flags.Locked))
 								{
 									available_items = oc_shipment.data.items.AsSpan();
 								}

@@ -80,7 +80,7 @@ namespace TC2.Conquest
 
 			{
 				var ts = Timestamp.Now();
-				foreach (var asset in IPrefecture.Database.GetAssets())
+				foreach (var asset in IPrefecture.Database.GetAssetsSpan())
 				{
 					if (asset.id == 0) continue;
 
@@ -196,7 +196,7 @@ namespace TC2.Conquest
 			}
 
 			{
-				foreach (var asset in ILocation.Database.GetAssets())
+				foreach (var asset in ILocation.Database.GetAssetsSpan())
 				{
 					if (asset.id == 0) continue;
 					ref var asset_data = ref asset.GetData();
@@ -240,7 +240,7 @@ namespace TC2.Conquest
 			}
 
 			{
-				foreach (var asset in IPrefecture.Database.GetAssets())
+				foreach (var asset in IPrefecture.Database.GetAssetsSpan())
 				{
 					asset.UpdateBB();
 				}
@@ -256,7 +256,7 @@ namespace TC2.Conquest
 			var nearest_handle = default(ILocation.Handle);
 			var nearest_distance_sq = float.MaxValue;
 
-			foreach (var asset in ILocation.Database.GetAssets())
+			foreach (var asset in ILocation.Database.GetAssetsSpan())
 			{
 				if (asset.id == 0) continue;
 
@@ -694,7 +694,7 @@ namespace TC2.Conquest
 
 		public static void Rescale()
 		{
-			foreach (var asset in ILocation.Database.GetAssets())
+			foreach (var asset in ILocation.Database.GetAssetsSpan())
 			{
 				if (asset.id == 0) continue;
 
@@ -704,7 +704,7 @@ namespace TC2.Conquest
 				hs_pending_asset_saves.Add(asset);
 			}
 
-			foreach (var asset in IGovernorate.Database.GetAssets())
+			foreach (var asset in IGovernorate.Database.GetAssetsSpan())
 			{
 				if (asset.id == 0) continue;
 
@@ -717,7 +717,7 @@ namespace TC2.Conquest
 				hs_pending_asset_saves.Add(asset);
 			}
 
-			foreach (var asset in IPrefecture.Database.GetAssets())
+			foreach (var asset in IPrefecture.Database.GetAssetsSpan())
 			{
 				if (asset.id == 0) continue;
 
@@ -738,7 +738,7 @@ namespace TC2.Conquest
 				hs_pending_asset_saves.Add(asset);
 			}
 
-			foreach (var asset in IScenario.Database.GetAssets())
+			foreach (var asset in IScenario.Database.GetAssetsSpan())
 			{
 				if (asset.id == 0) continue;
 

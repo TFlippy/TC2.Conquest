@@ -260,7 +260,7 @@ namespace TC2.Conquest
 											//using (row.Column(4)) GUI.Title("Deaths");
 										}
 
-										var players = IPlayer.Database.GetAssets();
+										var players = IPlayer.Database.GetAssetsSpan();
 										foreach (var player_asset in players)
 										{
 											ref var player_data = ref player_asset.GetData();
