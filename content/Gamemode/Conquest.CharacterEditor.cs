@@ -16,10 +16,10 @@ namespace TC2.Conquest
 			public void Invoke(ref NetConnection connection, ref Conquest.Gamemode data)
 			{
 				ref var player = ref connection.GetPlayer(out var player_asset);
-				Assert.NotNull(ref player, Assert.Level.Error);
+				Assert.IsNotNull(ref player, Assert.Level.Error);
 
 				ref var region = ref connection.GetRegionCommon();
-				Assert.NotNull(ref region, Assert.Level.Error);
+				Assert.IsNotNull(ref region, Assert.Level.Error);
 
 				Assert.Check(this.vars.h_species.IsValid());
 				Assert.Check(this.vars.h_origin.IsValid());
@@ -59,14 +59,14 @@ namespace TC2.Conquest
 				var kits_span = FixedArray.CreateSpan16<IKit.Handle>(out var kits_buffer);
 				var kits_count = 0;
 
-				kits_span.AddIfValid(vars.h_kit_primary, ref kits_count);
-				kits_span.AddIfValid(vars.h_kit_secondary, ref kits_count);
-				kits_span.AddIfValid(vars.h_kit_tool, ref kits_count);
-				kits_span.AddIfValid(vars.h_kit_utility, ref kits_count);
-				kits_span.AddIfValid(vars.h_kit_resources, ref kits_count);
-				kits_span.AddIfValid(vars.h_kit_harness, ref kits_count);
-				kits_span.AddIfValid(vars.h_kit_head, ref kits_count);
-				kits_span.AddIfValid(vars.h_kit_chest, ref kits_count);
+				kits_span.AddIfValid(this.vars.h_kit_primary, ref kits_count);
+				kits_span.AddIfValid(this.vars.h_kit_secondary, ref kits_count);
+				kits_span.AddIfValid(this.vars.h_kit_tool, ref kits_count);
+				kits_span.AddIfValid(this.vars.h_kit_utility, ref kits_count);
+				kits_span.AddIfValid(this.vars.h_kit_resources, ref kits_count);
+				kits_span.AddIfValid(this.vars.h_kit_harness, ref kits_count);
+				kits_span.AddIfValid(this.vars.h_kit_head, ref kits_count);
+				kits_span.AddIfValid(this.vars.h_kit_chest, ref kits_count);
 
 				var kits_span_sliced = kits_span.WithLength(kits_count);
 				character.kits = kits_span_sliced.ToArray();

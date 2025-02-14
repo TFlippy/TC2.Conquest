@@ -1,0 +1,43 @@
+﻿{
+	$version: "0.1.62.0"
+	name: "Wrench"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: selectable
+	slot: tool
+	categories: tools, construction
+	faction: "null"
+	species: human
+	
+	character_flags:
+	{
+		require: none
+		include: construction, scientist, artisan, laborer, technician, engineer
+		exclude: none
+		weight: 1.000
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	cost: 0.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: wrench
+				quantity: 1.000
+				flags: despawn, no_consume
+			}
+			null
+			null
+			null
+		]
+		flags: unpack
+	}
+}

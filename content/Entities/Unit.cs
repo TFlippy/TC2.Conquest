@@ -474,14 +474,14 @@ namespace TC2.Conquest
 
 
 			[ISystem.PostUpdate.A(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region)]
-			public static void UpdateParented([Source.Owned] ref Transform.Data transform_child, [Source.Parent] in Transform.Data transform_parent, [Source.Owned] ref Marker.Data marker)
+			public static void UpdateParented([Source.Owned] ref Transform.Data transform_child, [Source.Parent] in Transform.Data transform_parent, [Source.Owned] in Marker.Data marker)
 			{
 				transform_child.SetPosition(transform_parent.position + marker.relative_offset);
 			}
 
 #if CLIENT
 			[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region), HasRelation(Source.Modifier.Owned, Relation.Type.Child, false)]
-			public static void UpdateMarker(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity, [Source.Owned] in Unit.Data unit, [Source.Owned] in Transform.Data transform, [Source.Owned] ref Marker.Data marker)
+			public static void UpdateMarker([Source.Owned] in Unit.Data unit, [Source.Owned] ref Marker.Data marker)
 			{
 				marker.rotation = unit.dir_last.GetAngleRadiansFast();
 			}
@@ -508,7 +508,8 @@ namespace TC2.Conquest
 
 
 			[ISystem.Update.A(ISystem.Mode.Single, ISystem.Scope.Global)]
-			public static void UpdateActions(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Global] ref World.Global world_global, [Source.Owned] ref WorldMap.Unit.Data unit, [Source.Owned] ref Transform.Data transform)
+			public static void UpdateActions(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, 
+			[Source.Global] ref World.Global world_global, [Source.Owned] ref WorldMap.Unit.Data unit, [Source.Owned] ref Transform.Data transform)
 			{
 				var time = info.WorldTime;
 				switch (unit.action)
@@ -770,7 +771,8 @@ namespace TC2.Conquest
 
 			// TODO: probably make this serverside + skip if not moving
 			[ISystem.Update.B(ISystem.Mode.Single, ISystem.Scope.Global), HasRelation(Source.Modifier.Owned, Relation.Type.Child, false)]
-			public static void UpdateMovement(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Global] ref World.Global world_global, [Source.Owned] ref WorldMap.Unit.Data unit, [Source.Owned] ref Transform.Data transform)
+			public static void UpdateMovement(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, 
+			[Source.Global] ref World.Global world_global, [Source.Owned] ref WorldMap.Unit.Data unit, [Source.Owned] ref Transform.Data transform)
 			{
 				var dt = App.fixed_update_interval_s;
 
