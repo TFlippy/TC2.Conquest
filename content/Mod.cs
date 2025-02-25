@@ -64,7 +64,7 @@ namespace TC2.Conquest
 					{
 						var rect = window.group.GetOuterRect();
 
-						GUI.DrawTexture(GUI.tex_white, rect, layer: GUI.Layer.Foreground, color: Color32BGRA.Black.WithAlphaMult(1.00f * overlay_alpha));
+						GUI.DrawTexture(GUI.tex_white, rect, layer: GUI.Layer.Foreground, color: Color32BGRA.Black.WithAlphaMult(overlay_alpha));
 						GUI.DrawTexture(GUI.tex_vignette, rect, layer: GUI.Layer.Foreground, color: Color32BGRA.Black.WithAlphaMult(0.50f * overlay_alpha));
 						GUI.DrawTextCentered("Loading..."u8, position: rect.GetPosition(), pivot: new(0.50f, 0.50f), font: GUI.Font.Superstar, size: 32, layer: GUI.Layer.Foreground, color: GUI.font_color_title.WithAlphaMult(overlay_alpha));
 					}
@@ -97,7 +97,7 @@ namespace TC2.Conquest
 			}
 			else
 			{
-				flags |= Sidebar.Widget.Flags.Resizable;
+				//flags |= Sidebar.Widget.Flags.Resizable;
 			}
 
 			using (var widget = Sidebar.Widget.New("menu.worldmap", "World Map", new Sprite(GUI.tex_icons_widget, 16, 16, 9, 1), size: override_size ?? new Vector2(600, 700), override_pos: override_pos, order: -10.00f, flags: flags))

@@ -96,7 +96,7 @@ namespace TC2.Conquest
 				public float radius = 0.50f;
 			}
 
-			[MethodImpl(MethodImplOptions.NoInlining)]
+			//[MethodImpl(MethodImplOptions.NoInlining)]
 			public static Entity GetNearest(Vector2 pos, out float dist_sq, IFaction.Handle h_faction = default, Entity ent_exclude = default, Enterable.Data.Type type = Data.Type.Undefined)
 			{
 				ref var region = ref World.GetGlobalRegion();
@@ -297,7 +297,8 @@ namespace TC2.Conquest
 			}
 
 			[Query(ISystem.Scope.Global)]
-			public delegate void GetAllQuery(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] in Unit.Data unit, [Source.Owned] in Transform.Data transform, [Source.Owned, Optional(false)] in Faction.Data faction);
+			public delegate void GetAllQuery(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, 
+				[Source.Owned] in Unit.Data unit, [Source.Owned] in Transform.Data transform, [Source.Owned, Optional(false)] in Faction.Data faction);
 
 			public enum Type: byte
 			{
