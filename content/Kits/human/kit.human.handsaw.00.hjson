@@ -1,23 +1,23 @@
 ﻿{
 	$version: "0.1.62.0"
-	name: "Wrench"
+	name: "Handsaw"
 	desc:
 		'''
 		TODO: Desc
 		'''
 	
 	flags: selectable
-	slot: utility
-	categories: tools, construction, civilian, industrial
+	slot: tool
+	categories: tools, small, gathering, civilian, fast
 	faction: "null"
 	species: human
 	
 	character_flags:
 	{
 		require: none
-		include: construction, scientist, educated, artisan, laborer, civillian, technician, engineer, miner, strong
+		include: slave, construction, criminal, medical, artisan, farmer, laborer, technician, engineer, hunter, nomad, outdoor
 		exclude: none
-		weight: 1.100
+		weight: 1.300
 	}
 	
 	amount_multiplier_min: 1.000
@@ -30,7 +30,7 @@
 		[
 			{
 				type: prefab
-				prefab: wrench
+				prefab: handsaw.00
 				quantity: 1.000
 				flags: despawn, no_consume
 			}
