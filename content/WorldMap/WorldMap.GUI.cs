@@ -661,7 +661,7 @@ namespace TC2.Conquest
 										ref var enterable = ref entity.GetComponent<WorldMap.Enterable.Data>();
 										if (enterable.IsNotNull())
 										{
-											var children_span = FixedArray.CreateSpan8<Entity>(out var children_buffer);
+											var children_span = FixedArray.CreateSpan8NoInit<Entity>(out var children_buffer);
 											entity.GetChildren(ref children_span, Relation.Type.Child);
 
 											var child_i = 0;
@@ -1505,7 +1505,7 @@ namespace TC2.Conquest
 											//ref var enterable = ref entity.GetComponent<Enterable.Data>();
 											//if (enterable.IsNotNull())
 											{
-												Span<Entity> children = FixedArray.CreateSpan8<Entity>(out var buffer);
+												Span<Entity> children = FixedArray.CreateSpan8NoInit<Entity>(out var buffer);
 												entity.GetChildren(ref children, Relation.Type.Child);
 
 												if (!children.IsEmpty)
@@ -1746,7 +1746,7 @@ namespace TC2.Conquest
 										{
 											using (var scrollbox = GUI.Scrollbox.New("scroll.bottom"u8, size: GUI.Rm))
 											{
-												Span<Entity> children_span = FixedArray.CreateSpan32<Entity>(out var buffer_children);
+												Span<Entity> children_span = FixedArray.CreateSpan32NoInit<Entity>(out var buffer_children);
 												//ent_asset.GetAllChildren(ref children_span, false);
 												ent_asset.GetChildren(ref children_span, Relation.Type.Child);
 
@@ -1994,7 +1994,7 @@ namespace TC2.Conquest
 			{
 				var h_player = Client.GetPlayerHandle();
 
-				var children_span = FixedArray.CreateSpan16<Entity>(out var buffer);
+				var children_span = FixedArray.CreateSpan16NoInit<Entity>(out var buffer);
 				ent_unit.GetChildren(ref children_span, Relation.Type.Child);
 
 				if (results.HasAny(SelectUnitResults.Added))

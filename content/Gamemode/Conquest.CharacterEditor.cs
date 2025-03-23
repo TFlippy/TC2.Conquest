@@ -71,7 +71,7 @@ namespace TC2.Conquest
 				var kits_span_sliced = kits_span.WithLength(kits_count);
 				character.kits = kits_span_sliced.ToArray();
 
-				var identifier = Asset.GenerateRandomIdentifier();
+				var identifier = $"m.{character.species.GetIdentifier().OrDefault("misc")}.{Asset.GenerateRandomIdentifier()}";
 				//App.WriteLine(identifier);
 
 				var character_asset = ICharacter.Database.RegisterOrUpdate(identifier,
