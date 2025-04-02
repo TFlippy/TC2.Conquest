@@ -270,7 +270,7 @@ namespace TC2.Conquest
 												{
 													using (var row = GUI.Table.Row.New(size: new(GUI.RmX, 16)))
 													{
-														var is_online = true;
+														var is_online = player_data.flags.HasAny(IPlayer.Flags.Online);
 														var alpha = is_online ? 1.00f : 0.50f;
 
 														using (row.Column(0))
