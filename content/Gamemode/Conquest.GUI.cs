@@ -470,7 +470,7 @@ namespace TC2.Conquest
 								var rm = new Vec2f(GUI.Rm);
 								var button_size = new Vec2f(32, rm.y);
 
-								if (GUI.DrawIconButton("spawn.prev"u8, GUI.tex_icons_widget.GetSprite(8, 16, 4, 8), size: button_size))
+								if (GUI.DrawIconButton("spawn.prev"u8, GUI.tex_icons_widget.GetSprite(8, 16, 4, 8), size: button_size, color_icon: GUI.col_button_yellow))
 								{
 									scoped var args = new FetchNearestSpawnArgs(ent_selected_spawn: this.respawn.ent_selected_spawn, pos_pivot: pos_camera,
 									h_faction: h_faction, h_character: h_selected_character,
@@ -478,8 +478,6 @@ namespace TC2.Conquest
 									flags: FetchNearestSpawnArgs.Flags.None);
 
 									var ret = region.TriggerSystem(Conquest.FetchNearestSpawn, ref args);
-
-									App.WriteLine(args.spawn_info.ent_spawn);
 									if (args.spawn_info.ent_spawn != 0)
 									{
 										selected_spawn_info_cached = args.spawn_info;
@@ -501,19 +499,12 @@ namespace TC2.Conquest
 									group_title.DrawBackground(GUI.tex_window);
 
 									Utf8String title_text = (spawn_info_current.ent_spawn.IsValid() ? spawn_info_current.ent_spawn.GetFullName() : "Select a spawnpoint"u8);
-									//GUI.TitleCentered("Select a spawnpoint"u8, rect: group_title.GetInnerRect(), size: 32, pivot: new(0.50f, 0.50f));
 									GUI.TitleCentered(title_text, rect: group_title.GetInnerRect(), size: 32, pivot: new(0.50f, 0.50f));
-
-									//if (is_empty)
-									//{
-									//	GUI.TitleCentered("This spawnpoint is empty.", size: 16, pivot: new(1.00f, 0.50f), color: GUI.font_color_yellow, offset: new(0, -8));
-									//	GUI.TitleCentered("Select another one on the map!", size: 16, pivot: new(1.00f, 0.50f), color: GUI.font_color_yellow, offset: new(0, 8));
-									//}
 								}
 
 								GUI.SameLine();
 
-								if (GUI.DrawIconButton("spawn.next"u8, GUI.tex_icons_widget.GetSprite(8, 16, 5, 8), size: button_size))
+								if (GUI.DrawIconButton("spawn.next"u8, GUI.tex_icons_widget.GetSprite(8, 16, 5, 8), size: button_size, color_icon: GUI.col_button_yellow))
 								{
 									scoped var args = new FetchNearestSpawnArgs(ent_selected_spawn: this.respawn.ent_selected_spawn, pos_pivot: pos_camera,
 									h_faction: h_faction, h_character: h_selected_character,
@@ -521,8 +512,6 @@ namespace TC2.Conquest
 									flags: FetchNearestSpawnArgs.Flags.None);
 
 									var ret = region.TriggerSystem(Conquest.FetchNearestSpawn, ref args);
-
-									App.WriteLine(args.spawn_info.ent_spawn);
 									if (args.spawn_info.ent_spawn != 0)
 									{
 										selected_spawn_info_cached = args.spawn_info;
@@ -792,7 +781,7 @@ namespace TC2.Conquest
 										}
 										else
 										{
-											if (GUI.DrawButton("Cannot spawn as this character."u8, size: new Vector2(GUI.RmX, 48), font_size: 24, color: GUI.col_button_error, error: true))
+											if (GUI.DrawButton("Cannot spawn as this character."u8, size: new Vector2(GUI.RmX, 48), font_size: 16, color: GUI.col_button_error, error: true))
 											{
 
 											}
