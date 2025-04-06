@@ -4,15 +4,97 @@ namespace TC2.Conquest
 {
 	public static partial class Conquest
 	{
+		[ISystem.Manual(ISystem.Mode.Single, ISystem.Scope.Region | ISystem.Scope.Global)]
+		public static void ManualSystemTest(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity, [ISystem.Parameter] ref SpawnInfo arg,
+		[Source.Owned] ref Storage.Data storage, [Source.Owned] in Transform.Data transform, [Source.Owned, Optional] in Faction.Data faction)
+		{
+			App.WriteLine($"ManualSystemTest: {entity}; storage: {storage.flags}; pos: {transform.position}; faction: {faction.id}", App.Color.Green);
+			if (arg.IsNotNull())
+			{
+				App.WriteLine($"- faction: {arg.h_faction}; pos: {arg.pos}", color: App.Color.DarkGreen);
+			}
+		}
+
+		[ISystem.Manual(ISystem.Mode.Single, ISystem.Scope.Region | ISystem.Scope.Global)]
+		public static void FetchNearestSpawn(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity, 
+		[ISystem.Parameter] ref (Entity ent_spawn_current, Vec2f pos_pivot, float nearest_dist_sq, IFaction.Handle h_faction, SpawnInfo spawn_info) arg,
+		[Source.Owned] in Spawn.Data spawn, [Source.Owned] in Transform.Data transform, 
+		[Source.Owned, Optional(true)] ref Dormitory.Data dormitory, [Source.Owned, Optional] in Faction.Data faction)
+		{
+			if (arg.IsNotNull())
+			{
+				App.WriteLine($"{entity} vs {arg.spawn_info.ent_spawn}");
+				if (entity != arg.spawn_info.ent_spawn) // && spawn.IsVisibleToFaction(h_faction: arg.h_faction, h_faction_spawn: faction.id))
+				{
+					var dist = Maths.GetDistanceSq(transform.position, arg.pos_pivot);
+					if (dist < arg.nearest_dist_sq)
+					{
+						App.WriteLine(entity.GetFullName());
+
+						arg.nearest_dist_sq = dist;
+						arg.spawn_info = new SpawnInfo()
+						{
+							ent_spawn = entity,
+							pos = transform.position,
+
+							flags = SpawnInfo.Flags.None,
+							h_faction = faction.id,
+						};
+					}
+				}
+			}
+			else
+			{
+				//info.SetInterrupted(entity);
+			}
+		}
+
+		[ISystem.Manual(ISystem.Mode.Single, ISystem.Scope.Region | ISystem.Scope.Global)]
+		public static void FetchSpawns(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity, [ISystem.Parameter] ref SpanList<SpawnInfo> arg,
+		[Source.Owned] in Spawn.Data spawn, [Source.Owned] in Transform.Data transform,
+		[Source.Owned, Optional(true)] ref Dormitory.Data dormitory, [Source.Owned, Optional] in Faction.Data faction)
+		{
+			if (arg.IsNotNull())
+			{
+				
+			}
+			else
+			{
+				info.SetInterrupted(entity);
+			}
+		}
+
+		public struct SpawnInfo()
+		{
+			[Flags]
+			public enum Flags: uint
+			{
+				None = 0,
+
+				Is_Visible = 1 << 0,
+
+
+			}
+
+
+			public Entity ent_spawn;
+			public Vec2f pos;
+
+			public SpawnInfo.Flags flags;
+
+			public IFaction.Handle h_faction;
+
+		}
+
 #if CLIENT
 		[Shitcode]
 		public struct RespawnGUI: IGUICommand
 		{
 			public static readonly Texture.Handle tex_icons_minimap = "ui_icons_minimap";
-			public static Entity? ent_selected_spawn_new;
+			//public static Entity? ent_selected_spawn_new;
 
 			public Entity ent_respawn;
-			public IFaction.Handle faction_id;
+			public IFaction.Handle h_faction;
 			public Respawn.Data respawn;
 
 			//public static bool[] selected_items = new bool[32];
@@ -28,6 +110,20 @@ namespace TC2.Conquest
 
 			public static ICharacter.Handle h_selected_character;
 
+
+
+			[FixedAddressValueType, Region.Local] public static SpawnInfo selected_spawn_info_cached;
+			[FixedAddressValueType, Region.Local] public static FixedArray32<SpawnInfo> buffer_spawn_infos;
+
+			//var rpc = new RespawnExt.SetSpawnRPC()
+			//{
+			//	ent_spawn = ent_selected_spawn_new.Value
+			//};
+			//rpc.Send(Client.GetEntity());
+
+			//public static PinnedList<SpawnInfo> list_spawn_infos = new PinnedList<SpawnInfo>(32);
+
+
 			public void Draw()
 			{
 				//var rem_height = Maths.Max(GUI.CanvasSize.Y - total_height, 0.00f);
@@ -41,10 +137,10 @@ namespace TC2.Conquest
 				Spawn.RespawnGUI.window_size.Y = Maths.Clamp(Spawn.RespawnGUI.window_size.Y, 0, max_height);
 
 				//Spawn.RespawnGUI.ent_selected_spawn = this.respawn.ent_selected_spawn;
-				ref var ent_selected_spawn = ref Spawn.RespawnGUI.ent_selected_spawn;
-				ent_selected_spawn = this.respawn.ent_selected_spawn;
+				//ref var ent_selected_spawn = ref Spawn.RespawnGUI.ent_selected_spawn;
+				//var ent_selected_spawn_new = this.respawn.ent_selected_spawn;
 
-				var h_faction = this.faction_id;
+				var h_faction = this.h_faction;
 
 				Spawn.RespawnGUI.window_size = new Vector2(580, 480);
 
@@ -57,181 +153,209 @@ namespace TC2.Conquest
 						ref var player = ref Client.GetPlayerData(out var player_asset);
 
 						var random = XorRandom.New(true);
+						var pos_camera = (Vec2f)Camera.position;
+
+
+						var spawn_info_current = selected_spawn_info_cached; // new SpawnInfo();
+						//spawn_info_current.ent_spawn = ent_selected_spawn;
+
+						//using (var group_title = GUI.Group.New(size: new(GUI.RmX, 40), padding: new(4, 0)))
+						//{
+						//	//var spawn_name = ent_selected_spawn.GetFullName();
+						//	GUI.TitleCentered(spawn_info_current.ent_spawn.GetFullName(), size: 32, pivot: new(0.00f, 0.50f));
+
+						//	//if (is_empty)
+						//	//{
+						//	//	GUI.TitleCentered("This spawnpoint is empty.", size: 16, pivot: new(1.00f, 0.50f), color: GUI.font_color_yellow, offset: new(0, -8));
+						//	//	GUI.TitleCentered("Select another one on the map!", size: 16, pivot: new(1.00f, 0.50f), color: GUI.font_color_yellow, offset: new(0, 8));
+						//	//}
+						//}
+
+						//GUI.SeparatorThick();
+
+
+						//spawn_info_current.pos = Camera.position;
+						//App.WriteLine(spawn_info_current.pos);
 
 						GUI.DrawWindowBackground(GUI.tex_window_menu, padding: new Vector4(8, 8, 8, 8));
 
 						using (GUI.Group.New(size: new Vector2(GUI.RmX, GUI.RmY), padding: new(8, 8)))
 						{
-							var is_selected_spawn_valid = false;
+							//var is_selected_spawn_valid = false;
 
-							if (ent_selected_spawn.IsAlive())
-							{
-								ref var spawn = ref ent_selected_spawn.GetComponent<Spawn.Data>();
-								ref var dormitory = ref ent_selected_spawn.GetComponent<Dormitory.Data>();
+							//if (ent_selected_spawn.IsAlive())
+							//{
+							//	ref var spawn = ref ent_selected_spawn.GetComponent<Spawn.Data>();
+							//	ref var dormitory = ref ent_selected_spawn.GetComponent<Dormitory.Data>();
 
-								if (spawn.IsNotNull() && dormitory.IsNotNull())
-								{
-									var h_faction_spawn = ent_selected_spawn.GetFactionHandle();
-									var is_visible = false;
-									var has_characters = false;
+							//	if (spawn.IsNotNull() && dormitory.IsNotNull())
+							//	{
+							//		var h_faction_spawn = ent_selected_spawn.GetFactionHandle();
+							//		var is_visible = false;
+							//		var has_characters = false;
 
-									is_selected_spawn_valid = (is_visible = spawn.IsVisibleToFaction(h_faction, h_faction_spawn))
-										&& ((has_characters = dormitory.HasSpawnableCharacters(h_faction: h_faction, h_faction_spawn: h_faction_spawn, h_player: player_asset, spawn_flags: spawn.flags)) || spawn.IsSelectableByFaction(h_faction, h_faction_spawn, has_characters, is_visible));
-								}
-							}
+							//		is_selected_spawn_valid = (is_visible = spawn.IsVisibleToFaction(h_faction, h_faction_spawn))
+							//			&& ((has_characters = dormitory.HasSpawnableCharacters(h_faction: h_faction, h_faction_spawn: h_faction_spawn, h_player: player_asset, spawn_flags: spawn.flags)) || spawn.IsSelectableByFaction(h_faction, h_faction_spawn, has_characters, is_visible));
+							//	}
+							//}
 
-							if (!is_selected_spawn_valid && false)
-							{
-								ent_selected_spawn = default;
+							//if (!is_selected_spawn_valid && false)
+							//{
+							//	ent_selected_spawn = default;
 
-								//var player_faction_id = player.faction_id;
+							//	//var player_faction_id = player.faction_id;
 
-								foreach (ref var row in region.IterateQuery<Region.GetSpawnsQuery>())
-								{
-									row.Run((ISystem.Info info, Entity entity, in Spawn.Data spawn, in Nameable.Data nameable, in Transform.Data transform, in Faction.Data faction) =>
-									{
-										if (spawn.IsVisibleToFaction(h_faction, faction.id))
-										{
-											ref var dormitory = ref entity.GetComponent<Dormitory.Data>();
-											if (dormitory.IsNotNull())
-											{
-												var h_faction_spawn = faction.id;
-												var is_visible = false;
-												var has_characters = false;
+							//	foreach (ref var row in region.IterateQuery<Region.GetSpawnsQuery>())
+							//	{					
+							//		row.Run((ISystem.Info info, Entity entity, in Spawn.Data spawn, in Nameable.Data nameable, in Transform.Data transform, in Faction.Data faction) =>
+							//		{
+							//			//ref var spawn_info = ref list_spawn_infos.Reserve();
+							//			//if (spawn_info.IsNull())
+							//			//{
+							//			//	//info.SetInterrupted(entity);
+							//			//	return;
+							//			//}
 
-												is_selected_spawn_valid = (is_visible = spawn.IsVisibleToFaction(h_faction, h_faction_spawn))
-													&& ((has_characters = dormitory.HasSpawnableCharacters(h_faction: h_faction, h_faction_spawn: h_faction_spawn, h_player: player_asset, spawn_flags: spawn.flags)) || spawn.IsSelectableByFaction(h_faction, h_faction_spawn, has_characters, is_visible));
+							//			if (spawn.IsVisibleToFaction(h_faction, faction.id))
+							//			{
+							//				ref var dormitory = ref entity.GetComponent<Dormitory.Data>();
+							//				if (dormitory.IsNotNull())
+							//				{
+							//					var h_faction_spawn = faction.id;
+							//					var is_visible = false;
+							//					var has_characters = false;
 
-												//is_selected_spawn_valid = spawn.IsVisibleToFaction(h_faction, h_faction_spawn) && (h_faction_spawn == h_faction || dormitory.HasSpawnableCharacters(h_faction, h_faction_spawn, spawn.flags));
-											}
+							//					is_selected_spawn_valid = (is_visible = spawn.IsVisibleToFaction(h_faction, h_faction_spawn))
+							//						&& ((has_characters = dormitory.HasSpawnableCharacters(h_faction: h_faction, h_faction_spawn: h_faction_spawn, h_player: player_asset, spawn_flags: spawn.flags)) || spawn.IsSelectableByFaction(h_faction, h_faction_spawn, has_characters, is_visible));
 
-											//if (Spawn.RespawnGUI.ent_selected_spawn.id == 0 || random.NextBool(0.30f))
-											//{
-											//	ent_selected_spawn_new = entity;
-											//}
-										}
-									});
+							//					//is_selected_spawn_valid = spawn.IsVisibleToFaction(h_faction, h_faction_spawn) && (h_faction_spawn == h_faction || dormitory.HasSpawnableCharacters(h_faction, h_faction_spawn, spawn.flags));
+							//				}
 
-									if (is_selected_spawn_valid)
-									{
-										ent_selected_spawn_new = row.Entity;
-										//ent_selected_spawn = row.Entity;
-										break;
-									}
-								}
-							}
+							//				//if (Spawn.RespawnGUI.ent_selected_spawn.id == 0 || random.NextBool(0.30f))
+							//				//{
+							//				//	ent_selected_spawn_new = entity;
+							//				//}
+							//			}
+							//		});
+
+							//		if (is_selected_spawn_valid)
+							//		{
+							//			ent_selected_spawn_new = row.Entity;
+							//			//ent_selected_spawn = row.Entity;
+							//			break;
+							//		}
+							//	}
+							//}
 
 							{
 								using (GUI.Wrap.Push(GUI.RmX))
+								using (var group = GUI.Group.New(size: new(GUI.RmX, 80), padding: new(4)))
 								{
-									using (var group = GUI.Group.New(size: new(GUI.RmX, 92), padding: new(4)))
+									//ref var minimap = ref Minimap.MinimapHUD.minimaps[region.GetID()];
+									//if (minimap != null)
+									//{
+									//	var map_frame_size = minimap.GetFrameSize(2);
+									//	map_frame_size = map_frame_size.ScaleToSize(new Vector2(GUI.RmX, 80));
+
+									//	Minimap.DrawMap(ref region, minimap, map_frame_size, map_scale: 1.00f);
+									//}
+
+									ref var minimap = ref Minimap.MinimapHUD.minimaps[region.GetID()];
+									if (minimap != null)
 									{
-										//ref var minimap = ref Minimap.MinimapHUD.minimaps[region.GetID()];
-										//if (minimap != null)
-										//{
-										//	var map_frame_size = minimap.GetFrameSize(2);
-										//	map_frame_size = map_frame_size.ScaleToSize(new Vector2(GUI.RmX, 80));
+										var map_frame_size = minimap.GetFrameSize(2);
+										map_frame_size = map_frame_size.ScaleToSize(GUI.Rm);
 
-										//	Minimap.DrawMap(ref region, minimap, map_frame_size, map_scale: 1.00f);
-										//}
-
-										ref var minimap = ref Minimap.MinimapHUD.minimaps[region.GetID()];
-										if (minimap != null)
+										using (group.Split(size: map_frame_size, GUI.AlignX.Center, GUI.AlignY.Center))
 										{
-											var map_frame_size = minimap.GetFrameSize(2);
-											map_frame_size = map_frame_size.ScaleToSize(new Vector2(GUI.RmX, 80));
-
-											using (group.Split(size: map_frame_size, GUI.AlignX.Left, GUI.AlignY.Top))
+											using (var map = GUI.Map.New(ref region, minimap, size: map_frame_size, map_scale: 1.00f, draw_markers: false))
 											{
-												using (var map = GUI.Map.New(ref region, minimap, size: map_frame_size, map_scale: 1.00f, draw_markers: false))
+												//ISystem.Info info, Entity entity, [Source.Owned] in Minimap.Marker.Data marker, [Source.Owned] in Transform.Data transform, [Source.Owned, Optional] in Faction.Data faction, [Source.Owned, Optional] in Nameable.Data nameable
+
+												foreach (ref var row in region.IterateQuery<Minimap.GetMarkersQuery>())
 												{
-													//ISystem.Info info, Entity entity, [Source.Owned] in Minimap.Marker.Data marker, [Source.Owned] in Transform.Data transform, [Source.Owned, Optional] in Faction.Data faction, [Source.Owned, Optional] in Nameable.Data nameable
+													var selected = row.Entity == ent_selected_spawn;
+													var is_selectable = false;
+													var is_visible = false;
+													var has_characters = false;
 
-													foreach (ref var row in region.IterateQuery<Minimap.GetMarkersQuery>())
+													var transform_copy = default(Transform.Data);
+													//var nameable_copy = default(Nameable.Data);
+													var color = selected ? Color32BGRA.White : new Color32BGRA(0xff9a7f7f);
+													var marker_copy = default(Minimap.Marker.Data);
+													//var alpha = 1.00f;
+
+													var faction_id_tmp = this.h_faction;
+
+													//var ok = false;
+
+													row.Run((ISystem.Info info, Entity entity, [Source.Owned] in Minimap.Marker.Data marker, [Source.Owned] in Transform.Data transform, [Source.Owned, Optional] in Faction.Data faction, [Source.Owned, Optional] in Nameable.Data nameable) =>
 													{
-														var selected = row.Entity == ent_selected_spawn;
-														var is_selectable = false;
-														var is_visible = false;
-														var has_characters = false;
+														transform_copy = transform;
+														//nameable_copy = nameable;
+														marker_copy = marker;
 
-														var transform_copy = default(Transform.Data);
-														//var nameable_copy = default(Nameable.Data);
-														var color = selected ? Color32BGRA.White : new Color32BGRA(0xff9a7f7f);
-														var marker_copy = default(Minimap.Marker.Data);
-														//var alpha = 1.00f;
-
-														var faction_id_tmp = this.faction_id;
-
-														//var ok = false;
-
-														row.Run((ISystem.Info info, Entity entity, [Source.Owned] in Minimap.Marker.Data marker, [Source.Owned] in Transform.Data transform, [Source.Owned, Optional] in Faction.Data faction, [Source.Owned, Optional] in Nameable.Data nameable) =>
+														ref var spawn = ref entity.GetComponent<Spawn.Data>();
+														if (spawn.IsNotNull())
 														{
-															transform_copy = transform;
-															//nameable_copy = nameable;
-															marker_copy = marker;
-
-															ref var spawn = ref entity.GetComponent<Spawn.Data>();
-															if (spawn.IsNotNull())
+															if (is_visible = spawn.IsVisibleToFaction(faction_id_tmp, faction.id)) // (faction.id == faction_id_tmp.id || spawn.flags.HasAny(Spawn.Flags.Public)) || (faction_id_tmp.id == 0 && spawn.flags.HasAny(Spawn.Flags.Neutral_Only))) //((faction.id == 0 && spawn.flags.HasAny(Spawn.Flags.Public)) || faction.id == faction_id_tmp || (faction_id_tmp == 0 && spawn.flags.HasAny(Spawn.Flags.Neutral_Only))) && marker.flags.HasAll(Minimap.Marker.Flags.Spawner))
 															{
-																if (is_visible = spawn.IsVisibleToFaction(faction_id_tmp, faction.id)) // (faction.id == faction_id_tmp.id || spawn.flags.HasAny(Spawn.Flags.Public)) || (faction_id_tmp.id == 0 && spawn.flags.HasAny(Spawn.Flags.Neutral_Only))) //((faction.id == 0 && spawn.flags.HasAny(Spawn.Flags.Public)) || faction.id == faction_id_tmp || (faction_id_tmp == 0 && spawn.flags.HasAny(Spawn.Flags.Neutral_Only))) && marker.flags.HasAll(Minimap.Marker.Flags.Spawner))
+																if (faction.id.TryGetData(out var ref_faction))
 																{
-																	if (faction.id.TryGetData(out var ref_faction))
-																	{
-																		color = color.LumaBlend(ref_faction.value.color_a); // = Color32BGRA.Lerp(color, ref_faction.value.color_a, ref_faction.value.color_a.GetLuma());
-																	}
-
-																	//sprite.frame.X = 1;
-																	//ok = true;
-
-																	ref var dormitory = ref entity.GetComponent<Dormitory.Data>();
-																	if (dormitory.IsNotNull())
-																	{
-																		has_characters = dormitory.HasSpawnableCharacters(h_faction: faction_id_tmp, h_faction_spawn: faction.id, h_player: player_asset, spawn_flags: spawn.flags);
-
-																		//var dormitory_characters = dormitory.GetCharacterSpan(); //.characters.Slice(dormitory.characters_capacity);
-
-																		//var is_empty = dormitory_characters.GetFilledCount() == 0;
-																		//if (is_empty)
-																		//{
-																		//	alpha = 0.65f;
-																		//}
-																	}
-
-																	is_selectable = spawn.IsSelectableByFaction(faction_id_tmp, faction.id, has_characters, is_visible); // has_characters || faction.id == faction_id_tmp || (faction.id == 0 && spawn.flags.HasAny(Spawn.Flags.Public));
+																	color = color.LumaBlend(ref_faction.value.color_a); // = Color32BGRA.Lerp(color, ref_faction.value.color_a, ref_faction.value.color_a.GetLuma());
 																}
-																//else if (spawn.flags.HasAny(Spawn.Flags.Public))
-																//{
-																//	ok = true;
-																//	alpha = 0.65f;
-																//}
-															}
-														});
 
-														if (is_visible)
-														{
-															var alpha = has_characters ? 1.00f : 0.65f;
-															using (var node = map.DrawNode(marker_copy.sprite, transform_copy.GetInterpolatedPosition() + new Vector2(0, -3), color: (selected ? Color32BGRA.White : color).WithAlphaMult(alpha), color_hovered: selected ? Color32BGRA.White : Color32BGRA.Lerp(color, Color32BGRA.White, 0.50f).WithAlphaMult(alpha)))
-															{
-																//GUI.DrawTextCentered(nameable_copy.name, node.rect.GetPosition() + new Vector2(16, 0), piv layer: GUI.Layer.Window, font: GUI.Font.Superstar, size: 16);
+																//sprite.frame.X = 1;
+																//ok = true;
 
-																if (node.is_hovered && !selected)
+																ref var dormitory = ref entity.GetComponent<Dormitory.Data>();
+																if (dormitory.IsNotNull())
 																{
-																	if (is_selectable)
-																	{
-																		GUI.SetCursor(App.CursorType.Hand, 100);
+																	has_characters = dormitory.HasSpawnableCharacters(h_faction: faction_id_tmp, h_faction_spawn: faction.id, h_player: player_asset, spawn_flags: spawn.flags);
 
-																		if (GUI.GetMouse().GetKeyDown(Mouse.Key.Left))
-																		{
-																			//App.WriteLine("press");
-																			ent_selected_spawn_new = row.Entity;
-																		}
-																	}
+																	//var dormitory_characters = dormitory.GetCharacterSpan(); //.characters.Slice(dormitory.characters_capacity);
 
-																	using (GUI.Tooltip.New())
+																	//var is_empty = dormitory_characters.GetFilledCount() == 0;
+																	//if (is_empty)
+																	//{
+																	//	alpha = 0.65f;
+																	//}
+																}
+
+																is_selectable = spawn.IsSelectableByFaction(faction_id_tmp, faction.id, has_characters, is_visible); // has_characters || faction.id == faction_id_tmp || (faction.id == 0 && spawn.flags.HasAny(Spawn.Flags.Public));
+															}
+															//else if (spawn.flags.HasAny(Spawn.Flags.Public))
+															//{
+															//	ok = true;
+															//	alpha = 0.65f;
+															//}
+														}
+													});
+
+													if (is_visible)
+													{
+														var alpha = has_characters ? 1.00f : 0.65f;
+														using (var node = map.DrawNode(marker_copy.sprite, transform_copy.GetInterpolatedPosition() + new Vector2(0, -3), color: (selected ? Color32BGRA.White : color).WithAlphaMult(alpha), color_hovered: selected ? Color32BGRA.White : Color32BGRA.Lerp(color, Color32BGRA.White, 0.50f).WithAlphaMult(alpha)))
+														{
+															//GUI.DrawTextCentered(nameable_copy.name, node.rect.GetPosition() + new Vector2(16, 0), piv layer: GUI.Layer.Window, font: GUI.Font.Superstar, size: 16);
+
+															if (node.is_hovered && !selected)
+															{
+																if (is_selectable)
+																{
+																	GUI.SetCursor(App.CursorType.Hand, 100);
+
+																	if (GUI.GetMouse().GetKeyDown(Mouse.Key.Left))
 																	{
-																		//GUI.Title(nameable_copy.name, font: GUI.Font.Superstar, size: 16);
-																		GUI.Title(row.Entity.GetFullName(), font: GUI.Font.Superstar, size: 16);
+																		//App.WriteLine("press");
+																		ent_selected_spawn_new = row.Entity;
 																	}
+																}
+
+																using (GUI.Tooltip.New())
+																{
+																	//GUI.Title(nameable_copy.name, font: GUI.Font.Superstar, size: 16);
+																	GUI.Title(row.Entity.GetFullName(), font: GUI.Font.Superstar, size: 16);
 																}
 															}
 														}
@@ -244,6 +368,53 @@ namespace TC2.Conquest
 							}
 
 							GUI.SeparatorThick();
+
+							using (var group_top = GUI.Group.New(size: new(GUI.RmX, 48)))
+							{
+								var rm = new Vec2f(GUI.Rm);
+								var button_size = new Vec2f(32, rm.y);
+
+								if (GUI.DrawIconButton("spawn.prev"u8, GUI.tex_icons_widget.GetSprite(8, 16, 4, 8), size: button_size))
+								{
+									//var arg = (this.h_faction, player.name);
+
+									//var arg = (ent_spawn_current: ent_selected_spawn, pos_pivot: (Vec2f)spawn_info_current.pos.WithFallback(pos_camera), nearest_dist_sq: float.MaxValue, h_faction: h_faction, spawn_info: spawn_info_current);
+									var arg = (ent_spawn_current: ent_selected_spawn, pos_pivot: (Vec2f)spawn_info_current.pos.WithFallback(pos_camera), nearest_dist_sq: float.MaxValue, h_faction: h_faction, spawn_info: spawn_info_current);
+									var ret = region.TriggerSystem(Conquest.FetchNearestSpawn, ref arg);
+									App.WriteValue(ret);
+									App.WriteValue(arg.nearest_dist_sq);
+									App.WriteValue(arg.spawn_info.pos);
+									App.WriteValue(arg.spawn_info.ent_spawn);
+
+									ent_selected_spawn_new = arg.spawn_info.ent_spawn;
+								}
+
+								GUI.SameLine();
+
+								//GUI.DropdownInput(GUI.Dropdown.Begin()
+
+								using (var group_title = GUI.Group.New(size: rm - new Vec2f(button_size.x.x2(), 0.00f), padding: new(4, 0)))
+								{
+									group_title.DrawBackground(GUI.tex_window);
+
+									Utf8String title_text = (spawn_info_current.ent_spawn.IsValid() ? spawn_info_current.ent_spawn.GetFullName() : "Select a spawnpoint"u8);
+									//GUI.TitleCentered("Select a spawnpoint"u8, rect: group_title.GetInnerRect(), size: 32, pivot: new(0.50f, 0.50f));
+									GUI.TitleCentered(title_text, rect: group_title.GetInnerRect(), size: 32, pivot: new(0.50f, 0.50f));
+
+									//if (is_empty)
+									//{
+									//	GUI.TitleCentered("This spawnpoint is empty.", size: 16, pivot: new(1.00f, 0.50f), color: GUI.font_color_yellow, offset: new(0, -8));
+									//	GUI.TitleCentered("Select another one on the map!", size: 16, pivot: new(1.00f, 0.50f), color: GUI.font_color_yellow, offset: new(0, 8));
+									//}
+								}
+
+								GUI.SameLine();
+
+								if (GUI.DrawIconButton("spawn.next"u8, GUI.tex_icons_widget.GetSprite(8, 16, 5, 8), size: button_size))
+								{
+
+								}
+							}
 
 							if (ent_selected_spawn.IsAlive())
 							{
@@ -293,19 +464,19 @@ namespace TC2.Conquest
 
 								//var context = GUI.ItemContext.Begin();
 
-								using (var group_title = GUI.Group.New(size: new(GUI.RmX, 40), padding: new(4, 0)))
-								{
-									var spawn_name = ent_selected_spawn.GetFullName();
-									GUI.TitleCentered(spawn_name, size: 32, pivot: new(0.00f, 0.50f));
+								//using (var group_title = GUI.Group.New(size: new(GUI.RmX, 40), padding: new(4, 0)))
+								//{
+								//	var spawn_name = ent_selected_spawn.GetFullName();
+								//	GUI.TitleCentered(spawn_name, size: 32, pivot: new(0.00f, 0.50f));
 
-									//if (is_empty)
-									//{
-									//	GUI.TitleCentered("This spawnpoint is empty.", size: 16, pivot: new(1.00f, 0.50f), color: GUI.font_color_yellow, offset: new(0, -8));
-									//	GUI.TitleCentered("Select another one on the map!", size: 16, pivot: new(1.00f, 0.50f), color: GUI.font_color_yellow, offset: new(0, 8));
-									//}
-								}
+								//	//if (is_empty)
+								//	//{
+								//	//	GUI.TitleCentered("This spawnpoint is empty.", size: 16, pivot: new(1.00f, 0.50f), color: GUI.font_color_yellow, offset: new(0, -8));
+								//	//	GUI.TitleCentered("Select another one on the map!", size: 16, pivot: new(1.00f, 0.50f), color: GUI.font_color_yellow, offset: new(0, 8));
+								//	//}
+								//}
 
-								GUI.SeparatorThick();
+								//GUI.SeparatorThick();
 
 								using (GUI.Group.New(size: GUI.Rm with { X = 304 }, padding: new(0, 0)))
 								{
@@ -330,30 +501,28 @@ namespace TC2.Conquest
 
 												var h_character = characters[i];
 												using (GUI.ID<Conquest.RespawnGUI, Character.Data>.Push(h_character))
+												using (var group_row = GUI.Group.New(size: new(GUI.RmX, 40)))
 												{
-													using (var group_row = GUI.Group.New(size: new(GUI.RmX, 40)))
+													ref var character_data = ref h_character.GetData();
+
+													if (h_character && !h_selected_character_tmp)
 													{
-														ref var character_data = ref h_character.GetData();
-
-														if (h_character && !h_selected_character_tmp)
-														{
-															h_selected_character_tmp = h_character;
-															h_selected_character = h_character;
-														}
-
-														is_empty &= !h_character;
-														//var selectable = h_character.CanSpawnAsCharacter(faction_id, faction.id, spawn.flags); //  character_data.IsNotNull() && character_data.faction == faction_id;
-
-														Dormitory.DrawCharacterSmall(h_character);
-
-														var selected = h_selected_character_tmp && h_character == h_selected_character_tmp; // selected_index;
-														if (GUI.Selectable3("selectable"u8, group_row.GetOuterRect(), selected))
-														{
-															h_selected_character = h_character;
-														}
-
-														GUI.FocusableAsset(h_character);
+														h_selected_character_tmp = h_character;
+														h_selected_character = h_character;
 													}
+
+													is_empty &= !h_character;
+													//var selectable = h_character.CanSpawnAsCharacter(faction_id, faction.id, spawn.flags); //  character_data.IsNotNull() && character_data.faction == faction_id;
+
+													Dormitory.DrawCharacterSmall(h_character);
+
+													var selected = h_selected_character_tmp && h_character == h_selected_character_tmp; // selected_index;
+													if (GUI.Selectable3("selectable"u8, group_row.GetOuterRect(), selected))
+													{
+														h_selected_character = h_character;
+													}
+
+													GUI.FocusableAsset(h_character);
 												}
 											}
 										}
@@ -466,7 +635,7 @@ namespace TC2.Conquest
 									//{
 									if (is_empty)
 									{
-										if (GUI.DrawButton("No characters available."u8, size: new Vector2(GUI.RmX, 48), color: GUI.col_button_error, error: true))
+										if (GUI.DrawButton("No characters available."u8, size: new Vector2(GUI.RmX, 48), font_size: 24, color: GUI.col_button_error, error: true))
 										{
 
 										}
@@ -477,7 +646,7 @@ namespace TC2.Conquest
 										var is_selected_character_spawnable = h_selected_character_tmp.CanSpawnAsCharacter(h_faction: h_faction, h_faction_spawn: faction.id, h_player: player_asset, spawn_flags: spawn.flags);
 										if (is_selected_character_spawnable)
 										{
-											if (GUI.DrawButton("Spawn"u8, size: new Vector2(GUI.RmX, 48), color: GUI.col_button_ok))
+											if (GUI.DrawButton("Spawn"u8, size: new Vector2(GUI.RmX, 48), font_size: 24, color: GUI.col_button_ok))
 											{
 												var rpc = new Spawn.SpawnRPC()
 												{
@@ -503,7 +672,7 @@ namespace TC2.Conquest
 										}
 										else
 										{
-											if (GUI.DrawButton("Cannot spawn as this character."u8, size: new Vector2(GUI.RmX, 48), color: GUI.col_button_error, error: true))
+											if (GUI.DrawButton("Cannot spawn as this character."u8, size: new Vector2(GUI.RmX, 48), font_size: 24, color: GUI.col_button_error, error: true))
 											{
 
 											}
@@ -515,53 +684,80 @@ namespace TC2.Conquest
 							}
 							else
 							{
-								using (var group_title = GUI.Group.New(size: new(GUI.RmX, 40), padding: new(4, 0)))
-								{
-									GUI.TitleCentered("No Spawns Available"u8, size: 32, pivot: new(0.50f, 1.00f));
+								//using (var group_top = GUI.Group.New(size: new(GUI.RmX, 48)))
+								//{
+								//	var rm = new Vec2f(GUI.Rm);
+								//	var button_size = new Vec2f(32, rm.y);
 
-									//if (is_empty)
-									//{
-									//	GUI.TitleCentered("This spawnpoint is empty.", size: 16, pivot: new(1.00f, 0.50f), color: GUI.font_color_yellow, offset: new(0, -8));
-									//	GUI.TitleCentered("Select another one on the map!", size: 16, pivot: new(1.00f, 0.50f), color: GUI.font_color_yellow, offset: new(0, 8));
-									//}
-								}
+								//	if (GUI.DrawIconButton("spawn.prev"u8, GUI.tex_icons_widget.GetSprite(8, 16, 4, 8), size: button_size))
+								//	{
+								//		//var arg = (this.h_faction, player.name);
 
-								using (GUI.Group.New(size: GUI.Rm, padding: new(8)))
-								{
-									GUI.SeparatorThick();
+								//		var arg = (pos_pivot: (Vec2f)pos_camera, nearest_dist_sq: float.MaxValue, h_faction: h_faction, spawn_info: default(Conquest.SpawnInfo));
+								//		var ret = region.TriggerSystem(Conquest.FetchNearestSpawn, ref arg);
+								//		App.WriteValue(ret);
+								//		App.WriteValue(arg.nearest_dist_sq);
+								//	}
 
-									ref var faction_data = ref this.faction_id.GetData();
-									if (faction_data.IsNotNull())
-									{
-										using (GUI.Group.New(size: GUI.Rm, padding: new(8)))
-										{
-											GUI.Title("Your faction has no established presence in this region."u8, size: 20);
+								//	GUI.SameLine();
 
-											//if (GUI.DrawButton($"Deploy a Scout ({faction_data.scout_count} available)", size: new(300, 40), font_size: 20, color: GUI.col_button_yellow, enabled: faction_data.scout_count > 0))
-											//{
-											//	var rpc = new Conquest.DeployInfiltratorRPC()
-											//	{
-											//		h_character = 0
-											//	};
-											//	rpc.Send();
-											//}
-										}
-									}
-								}
+								//	//GUI.DropdownInput(GUI.Dropdown.Begin()
 
+								//	using (var group_title = GUI.Group.New(size: rm - new Vec2f(button_size.x.x2(), 0.00f), padding: new(4, 0)))
+								//	{
+								//		group_title.DrawBackground(GUI.tex_window);
+								//		GUI.TitleCentered("Select a spawnpoint"u8, rect: group_title.GetInnerRect(), size: 32, pivot: new(0.50f, 0.50f));
+
+								//		//if (is_empty)
+								//		//{
+								//		//	GUI.TitleCentered("This spawnpoint is empty.", size: 16, pivot: new(1.00f, 0.50f), color: GUI.font_color_yellow, offset: new(0, -8));
+								//		//	GUI.TitleCentered("Select another one on the map!", size: 16, pivot: new(1.00f, 0.50f), color: GUI.font_color_yellow, offset: new(0, 8));
+								//		//}
+								//	}
+
+								//	GUI.SameLine();
+
+								//	if (GUI.DrawIconButton("spawn.next"u8, GUI.tex_icons_widget.GetSprite(8, 16, 5, 8), size: button_size))
+								//	{
+
+								//	}
+								//}
+
+								//using (GUI.Group.New(size: GUI.Rm, padding: new(8)))
+								//{
+								//	GUI.SeparatorThick();
+
+								//	ref var faction_data = ref this.h_faction.GetData();
+								//	if (faction_data.IsNotNull())
+								//	{
+								//		using (GUI.Group.New(size: GUI.Rm, padding: new(8)))
+								//		{
+								//			//GUI.Title("Your faction has no established presence in this region."u8, size: 20);
+
+								//			//if (GUI.DrawButton($"Deploy a Scout ({faction_data.scout_count} available)", size: new(300, 40), font_size: 20, color: GUI.col_button_yellow, enabled: faction_data.scout_count > 0))
+								//			//{
+								//			//	var rpc = new Conquest.DeployInfiltratorRPC()
+								//			//	{
+								//			//		h_character = 0
+								//			//	};
+								//			//	rpc.Send();
+								//			//}
+								//		}
+								//	}
+								//}
 							}
 
-							if (ent_selected_spawn_new.HasValue && ent_selected_spawn_new != ent_selected_spawn)
-							{
-								var rpc = new RespawnExt.SetSpawnRPC()
-								{
-									ent_spawn = ent_selected_spawn_new.Value
-								};
-								rpc.Send(Client.GetEntity());
+							//if (ent_selected_spawn_new.HasValue && ent_selected_spawn_new.Value != ent_selected_spawn)
+							//{
+							//	var rpc = new RespawnExt.SetSpawnRPC()
+							//	{
+							//		ent_spawn = ent_selected_spawn_new.Value
+							//	};
+							//	rpc.Send(Client.GetEntity());
 
-								//ent_selected_spawn = ent_selected_spawn_new.Value;
-								ent_selected_spawn_new = default;
-							}
+							//	//ent_selected_spawn = ent_selected_spawn_new.Value;
+							//	ent_selected_spawn_new = default;
+							//}
 						}
 					}
 				}
@@ -584,7 +780,7 @@ namespace TC2.Conquest
 
 					//App.WriteLine(faction.id);
 					gui.respawn = respawn;
-					gui.faction_id = player.faction_id;
+					gui.h_faction = player.faction_id;
 
 					gui.Submit();
 				}

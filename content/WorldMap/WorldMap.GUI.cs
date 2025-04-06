@@ -143,11 +143,11 @@ namespace TC2.Conquest
 						var mat_l2c2 = Maths.TRS3x2(rect.GetPosition(new Vector2(0.50f)), rotation, new Vector2(1));
 						Matrix3x2.Invert(mat_l2c2, out var mat_c2l2);
 
-						region.GetWorldToCanvasMatrix() = mat_l2c;
-						region.GetCanvasToWorldMatrix() = mat_c2l;
+						region.SetWorldToCanvasMatrix(mat_l2c);
+						region.SetCanvasToWorldMatrix(mat_c2l);
 
-						region.GetWorldToCanvasScale() = zoom * 0.50f;
-						region.GetCanvasToWorldScale() = 1.00f / region.GetWorldToCanvasScale();
+						region.SetWorldToCanvasScale(zoom * 0.50f);
+						region.SetCanvasToWorldScale(1.00f / region.GetWorldToCanvasScale());
 
 						var snap_delta_canvas = snap_delta * zoom;
 
