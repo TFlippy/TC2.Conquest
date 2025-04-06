@@ -15,27 +15,100 @@ namespace TC2.Conquest
 			}
 		}
 
+		public ref struct FetchNearestSpawnArgs
+		{
+			[Flags]
+			public enum Flags: byte
+			{
+				None = 0,
+			}
+
+			public enum SearchType: byte
+			{
+				Nearest = 0,
+
+				Left,
+				Right
+			}
+
+			public Entity ent_selected_spawn;
+
+			public Vec2f pos_pivot;
+			public float nearest_dist_sq;
+			public float unused;
+
+			public IFaction.Handle h_faction;
+			public ICharacter.Handle h_character;
+
+			public FetchNearestSpawnArgs.SearchType search_type;
+			public FetchNearestSpawnArgs.Flags flags;
+
+			public SpawnInfo spawn_info;
+
+			public FetchNearestSpawnArgs(Entity ent_selected_spawn, Vec2f pos_pivot, IFaction.Handle h_faction, ICharacter.Handle h_character, SearchType search_type, Flags flags)
+			{
+				this.ent_selected_spawn = ent_selected_spawn;
+				this.pos_pivot = pos_pivot;
+				this.nearest_dist_sq = float.MaxValue;
+				this.h_faction = h_faction;
+				this.h_character = h_character;
+				this.search_type = search_type;
+				this.flags = flags;
+			}
+		}
+
 		[ISystem.Manual(ISystem.Mode.Single, ISystem.Scope.Region | ISystem.Scope.Global)]
-		public static void FetchNearestSpawn(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity, 
-		[ISystem.Parameter] ref (Entity ent_spawn_current, Vec2f pos_pivot, float nearest_dist_sq, IFaction.Handle h_faction, SpawnInfo spawn_info) arg,
-		[Source.Owned] in Spawn.Data spawn, [Source.Owned] in Transform.Data transform, 
+		public static void FetchNearestSpawn(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity,
+		[ISystem.Parameter] ref FetchNearestSpawnArgs args,
+		[Source.Owned] in Spawn.Data spawn, [Source.Owned] in Transform.Data transform,
 		[Source.Owned, Optional(true)] ref Dormitory.Data dormitory, [Source.Owned, Optional] in Faction.Data faction)
 		{
-			if (arg.IsNotNull())
+			if (args.IsNotNull())
 			{
-				App.WriteLine($"{entity} vs {arg.spawn_info.ent_spawn}");
-				if (entity != arg.spawn_info.ent_spawn) // && spawn.IsVisibleToFaction(h_faction: arg.h_faction, h_faction_spawn: faction.id))
+				//App.WriteLine($"{entity} vs {args.ent_selected_spawn}; {args.nearest_dist_sq}; {args.spawn_info.ent_spawn}");
+				if (entity != args.ent_selected_spawn && spawn.IsVisibleToFaction(h_faction: args.h_faction, h_faction_spawn: faction.id))
 				{
-					var dist = Maths.GetDistanceSq(transform.position, arg.pos_pivot);
-					if (dist < arg.nearest_dist_sq)
-					{
-						App.WriteLine(entity.GetFullName());
+					var pos = (Vec2f)transform.position;
+					//App.WriteLine($"- {pos} vs {args.pos_pivot}");
 
-						arg.nearest_dist_sq = dist;
-						arg.spawn_info = new SpawnInfo()
+					float dist;
+					switch (args.search_type)
+					{
+						default:
+						case FetchNearestSpawnArgs.SearchType.Nearest:
+						{
+							//dist = Maths.GetDistanceSq(pos, args.pos_pivot);
+						}
+						break;
+
+						case FetchNearestSpawnArgs.SearchType.Left:
+						{
+							if (pos.x > args.pos_pivot.x) return;
+							//dist = Maths.GetDistanceSq(pos, args.pos_pivot);
+						}
+						break;
+
+						case FetchNearestSpawnArgs.SearchType.Right:
+						{
+							if (pos.x < args.pos_pivot.x) return;
+							//dist = Maths.GetDistanceSq(pos, args.pos_pivot);
+						}
+						break;
+					}
+
+					//App.WriteLine($"- {pos} vs {args.pos_pivot}");
+
+
+					dist = Maths.GetDistanceSq(pos, args.pos_pivot);
+					if (dist < args.nearest_dist_sq)
+					{
+						//App.WriteLine(entity.GetFullName());
+
+						args.nearest_dist_sq = dist;
+						args.spawn_info = new SpawnInfo()
 						{
 							ent_spawn = entity,
-							pos = transform.position,
+							pos = pos,
 
 							flags = SpawnInfo.Flags.None,
 							h_faction = faction.id,
@@ -56,7 +129,7 @@ namespace TC2.Conquest
 		{
 			if (arg.IsNotNull())
 			{
-				
+
 			}
 			else
 			{
@@ -85,6 +158,7 @@ namespace TC2.Conquest
 			public IFaction.Handle h_faction;
 
 		}
+
 
 #if CLIENT
 		[Shitcode]
@@ -155,8 +229,24 @@ namespace TC2.Conquest
 						var random = XorRandom.New(true);
 						var pos_camera = (Vec2f)Camera.position;
 
+						var spawn_info_current = selected_spawn_info_cached;
+						if (spawn_info_current.ent_spawn.TrySet(this.respawn.ent_selected_spawn))
+						{
+							//spawn_info_current.ent_spawn = this.respawn.ent_selected_spawn;
+						}
 
-						var spawn_info_current = selected_spawn_info_cached; // new SpawnInfo();
+						if (spawn_info_current.ent_spawn.IsAlive())
+						{
+
+						}
+
+						if (spawn_info_current.ent_spawn == 0)
+						{
+							spawn_info_current.ent_spawn = this.respawn.ent_selected_spawn;
+							spawn_info_current.pos = pos_camera;
+						}
+
+						// new SpawnInfo();
 						//spawn_info_current.ent_spawn = ent_selected_spawn;
 
 						//using (var group_title = GUI.Group.New(size: new(GUI.RmX, 40), padding: new(4, 0)))
@@ -274,7 +364,7 @@ namespace TC2.Conquest
 
 												foreach (ref var row in region.IterateQuery<Minimap.GetMarkersQuery>())
 												{
-													var selected = row.Entity == ent_selected_spawn;
+													var selected = row.Entity == spawn_info_current.ent_spawn;
 													var is_selectable = false;
 													var is_visible = false;
 													var has_characters = false;
@@ -347,8 +437,14 @@ namespace TC2.Conquest
 
 																	if (GUI.GetMouse().GetKeyDown(Mouse.Key.Left))
 																	{
+																		var rpc = new RespawnExt.SetSpawnRPC()
+																		{
+																			ent_spawn = row.Entity
+																		};
+																		rpc.Send(this.ent_respawn);
+
 																		//App.WriteLine("press");
-																		ent_selected_spawn_new = row.Entity;
+																		//ent_selected_spawn_new = row.Entity;
 																	}
 																}
 
@@ -376,17 +472,24 @@ namespace TC2.Conquest
 
 								if (GUI.DrawIconButton("spawn.prev"u8, GUI.tex_icons_widget.GetSprite(8, 16, 4, 8), size: button_size))
 								{
-									//var arg = (this.h_faction, player.name);
+									scoped var args = new FetchNearestSpawnArgs(ent_selected_spawn: this.respawn.ent_selected_spawn, pos_pivot: pos_camera,
+									h_faction: h_faction, h_character: h_selected_character,
+									search_type: FetchNearestSpawnArgs.SearchType.Left,
+									flags: FetchNearestSpawnArgs.Flags.None);
 
-									//var arg = (ent_spawn_current: ent_selected_spawn, pos_pivot: (Vec2f)spawn_info_current.pos.WithFallback(pos_camera), nearest_dist_sq: float.MaxValue, h_faction: h_faction, spawn_info: spawn_info_current);
-									var arg = (ent_spawn_current: ent_selected_spawn, pos_pivot: (Vec2f)spawn_info_current.pos.WithFallback(pos_camera), nearest_dist_sq: float.MaxValue, h_faction: h_faction, spawn_info: spawn_info_current);
-									var ret = region.TriggerSystem(Conquest.FetchNearestSpawn, ref arg);
-									App.WriteValue(ret);
-									App.WriteValue(arg.nearest_dist_sq);
-									App.WriteValue(arg.spawn_info.pos);
-									App.WriteValue(arg.spawn_info.ent_spawn);
+									var ret = region.TriggerSystem(Conquest.FetchNearestSpawn, ref args);
 
-									ent_selected_spawn_new = arg.spawn_info.ent_spawn;
+									App.WriteLine(args.spawn_info.ent_spawn);
+									if (args.spawn_info.ent_spawn != 0)
+									{
+										selected_spawn_info_cached = args.spawn_info;
+
+										var rpc = new RespawnExt.SetSpawnRPC()
+										{
+											ent_spawn = args.spawn_info.ent_spawn
+										};
+										rpc.Send(this.ent_respawn);
+									}
 								}
 
 								GUI.SameLine();
@@ -412,19 +515,36 @@ namespace TC2.Conquest
 
 								if (GUI.DrawIconButton("spawn.next"u8, GUI.tex_icons_widget.GetSprite(8, 16, 5, 8), size: button_size))
 								{
+									scoped var args = new FetchNearestSpawnArgs(ent_selected_spawn: this.respawn.ent_selected_spawn, pos_pivot: pos_camera,
+									h_faction: h_faction, h_character: h_selected_character,
+									search_type: FetchNearestSpawnArgs.SearchType.Right,
+									flags: FetchNearestSpawnArgs.Flags.None);
 
+									var ret = region.TriggerSystem(Conquest.FetchNearestSpawn, ref args);
+
+									App.WriteLine(args.spawn_info.ent_spawn);
+									if (args.spawn_info.ent_spawn != 0)
+									{
+										selected_spawn_info_cached = args.spawn_info;
+
+										var rpc = new RespawnExt.SetSpawnRPC()
+										{
+											ent_spawn = args.spawn_info.ent_spawn
+										};
+										rpc.Send(this.ent_respawn);
+									}
 								}
 							}
 
-							if (ent_selected_spawn.IsAlive())
+							if (spawn_info_current.ent_spawn.IsAlive())
 							{
 								var context = GUI.ItemContext.Begin(is_readonly: true);
 								var available_items = Span<Shipment.Item>.Empty;
 
-								ref var faction = ref ent_selected_spawn.GetComponent<Faction.Data>();
-								ref var spawn = ref ent_selected_spawn.GetComponent<Spawn.Data>();
+								ref var faction = ref spawn_info_current.ent_spawn.GetComponent<Faction.Data>();
+								ref var spawn = ref spawn_info_current.ent_spawn.GetComponent<Spawn.Data>();
 
-								var oc_shipment = ent_selected_spawn.GetComponentWithOwner<Shipment.Data>(Relation.Type.Instance);
+								var oc_shipment = spawn_info_current.ent_spawn.GetComponentWithOwner<Shipment.Data>(Relation.Type.Instance);
 								if (oc_shipment.IsValid() && oc_shipment.data.flags.HasAnyExcept(Shipment.Flags.Allow_Withdraw, Shipment.Flags.No_GUI | Shipment.Flags.Staging | Shipment.Flags.Locked))
 								{
 									available_items = oc_shipment.data.items.AsSpan();
@@ -434,7 +554,7 @@ namespace TC2.Conquest
 
 								var h_selected_character_tmp = h_selected_character;
 
-								ref var dormitory = ref ent_selected_spawn.GetComponent<Dormitory.Data>();
+								ref var dormitory = ref spawn_info_current.ent_spawn.GetComponent<Dormitory.Data>();
 								if (dormitory.IsNotNull())
 								{
 									var characters = dormitory.GetCharacterSpan();
@@ -444,7 +564,7 @@ namespace TC2.Conquest
 									}
 								}
 
-								ref var armory = ref ent_selected_spawn.GetComponent<Armory.Data>();
+								ref var armory = ref spawn_info_current.ent_spawn.GetComponent<Armory.Data>();
 								if (armory.IsNotNull())
 								{
 									armory.inv_storage.TryGetHandle(out h_inventory);
@@ -460,7 +580,7 @@ namespace TC2.Conquest
 								//}
 
 								//Crafting.Context.New(ref region, ent_selected_spawn, ent_selected_spawn, out var crafting_context, inventory: h_inventory, shipment: oc_shipment, search_radius: 0.00f, h_faction: this.faction_id);
-								Crafting.Context.NewFromSelf(ref region.AsCommon(), ent_selected_spawn, out var crafting_context, search_radius: 0.00f);
+								Crafting.Context.NewFromSelf(ref region.AsCommon(), spawn_info_current.ent_spawn, out var crafting_context, search_radius: 0.00f);
 
 								//var context = GUI.ItemContext.Begin();
 
@@ -548,7 +668,7 @@ namespace TC2.Conquest
 											{
 												using (GUI.Group.New(size: GUI.Rm))
 												{
-													GUI.DrawShipment(ref context, ent_selected_spawn, ref oc_shipment.data, slot_size: new(96, 48));
+													GUI.DrawShipment(ref context, spawn_info_current.ent_spawn, ref oc_shipment.data, slot_size: new(96, 48));
 												}
 											}
 										}
@@ -661,7 +781,7 @@ namespace TC2.Conquest
 												}
 
 												//rpc.Send(ent_selected_spawn);
-												rpc.Send(ent_selected_spawn);
+												rpc.Send(spawn_info_current.ent_spawn);
 												//AsTask(ent_selected_spawn).ContinueWith((result) =>
 												//{
 												//	//App.WriteLine(result.out_ent_spawned);
