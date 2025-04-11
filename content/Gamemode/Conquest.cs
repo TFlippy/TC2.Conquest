@@ -198,7 +198,7 @@ namespace TC2.Conquest
 				//ref var local_character_data = ref Client.GetCharacter(out var local_character_asset);
 
 				var window_pos = (GUI.CanvasSize * new Vector2(0.40f, 0.00f)) + new Vector2(0, 64);
-				using (var window = GUI.Window.Standalone("Scoreboard"u8, position: alive ? null : window_pos, size: new Vector2(500, 400), pivot: alive ? new Vector2(0.50f, 0.00f) : new(1.00f, 0.00f), flags: GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.No_Click_Focus))
+				using (var window = GUI.Window.Standalone("Scoreboard"u8, position: alive ? null : window_pos, size: new Vector2(380, 0), pivot: alive ? new Vector2(0.50f, 0.00f) : new(1.00f, 0.00f), flags: GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.No_Click_Focus))
 				{
 					this.StoreCurrentWindowTypeID();
 					if (window.show)
@@ -212,7 +212,7 @@ namespace TC2.Conquest
 							GUI.DrawWindowBackground(GUI.tex_scoreboard_bg);
 						}
 
-						using (GUI.Group.New(size: GUI.GetAvailableSize(), padding: new(14, 12)))
+						using (GUI.Group.New(size: new(GUI.RmX, 0), padding: new(14, 12)))
 						{
 							using (GUI.Group.New(size: new Vector2(GUI.RmX, 32)))
 							{
@@ -239,9 +239,9 @@ namespace TC2.Conquest
 
 							GUI.NewLine(4);
 
-							using (GUI.Group.New(size: GUI.Rm, padding: new Vector2(4, 4)))
+							using (GUI.Group.New(size: new(GUI.RmX, 0), padding: new Vector2(4, 4)))
 							{
-								using (var table = GUI.Table.New("Players"u8, 3, size: new Vector2(0, GUI.RmY)))
+								using (var table = GUI.Table.New("Players"u8, 3, size: new Vector2(GUI.RmX, 0)))
 								{
 									if (table.show)
 									{
