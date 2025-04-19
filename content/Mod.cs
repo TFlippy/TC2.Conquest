@@ -100,7 +100,13 @@ namespace TC2.Conquest
 				//flags |= Sidebar.Widget.Flags.Resizable;
 			}
 
-			using (var widget = Sidebar.Widget.New("menu.worldmap", "World Map", new Sprite(GUI.tex_icons_widget, 16, 16, 9, 1), size: override_size ?? new Vector2(600, 700), override_pos: override_pos, order: -10.00f, flags: flags))
+			using (var widget = Sidebar.Widget.New(identifier: "menu.worldmap",
+			name: "World Map",
+			icon: new Sprite(GUI.tex_icons_widget, 16, 16, 9, 1),
+			size: override_size ?? new Vector2(600, 700),
+			override_pos: override_pos,
+			order: -10.00f,
+			flags: flags))
 			{
 				ref readonly var kb = ref Control.GetKeyboard();
 				if (kb.GetKeyDown(Keyboard.Key.M) || GUI.GameMenu.widget_toggle_open.HasValue)

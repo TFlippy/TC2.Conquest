@@ -7,6 +7,13 @@ namespace TC2.Conquest
 {
 	public static partial class WorldMap
 	{
+		//public enum Context: uint
+		//{
+		//	Undefined,
+
+
+		//}
+
 		public static FrozenDictionary<Road.Segment, int> road_segment_to_junction_index;
 		public static Road.Junction[] road_junctions;
 
@@ -18,6 +25,8 @@ namespace TC2.Conquest
 
 		public static Entity interacted_entity;
 		public static Entity interacted_entity_cached;
+
+		public static Entity ent_context_current;
 
 		public static readonly Dictionary<ILocation.Handle, Road.Segment> location_to_road = new();
 		public static readonly Dictionary<ILocation.Handle, Road.Segment> location_to_rail = new();
