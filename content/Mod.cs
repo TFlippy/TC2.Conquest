@@ -86,11 +86,11 @@ namespace TC2.Conquest
 
 			if (!has_region)
 			{
-				flags |= Sidebar.Widget.Flags.Force_Open | Sidebar.Widget.Flags.Hide_Icon | Sidebar.Widget.Flags.Hide_Title | Sidebar.Widget.Flags.No_Background;
+				flags |= Sidebar.Widget.Flags.Force_Open | Sidebar.Widget.Flags.Hide_Icon | Sidebar.Widget.Flags.Hide_Title | Sidebar.Widget.Flags.No_Background | Sidebar.Widget.Flags.No_Move | Sidebar.Widget.Flags.No_Collapse;
 				//rect_window = rect_canvas.Pad(128, 32, 24, 24 + 32).Constrain(rect_window); //.Pad(120, 40, 120, 120);
 				//rect_window = rect_canvas.Pad(32, 32, 24, 24 + 32).Constrain(rect_window); //.Pad(120, 40, 120, 120);
 				//rect_window = rect_canvas.Pad(24, -32, 24, 24 + 32).Constrain(rect_window.Scale(2)); //.Pad(120, 40, 120, 120);
-				rect_window = rect_canvas.Pad(0, -32, 0, 32).Constrain(rect_window.Scale(2)); //.Pad(120, 40, 120, 120);
+				rect_window = rect_canvas.Pad(0, -40, 0, 52).Constrain(rect_window.Scale(2)); //.Pad(120, 40, 120, 120);
 
 				override_size = rect_window.GetSize();
 				override_pos = rect_window.GetPosition(new(0.50f, 0.00f));

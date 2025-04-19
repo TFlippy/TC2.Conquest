@@ -81,6 +81,8 @@ namespace TC2.Conquest
 			ref var region = ref world.GetGlobalRegion();
 			if (region.IsNull()) return;
 
+			var has_region = Client.HasRegion() || is_loading;
+
 			last_open_frame = App.CurrentFrame;
 
 			WorldMap.hovered_entity = default;
@@ -131,6 +133,7 @@ namespace TC2.Conquest
 					}
 
 					var rect_center = rect.GetPosition();
+					//GUI.DrawRect(rect, color: GUI.col_button_yellow, layer: GUI.Layer.Foreground);
 
 					using (GUI.Clip.Push(rect))
 					{
@@ -896,6 +899,11 @@ namespace TC2.Conquest
 							GUI.SetHoveredID("worldmap"u8);
 						}
 					}
+
+					if (has_region)
+					{
+						GUI.DrawBackground(GUI.tex_frame, rect: rect, padding: new(6));
+					}
 				}
 
 				#region Interactions
@@ -1030,8 +1038,16 @@ namespace TC2.Conquest
 					{
 						var sub_size = interactable.window_size;
 						//using (var window_sub = window.BeginChildWindow("worldmap.side.right.sub", GUI.AlignX.Left, GUI.AlignY.Top, pivot: new(1.00f, 0.00f), size: sub_size + new Vector2(16, 16), padding: new(8, 8), open: WorldMap.selected_entity.IsValid(), tex_bg: GUI.tex_window_popup_b))
-						using (var window = GUI.Window.Standalone("worldmap.interact"u8, pivot: new(0.50f, 0.00f), position: new(GUI.CanvasSize.X * 0.50f, 32), force_position: false, size: sub_size + new Vector2(16, 16), size_min: interactable.window_size_min, padding: new(8, 8)))
+						using (var window = GUI.Window.Standalone(identifier: "worldmap.interact"u8,
+						pivot: new(0.50f, 0.00f),
+						position: new(GUI.CanvasSize.X * 0.50f, 32),
+						force_position: false,
+						size: sub_size + new Vector2(16, 16),
+						size_min: interactable.window_size_min,
+						padding: new(4, 4)))
 						{
+							//var interacted_entity_cached = WorldMap.interacted_entity;
+
 							if (window.appearing)
 							{
 								//App.WriteLine("appearing");
@@ -1040,7 +1056,8 @@ namespace TC2.Conquest
 
 							if (window.show)
 							{
-								GUI.DrawWindowBackground(GUI.tex_window_popup_b, padding: new(4), color: GUI.col_default);
+								//GUI.DrawWindowBackground(GUI.tex_window_popup_b, padding: new(4), color: GUI.col_default);
+								GUI.DrawWindowBackground(GUI.tex_window, padding: new(4), color: null); //, color: GUI.col_default);
 
 								using (var group_row = GUI.Group.New(size: new(GUI.RmX, 40)))
 								{
@@ -1104,6 +1121,32 @@ namespace TC2.Conquest
 
 											//GUI.Text("hi");
 											//GUI.DrawInventoryDock(this.vehicle.inventory_type, GUI.Rm);
+										}
+									}
+								}
+
+								if (false && interactable.flags.HasNone(Interactable.Flags.No_Tab))
+								{
+									//using (var window_side = window.BeginChildWindow("worldmap.interact.children"u8, GUI.AlignX.Center, GUI.AlignY.Bottom, size: new(interactable.window_size.X, 32), pivot: new(0.50f, 0), offset: new(0, -8), open: true))
+									using (var window_side = window.BeginChildWindow("worldmap.interact.children"u8, GUI.AlignX.Center, GUI.AlignY.Top, size: new(interactable.window_size.X, 32), pivot: new(0.50f, 0), offset: new(0, -32), open: true))
+									{
+										if (window_side.show)
+										{
+											Span<Entity> span_children = FixedArray.CreateSpan16NoInit<Entity>(out var buffer);
+											WorldMap.interacted_entity_cached.GetChildren(ref span_children, Relation.Type.Child);
+
+											var ent_parent = WorldMap.interacted_entity_cached.GetParent(relation: Relation.Type.Child);
+											if (ent_parent.IsAlive())
+											{
+												GUI.DrawTab3(ent_parent.GetName(), size: new(64, 32), index: ent_parent, selected_index: ref interacted_entity, inner: true);
+												GUI.SameLine();
+											}
+
+											foreach (var ent_child in span_children)
+											{
+												GUI.SameLine();
+												GUI.DrawTab3(ent_child.GetName(), size: new(64, 32), index: ent_child, selected_index: ref interacted_entity, inner: true);
+											}
 										}
 									}
 								}
@@ -2171,141 +2214,139 @@ namespace TC2.Conquest
 									GUI.DrawCircle(region.WorldToCanvas(transform.position), 0.50f * region.GetWorldToCanvasScale(), color: Color32BGRA.Green.WithAlpha(200), layer: GUI.Layer.Foreground);
 
 									using (GUI.ID.Push(ent_unit))
+									using (var group = GUI.Group.New(size: new(slot_w, slot_h)))
 									{
-										using (var group = GUI.Group.New(size: new(slot_w, slot_h)))
-										{
-											ref var unit = ref ent_unit.GetComponent<Unit.Data>();
+										ref var unit = ref ent_unit.GetComponent<Unit.Data>();
 
-											using (var group_button = GUI.Group.New(size: new(GUI.RmX, button_h)))
+										using (var group_button = GUI.Group.New(size: new(GUI.RmX, button_h)))
+										{
+											if (unit.IsNotNull())
 											{
-												if (unit.IsNotNull())
+												if (has_parent)
 												{
-													if (has_parent)
+													var can_exit = true;
+													if (ent_parent.TryGetAsset(out ILocation.Definition location_asset) && location_asset.data.flags.HasAny(ILocation.Flags.Region))
 													{
-														var can_exit = true;
-														if (ent_parent.TryGetAsset(out ILocation.Definition location_asset) && location_asset.data.flags.HasAny(ILocation.Flags.Region))
+														if (GUI.DrawButton("Region"u8, size: GUI.Rm, color: GUI.col_button, enabled: true))
 														{
-															if (GUI.DrawButton("Region"u8, size: GUI.Rm, color: GUI.col_button, enabled: true))
-															{
-																WorldMap.FocusLocation(location_asset);
-																//var rpc = new Unit.ActionRPC();
-																//rpc.action = Unit.Action.Exit;
-																//rpc.ent_target = ent_parent;
-																//rpc.pos_target = wpos_mouse_snapped + ((transform.position - wpos_mouse_snapped).GetNormalized(out var dist) * Maths.Min((unit_index++) * 0.30f, dist * 0.50f));
-																//rpc.Send(ent_unit);
-															}
+															WorldMap.FocusLocation(location_asset);
+															//var rpc = new Unit.ActionRPC();
+															//rpc.action = Unit.Action.Exit;
+															//rpc.ent_target = ent_parent;
+															//rpc.pos_target = wpos_mouse_snapped + ((transform.position - wpos_mouse_snapped).GetNormalized(out var dist) * Maths.Min((unit_index++) * 0.30f, dist * 0.50f));
+															//rpc.Send(ent_unit);
 														}
-														else
+													}
+													else
+													{
+														if (GUI.DrawButton("Exit"u8, size: GUI.Rm, color: GUI.col_remove, enabled: can_exit))
 														{
-															if (GUI.DrawButton("Exit"u8, size: GUI.Rm, color: GUI.col_remove, enabled: can_exit))
+															var rpc = new Unit.ActionRPC();
+															rpc.action = Unit.Action.Exit;
+															rpc.ent_target = ent_parent;
+															rpc.pos_target = wpos_mouse_snapped + ((transform.position - wpos_mouse_snapped).GetNormalized(out var dist) * Maths.Min((unit_index++) * 0.30f, dist * 0.50f));
+															rpc.Send(ent_unit);
+														}
+													}
+												}
+												else
+												{
+													//if (GUI.DrawButton("Enter", size: GUI.Rm, color: GUI.col_add))
+													//{
+
+													//}
+												}
+											}
+										}
+
+										if (unit.IsNotNull())
+										{
+											if (!has_parent)
+											{
+												GUI.DrawLine(region.WorldToCanvas(transform.position), region.WorldToCanvas(unit.pos_next), Color32BGRA.Green.WithAlpha(80), thickness: 0.125f * canvas_scale * 0.25f, GUI.Layer.Foreground);
+
+												GUI.DrawCircleFilled(region.WorldToCanvas(unit.pos_next), 0.1250f * canvas_scale * 0.50f, Color32BGRA.Green.WithAlpha(140), segments: 4, layer: GUI.Layer.Foreground);
+												GUI.DrawCircleFilled(region.WorldToCanvas(unit.pos_target), 0.1250f * canvas_scale * 0.50f, Color32BGRA.Green.WithAlpha(140), segments: 4, layer: GUI.Layer.Foreground);
+
+												if (WorldMap.IsHovered())
+												{
+													GUI.DrawLine(region.WorldToCanvas(transform.position), region.WorldToCanvas(wpos_mouse_snapped), Color32BGRA.Yellow.WithAlpha(80), thickness: 0.125f * canvas_scale * 0.25f, GUI.Layer.Foreground);
+													GUI.DrawRectFilled(region.WorldToCanvas(AABB.Centered(wpos_mouse_snapped, new Vector2(0.125f * 0.50f))), Color32BGRA.Yellow.WithAlpha(140), GUI.Layer.Foreground);
+												}
+											}
+										}
+
+										var is_selected = WorldMap.interacted_entity == ent_unit;
+
+										using (var group_icon = GUI.Group.New(size: new(GUI.RmX)))
+										{
+											group_icon.DrawBackground(GUI.tex_frame);
+
+											ref var marker = ref ent_unit.GetComponent<Marker.Data>();
+											if (marker.IsNotNull())
+											{
+												GUI.DrawSpriteCentered(marker.icon, group_icon.GetInnerRect(), layer: GUI.Layer.Window, scale: 3.00f);
+											}
+
+											if (GUI.Selectable3(ent_unit.GetShortID(), group_icon.GetOuterRect(), selected: is_selected))
+											{
+												//App.WriteLine("click");
+												//WorldMap.FocusEntity(ent_unit);
+
+												WorldMap.interacted_entity.Toggle(ent_unit, !is_selected);
+												if (!is_selected) WorldMap.FocusEntity(ent_unit);
+											}
+										}
+
+										if (WorldMap.IsHovered())
+										{
+											if (unit.IsNotNull() && !ent_parent.IsAsset<ILocation.Handle>())
+											{
+												var rpc = new Unit.ActionRPC();
+												rpc.action = Unit.Action.Move;
+
+												var ent_hovered = WorldMap.hovered_entity;
+												if (ent_hovered != ent_unit)
+												{
+													if (ent_hovered.IsAlive())
+													{
+														ref var enterable = ref ent_hovered.GetComponent<Enterable.Data>();
+														if (enterable.IsNotNull() && enterable.mask_units.Has(unit.type))
+														{
+															if (has_parent && ent_hovered == ent_parent)
 															{
-																var rpc = new Unit.ActionRPC();
+																GUI.SetCursor(App.CursorType.Remove, 200);
 																rpc.action = Unit.Action.Exit;
-																rpc.ent_target = ent_parent;
-																rpc.pos_target = wpos_mouse_snapped + ((transform.position - wpos_mouse_snapped).GetNormalized(out var dist) * Maths.Min((unit_index++) * 0.30f, dist * 0.50f));
-																rpc.Send(ent_unit);
+																rpc.ent_target = ent_hovered;
+															}
+															else
+															{
+																GUI.SetCursor(App.CursorType.Add, 200);
+																rpc.action = Unit.Action.Enter;
+																rpc.ent_target = ent_hovered;
 															}
 														}
 													}
 													else
 													{
-														//if (GUI.DrawButton("Enter", size: GUI.Rm, color: GUI.col_add))
-														//{
-
-														//}
-													}
-												}
-											}
-
-											if (unit.IsNotNull())
-											{
-												if (!has_parent)
-												{
-													GUI.DrawLine(region.WorldToCanvas(transform.position), region.WorldToCanvas(unit.pos_next), Color32BGRA.Green.WithAlpha(80), thickness: 0.125f * canvas_scale * 0.25f, GUI.Layer.Foreground);
-
-													GUI.DrawCircleFilled(region.WorldToCanvas(unit.pos_next), 0.1250f * canvas_scale * 0.50f, Color32BGRA.Green.WithAlpha(140), segments: 4, layer: GUI.Layer.Foreground);
-													GUI.DrawCircleFilled(region.WorldToCanvas(unit.pos_target), 0.1250f * canvas_scale * 0.50f, Color32BGRA.Green.WithAlpha(140), segments: 4, layer: GUI.Layer.Foreground);
-
-													if (WorldMap.IsHovered())
-													{
-														GUI.DrawLine(region.WorldToCanvas(transform.position), region.WorldToCanvas(wpos_mouse_snapped), Color32BGRA.Yellow.WithAlpha(80), thickness: 0.125f * canvas_scale * 0.25f, GUI.Layer.Foreground);
-														GUI.DrawRectFilled(region.WorldToCanvas(AABB.Centered(wpos_mouse_snapped, new Vector2(0.125f * 0.50f))), Color32BGRA.Yellow.WithAlpha(140), GUI.Layer.Foreground);
-													}
-												}
-											}
-
-											var is_selected = WorldMap.interacted_entity == ent_unit;
-
-											using (var group_icon = GUI.Group.New(size: new(GUI.RmX)))
-											{
-												group_icon.DrawBackground(GUI.tex_frame);
-
-												ref var marker = ref ent_unit.GetComponent<Marker.Data>();
-												if (marker.IsNotNull())
-												{
-													GUI.DrawSpriteCentered(marker.icon, group_icon.GetInnerRect(), layer: GUI.Layer.Window, scale: 3.00f);
-												}
-
-												if (GUI.Selectable3(ent_unit.GetShortID(), group_icon.GetOuterRect(), selected: is_selected))
-												{
-													//App.WriteLine("click");
-													//WorldMap.FocusEntity(ent_unit);
-
-													WorldMap.interacted_entity.Toggle(ent_unit, !is_selected);
-													if (!is_selected) WorldMap.FocusEntity(ent_unit);
-												}
-											}
-
-											if (WorldMap.IsHovered())
-											{
-												if (unit.IsNotNull() && !ent_parent.IsAsset<ILocation.Handle>())
-												{
-													var rpc = new Unit.ActionRPC();
-													rpc.action = Unit.Action.Move;
-
-													var ent_hovered = WorldMap.hovered_entity;
-													if (ent_hovered != ent_unit)
-													{
-														if (ent_hovered.IsAlive())
+														if (has_parent && hs_selected_entities.Count == 1)
 														{
-															ref var enterable = ref ent_hovered.GetComponent<Enterable.Data>();
-															if (enterable.IsNotNull() && enterable.mask_units.Has(unit.type))
+															ref var enterable = ref ent_parent.GetComponent<Enterable.Data>();
+															if (enterable.IsNotNull() && enterable.mask_units.Has(unit.type) && transform.position.IsInRadius(wpos_mouse_snapped, enterable.radius * 2))
 															{
-																if (has_parent && ent_hovered == ent_parent)
-																{
-																	GUI.SetCursor(App.CursorType.Remove, 200);
-																	rpc.action = Unit.Action.Exit;
-																	rpc.ent_target = ent_hovered;
-																}
-																else
-																{
-																	GUI.SetCursor(App.CursorType.Add, 200);
-																	rpc.action = Unit.Action.Enter;
-																	rpc.ent_target = ent_hovered;
-																}
-															}
-														}
-														else
-														{
-															if (has_parent && hs_selected_entities.Count == 1)
-															{
-																ref var enterable = ref ent_parent.GetComponent<Enterable.Data>();
-																if (enterable.IsNotNull() && enterable.mask_units.Has(unit.type) && transform.position.IsInRadius(wpos_mouse_snapped, enterable.radius * 2))
-																{
-																	GUI.SetCursor(App.CursorType.Remove, 200);
-																	rpc.action = Unit.Action.Exit;
-																	rpc.ent_target = ent_parent;
-																	rpc.pos_target = wpos_mouse_snapped;
-																}
+																GUI.SetCursor(App.CursorType.Remove, 200);
+																rpc.action = Unit.Action.Exit;
+																rpc.ent_target = ent_parent;
+																rpc.pos_target = wpos_mouse_snapped;
 															}
 														}
 													}
+												}
 
-													if (mouse.GetKeyDown(Mouse.Key.Right) && unit.CanPlayerControlUnit(ent_unit, Client.GetPlayerHandle()))
-													{
-														if (rpc.pos_target == Vector2.Zero) rpc.pos_target = wpos_mouse_snapped + ((transform.position - wpos_mouse_snapped).GetNormalized(out var dist) * Maths.Min((unit_index++) * 0.30f, dist * 0.50f));
-														rpc.Send(ent_unit);
-													}
+												if (mouse.GetKeyDown(Mouse.Key.Right) && unit.CanPlayerControlUnit(ent_unit, Client.GetPlayerHandle()))
+												{
+													if (rpc.pos_target == Vector2.Zero) rpc.pos_target = wpos_mouse_snapped + ((transform.position - wpos_mouse_snapped).GetNormalized(out var dist) * Maths.Min((unit_index++) * 0.30f, dist * 0.50f));
+													rpc.Send(ent_unit);
 												}
 											}
 										}

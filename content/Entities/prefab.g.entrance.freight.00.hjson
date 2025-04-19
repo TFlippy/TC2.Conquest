@@ -1,3 +1,4 @@
+$name: "Station"
 $tags: []
 
 entrance:
@@ -22,10 +23,10 @@ transform:
 
 interactable:
 {
-	flags: no_tab
-	window_size: [600.000, 422.000]
-	// window_size_misc: [216.000, 0.000]
-	window_offset: [0.000, 0.000]
+	flags: none
+	priority: 0.150
+	window_size: [622.000, 458.000]
+	window_size_misc: [132.000, 0.000]
 }
 
 company:

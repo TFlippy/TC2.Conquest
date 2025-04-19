@@ -35,6 +35,7 @@ namespace TC2.Conquest
 			}
 		}
 
+		[Obsolete]
 		public struct DeployInfiltratorRPC: Net.IGRPC<Conquest.Gamemode>
 		{
 			public ICharacter.Handle h_character;

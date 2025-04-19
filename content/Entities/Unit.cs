@@ -410,6 +410,8 @@ namespace TC2.Conquest
 				{
 					Assert.Check(data.CanPlayerControlUnit(rpc.entity, rpc.connection.GetPlayerHandle()));
 
+					//App.WriteLine(this.action);
+
 					var ok = true;
 					switch (this.action)
 					{
@@ -426,7 +428,7 @@ namespace TC2.Conquest
 							Assert.Check(this.ent_target.IsAlive());
 
 							ref var enterable = ref this.ent_target.GetComponent<Enterable.Data>();
-							Assert.NotNull(ref enterable);
+							Assert.IsNotNull(ref enterable);
 
 							Assert.Check(enterable.mask_units.Has(data.type));
 
@@ -597,7 +599,7 @@ namespace TC2.Conquest
 
 					Assert.Check(enterable.flags.HasNone(Enterable.Data.Flags.Hide_If_Parented) || !ent_enterable.GetParent(Relation.Type.Child).IsValid());
 
-					ent_unit.AddRelation(ent_enterable, Relation.Type.Child, true);
+					ent_unit.ReplaceRelation(ent_enterable, Relation.Type.Child, true);
 
 					return true;
 				}
@@ -612,6 +614,8 @@ namespace TC2.Conquest
 			{
 				try
 				{
+					Assert.Check(ent_unit.IsAlive());
+
 					var ent_enterable = ent_unit.GetParent(Relation.Type.Child);
 
 					Assert.Check(ent_enterable != ent_unit);
@@ -658,7 +662,7 @@ namespace TC2.Conquest
 					ref var region = ref World.GetGlobalRegion();
 
 					//character_data.ent_inside = default;
-					if (ent_unit.IsAlive())
+					//if (ent_unit.IsAlive())
 					{
 						ent_unit.RemoveRelation(ent_enterable, Relation.Type.Child);
 						//ref var transform_unit = ref ent_unit.GetComponent<Transform.Data>();
@@ -668,7 +672,7 @@ namespace TC2.Conquest
 						//	transform_unit.Sync(ent_unit);
 						//}
 
-						region.Schedule((ref Region.Data.Global region) =>
+						region.Schedule((ref region) =>
 						{
 							ref var transform_unit = ref ent_unit.GetComponent<Transform.Data>();
 							if (transform_unit.IsNotNull())
