@@ -74,10 +74,22 @@ namespace TC2.Conquest
 				var identifier = $"m.{character.species.GetIdentifier().OrDefault("misc")}.{Asset.GenerateRandomIdentifier()}";
 				//App.WriteLine(identifier);
 
+				Prefab.Handle h_prefab_unit = default;
+				ref var species = ref character.species.GetData();
+				if (species.IsNotNull())
+				{
+					h_prefab_unit = species.prefab_unit;
+				}
+
+				if (!h_prefab_unit)
+				{
+					h_prefab_unit = "unit.guy";
+				}
+
 				var character_asset = ICharacter.Database.RegisterOrUpdate(identifier,
 					index: null,
 					scope: Asset.Scope.World,
-					h_prefab: "unit.guy",
+					h_prefab: h_prefab_unit,
 					h_prefab_region: "region.character",
 					region_id: 0,
 					data: ref character);

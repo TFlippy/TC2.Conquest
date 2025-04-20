@@ -1,0 +1,63 @@
+$name: "Human"
+$tags: []
+
+transform:
+{
+	scale: [1.000, 1.000]
+}
+
+worldmap.unit:
+{
+	type: character
+	speed: 7.000
+	speed_mult_offroad: 0.900
+	acc: 35.000
+}
+
+worldmap.marker:
+{
+	flags: hide_if_parented
+	radius: 0.250
+	scale: 0.375
+	color: "0xc0ffffff"
+	text_offset: [0.000, 0.150]
+	icon_offset: [0.000, 0.000]
+	icon:
+	{
+		texture: "human.male.head"
+		mask: "missing"
+		fps: 0.000
+		count: 0
+		size: [16, 16]
+		frame: [0, 0]
+	}
+}
+
+interactable:
+{
+	flags: none
+	window_size: [208.000, 232.000]
+	window_size_min: [208.000, 232.000]
+	window_size_misc: [120.000, 0.000]
+	window_offset: [0.000, 0.000]
+}
+
+faction:
+{
+	
+}
+
+nameable:
+{
+	flags: no_rename, use_asset_name
+}
+
+storage:
+{
+	@inventory8:
+	{
+		stack_size_multiplier: 1.000
+		type: personal
+		flags: standalone, vertical, faction
+	}
+}
