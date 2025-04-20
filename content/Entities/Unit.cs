@@ -723,7 +723,7 @@ namespace TC2.Conquest
 								if (ent_unit_child == WorldMap.interacted_entity || (WorldMap.hs_selected_entities.Count == 1 && WorldMap.hs_selected_entities.Contains(ent_unit_child)))
 								{
 									WorldMap.hs_selected_entities.Add(ent_unit_parent);
-									if (!WorldMap.interacted_entity.IsAlive()) WorldMap.SelectEntity(ent_unit_parent);
+									if (!WorldMap.interacted_entity.IsAlive()) WorldMap.SelectEntity(ent_unit_parent, open_widget: false);
 								}
 #endif
 							}
@@ -733,7 +733,7 @@ namespace TC2.Conquest
 								// TODO: hack
 								if (ent_unit_child == WorldMap.interacted_entity || (WorldMap.hs_selected_entities.Count == 1 && WorldMap.hs_selected_entities.Contains(ent_unit_child)))
 								{
-									WorldMap.FocusEntity(ent_enterable, interact: true);
+									WorldMap.FocusEntity(ent_enterable, interact: true, open_widget: false);
 								}
 #endif
 							}
@@ -764,7 +764,7 @@ namespace TC2.Conquest
 								// TODO: hack
 								if (ent_enterable == WorldMap.interacted_entity_cached || (WorldMap.hs_selected_entities.Contains(ent_unit_child) && WorldMap.hs_selected_entities.Count == 1))
 								{
-									WorldMap.FocusEntity(ent_unit_child, interact: true);
+									WorldMap.FocusEntity(ent_unit_child, interact: true, open_widget: false);
 								}
 #endif
 							}

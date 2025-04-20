@@ -934,9 +934,9 @@ namespace TC2.Conquest
 		internal static bool is_worldmap_hovered;
 		public static bool IsHovered() => is_worldmap_hovered;
 
-		public static void FocusLocation(ILocation.Handle h_location, bool interact = true)
+		public static void FocusLocation(ILocation.Handle h_location, bool interact = true, bool open_widget = true)
 		{
-			GUI.RegionMenu.ToggleWidget(true);
+			if (open_widget) GUI.RegionMenu.ToggleWidget(true);
 			WorldMap.h_selected_location = h_location;
 
 			ref var location_data = ref h_location.GetData(out var location_asset);
@@ -964,11 +964,11 @@ namespace TC2.Conquest
 			WorldMap.worldmap_offset_target = pos;
 		}
 
-		public static void SelectEntity(Entity entity, bool focus = true, bool interact = true)
+		public static void SelectEntity(Entity entity, bool focus = true, bool interact = true, bool open_widget = true)
 		{
 			if (entity.id != 0 && entity.GetRegionID() == 0 && entity.IsAlive())
 			{
-				GUI.RegionMenu.ToggleWidget(true);
+				if (open_widget) GUI.RegionMenu.ToggleWidget(true);
 
 				if (interact)
 				{
@@ -997,11 +997,11 @@ namespace TC2.Conquest
 			}
 		}
 
-		public static void FocusEntity(Entity entity, bool interact = true)
+		public static void FocusEntity(Entity entity, bool interact = true, bool open_widget = true)
 		{
 			if (entity.id != 0 && entity.GetRegionID() == 0 && entity.IsAlive())
 			{
-				GUI.RegionMenu.ToggleWidget(true);
+				if (open_widget) GUI.RegionMenu.ToggleWidget(true);
 
 				if (interact)
 				{
