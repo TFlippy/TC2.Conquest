@@ -5,14 +5,14 @@ location:
 
 }
 
+zone:
+{
+	
+}
+
 faction:
 {
 
-}
-
-company:
-{
-    
 }
 
 transform:
@@ -20,10 +20,18 @@ transform:
 	
 }
 
-zone:
+interactable:
 {
-	
+	flags: none
+	window_size: [640.000, 454.000]
+	window_size_misc: [96.000, 0.000]
 }
+
+company:
+{
+    
+}
+
 
 // worldmap.enterable:
 // {
@@ -36,11 +44,6 @@ zone:
 //     window_size: [456.000, 336.000]
 // }
 
-worldmap.marker:
-{
-	radius: 0.375
-}
-
 nameable:
 {
 	flags: no_rename, use_asset_name
@@ -50,3 +53,8 @@ nameable:
 // {
 	
 // }
+
+worldmap.marker:
+{
+	radius: 0.375
+}

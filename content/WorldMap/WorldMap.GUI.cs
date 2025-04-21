@@ -1775,7 +1775,7 @@ namespace TC2.Conquest
 											//GUI.NewLine(6);
 
 											//GUI.LabelShaded("Faction:"u8, character_data_selected.faction.GetName().OrDefault("N/A"), font_a: GUI.Font.Superstar, font_b: GUI.Font.Monaco, size_a: 16, size_b: 14);
-										
+
 										}
 									}
 
@@ -2416,6 +2416,8 @@ namespace TC2.Conquest
 		public static AABB drag_rect_cached;
 		public static AABB drag_rect_cached_world;
 		public static readonly HashSet<Entity> hs_selected_entities = new();
+		public static Entity? ent_hovered_unit_override;
+
 		private static void DrawBottomWindow(bool is_loading, ref AABB rect)
 		{
 			//if (selected_region_id != 0 || h_selected_location != 0)
@@ -2584,14 +2586,16 @@ namespace TC2.Conquest
 											}
 										}
 
-										if (WorldMap.IsHovered())
+										if (WorldMap.IsHovered() || WorldMap.ent_hovered_unit_override.HasValue)
 										{
 											if (unit.IsNotNull() && !ent_parent.IsAsset<ILocation.Handle>())
 											{
+												//App.WriteLine("test");
+
 												var rpc = new Unit.ActionRPC();
 												rpc.action = Unit.Action.Move;
 
-												var ent_hovered = WorldMap.hovered_entity;
+												var ent_hovered = WorldMap.ent_hovered_unit_override ?? WorldMap.hovered_entity;
 												if (ent_hovered != ent_unit)
 												{
 													if (ent_hovered.IsAlive())
@@ -2601,9 +2605,16 @@ namespace TC2.Conquest
 														{
 															if (has_parent && ent_hovered == ent_parent)
 															{
-																GUI.SetCursor(App.CursorType.Remove, 200);
-																rpc.action = Unit.Action.Exit;
-																rpc.ent_target = ent_hovered;
+																if (WorldMap.ent_hovered_unit_override.HasValue)
+																{
+																	// TODO
+																}
+																else
+																{
+																	GUI.SetCursor(App.CursorType.Remove, 200);
+																	rpc.action = Unit.Action.Exit;
+																	rpc.ent_target = ent_hovered;
+																}
 															}
 															else
 															{
@@ -2656,6 +2667,8 @@ namespace TC2.Conquest
 
 							hs_selected_entities.Clear();
 						}
+
+						WorldMap.ent_hovered_unit_override.Unset();
 					}
 				}
 			}

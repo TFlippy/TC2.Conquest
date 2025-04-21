@@ -785,7 +785,7 @@ namespace TC2.Conquest
 												return kit_data.slot == slot
 													&& !kit_data.faction
 													&& kit_data.flags.HasAnyExcept(Kit.Flags.Selectable, Kit.Flags.Hidden)
-													&& kit_data.species.IsSameOrEmpty(vars.h_species)			
+													&& kit_data.species.IsSameOrEmpty(vars.h_species)
 													&& (skip_flags || kit_data.character_flags.Evaluate(props.character_flags_default | vars.character_flags) > 0.00f);
 											}
 
@@ -971,8 +971,8 @@ namespace TC2.Conquest
 						{
 							//if (widget.IsAppearing()) WorldMap.FocusLocation(Conquest.CreationGUI.custom_character.vars.h_location);
 
-							App.WriteLine("switch");
-							Client.SetCharacter(h_character, true, force: !is_selected);
+							App.WriteLine($"switch begin ({h_character_current} to {h_character})", color: App.Color.Magenta);
+							//Client.SetCharacter(h_character, true, force: !is_selected);
 							//if (h_character_current != h_character | !is_selected)
 							//{
 							//	Client.SetCharacter(h_character, true);
@@ -983,47 +983,84 @@ namespace TC2.Conquest
 							//	//rpc.Send();
 							//}
 
-							var ent_character_global = h_character.GetGlobalEntity();
-							if (ent_character_global.IsAlive())
+							Client.SetCharacter(h_character, true, force: !is_selected).WaitForRender().ContinueWith((x) =>
 							{
-								if (ent_character_global.TryGetParent(Relation.Type.Child, out var ent_character_parent))
+								var h_character = x.h_character;
+								App.WriteLine($"switch done ({h_character_current} to {h_character}; {x.h_character})", color: App.Color.Magenta);
+
+								var ent_character_global = h_character.GetGlobalEntity();
+								if (ent_character_global.IsAlive())
 								{
-									if (ent_character_parent.TryGetAssetHandle(out ILocation.Handle h_location))
+									if (ent_character_global.TryGetParent(Relation.Type.Child, out var ent_character_parent))
 									{
-										var region_id_location = h_location.GetRegionID();
-										//if (h_location.TryGetRegionID(out var region_id_location) && region_id_location == Client.GetRegionID())
-										if (region_id_location != 0 && region_id_location == Client.GetRegionID())
+										if (ent_character_parent.TryGetAsset(out ILocation.Definition location_asset))
 										{
-											if (WorldMap.IsOpen)
+											var h_location = location_asset.GetHandle();
+
+											var region_id_location = h_location.GetRegionID();
+											if (region_id_location != 0 && region_id_location == Client.GetRegionID())
+											{
+												if (WorldMap.IsOpen)
+												{
+													GUI.RegionMenu.ToggleWidget(false);
+													//WorldMap.FocusLocation(h_location, interact: false, open_widget: false);
+													//WorldMap.SelectEntity(ent_character_global, focus: false, interact: false, open_widget: false);
+												}
+											}
+											else
 											{
 												WorldMap.FocusLocation(h_location, interact: false);
 												WorldMap.SelectEntity(ent_character_global, focus: false, interact: false);
 											}
 										}
+										else if (ent_character_parent.TryGetAsset(out IEntrance.Definition entrance_asset))
+										{
+											var h_entrance = entrance_asset.GetHandle();
+
+											var region_id_entrance = h_entrance.GetRegionID();
+											if (region_id_entrance != 0 && region_id_entrance == Client.GetRegionID())
+											{
+												ref var entrance = ref ent_character_parent.GetComponent<Entrance.Data>();
+												if (entrance.IsNotNull() && entrance.GetCharacterSpan().Contains(h_character))
+												{
+													if (WorldMap.IsOpen)
+													{
+														GUI.RegionMenu.ToggleWidget(false);
+													}
+
+													//if (WorldMap.IsOpen)
+													//{
+													//	WorldMap.FocusLocation(entrance_asset.data.h_location_parent, interact: false, open_widget: false);
+													//	WorldMap.FocusEntity(entrance_asset.GetGlobalEntity(), interact: true, open_widget: false);
+													//	WorldMap.SelectEntity(ent_character_global, focus: false, interact: false, open_widget: false);
+													//}
+												}
+												else
+												{
+													WorldMap.FocusLocation(entrance_asset.data.h_location_parent, interact: false);
+													WorldMap.FocusEntity(entrance_asset.GetGlobalEntity(), interact: true);
+													WorldMap.SelectEntity(ent_character_global, focus: false, interact: false);
+												}
+											}
+											else
+											{
+												WorldMap.FocusLocation(entrance_asset.data.h_location_parent, interact: false);
+												WorldMap.FocusEntity(entrance_asset.GetGlobalEntity(), interact: true);
+												WorldMap.SelectEntity(ent_character_global, focus: false, interact: false);
+											}
+										}
 										else
 										{
-											WorldMap.FocusLocation(h_location, interact: false);
-											WorldMap.SelectEntity(ent_character_global, focus: false, interact: false);
+											if (WorldMap.CanPlayerControlUnit(ent_character_parent, player_asset)) WorldMap.hs_selected_entities.Add(ent_character_parent);
+											WorldMap.SelectEntity(ent_character_global, interact: false);
 										}
-									}
-									else if (ent_character_parent.TryGetAsset(out IEntrance.Definition entrance_asset))
-									{
-										h_location = entrance_asset.data.h_location_parent;
-										WorldMap.FocusLocation(h_location, interact: false);
-										WorldMap.FocusEntity(entrance_asset.GetGlobalEntity(), interact: true);
-										WorldMap.SelectEntity(ent_character_global, focus: false, interact: false);
 									}
 									else
 									{
-										if (WorldMap.CanPlayerControlUnit(ent_character_parent, player_asset)) WorldMap.hs_selected_entities.Add(ent_character_parent);
 										WorldMap.SelectEntity(ent_character_global, interact: false);
 									}
 								}
-								else
-								{
-									WorldMap.SelectEntity(ent_character_global, interact: false);
-								}
-							}
+							});
 						}
 
 						//if (widget.IsHovered())
