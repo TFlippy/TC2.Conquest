@@ -84,7 +84,6 @@ namespace TC2.Conquest
 			var has_region = Client.HasRegion() || is_loading;
 
 			last_open_frame = App.CurrentFrame;
-
 			WorldMap.hovered_entity = default;
 
 			var mouse = GUI.GetMouse();
@@ -420,7 +419,9 @@ namespace TC2.Conquest
 										var is_interactable = marker.flags.HasNone(Marker.Data.Flags.No_Interact);
 										var is_selectable = marker.flags.HasNone(Marker.Data.Flags.No_Select);
 
+										is_hovered |= WorldMap.hovered_entity == entity;
 										is_hovered &= is_selectable;
+										
 
 										ref var unit = ref entity.GetComponent<WorldMap.Unit.Data>();
 										if (unit.IsNotNull())
@@ -906,6 +907,8 @@ namespace TC2.Conquest
 					}
 				}
 
+
+
 				#region Interactions
 				DrawInteractionWindow();
 				#endregion
@@ -1130,27 +1133,69 @@ namespace TC2.Conquest
 									}
 								}
 
-								if (false && interactable.flags.HasNone(Interactable.Flags.No_Tab))
+								if (true) //false && interactable.flags.HasNone(Interactable.Flags.No_Tab))
 								{
 									//using (var window_side = window.BeginChildWindow("worldmap.interact.children"u8, GUI.AlignX.Center, GUI.AlignY.Bottom, size: new(interactable.window_size.X, 32), pivot: new(0.50f, 0), offset: new(0, -8), open: true))
-									using (var window_side = window.BeginChildWindow("worldmap.interact.children"u8, GUI.AlignX.Center, GUI.AlignY.Top, size: new(interactable.window_size.X, 32), pivot: new(0.50f, 0), offset: new(0, -32), open: true))
+									using (var window_side = window.BeginChildWindow(identifier: "worldmap.interact.children"u8,
+									anchor_x: GUI.AlignX.Center,
+									anchor_y: GUI.AlignY.Top,
+									size: new(interactable.window_size.X, 32),
+									pivot: new(0.50f, 0),
+									offset: new(0, -32),
+									open: true,
+									tex_bg: default(Texture.Handle)))
 									{
 										if (window_side.show)
 										{
-											Span<Entity> span_children = FixedArray.CreateSpan16NoInit<Entity>(out var buffer);
-											WorldMap.interacted_entity_cached.GetChildren(ref span_children, Relation.Type.Child);
+											var ent_interacted = WorldMap.interacted_entity_cached;
+											var ent_root = ent_interacted.GetRoot(Relation.Type.Child);
+											var is_root = ent_root == ent_interacted;
 
-											var ent_parent = WorldMap.interacted_entity_cached.GetParent(relation: Relation.Type.Child);
-											if (ent_parent.IsAlive())
+											Span<Entity> span_children = FixedArray.CreateSpan16NoInit<Entity>(out var buffer);
+											ent_root.GetChildren(ref span_children, Relation.Type.Child);
+
+											var ent_parent = is_root ? Entity.Default : ent_interacted.GetParent(relation: Relation.Type.Child);
+
+
+											if (ent_root.IsAlive())
 											{
-												GUI.DrawTab3(ent_parent.GetName(), size: new(64, 32), index: ent_parent, selected_index: ref interacted_entity, inner: true);
+												var color = ent_root.GetComponent<WorldMap.Marker.Data>().OrNullable()?.color;
+
+												GUI.DrawTab3(ent_root.GetName(), size: new(64, 32), index: ent_root, selected_index: ref interacted_entity, inner: true, color: color);
+												if (GUI.IsItemHovered())
+												{
+													GUI.DrawEntityMarker(ent_root, cross_size: 0.125f, layer: GUI.Layer.Foreground);
+													WorldMap.hovered_entity = ent_root;
+												}
+
 												GUI.SameLine();
+											}
+
+											if (ent_parent != ent_root)
+											{
+												if (ent_parent.IsAlive())
+												{
+													GUI.DrawTab3(ent_parent.GetName(), size: new(64, 32), index: ent_parent, selected_index: ref interacted_entity, inner: false);
+													if (GUI.IsItemHovered())
+													{
+														GUI.DrawEntityMarker(ent_parent, cross_size: 0.125f, layer: GUI.Layer.Foreground);
+														WorldMap.hovered_entity = ent_parent;
+													}
+
+													GUI.SameLine();
+												}
 											}
 
 											foreach (var ent_child in span_children)
 											{
+												GUI.DrawTab3(ent_child.GetName(), size: new(64, 32), index: ent_child, selected_index: ref interacted_entity, inner: false);
+												if (GUI.IsItemHovered())
+												{
+													GUI.DrawEntityMarker(ent_child, cross_size: 0.125f, layer: GUI.Layer.Foreground);
+													WorldMap.hovered_entity = ent_child;
+												}
+
 												GUI.SameLine();
-												GUI.DrawTab3(ent_child.GetName(), size: new(64, 32), index: ent_child, selected_index: ref interacted_entity, inner: true);
 											}
 										}
 									}
@@ -1624,9 +1669,13 @@ namespace TC2.Conquest
 																		}
 																	}
 
-																	if (GUI.IsItemHovered() && GUI.GetMouse().GetKeyDown(Mouse.Key.Right))
+																	if (GUI.IsItemHovered())
 																	{
-																		WorldMap.FocusEntity(ent_child, interact: false);
+																		if (GUI.GetMouse().GetKeyDown(Mouse.Key.Right))
+																		{
+																			WorldMap.FocusEntity(ent_child, interact: false);
+																		}
+																		GUI.DrawEntityMarker(ent_child, cross_size: 0.125f, layer: GUI.Layer.Foreground);
 																		//hs_selected_entities.Add(ent_child);
 																	}
 																}
