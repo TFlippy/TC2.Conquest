@@ -24,9 +24,8 @@ transform:
 interactable:
 {
 	flags: none
-	priority: 0.150
-	window_size: [622.000, 458.000]
-	window_size_misc: [132.000, 0.000]
+	window_size: [640.000, 454.000]
+	window_size_misc: [96.000, 0.000]
 }
 
 company:

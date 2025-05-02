@@ -21,7 +21,7 @@ namespace TC2.Conquest
 		public const float km_per_unit = 2.00f;
 		public const float km_per_unit_inv = 1.00f / km_per_unit;
 
-		public static Entity hovered_entity;
+		public static (Entity current, Entity pending) hovered_entity;
 
 		public static Entity interacted_entity;
 		public static Entity interacted_entity_cached;
@@ -864,7 +864,7 @@ namespace TC2.Conquest
 		{
 			//if (WorldMap.IsOpen)
 			{
-				interactable.show = WorldMap.interacted_entity == entity
+				interactable.show = WorldMap.interacted_entity_cached == entity
 				&& WorldMap.IsOpen
 				//&& WorldMap.ts_last_draw.GetMilliseconds() <= 50 // TODO: shithack
 				&& interactable.flags.HasNone(Interactable.Flags.No_Window)

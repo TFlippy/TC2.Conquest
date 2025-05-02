@@ -84,7 +84,28 @@ namespace TC2.Conquest
 			var has_region = Client.HasRegion() || is_loading;
 
 			last_open_frame = App.CurrentFrame;
-			WorldMap.hovered_entity = default;
+
+			//var derp = WorldMap.hovered_entity;
+			//App.WriteLine(WorldMap.hovered_entity);
+			//var pop = WorldMap.hovered_entity.Pop(); // WorldMap.interacted_entity);
+			//App.WriteLine(WorldMap.hovered_entity.Item1);
+			//App.WriteLine(WorldMap.hovered_entity.Item2);
+			//App.WriteLine(pop);
+
+			Keg.Extensions.TupleExtensions.Pop(ref WorldMap.hovered_entity); // WorldMap.hovered_entity.Pop();
+
+			//App.WriteLine($"{WorldMap.hovered_entity.current}; {WorldMap.hovered_entity.pending}");
+			//App.WriteLine($"{WorldMap.hovered_entity.Pop()}");
+			//App.WriteLine($"{WorldMap.hovered_entity.current}; {WorldMap.hovered_entity.pending}");
+
+
+			//WorldMap.hovered_entity.Item1 = WorldMap.hovered_entity.Item2; //.Push(); //.pending = default;
+			//WorldMap.hovered_entity.Item2 = default; //.Push(); //.pending = default;
+
+
+			//WorldMap.hovered_entity.current = WorldMap.hovered_entity.pending; //.Push(); //.pending = default;
+			//WorldMap.hovered_entity.pending = default; //.Push(); //.pending = default;
+
 
 			var mouse = GUI.GetMouse();
 			var kb = GUI.GetKeyboard();
@@ -414,13 +435,27 @@ namespace TC2.Conquest
 										//GUI.DrawRect(rect_icon, layer: GUI.Layer.Foreground);
 										//GUI.DrawRect(rect_text, layer: GUI.Layer.Foreground);
 
-										var is_selected = WorldMap.interacted_entity == entity;
+										var is_selected = WorldMap.interacted_entity_cached == entity;
 										var is_pressed = GUI.ButtonBehavior(entity, rect_button, out var is_hovered, out var is_held);
 										var is_interactable = marker.flags.HasNone(Marker.Data.Flags.No_Interact);
 										var is_selectable = marker.flags.HasNone(Marker.Data.Flags.No_Select);
 
-										is_hovered |= WorldMap.hovered_entity == entity;
-										is_hovered &= is_selectable;
+										//if (is_selected)
+										//{
+										//	App.WriteLine(WorldMap.hovered_entity);
+										//}
+
+										if (is_selectable)
+										{
+											//if (is_hovered) WorldMap.hovered_entity.pending = entity;
+											is_hovered |= WorldMap.hovered_entity.current == entity;
+										}
+										else
+										{
+											is_hovered = false;
+										}
+											//is_hovered |= WorldMap.hovered_entity.current == entity;
+										//is_hovered &= is_selectable;
 										
 
 										ref var unit = ref entity.GetComponent<WorldMap.Unit.Data>();
@@ -455,7 +490,7 @@ namespace TC2.Conquest
 
 										if (is_hovered)
 										{
-											WorldMap.hovered_entity = entity;
+											////WorldMap.hovered_entity.pending = entity;
 											if (is_interactable) GUI.SetCursor(App.CursorType.Hand, 100);
 
 											if (entity.TryGetAsset(out ILocation.Definition location_asset) || ent_parent.TryGetAsset(out location_asset))
@@ -1027,12 +1062,14 @@ namespace TC2.Conquest
 
 		public static void DrawInteractionWindow()
 		{
-			if (WorldMap.interacted_entity.id != 0)
-			{
-				WorldMap.interacted_entity_cached = WorldMap.interacted_entity;
-			}
+			//if (WorldMap.interacted_entity.id != 0)
+			//{
+			//	WorldMap.interacted_entity_cached = WorldMap.interacted_entity;
+			//}
+			WorldMap.interacted_entity_cached = WorldMap.interacted_entity;
 
-			if (WorldMap.interacted_entity_cached.IsAlive() && WorldMap.IsOpen)
+
+			if (WorldMap.IsOpen && WorldMap.interacted_entity_cached.IsAlive())
 			{
 				ref var interactable = ref WorldMap.interacted_entity_cached.GetComponent<Interactable.Data>();
 				if (interactable.IsNotNull())
@@ -1147,65 +1184,123 @@ namespace TC2.Conquest
 									{
 										if (window_side.show)
 										{
-											var ent_interacted = WorldMap.interacted_entity_cached;
-											var ent_root = ent_interacted.GetRoot(Relation.Type.Child);
-											var is_root = ent_root == ent_interacted;
+											var random = XorRandom.New(true);
+											//var window_rect = GUI.GetCurrentWindowRect();
 
-											Span<Entity> span_children = FixedArray.CreateSpan16NoInit<Entity>(out var buffer);
-											ent_root.GetChildren(ref span_children, Relation.Type.Child);
+											var ent_root = WorldMap.interacted_entity_cached.GetRoot(Relation.Type.Child);
+											var is_root = ent_root == WorldMap.interacted_entity_cached;
 
-											var ent_parent = is_root ? Entity.Default : ent_interacted.GetParent(relation: Relation.Type.Child);
+											var ents_list = FixedArray.CreateSpan16NoInit<Entity>(out var ents_buffer).AsSpanList();
+											ents_list.Add(ent_root);
+											ent_root.GetChildren(ref ents_list, Relation.Type.Child);
+											var ents_span = ents_list.GetSpan();
 
+											//var ent_parent = is_root ? Entity.Default : ent_interacted.GetParent(relation: Relation.Type.Child);
 
-											if (ent_root.IsAlive())
+											var window_rect = window.GetWindowRect();
+											//GUI.DrawRect(window_rect, layer: GUI.Layer.Foreground);
+
+											if (WorldMap.IsHovered() || GUI.IsHoveringRect(window_rect, window_only: false, allow_overlapped: true, clip: false))
 											{
-												var color = ent_root.GetComponent<WorldMap.Marker.Data>().OrNullable()?.color;
-
-												GUI.DrawTab3(ent_root.GetName(), size: new(64, 32), index: ent_root, selected_index: ref interacted_entity, inner: true, color: color);
-												if (GUI.IsItemHovered())
+												if (GUI.GetMouse().GetKeyDown(Mouse.Key.Forward))
 												{
-													GUI.DrawEntityMarker(ent_root, cross_size: 0.125f, layer: GUI.Layer.Foreground);
-													WorldMap.hovered_entity = ent_root;
+													App.WriteLine($"forward");
+													if (ents_span.TryGetNext(ref WorldMap.interacted_entity))
+													{
+														Sound.PlayGUI(GUI.sound_button, volume: 0.40f, pitch: random.NextFloatExtra(1.00f, 0.02f));
+													}
 												}
-
-												GUI.SameLine();
+												else if (GUI.GetMouse().GetKeyDown(Mouse.Key.Back))
+												{
+													App.WriteLine($"back");
+													if (ents_span.TryGetPrev(ref WorldMap.interacted_entity))
+													{
+														Sound.PlayGUI(GUI.sound_button, volume: 0.40f, pitch: random.NextFloatExtra(0.95f, 0.02f));
+													}
+												}
 											}
 
-											if (ent_parent != ent_root)
+											//if (ent_root.IsAlive())
+											//{
+											//	var color = ent_root.GetComponent<WorldMap.Marker.Data>().OrDefault().color;
+
+											//	GUI.DrawTab3(ent_root.GetName(), size: new(64, 32), index: ent_root, selected_index: ref interacted_entity, inner: true, color: color);
+											//	if (GUI.IsItemHovered())
+											//	{
+											//		GUI.DrawEntityMarker(ent_root, cross_size: 0.125f, layer: GUI.Layer.Foreground);
+											//		WorldMap.hovered_entity.pending = ent_root;
+											//	}
+
+											//	GUI.SameLine();
+											//}
+
+											//if (ent_parent != ent_root)
+											//{
+											//	if (ent_parent.IsAlive())
+											//	{
+											//		GUI.DrawTab3(ent_parent.GetName(), size: new(64, 32), index: ent_parent, selected_index: ref interacted_entity, inner: false);
+											//		if (GUI.IsItemHovered())
+											//		{
+											//			GUI.DrawEntityMarker(ent_parent, cross_size: 0.125f, layer: GUI.Layer.Foreground);
+											//			WorldMap.hovered_entity.pending = ent_parent;
+											//		}
+
+											//		GUI.SameLine();
+											//	}
+											//}
+
+											for (var i = 0; i < ents_span.Length; i++)
 											{
-												if (ent_parent.IsAlive())
+												var ent = ents_span[i];
+												var name = ent.GetName();
+
+												if (i == 0)
 												{
-													GUI.DrawTab3(ent_parent.GetName(), size: new(64, 32), index: ent_parent, selected_index: ref interacted_entity, inner: false);
-													if (GUI.IsItemHovered())
+													var color = ent.GetComponent<WorldMap.Marker.Data>().OrDefault().color;
+
+													if (GUI.DrawTab3(name, size: new(64, 32), index: ent, selected_index: ref WorldMap.interacted_entity, inner: true, color: color))
 													{
-														GUI.DrawEntityMarker(ent_parent, cross_size: 0.125f, layer: GUI.Layer.Foreground);
-														WorldMap.hovered_entity = ent_parent;
+														App.WriteLine("press root tab");
 													}
 
-													GUI.SameLine();
+													//if (GUI.IsItemHovered())
+													//{
+													//	GUI.DrawEntityMarker(ent_root, cross_size: 0.125f, layer: GUI.Layer.Foreground);
+													//	WorldMap.hovered_entity.pending = ent_root;
+													//}
 												}
-											}
+												else
+												{
+													GUI.SameLine();
 
-											foreach (var ent_child in span_children)
-											{
-												GUI.DrawTab3(ent_child.GetName(), size: new(64, 32), index: ent_child, selected_index: ref interacted_entity, inner: false);
+													if (GUI.DrawTab3(name, size: new(64, 32), index: ent, selected_index: ref WorldMap.interacted_entity, inner: false, font_size: 20, padding: 20.00f))
+													{
+														App.WriteLine("press child tab");
+													}
+													//if (GUI.IsItemHovered())
+													//{
+													//	GUI.DrawEntityMarker(ent_child, cross_size: 0.125f, layer: GUI.Layer.Foreground);
+													//	WorldMap.hovered_entity.pending = ent_child;
+													//}
+												}
+
 												if (GUI.IsItemHovered())
 												{
-													GUI.DrawEntityMarker(ent_child, cross_size: 0.125f, layer: GUI.Layer.Foreground);
-													WorldMap.hovered_entity = ent_child;
+													GUI.DrawEntityMarker(ent, cross_size: 0.125f, layer: GUI.Layer.Foreground);
+													WorldMap.hovered_entity.pending = ent;
 												}
-
-												GUI.SameLine();
 											}
 										}
 									}
 								}
 							}
 						}
+
+
 					}
 				}
 			}
-			WorldMap.interacted_entity_cached = WorldMap.interacted_entity;
+			//WorldMap.interacted_entity_cached = WorldMap.interacted_entity;
 		}
 
 		//public struct UnitInfo
@@ -1507,7 +1602,7 @@ namespace TC2.Conquest
 												{
 													using (GUI.ID.Push(entity))
 													{
-														var is_selected = WorldMap.interacted_entity == entity;
+														var is_selected = WorldMap.interacted_entity_cached == entity;
 														var contains = WorldMap.hs_selected_entities.Contains(entity);
 														var is_selectable = WorldMap.CanPlayerControlUnit(entity, Client.GetPlayerHandle());
 
@@ -1572,7 +1667,7 @@ namespace TC2.Conquest
 																	}
 																}
 
-																if (WorldMap.interacted_entity == entity && (entity.TryGetAsset(out ILocation.Definition location_asset))) // || ent_parent.TryGetAsset(out location_asset)))
+																if (WorldMap.interacted_entity_cached == entity && (entity.TryGetAsset(out ILocation.Definition location_asset))) // || ent_parent.TryGetAsset(out location_asset)))
 																{
 																	WorldMap.h_selected_location = location_asset;
 																}
@@ -1614,7 +1709,7 @@ namespace TC2.Conquest
 															{
 																using (GUI.ID.Push(ent_child))
 																{
-																	var is_selected = WorldMap.interacted_entity == ent_child; // || WorldMap.hs_selected_entities.Contains(ent_child);
+																	var is_selected = WorldMap.interacted_entity_cached == ent_child; // || WorldMap.hs_selected_entities.Contains(ent_child);
 																	var contains = WorldMap.hs_selected_entities.Contains(ent_child);
 																	var is_selectable = WorldMap.CanPlayerControlUnit(ent_child, Client.GetPlayerHandle());
 
@@ -1658,7 +1753,7 @@ namespace TC2.Conquest
 
 
 																			var ent_parent = entity.GetParent(Relation.Type.Child);
-																			if (WorldMap.interacted_entity == ent_child && (ent_child.TryGetAsset(out ILocation.Definition location_asset) || entity.TryGetAsset(out location_asset) || ent_parent.TryGetAsset(out location_asset)))
+																			if (WorldMap.interacted_entity_cached == ent_child && (ent_child.TryGetAsset(out ILocation.Definition location_asset) || entity.TryGetAsset(out location_asset) || ent_parent.TryGetAsset(out location_asset)))
 																			{
 																				WorldMap.h_selected_location = location_asset;
 																			}
@@ -2191,7 +2286,7 @@ namespace TC2.Conquest
 																		//group_right.DrawBackground(GUI.tex_window_popup);
 																	}
 
-																	var is_selected = WorldMap.interacted_entity == ent_child;
+																	var is_selected = WorldMap.interacted_entity_cached == ent_child;
 																	if (GUI.Selectable3(ent_child.GetShortID(), group_row.GetInnerRect(), selected: is_selected))
 																	{
 																		WorldMap.interacted_entity.Toggle(ent_child, !is_selected);
@@ -2213,7 +2308,7 @@ namespace TC2.Conquest
 								{
 									WorldMap.selected_region_id = 0;
 									WorldMap.h_selected_location = 0;
-									if (location_asset.GetGlobalEntity() == WorldMap.interacted_entity) WorldMap.interacted_entity = default;
+									if (location_asset.GetGlobalEntity() == WorldMap.interacted_entity_cached) WorldMap.interacted_entity = default;
 								}
 
 								if (WorldMap.h_selected_location == 0 && WorldMap.selected_region_id == 0)
@@ -2644,7 +2739,7 @@ namespace TC2.Conquest
 												var rpc = new Unit.ActionRPC();
 												rpc.action = Unit.Action.Move;
 
-												var ent_hovered = WorldMap.ent_hovered_unit_override ?? WorldMap.hovered_entity;
+												var ent_hovered = WorldMap.ent_hovered_unit_override ?? WorldMap.hovered_entity.current;
 												if (ent_hovered != ent_unit)
 												{
 													if (ent_hovered.IsAlive())
