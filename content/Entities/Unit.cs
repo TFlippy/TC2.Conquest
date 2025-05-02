@@ -482,8 +482,14 @@ namespace TC2.Conquest
 				transform_child.SetPosition(transform_parent.position + marker.relative_offset);
 			}
 
+			[ISystem.PostUpdate.A(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region)]
+			public static void UpdateStored([Source.Owned] ref Transform.Data transform_child, [Source.Stored] in Transform.Data transform_parent, [Source.Owned] in Marker.Data marker)
+			{
+				transform_child.SetPosition(transform_parent.position + marker.relative_offset);
+			}
+
 #if CLIENT
-			[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region), HasRelation(Source.Modifier.Owned, Relation.Type.Child, false)]
+			[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region), HasRelation(Source.Modifier.Owned, Relation.Type.Child, false), HasRelation(Source.Modifier.Owned, Relation.Type.Stored, false)]
 			public static void UpdateMarker([Source.Owned] in Unit.Data unit, [Source.Owned] ref Marker.Data marker)
 			{
 				marker.rotation = unit.dir_last.GetAngleRadiansFast();
@@ -599,7 +605,7 @@ namespace TC2.Conquest
 
 					Assert.Check(enterable.flags.HasNone(Enterable.Data.Flags.Hide_If_Parented) || !ent_enterable.GetParent(Relation.Type.Child).IsValid());
 
-					ent_unit.ReplaceRelation(ent_enterable, Relation.Type.Child, true);
+					ent_unit.ReplaceRelation(ent_enterable, Relation.Type.Stored, true);
 
 					return true;
 				}
@@ -616,7 +622,7 @@ namespace TC2.Conquest
 				{
 					Assert.Check(ent_unit.IsAlive());
 
-					var ent_enterable = ent_unit.GetParent(Relation.Type.Child);
+					var ent_enterable = ent_unit.GetParent(Relation.Type.Stored);
 
 					Assert.Check(ent_enterable != ent_unit);
 					Assert.Check(ent_enterable.IsAlive());
@@ -664,7 +670,7 @@ namespace TC2.Conquest
 					//character_data.ent_inside = default;
 					//if (ent_unit.IsAlive())
 					{
-						ent_unit.RemoveRelation(ent_enterable, Relation.Type.Child);
+						ent_unit.RemoveRelation(ent_enterable, Relation.Type.Stored);
 						//ref var transform_unit = ref ent_unit.GetComponent<Transform.Data>();
 						//if (transform_unit.IsNotNull())
 						//{
@@ -697,8 +703,8 @@ namespace TC2.Conquest
 			[ISystem.Monitor(ISystem.Mode.Single, ISystem.Scope.Global)]
 			public static void OnUnitEnter(ISystem.Info.Global info, ref Region.Data.Global region,
 			Entity ent_unit_parent, Entity ent_unit_child, Entity ent_enterable,
-			[Source.Parent] ref WorldMap.Enterable.Data enterable,
-			[Source.Parent, Optional(true)] ref WorldMap.Unit.Data unit_parent, [Source.Owned] ref WorldMap.Unit.Data unit_child)
+			[Source.Stored] ref WorldMap.Enterable.Data enterable,
+			[Source.Stored, Optional(true)] ref WorldMap.Unit.Data unit_parent, [Source.Owned] ref WorldMap.Unit.Data unit_child)
 			{
 				//App.WriteLine($"OnUnitEnter() {info.EventType}");
 				//App.WriteValue(ent_unit_parent);
@@ -775,7 +781,7 @@ namespace TC2.Conquest
 			}
 
 			// TODO: probably make this serverside + skip if not moving
-			[ISystem.Update.B(ISystem.Mode.Single, ISystem.Scope.Global), HasRelation(Source.Modifier.Owned, Relation.Type.Child, false)]
+			[ISystem.Update.B(ISystem.Mode.Single, ISystem.Scope.Global), HasRelation(Source.Modifier.Owned, Relation.Type.Child, false), HasRelation(Source.Modifier.Owned, Relation.Type.Stored, false)]
 			public static void UpdateMovement(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, 
 			[Source.Global] ref World.Global world_global, [Source.Owned] ref WorldMap.Unit.Data unit, [Source.Owned] ref Transform.Data transform)
 			{
@@ -1313,7 +1319,7 @@ namespace TC2.Conquest
 
 			[ISystem.LateGUI(ISystem.Mode.Single, ISystem.Scope.Global)]
 			public static void OnGUI(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] ref Unit.Data unit, [Source.Owned] ref Transform.Data transform,
-			[HasRelation(Source.Modifier.Owned, Relation.Type.Child, true)] bool has_parent)
+			[HasRelation(Source.Modifier.Owned, Relation.Type.Stored, true)] bool has_parent)
 			{
 				//return;
 

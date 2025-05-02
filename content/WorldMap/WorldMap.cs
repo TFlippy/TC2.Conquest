@@ -104,7 +104,7 @@ namespace TC2.Conquest
 				[Source.Owned] in WorldMap.Marker.Data marker,
 				[Source.Owned] in Transform.Data transform,
 				[Source.Owned, Optional(true)] ref Nameable.Data nameable,
-				[HasRelation(Source.Modifier.Owned, Relation.Type.Child, true)] bool has_parent);
+				[HasRelation(Source.Modifier.Owned, Relation.Type.Stored, true)] bool has_parent);
 
 			[Query(ISystem.Scope.Global, Query.Flags.None)]
 			public delegate void GetUnitsQuery(ISystem.Info.Global info, ref Region.Data.Global region,

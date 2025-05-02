@@ -991,7 +991,7 @@ namespace TC2.Conquest
 								var ent_character_global = h_character.GetGlobalEntity();
 								if (ent_character_global.IsAlive())
 								{
-									if (ent_character_global.TryGetParent(Relation.Type.Child, out var ent_character_parent))
+									if (ent_character_global.TryGetParent(Relation.Type.Stored, out var ent_character_parent))
 									{
 										if (ent_character_parent.TryGetAsset(out ILocation.Definition location_asset))
 										{
