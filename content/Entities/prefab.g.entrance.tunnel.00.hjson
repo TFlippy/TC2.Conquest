@@ -24,7 +24,7 @@ transform:
 interactable:
 {
 	flags: none
-	window_size: [640.000, 454.000]
+	window_size: [592.000, 454.000]
 	window_size_misc: [96.000, 0.000]
 }
 
@@ -50,7 +50,9 @@ nameable:
 
 stockpile:
 {
-	flags: auto_create
+	request_types: pack, unpack, move
+	flags: auto_create, show_addresses
+
 	grid_column_count: 6
 	capacity_items: 8
 	capacity_shipments: 12
