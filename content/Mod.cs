@@ -86,24 +86,29 @@ namespace TC2.Conquest
 
 			if (!has_region)
 			{
-				flags |= Sidebar.Widget.Flags.Force_Open | Sidebar.Widget.Flags.Hide_Icon | Sidebar.Widget.Flags.Hide_Title | Sidebar.Widget.Flags.No_Background | Sidebar.Widget.Flags.No_Move | Sidebar.Widget.Flags.No_Collapse;
+				flags |= Sidebar.Widget.Flags.Force_Open | Sidebar.Widget.Flags.Hide_Icon | Sidebar.Widget.Flags.Hide_Title | Sidebar.Widget.Flags.No_Background | Sidebar.Widget.Flags.No_Move | Sidebar.Widget.Flags.No_Collapse | Sidebar.Widget.Flags.Hide_Bar;
 				//rect_window = rect_canvas.Pad(128, 32, 24, 24 + 32).Constrain(rect_window); //.Pad(120, 40, 120, 120);
 				//rect_window = rect_canvas.Pad(32, 32, 24, 24 + 32).Constrain(rect_window); //.Pad(120, 40, 120, 120);
 				//rect_window = rect_canvas.Pad(24, -32, 24, 24 + 32).Constrain(rect_window.Scale(2)); //.Pad(120, 40, 120, 120);
-				rect_window = rect_canvas.Pad(0, -40, 0, 52).Constrain(rect_window.Scale(2)); //.Pad(120, 40, 120, 120);
+				//rect_window = rect_canvas.Pad(0, 0, 0, 0).Constrain(rect_window); //.Constrain(rect_window.Scale(2)); //.Pad(120, 40, 120, 120);
+
+				//rect_window = rect_canvas.Pad(new Vector4(16)); //, 0, 0, 0).Constrain(rect_window); //.Constrain(rect_window.Scale(2)); //.Pad(120, 40, 120, 120);
 
 				override_size = rect_window.GetSize();
-				override_pos = rect_window.GetPosition(new(0.50f, 0.00f));
+				override_pos = rect_window.GetPosition(new(0.50f, 0.50f));
+
+				//flags |= Sidebar.Widget.Flags.Hide_Bar;
 			}
 			else
 			{
-				//flags |= Sidebar.Widget.Flags.Resizable;
+				flags |= Sidebar.Widget.Flags.Resizable;
 			}
 
 			using (var widget = Sidebar.Widget.New(identifier: "menu.worldmap",
 			name: "World Map",
 			icon: new Sprite(GUI.tex_icons_widget, 16, 16, 9, 1),
-			size: override_size ?? new Vector2(600, 700),
+			size: override_size ?? new Vector2(0, 0),
+			size_min: new Vector2(800, 640),
 			override_pos: override_pos,
 			order: -10.00f,
 			flags: flags))

@@ -596,8 +596,11 @@ namespace TC2.Conquest
 				try
 				{
 					Assert.Check(ent_enterable != ent_unit);
+					Assert.Check(ent_enterable.region_id == ent_unit.region_id);
+
+					Assert.Check(ent_unit.IsAlive());
 					Assert.Check(ent_enterable.IsAlive());
-					Assert.Check(ent_enterable.GetRegionID() == ent_unit.GetRegionID());
+
 					//Assert.Check(!this.ent_enterable.TryGetParent(Relation.Type.Child, out var ent_enterable_parent));
 
 					ref var enterable = ref ent_enterable.GetComponent<WorldMap.Enterable.Data>();
@@ -625,8 +628,9 @@ namespace TC2.Conquest
 					var ent_enterable = ent_unit.GetParent(Relation.Type.Stored);
 
 					Assert.Check(ent_enterable != ent_unit);
+					Assert.Check(ent_enterable.region_id == ent_unit.region_id);
+
 					Assert.Check(ent_enterable.IsAlive());
-					Assert.Check(ent_enterable.GetRegionID() == ent_unit.GetRegionID());
 
 					ref var enterable = ref ent_enterable.GetComponent<WorldMap.Enterable.Data>();
 					Assert.IsNotNull(ref enterable);
@@ -706,7 +710,7 @@ namespace TC2.Conquest
 			[Source.Stored] ref WorldMap.Enterable.Data enterable,
 			[Source.Stored, Optional(true)] ref WorldMap.Unit.Data unit_parent, [Source.Owned] ref WorldMap.Unit.Data unit_child)
 			{
-				//App.WriteLine($"OnUnitEnter() {info.EventType}");
+				App.WriteLine($"OnUnitEnter() {info.EventType}");
 				//App.WriteValue(ent_unit_parent);
 				//App.WriteValue(ent_unit_child);
 				//App.WriteValue(ent_enterable);
@@ -737,7 +741,7 @@ namespace TC2.Conquest
 							{
 #if CLIENT
 								// TODO: hack
-								if (ent_unit_child == WorldMap.interacted_entity_cached || (WorldMap.hs_selected_entities.Count == 1 && WorldMap.hs_selected_entities.Contains(ent_unit_child)))
+								if (ent_enterable == WorldMap.interacted_entity_cached || (ent_unit_child == WorldMap.interacted_entity_cached || (WorldMap.hs_selected_entities.Count == 1 && WorldMap.hs_selected_entities.Contains(ent_unit_child))))
 								{
 									WorldMap.FocusEntity(ent_enterable, interact: true, open_widget: false);
 								}
