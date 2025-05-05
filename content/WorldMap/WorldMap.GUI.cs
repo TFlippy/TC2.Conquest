@@ -176,7 +176,7 @@ namespace TC2.Conquest
 
 						var snap_delta_canvas = snap_delta * zoom;
 
-						var tex_scale = enable_renderer ? (IScenario.WorldMap.worldmap_size.X / scale_b) * zoom : 16.00f;
+						var tex_scale = enable_renderer ? (IScenario.WorldMap.worldmap_size.x / scale_b) * zoom : 16.00f;
 						var tex_scale_inv = 1.00f / tex_scale;
 
 						var color_grid = new Color32BGRA(0xff4eabb5);
@@ -233,7 +233,7 @@ namespace TC2.Conquest
 										Inner(ref region, ref asset_data, points);
 
 										[MethodImpl(MethodImplOptions.NoInlining)] // Stackalloc in loop
-										static void Inner(ref Region.Data.Global region, ref IPrefecture.Data asset_data, Span<short2> points)
+										static void Inner(ref Region.Data.Global region, ref IPrefecture.Data asset_data, Span<Vec2i16> points)
 										{
 											var pos_center = Vector2.Zero;
 

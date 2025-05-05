@@ -259,7 +259,7 @@ namespace TC2.Conquest
 								{
 									hs_pending_asset_saves.Add(asset);
 
-									asset_data.point = new short2((short)MathF.Round(point_tmp.X), (short)MathF.Round(point_tmp.Y));
+									asset_data.point = new Vec2i16((short)MathF.Round(point_tmp.X), (short)MathF.Round(point_tmp.Y));
 								}
 							}
 						}
@@ -804,7 +804,7 @@ namespace TC2.Conquest
 
 			if (edit_points_index.TryGetValue(out var v_edit_points_index))
 			{
-				if (edit_points_s16 != null) edit_points_s16[v_edit_points_index] = new short2((short)MathF.Round(mouse_local.X), (short)MathF.Round(mouse_local.Y));
+				if (edit_points_s16 != null) edit_points_s16[v_edit_points_index] = new Vec2i16((short)MathF.Round(mouse_local.X), (short)MathF.Round(mouse_local.Y));
 				if (edit_points_f32 != null) edit_points_f32[v_edit_points_index] = mouse_local;
 
 				if (mouse.GetKeyUp(Mouse.Key.Right))

@@ -98,7 +98,7 @@ namespace TC2.Conquest
 						{
 							ref var point = ref points_span[point_index];
 
-							var pos_grid = new short2((short)point.X, (short)point.Y);
+							var pos_grid = new Vec2i16((short)point.X, (short)point.Y);
 							var pos_key = Maths.ToInt32BitCast(pos_grid);
 
 							pos_hash_to_prefecture[pos_key] = h_prefecture;
@@ -605,11 +605,11 @@ namespace TC2.Conquest
 			}
 		}
 
-		public static void DrawOutlineShader(Span<short2> points, Color32BGRA color, float thickness, Texture.Handle h_texture, bool loop = true)
+		public static void DrawOutlineShader(Span<Vec2i16> points, Color32BGRA color, float thickness, Texture.Handle h_texture, bool loop = true)
 		{
 			var count = points.Length;
 
-			var last_vert = default(short2);
+			var last_vert = default(Vec2i16);
 			for (var i = 0; i < (count + 1); i++)
 			{
 				if (!loop && i >= count) break;
@@ -669,11 +669,11 @@ namespace TC2.Conquest
 			}
 		}
 
-		public static void DrawOutline(ref Region.Data.Global region, Span<short2> points, Color32BGRA color, float thickness, float cap_size, Texture.Handle h_texture)
+		public static void DrawOutline(ref Region.Data.Global region, Span<Vec2i16> points, Color32BGRA color, float thickness, float cap_size, Texture.Handle h_texture)
 		{
 			var count = points.Length;
 
-			var last_vert = default(short2);
+			var last_vert = default(Vec2i16);
 			for (var i = 0; i < (count + 1); i++)
 			{
 				var index = i % count;

@@ -48,14 +48,14 @@ namespace TC2.Conquest
 
 		public static IPrefecture.Handle GetPrefectureAtPosition(Vector2 pos)
 		{
-			var pos_grid = new short2((short)pos.X, (short)pos.Y);
+			var pos_grid = new Vec2i16((short)pos.X, (short)pos.Y);
 			var pos_key = Maths.ToInt32BitCast(pos_grid);
 
 			pos_hash_to_prefecture.TryGetValue(pos_key, out var h_prefecture);
 			return h_prefecture;
 		}
 
-		public static IPrefecture.Handle GetPrefectureAtPoint(short2 pos)
+		public static IPrefecture.Handle GetPrefectureAtPoint(Vec2i16 pos)
 		{
 			var pos_key = Maths.ToInt32BitCast(pos);
 
@@ -809,7 +809,7 @@ namespace TC2.Conquest
 		public static Road.Chain edit_road;
 
 		public static int? edit_points_index;
-		public static short2[] edit_points_s16;
+		public static Vec2i16[] edit_points_s16;
 		public static Vector2[] edit_points_f32;
 
 		public static Doodad.Renderer.Data? clipboard_doodad;
