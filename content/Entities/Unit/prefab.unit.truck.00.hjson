@@ -91,6 +91,11 @@ storage:
 		stack_size_multiplier: 16.000
 		type: storage
 		flags: standalone, ignore_mass, faction
+
+		filter:
+		{
+			exclude: gas
+		}
 	}
 }
 
