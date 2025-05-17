@@ -1179,8 +1179,8 @@
 				frame: [0, 4]
 			}
 			
-			position: [23.77132, -13.92871]
-			scale: [0.274988, 0.300041]
+			position: [22.66088, -13.23806]
+			scale: [0.374986, 0.500041]
 			z: -0.228
 		}
 		{
@@ -1192,10 +1192,10 @@
 				frame: [0, 1]
 			}
 			
-			position: [27.2367, -13.35028]
+			position: [27.19728, -13.51452]
 			scale: [-0.430748, 0.474999]
 			rotation: -0.070
-			z: 0.455
+			z: 0.009
 			color: "0xffdddddd"
 		}
 		{
@@ -1222,7 +1222,7 @@
 				frame: [2, 1]
 			}
 			
-			position: [25.6401, -15.29016]
+			position: [23.65196, -14.18538]
 			scale: [-0.550685, 0.474701]
 			rotation: -0.070
 			z: 0.050
@@ -1835,10 +1835,10 @@
 				frame: [4, 4]
 			}
 			
-			position: [25.70379, -14.63296]
-			scale: [0.502026, 0.447325]
+			position: [26.94362, -12.97477]
+			scale: [0.527023, 0.572324]
 			rotation: -0.030
-			z: 0.223
+			z: 0.664
 			color: "0xffc3c3c3"
 		}
 		{
@@ -3865,9 +3865,9 @@
 				frame: [4, 0]
 			}
 			
-			position: [26.38695, -14.4027]
-			scale: [0.372373, 0.524239]
-			rotation: 0.050
+			position: [26.09821, -15.11714]
+			scale: [0.197382, 0.524239]
+			rotation: 0.139626
 			z: 0.050
 			color: "0xffcfcfcf"
 		}
@@ -3970,7 +3970,7 @@
 				frame: [3, 3]
 			}
 			
-			position: [26.20027, -14.87321]
+			position: [26.68417, -16.4598]
 			scale: [-0.279295, 0.646538]
 			rotation: 0.090
 			z: 0.050
@@ -5312,9 +5312,9 @@
 				frame: [0, 4]
 			}
 			
-			position: [26.51405, -13.93536]
-			scale: [-0.399831, -0.400]
-			rotation: -3.050
+			position: [27.33791, -13.16599]
+			scale: [-0.174854, -0.575011]
+			rotation: -2.6529
 			z: -0.017
 		}
 		{
@@ -10182,7 +10182,7 @@
 				frame: [0, 4]
 			}
 			
-			position: [29.49539, -7.454884]
+			position: [29.4861, -7.594244]
 			scale: [0.200811, -0.425028]
 			rotation: -2.740167
 			z: -0.805
@@ -11663,11 +11663,245 @@
 				frame: [4, 4]
 			}
 			
-			position: [25.80469, -13.16233]
-			scale: [0.502026, 0.447325]
+			position: [25.3932, -13.52604]
+			scale: [-0.477011, 0.622324]
 			rotation: -0.030
+			z: 0.009
+			color: "0xffc3c3c3"
+		}
+		{
+			sprite:
+			{
+				texture: worldmap.doodads.00
+				mask: missing
+				size: [64, 24]
+				frame: [0, 4]
+			}
+			
+			position: [25.77844, -14.07202]
+			scale: [-0.324839, 0.799995]
+			rotation: -3.385939
+			z: -0.017
+		}
+		{
+			sprite:
+			{
+				texture: worldmap.doodads.00
+				mask: missing
+				size: [64, 24]
+				frame: [0, 4]
+			}
+			
+			position: [25.59105, -14.75007]
+			scale: [-0.225014, 0.773437]
+			rotation: -2.932153
+			z: -0.017
+		}
+		{
+			sprite:
+			{
+				texture: worldmap.doodads.00
+				mask: missing
+				size: [64, 24]
+				frame: [0, 4]
+			}
+			
+			position: [26.54677, -13.97668]
+			scale: [0.299824, -0.475001]
+			rotation: -3.036873
+			z: 0.504
+		}
+		{
+			sprite:
+			{
+				texture: worldmap.doodads.00
+				mask: missing
+				size: [24, 24]
+				frame: [4, 4]
+			}
+			
+			position: [26.92691, -16.28948]
+			scale: [-0.502026, 0.447325]
+			rotation: -0
 			z: 0.223
 			color: "0xffc3c3c3"
+		}
+		{
+			sprite:
+			{
+				texture: worldmap.doodads.00
+				mask: missing
+				size: [48, 24]
+				frame: [0, 1]
+			}
+			
+			position: [26.07878, -13.50358]
+			scale: [-0.724592, 0.850147]
+			rotation: 0.120
+			z: 0.628
+			color: "0xffe3e3e3"
+		}
+		{
+			sprite:
+			{
+				texture: worldmap.doodads.01
+				mask: missing
+				size: [48, 24]
+				frame: [3, 3]
+			}
+			
+			position: [23.82673, -12.34282]
+			scale: [-0.329298, 0.721535]
+			rotation: 0.090
+			z: 0.050
+			color: "0xffc3b149"
+		}
+		{
+			sprite:
+			{
+				texture: worldmap.doodads.00
+				mask: missing
+				size: [48, 48]
+				frame: [0, 1]
+			}
+			
+			position: [25.56689, -12.79535]
+			scale: [-0.502239, 0.499997]
+			rotation: -0.069813
+			z: 0.717
+			color: "0xffcccccc"
+		}
+		{
+			sprite:
+			{
+				texture: worldmap.doodads.01
+				mask: missing
+				size: [16, 16]
+				frame: [2, 22]
+			}
+			
+			position: [25.57594, -13.89349]
+			scale: [0.37496, 1.049329]
+			rotation: -2.059488
+			z: 0.001
+		}
+		{
+			sprite:
+			{
+				texture: worldmap.doodads.01
+				mask: missing
+				size: [8, 16]
+				frame: [2, 22]
+			}
+			
+			position: [24.90328, -14.04911]
+			scale: [0.599972, 1.25001]
+			rotation: 1.605703
+			z: -0.717
+			color: "0xffa8a7a7"
+		}
+		{
+			sprite:
+			{
+				texture: worldmap.doodads.00
+				mask: missing
+				size: [48, 48]
+				frame: [0, 4]
+			}
+			
+			position: [28.63651, -16.31721]
+			scale: [0.740919, -0.802428]
+			rotation: 2.879794
+			z: -0.575
+			color: "0xffc2ab9d"
+		}
+		{
+			sprite:
+			{
+				texture: worldmap.doodads.00
+				mask: missing
+				size: [48, 48]
+				frame: [0, 4]
+			}
+			
+			position: [26.26339, -15.35476]
+			scale: [0.690916, -0.77743]
+			rotation: 3.01942
+			z: -0.009
+			color: "0xffc2ab9d"
+		}
+		{
+			sprite:
+			{
+				texture: worldmap.doodads.00
+				mask: missing
+				size: [48, 48]
+				frame: [0, 4]
+			}
+			
+			position: [26.67874, -14.57553]
+			scale: [-0.640912, 0.652427]
+			rotation: 2.984513
+			z: -0.003
+			color: "0xffc2ab9d"
+		}
+		{
+			sprite:
+			{
+				texture: worldmap.doodads.00
+				mask: missing
+				size: [64, 24]
+				frame: [0, 4]
+			}
+			
+			position: [26.29811, -12.6182]
+			scale: [-0.300023, 0.548435]
+			rotation: -2.932153
+			z: 0.894
+		}
+		{
+			sprite:
+			{
+				texture: worldmap.doodads.00
+				mask: missing
+				size: [24, 24]
+				frame: [4, 4]
+			}
+			
+			position: [25.61251, -15.10056]
+			scale: [-0.452005, 0.572329]
+			rotation: -0.030
+			z: 0.009
+			color: "0xffc3c3c3"
+		}
+		{
+			sprite:
+			{
+				texture: worldmap.doodads.01
+				mask: missing
+				size: [16, 16]
+				frame: [2, 22]
+			}
+			
+			position: [27.1151, -16.75231]
+			scale: [0.724948, -1.424341]
+			rotation: -1.448623
+			z: -0.001
+		}
+		{
+			sprite:
+			{
+				texture: worldmap.doodads.01
+				mask: missing
+				size: [48, 24]
+				frame: [4, 2]
+			}
+			
+			position: [26.28164, -14.72816]
+			scale: [-0.273295, -0.524126]
+			rotation: -0.436332
+			z: 0.050
+			color: "0xffe1e1e1"
 		}
 	]
 }
