@@ -36,7 +36,7 @@
 			}
 			{
 				type: resource
-				material: ammo.sg.slug
+				material: ammo.sg.slug.hv
 				quantity: 40.000
 				flags: despawn, no_consume
 			}

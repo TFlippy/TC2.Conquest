@@ -31,7 +31,7 @@
 			}
 			{
 				type: resource
-				material: "ammo.rocket"
+				material: "ammo.rocket.lv"
 				quantity: 4.000
 				flags: none
 			}

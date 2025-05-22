@@ -36,7 +36,7 @@
 			}
 			{
 				type: resource
-				material: ammo.sg.buck
+				material: ammo.sg.buck.lv
 				quantity: 12.000
 				flags: despawn, no_consume
 			}

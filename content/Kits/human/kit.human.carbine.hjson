@@ -36,7 +36,7 @@
 			}
 			{
 				type: resource
-				material: ammo.hc
+				material: ammo.hc.lv
 				quantity: 16.000
 				flags: no_consume
 			}

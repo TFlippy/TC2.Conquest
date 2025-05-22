@@ -31,7 +31,7 @@
 			}
 			{
 				type: resource
-				material: "ammo.lc"
+				material: "ammo.lc.lv"
 				quantity: 120.000
 				flags: none
 			}
