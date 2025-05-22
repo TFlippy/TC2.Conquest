@@ -32,7 +32,7 @@
 			}
 			{
 				type: resource
-				material: ammo_lc.hv
+				material: ammo.lc.hv
 				quantity: 150.000
 				flags: none
 			}

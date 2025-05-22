@@ -36,13 +36,13 @@
 			}
 			{
 				type: resource
-				material: ammo_mg
+				material: ammo.mg.hv
 				quantity: 20.000
 				flags: none
 			}
 			{
 				type: resource
-				material: ammo_musket
+				material: ammo.hc.ap
 				quantity: 30.000
 				flags: none
 			}
