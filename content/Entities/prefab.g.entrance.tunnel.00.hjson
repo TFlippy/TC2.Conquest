@@ -78,7 +78,7 @@ faction.colorable:
 
 worldmap.marker:
 {
-	radius: 0.250
+	radius: 0.500
 	scale: 0.500
 	rotation: 0.000
 	color: "0xc0ffffff"

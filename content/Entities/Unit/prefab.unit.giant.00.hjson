@@ -18,7 +18,7 @@ worldmap.marker:
 {
 	flags: hide_if_parented
 	radius: 0.250
-	scale: 0.375
+	scale: 0.300
 	color: "0xc0ffffff"
 	text_offset: [0.000, 0.150]
 	icon_offset: [0.000, 0.000]
