@@ -292,7 +292,7 @@ namespace TC2.Conquest
 						}
 						var ts_elapsed = ts.GetMilliseconds();
 
-						if (doodad.IsNotNull() && (edit_doodad_index.HasValue || distance_sq <= 1.00f.Pow2()))
+						if (doodad.IsNotNull() && (edit_doodad_index.HasValue || distance_sq <= 1.00f))
 						{
 							{
 								ref var point = ref doodad.position;

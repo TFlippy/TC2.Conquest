@@ -5,12 +5,12 @@ namespace TC2.Conquest
 {
 	public sealed partial class ModInstance: Mod
 	{
-		protected override void OnRegister(ModContext context)
+		protected override void OnRegister(ref ModContext context)
 		{
 
 		}
 
-		protected override void OnInitialize(ModContext context)
+		protected override void OnInitialize(ref ModContext context)
 		{
 			WorldMap.Init();
 
