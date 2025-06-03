@@ -943,6 +943,8 @@ namespace TC2.Conquest
 			}
 		}
 
+		//public const bool debug_log_character_switch = false;
+
 		[ISystem.GUI(ISystem.Mode.Single, ISystem.Scope.Global)]
 		public static void OnCharacterGUI(ISystem.Info.Global info, ref Region.Data.Global region, [Source.Owned] ref World.Global world)
 		{
@@ -971,7 +973,7 @@ namespace TC2.Conquest
 						{
 							//if (widget.IsAppearing()) WorldMap.FocusLocation(Conquest.CreationGUI.custom_character.vars.h_location);
 
-							App.WriteLine($"switch begin ({h_character_current} to {h_character})", color: App.Color.Magenta);
+							//App.WriteLine($"switch begin ({h_character_current} to {h_character})", color: App.Color.Magenta);
 							//Client.SetCharacter(h_character, true, force: !is_selected);
 							//if (h_character_current != h_character | !is_selected)
 							//{
@@ -986,7 +988,7 @@ namespace TC2.Conquest
 							Client.SetCharacter(h_character, true, force: !is_selected).WaitForRender().ContinueWith((x) =>
 							{
 								var h_character = x.h_character;
-								App.WriteLine($"switch done ({h_character_current} to {h_character}; {x.h_character})", color: App.Color.Magenta);
+								//App.WriteLine($"switch done ({h_character_current} to {h_character}; {x.h_character})", color: App.Color.Magenta);
 
 								var ent_character_global = h_character.GetGlobalEntity();
 								if (ent_character_global.IsAlive())

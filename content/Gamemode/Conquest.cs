@@ -177,35 +177,35 @@ namespace TC2.Conquest
 		}
 #endif
 
-		[ISystem.Event<Character.SetPlayerEvent>(ISystem.Mode.Single, ISystem.Scope.Region)]
-		public static void OnCharacterSetPlayerEvent(ISystem.Info info, ref Region.Data region, Entity ent_character, Entity ent_player, [Source.Owned] ref Character.SetPlayerEvent ev, 
-		[Source.Owned] ref Character.Data character, [Source.Shared] ref Player.Data player, [Source.Shared] ref Respawn.Data respawn)
-		{
-			App.WriteLine($"OnCharacterSetPlayerEvent()", App.Color.Magenta);
+//		[ISystem.Event<Character.SetPlayerEvent>(ISystem.Mode.Single, ISystem.Scope.Region)]
+//		public static void OnCharacterSetPlayerEvent(ISystem.Info info, ref Region.Data region, Entity ent_character, Entity ent_player, [Source.Owned] ref Character.SetPlayerEvent ev, 
+//		[Source.Owned] ref Character.Data character, [Source.Shared] ref Player.Data player, [Source.Shared] ref Respawn.Data respawn)
+//		{
+//			App.WriteLine($"OnCharacterSetPlayerEvent()", App.Color.Magenta);
 
-			var ent_occupied = character.ent_occupied;
-			if (ent_occupied.IsAlive() && ent_occupied.HasComponent<Spawn.Data>())
-			{
-				App.WriteLine($"EV: is spawn {ent_occupied}");
-			}
-		}
+//			var ent_occupied = character.ent_occupied;
+//			if (ent_occupied.IsAlive() && ent_occupied.HasComponent<Spawn.Data>())
+//			{
+//				App.WriteLine($"EV: is spawn {ent_occupied}");
+//			}
+//		}
 
-		[ISystem.Add(ISystem.Mode.Single, ISystem.Scope.Region)]
-		public static void OnCharacterAddPlayer(ISystem.Info info, ref Region.Data region, Entity ent_character, Entity ent_player,
-		[Source.Owned] ref Character.Data character, [Source.Shared] ref Player.Data player, [Source.Shared] ref Respawn.Data respawn)
-		{
-			App.WriteLine($"OnCharacterAddPlayer()", App.Color.Magenta);
+//		[ISystem.Add(ISystem.Mode.Single, ISystem.Scope.Region)]
+//		public static void OnCharacterAddPlayer(ISystem.Info info, ref Region.Data region, Entity ent_character, Entity ent_player,
+//		[Source.Owned] ref Character.Data character, [Source.Shared] ref Player.Data player, [Source.Shared] ref Respawn.Data respawn)
+//		{
+//			App.WriteLine($"OnCharacterAddPlayer()", App.Color.Magenta);
 
-			var ent_occupied = character.ent_occupied;
-			if (ent_occupied.IsAlive() && ent_occupied.HasComponent<Spawn.Data>())
-			{
-				App.WriteLine($"ADD: is spawn {ent_occupied}");
-#if SERVER
-				//respawn.ent_selected_spawn = ent_occupied;
-				//respawn.Sync(ent_player, true);
-#endif
-			}
-		}
+//			var ent_occupied = character.ent_occupied;
+//			if (ent_occupied.IsAlive() && ent_occupied.HasComponent<Spawn.Data>())
+//			{
+//				App.WriteLine($"ADD: is spawn {ent_occupied}");
+//#if SERVER
+//				//respawn.ent_selected_spawn = ent_occupied;
+//				//respawn.Sync(ent_player, true);
+//#endif
+//			}
+//		}
 
 #if CLIENT
 		public struct ScoreboardGUI: IGUICommand
@@ -346,35 +346,36 @@ namespace TC2.Conquest
 			}
 		}
 
-		[Shitcode]
-		[ISystem.EarlyGUI(ISystem.Mode.Single, ISystem.Scope.Region), HasTag("local", true, Source.Modifier.Owned)]
-		public static void OnEarlyGUI(Entity entity, [Source.Owned] in Player.Data player, [Source.Singleton] in Conquest.Gamemode gamemode)
-		{
-			return;
+		//[Shitcode]
+		//[ISystem.EarlyGUI(ISystem.Mode.Single, ISystem.Scope.Region), HasTag("local", true, Source.Modifier.Owned)]
+		//public static void OnEarlyGUI(Entity entity, [Source.Owned] in Player.Data player, [Source.Singleton] in Conquest.Gamemode gamemode)
+		//{
+		//	return;
 
-			if (!GUI.IsHovered || ScoreboardGUI.show)
-			{
-				ref readonly var kb = ref Control.GetKeyboard();
-				if (kb.GetKeyDown(Keyboard.Key.Tab))
-				{
-					ScoreboardGUI.show.Toggle();
-				}
-			}
+		//	if (!GUI.IsHovered || ScoreboardGUI.show)
+		//	{
+		//		ref readonly var kb = ref Control.GetKeyboard();
+		//		if (kb.GetKeyDown(Keyboard.Key.Tab))
+		//		{
+		//			ScoreboardGUI.show.Toggle();
+		//		}
+		//	}
 
-			Spawn.RespawnGUI.window_offset = new Vector2(0, 90);
-			Spawn.RespawnGUI.window_pivot = new Vector2(0, 0);
+		//	Spawn.RespawnGUI.window_offset = new Vector2(0, 90);
+		//	Spawn.RespawnGUI.window_pivot = new Vector2(0, 0);
 
-			if (!WorldMap.IsOpen && (ScoreboardGUI.show || (!player.flags.HasAny(Player.Flags.Alive) && Editor.show_respawn_menu)))
-			{
-				var gui = new ScoreboardGUI()
-				{
-					//player = player,
-					player_flags = player.flags,
-					//gamemode = gamemode,
-				};
-				gui.Submit();
-			}
-		}
+		//	if (!WorldMap.IsOpen && (ScoreboardGUI.show || (!player.flags.HasAny(Player.Flags.Alive) && Editor.show_respawn_menu)))
+		//	{
+		//		var gui = new ScoreboardGUI()
+		//		{
+		//			//player = player,
+		//			player_flags = player.flags,
+		//			//gamemode = gamemode,
+		//		};
+		//		gui.Submit();
+		//	}
+		//}
+
 #endif
 	}
 }

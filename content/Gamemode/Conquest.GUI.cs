@@ -803,7 +803,7 @@ namespace TC2.Conquest
 		[ISystem.PreUpdate.D(ISystem.Mode.Single, ISystem.Scope.Region, flags: ISystem.Flags.Unchecked, order: -55)]
 		public static void UpdateRespawn([Source.Owned] in Respawn.Data respawn, [Source.Owned] in Player.Data player)
 		{
-			if (!player.h_character && respawn.ent_selected_spawn.IsAlive())
+			if (!WorldMap.IsOpen && !player.h_character && respawn.ent_selected_spawn.IsAlive())
 			{
 				ref var interactable = ref respawn.ent_selected_spawn.GetComponent<Interactable.Data>();
 				if (interactable.IsNotNull())
