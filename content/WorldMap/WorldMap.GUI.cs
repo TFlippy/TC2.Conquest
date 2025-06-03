@@ -1960,33 +1960,33 @@ namespace TC2.Conquest
 													var color = GUI.col_button_ok;
 													var alpha = 1.00f;
 
-													if (GUI.DrawIconButton("info"u8, new(GUI.tex_icons_widget, 16, 16, 6, 1), size: new(48, 48)))
-													{
+													//if (GUI.DrawIconButton("info"u8, new(GUI.tex_icons_widget, 16, 16, 6, 1), size: new(48, 48)))
+													//{
 
-													}
+													//}
 
-													GUI.SameLine();
+													//GUI.SameLine();
 
-													if (Client.GetRegionID() != selected_region_id)
-													{
-														if (GUI.DrawButton("Join"u8, size: new(GUI.RmX, 48), font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
-														{
-															Client.RequestSetActiveRegion(selected_region_id, delay_seconds: 0.75f);
+													//if (Client.GetRegionID() != selected_region_id)
+													//{
+													//	if (GUI.DrawButton("Join"u8, size: new(GUI.RmX, 48), font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+													//	{
+													//		Client.RequestSetActiveRegion(selected_region_id, delay_seconds: 0.75f);
 
-															window.Close();
-															GUI.RegionMenu.ToggleWidget(false);
+													//		window.Close();
+													//		GUI.RegionMenu.ToggleWidget(false);
 
-															//Client.TODO_LoadRegion(region_id);
-														}
-													}
-													else
-													{
-														color = GUI.col_button_error;
-														if (GUI.DrawButton("Leave"u8, size: new(GUI.RmX, 48), font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
-														{
-															Client.RequestSetActiveRegion(0, delay_seconds: 0.10f);
-														}
-													}
+													//		//Client.TODO_LoadRegion(region_id);
+													//	}
+													//}
+													//else
+													//{
+													//	color = GUI.col_button_error;
+													//	if (GUI.DrawButton("Leave"u8, size: new(GUI.RmX, 48), font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+													//	{
+													//		Client.RequestSetActiveRegion(0, delay_seconds: 0.10f);
+													//	}
+													//}
 												}
 												else
 												{
@@ -2089,8 +2089,41 @@ namespace TC2.Conquest
 
 																	using (var group_right = GUI.Group.New(size: GUI.Rm, padding: new(4)))
 																	{
-																		GUI.Title(ent_child.GetName(), size: 24);
+																		GUI.TitleCentered(ent_child.GetName(), size: 24, pivot: new(0.00f, 0.50f));
 																		//group_right.DrawBackground(GUI.tex_window_popup);
+
+																		//if (GUI.DrawIconButton("info"u8, new(GUI.tex_icons_widget, 16, 16, 6, 1), size: new(48, 48)))
+																		//{
+
+																		//}
+
+																		//GUI.SameLine();
+
+																		using (var group_button = group_right.Split(size: new(80, GUI.RmY), align_x: GUI.AlignX.Right, align_y: GUI.AlignY.Center))
+																		{
+																			var alpha = 1.00f;
+																			if (Client.GetRegionID() != selected_region_id)
+																			{
+																				var color = GUI.col_button_ok;
+																				if (GUI.DrawButton("Join"u8, size: GUI.Rm, font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+																				{
+																					Client.RequestSetActiveRegion(selected_region_id, delay_seconds: 0.75f);
+
+																					window.Close();
+																					GUI.RegionMenu.ToggleWidget(false);
+
+																					//Client.TODO_LoadRegion(region_id);
+																				}
+																			}
+																			else
+																			{
+																				var color = GUI.col_button_error;
+																				if (GUI.DrawButton("Leave"u8, size: GUI.Rm, font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+																				{
+																					Client.RequestSetActiveRegion(0, delay_seconds: 0.10f);
+																				}
+																			}
+																		}
 																	}
 
 																	var is_selected = WorldMap.interacted_entity_cached == ent_child;
