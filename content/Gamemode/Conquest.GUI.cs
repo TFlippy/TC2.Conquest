@@ -213,14 +213,22 @@ namespace TC2.Conquest
 					map_frame_size_raw = default;
 				}
 
+				var pos = GUI.GetCanvasRect().GetPosition(pivot: new(0.50f, 0.00f), offset: new(0.00f, 64.00f + 8.00f));
+
 				//using (var window = GUI.Window.Standalone("Respawn"u8, position: new Vector2(GUI.CanvasSize.X * 0.40f, 0) + Spawn.RespawnGUI.window_offset, pivot: Spawn.RespawnGUI.window_pivot, size: Spawn.RespawnGUI.window_size, flags: GUI.Window.Flags.No_Appear_Focus))
-				using (var window = GUI.Window.InteractionAnchored("Respawn"u8, size: new(600, 144), anchor: GUI.Anchor.Bottom, align: 0.00f)) //, flags: GUI.Window.Flags.No_Appear_Focus))
+				//using (var window = GUI.Window.InteractionAnchored("Respawn"u8, size: new(600, 144), anchor: GUI.Anchor.Top, align: 0.00f)) //, flags: GUI.Window.Flags.No_Appear_Focus))
+				using (var window = GUI.Window.Standalone("Respawn"u8, size: new(600, 144), position: pos, pivot: new(0.50f, 0.00f))) // anchor: GUI.Anchor.Top, align: 0.00f)) //, flags: GUI.Window.Flags.No_Appear_Focus))
 				{
 					this.StoreCurrentWindowTypeID();
 					if (window.show)
 					{
+						var pos_interaction = pos + new Vector2(0.00f, 144.00f);
+						Interactable.SetCanvasPosition(pos: pos_interaction, pivot: new(0.50f, 0.00f));
+
 						ref var region = ref this.ent_respawn.GetRegion();
 						ref var player = ref Client.GetPlayerData(out var player_asset);
+
+						var h_character_current = Client.GetCharacterHandle();
 
 						//var random = XorRandom.New(true);
 						var pos_camera = (Vec2f)Camera.position;
@@ -249,68 +257,8 @@ namespace TC2.Conquest
 
 						using (GUI.Group.New(size: GUI.Rm, padding: new(8)))
 						{
-							using (var group_top = GUI.Group.New(size: new(GUI.RmX, 48)))
-							{
-								var rm = new Vec2f(GUI.Rm);
-								var button_size = new Vec2f(32, rm.y);
-
-								if (GUI.DrawIconButton("spawn.prev"u8, GUI.tex_icons_widget.GetSprite(8, 16, 4, 8), size: button_size, color_icon: GUI.col_button_yellow))
-								{
-									scoped var args = new FetchNearestSpawnArgs(ent_selected_spawn: this.respawn.ent_selected_spawn, pos_pivot: pos_camera,
-									h_faction: h_faction, h_character: h_selected_character,
-									search_type: FetchNearestSpawnArgs.SearchType.Left,
-									flags: FetchNearestSpawnArgs.Flags.None);
-
-									var ret = region.TriggerSystem(Conquest.FetchNearestSpawn, ref args);
-									if (args.spawn_info.ent_spawn != 0)
-									{
-										selected_spawn_info_cached = args.spawn_info;
-
-										var rpc = new RespawnExt.SetSpawnRPC()
-										{
-											ent_spawn = args.spawn_info.ent_spawn
-										};
-										rpc.Send(this.ent_respawn);
-									}
-								}
-
-								GUI.SameLine();
-
-								//GUI.DropdownInput(GUI.Dropdown.Begin()
-
-								using (var group_title = GUI.Group.New(size: rm - new Vec2f(button_size.x.x2(), 0.00f), padding: new(4, 0)))
-								{
-									group_title.DrawBackground(GUI.tex_window);
-
-									Utf8String title_text = (spawn_info_current.ent_spawn.IsValid() ? spawn_info_current.ent_spawn.GetFullName() : "Select a spawnpoint"u8);
-									GUI.TitleCentered(title_text, rect: group_title.GetInnerRect(), size: 32, pivot: new(0.50f, 0.50f));
-								}
-
-								GUI.SameLine();
-
-								if (GUI.DrawIconButton("spawn.next"u8, GUI.tex_icons_widget.GetSprite(8, 16, 5, 8), size: button_size, color_icon: GUI.col_button_yellow))
-								{
-									scoped var args = new FetchNearestSpawnArgs(ent_selected_spawn: this.respawn.ent_selected_spawn, pos_pivot: pos_camera,
-									h_faction: h_faction, h_character: h_selected_character,
-									search_type: FetchNearestSpawnArgs.SearchType.Right,
-									flags: FetchNearestSpawnArgs.Flags.None);
-
-									var ret = region.TriggerSystem(Conquest.FetchNearestSpawn, ref args);
-									if (args.spawn_info.ent_spawn != 0)
-									{
-										selected_spawn_info_cached = args.spawn_info;
-
-										var rpc = new RespawnExt.SetSpawnRPC()
-										{
-											ent_spawn = args.spawn_info.ent_spawn
-										};
-										rpc.Send(this.ent_respawn);
-									}
-								}
-							}
-
-							GUI.SeparatorThick();
-
+					
+						
 							{
 								using (GUI.Wrap.Push(GUI.RmX))
 								using (var group = GUI.Group.New(size: new(GUI.RmX, 80), padding: new(4)))
@@ -386,7 +334,7 @@ namespace TC2.Conquest
 																	//}
 																}
 
-																is_selectable = spawn.IsSelectableByFaction(faction_id_tmp, faction.id, has_characters, is_visible); // has_characters || faction.id == faction_id_tmp || (faction.id == 0 && spawn.flags.HasAny(Spawn.Flags.Public));
+																is_selectable = !h_character_current && spawn.IsSelectableByFaction(faction_id_tmp, faction.id, has_characters, is_visible); // has_characters || faction.id == faction_id_tmp || (faction.id == 0 && spawn.flags.HasAny(Spawn.Flags.Public));
 															}
 															//else if (spawn.flags.HasAny(Spawn.Flags.Public))
 															//{
@@ -398,7 +346,7 @@ namespace TC2.Conquest
 
 													if (is_visible)
 													{
-														var alpha = has_characters ? 1.00f : 0.65f;
+														var alpha = has_characters & is_selectable ? 1.00f : 0.50f;
 														using (var node = map.DrawNode(marker_copy.sprite, transform_copy.GetInterpolatedPosition() + new Vector2(0, -3), color: (selected ? Color32BGRA.White : color).WithAlphaMult(alpha), color_hovered: selected ? Color32BGRA.White : Color32BGRA.Lerp(color, Color32BGRA.White, 0.50f).WithAlphaMult(alpha)))
 														{
 															//GUI.DrawTextCentered(nameable_copy.name, node.rect.GetPosition() + new Vector2(16, 0), piv layer: GUI.Layer.Window, font: GUI.Font.Superstar, size: 16);
@@ -437,8 +385,71 @@ namespace TC2.Conquest
 								}
 							}
 
-							
-					
+							GUI.SeparatorThick();
+
+
+							using (var group_top = GUI.Group.New(size: new(GUI.RmX, 48)))
+							{
+								var rm = new Vec2f(GUI.Rm);
+								var button_size = new Vec2f(32, rm.y);
+
+								if (GUI.DrawIconButton(identifier: "spawn.prev"u8, enabled: !h_character_current, sprite: GUI.tex_icons_widget.GetSprite(8, 16, 4, 8), size: button_size, color_icon: GUI.col_button_yellow))
+								{
+									scoped var args = new FetchNearestSpawnArgs(ent_selected_spawn: this.respawn.ent_selected_spawn, pos_pivot: pos_camera,
+									h_faction: h_faction, h_character: h_character_current,
+									search_type: FetchNearestSpawnArgs.SearchType.Left,
+									flags: FetchNearestSpawnArgs.Flags.None);
+
+									var ret = region.TriggerSystem(Conquest.FetchNearestSpawn, ref args);
+									if (args.spawn_info.ent_spawn != 0)
+									{
+										selected_spawn_info_cached = args.spawn_info;
+
+										var rpc = new RespawnExt.SetSpawnRPC()
+										{
+											ent_spawn = args.spawn_info.ent_spawn
+										};
+										rpc.Send(this.ent_respawn);
+									}
+								}
+
+								GUI.SameLine();
+
+								//GUI.DropdownInput(GUI.Dropdown.Begin()
+
+								using (var group_title = GUI.Group.New(size: rm - new Vec2f(button_size.x.x2(), 0.00f), padding: new(4, 0)))
+								{
+									group_title.DrawBackground(GUI.tex_window);
+
+									Utf8String title_text = (spawn_info_current.ent_spawn.IsValid() ? spawn_info_current.ent_spawn.GetFullName() : "Select a spawnpoint"u8);
+									GUI.TitleCentered(title_text, rect: group_title.GetInnerRect(), size: 32, pivot: new(0.50f, 0.50f));
+								}
+
+								GUI.SameLine();
+
+								if (GUI.DrawIconButton(identifier: "spawn.next"u8, enabled: !h_character_current, sprite: GUI.tex_icons_widget.GetSprite(8, 16, 5, 8), size: button_size, color_icon: GUI.col_button_yellow))
+								{
+									scoped var args = new FetchNearestSpawnArgs(ent_selected_spawn: this.respawn.ent_selected_spawn, pos_pivot: pos_camera,
+									h_faction: h_faction, h_character: h_character_current,
+									search_type: FetchNearestSpawnArgs.SearchType.Right,
+									flags: FetchNearestSpawnArgs.Flags.None);
+
+									var ret = region.TriggerSystem(Conquest.FetchNearestSpawn, ref args);
+									if (args.spawn_info.ent_spawn != 0)
+									{
+										selected_spawn_info_cached = args.spawn_info;
+
+										var rpc = new RespawnExt.SetSpawnRPC()
+										{
+											ent_spawn = args.spawn_info.ent_spawn
+										};
+										rpc.Send(this.ent_respawn);
+									}
+								}
+							}
+
+
+
 							//if (spawn_info_current.ent_spawn.IsAlive())
 							//{
 							//	var context = GUI.ItemContext.Begin(is_readonly: true);
@@ -807,7 +818,7 @@ namespace TC2.Conquest
 		[ISystem.GUI(ISystem.Mode.Single, ISystem.Scope.Region), HasTag("local", true, Source.Modifier.Owned)]
 		public static void OnGUIRespawn(Entity entity, [Source.Owned] in Player.Data player, [Source.Owned] in Respawn.Data respawn)
 		{
-			Spawn.RespawnGUI.enabled = false;
+			//Spawn.RespawnGUI.enabled = false;
 
 			//if (player.IsLocal())
 			{
