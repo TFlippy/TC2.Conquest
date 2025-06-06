@@ -61,7 +61,7 @@ interactable:
 {
 	window_size: [592.000, 408.000]
 	window_size_min: [592.000, 408.000]
-	window_size_misc: [214.000, 320.000]
+	window_size_misc: [96.000, 0.000]
 	window_offset: [0.000, 0.000]
 	flags: none
 }

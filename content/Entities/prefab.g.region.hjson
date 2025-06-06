@@ -24,7 +24,7 @@ interactable:
 {
 	flags: none
 	window_size: [592.000, 454.000]
-	window_size_misc: [96.000, 0.000]
+	window_size_misc: [144.000, 0.000]
 }
 
 company:

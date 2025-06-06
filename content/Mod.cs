@@ -123,7 +123,7 @@ namespace TC2.Conquest
 					}
 					else if (GUI.GameMenu.widget_toggle_open ?? true)
 					{
-						if (!widget.IsActive()) Sound.PlayGUI(GUI.sound_window_open, volume: 0.30f);
+						Sound.PlayGUI(GUI.sound_window_open, volume: 0.30f);
 						widget.SetActive(true);
 					}
 
