@@ -246,6 +246,8 @@ dotnet_diagnostic.IDE0059.severity = none
 # CS0162: Unreachable code detected
 dotnet_diagnostic.CS0162.severity = none
 
+# Default severity for analyzer diagnostics with category 'Design'
+dotnet_analyzer_diagnostic.category-Design.severity = none
 
 # IDE0017: Simplify object initialization
 dotnet_diagnostic.IDE0017.severity = none
@@ -263,6 +265,7 @@ dotnet_diagnostic.CA1028.severity = silent
 dotnet_diagnostic.CA1307.severity = error
 dotnet_diagnostic.CA1310.severity = error
 dotnet_diagnostic.CS8500.severity = none
+dotnet_diagnostic.CS0570.severity = none
 
 [*.Generated.cs]
 generated_code = true

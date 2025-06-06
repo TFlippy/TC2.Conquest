@@ -400,7 +400,7 @@ namespace TC2.Conquest
 									search_type: FetchNearestSpawnArgs.SearchType.Left,
 									flags: FetchNearestSpawnArgs.Flags.None);
 
-									var ret = region.TriggerSystem(Conquest.FetchNearestSpawn, ref args);
+									var ret = region.RunSystem(Conquest.FetchNearestSpawn, ref args);
 									if (args.spawn_info.ent_spawn != 0)
 									{
 										selected_spawn_info_cached = args.spawn_info;
@@ -434,7 +434,7 @@ namespace TC2.Conquest
 									search_type: FetchNearestSpawnArgs.SearchType.Right,
 									flags: FetchNearestSpawnArgs.Flags.None);
 
-									var ret = region.TriggerSystem(Conquest.FetchNearestSpawn, ref args);
+									var ret = region.RunSystem(Conquest.FetchNearestSpawn, ref args);
 									if (args.spawn_info.ent_spawn != 0)
 									{
 										selected_spawn_info_cached = args.spawn_info;
@@ -803,7 +803,7 @@ namespace TC2.Conquest
 		[ISystem.PreUpdate.D(ISystem.Mode.Single, ISystem.Scope.Region, flags: ISystem.Flags.Unchecked, order: -55)]
 		public static void UpdateRespawn([Source.Owned] in Respawn.Data respawn, [Source.Owned] in Player.Data player)
 		{
-			if (!WorldMap.IsOpen && !player.h_character && respawn.ent_selected_spawn.IsAlive())
+			if (!WorldMap.IsOpen && !player.h_character && (player.flags.HasNone(Player.Flags.Editor) | Editor.show_respawn_menu) && respawn.ent_selected_spawn.IsAlive())
 			{
 				ref var interactable = ref respawn.ent_selected_spawn.GetComponent<Interactable.Data>();
 				if (interactable.IsNotNull())
@@ -823,7 +823,7 @@ namespace TC2.Conquest
 			//if (player.IsLocal())
 			{
 				//if (!WorldMap.IsOpen && player.flags.HasNone(Player.Flags.Alive) && !(player.flags.HasAny(Player.Flags.Editor) && !Editor.show_respawn_menu))
-				if (!WorldMap.IsOpen && !player.ent_controlled.IsValid() && !(player.flags.HasAny(Player.Flags.Editor) && !Editor.show_respawn_menu))
+				if (!WorldMap.IsOpen && !player.ent_controlled.IsValid() && (player.flags.HasNone(Player.Flags.Editor) | Editor.show_respawn_menu))
 				{
 					var gui = new RespawnGUI
 					{

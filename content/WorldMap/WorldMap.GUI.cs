@@ -954,9 +954,9 @@ namespace TC2.Conquest
 				DrawLeftWindow(ref rect);
 				#endregion
 
-				#region Right
-				DrawRightWindow(is_loading, ref rect);
-				#endregion
+				//#region Right
+				//DrawRightWindow(is_loading, ref rect);
+				//#endregion
 
 				#region Bottom
 				DrawBottomWindow(is_loading, ref rect);
