@@ -1153,12 +1153,12 @@ namespace TC2.Conquest
 
 								if (interactable.window_size_misc.X > 0)
 								{
-									using (var window_side = window.BeginChildWindow("worldmap.interact.sub"u8, GUI.AlignX.Left, GUI.AlignY.Center, size: new(interactable.window_size_misc.X + 16, (interactable.window_size_misc.Y <= 0 ? interactable.window_size.Y : interactable.window_size_misc.Y) + 8), padding: new(8), offset: new(6, 0), open: true))
+									using (var window_side = window.BeginChildWindow(identifier: "worldmap.interact.sub"u8, anchor_x: GUI.AlignX.Left, anchor_y: GUI.AlignY.Center, size: new(interactable.window_size_misc.X + 8, (interactable.window_size_misc.Y <= 0 ? interactable.window_size.Y : interactable.window_size_misc.Y) + 8), padding: new(4), offset: new(6, 0), open: true))
 									{
 										if (window_side.show)
 										{
 											//using (GUI.Group.New(GUI.Rm))
-											using (var scrollbox = GUI.Scrollbox.New("worldmap.interact.sub.scroll"u8, size: GUI.Rm))
+											//using (var scrollbox = GUI.Scrollbox.New("worldmap.interact.sub.scroll"u8, size: GUI.Rm))
 											using (var dock_misc = GUI.Dock.New("Misc"u8))
 											{
 												//GUI.DrawInventoryDock(Inventory.Type.Essence, new(48, 48));

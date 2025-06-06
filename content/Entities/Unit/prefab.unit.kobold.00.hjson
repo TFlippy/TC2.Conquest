@@ -38,7 +38,7 @@ interactable:
 	flags: none
 	window_size: [208.000, 232.000]
 	window_size_min: [208.000, 232.000]
-	window_size_misc: [120.000, 0.000]
+	window_size_misc: [96.000, 0.000]
 	window_offset: [0.000, 0.000]
 }
 
