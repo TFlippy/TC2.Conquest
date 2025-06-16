@@ -140,3 +140,10 @@ personnel:
 	]
 	characters_capacity: 4
 }
+
+despawn:
+{
+	interval: 90.000
+	interval_extra: 300.000
+	sleep_count_max: 24
+}

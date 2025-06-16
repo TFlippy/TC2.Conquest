@@ -477,13 +477,15 @@ namespace TC2.Conquest
 
 
 			[ISystem.PostUpdate.A(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region)]
-			public static void UpdateParented([Source.Owned] ref Transform.Data transform_child, [Source.Parent] in Transform.Data transform_parent, [Source.Owned] in Marker.Data marker)
+			public static void UpdateParented([Source.Owned] ref Transform.Data transform_child, [Source.Parent] in Transform.Data transform_parent, 
+			[Source.Owned] in Marker.Data marker)
 			{
 				transform_child.SetPosition(transform_parent.position + marker.relative_offset);
 			}
 
 			[ISystem.PostUpdate.A(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region)]
-			public static void UpdateStored([Source.Owned] ref Transform.Data transform_child, [Source.Stored] in Transform.Data transform_parent, [Source.Owned] in Marker.Data marker)
+			public static void UpdateStored([Source.Owned] ref Transform.Data transform_child, [Source.Stored] in Transform.Data transform_parent, 
+			[Source.Owned] in Marker.Data marker)
 			{
 				transform_child.SetPosition(transform_parent.position + marker.relative_offset);
 			}
@@ -493,6 +495,53 @@ namespace TC2.Conquest
 			public static void UpdateMarker([Source.Owned] in Unit.Data unit, [Source.Owned] ref Marker.Data marker)
 			{
 				marker.rotation = unit.dir_last.GetAngleRadiansFast();
+			}
+#endif
+
+#if SERVER
+			// TODO: kinda shithack
+			[HasRelation(Source.Modifier.Owned, Relation.Type.Child, false), HasRelation(Source.Modifier.Owned, Relation.Type.Stored, false)]
+			[ISystem.VeryLateUpdate(ISystem.Mode.Single, ISystem.Scope.Global, interval: 1.1374f), HasTag("initialized", true, Source.Modifier.Owned)]
+			public static void OnUpdateDespawn(ISystem.Info.Global info, Entity entity, ref XorRandom random,
+			[Source.Owned] in Transform.Data transform, [Source.Owned] ref Despawn.Data despawn, [Source.Owned] ref WorldMap.Unit.Data unit)
+			{
+				if (info.WorldTime >= despawn.next_update)
+				{
+					despawn.next_update = info.WorldTime + random.NextFloatExtra(despawn.interval, despawn.interval_extra);
+
+					if (Vec2f.IsInDistance(transform.position, despawn.last_pos, 0.125f) && !unit.h_character_driver) // despawn.last_pos ) //despawn.state_flags.HasAny(Despawn.StateFlags.Idle)) 
+					{
+						if (despawn.sleep_count >= despawn.sleep_count_max)
+						{
+							if (Despawn.debug_log) App.WriteLine($"{entity.GetPrefabName()}: despawn delete");
+
+							var ev = new Despawn.DespawnEvent()
+							{
+								position = transform.position
+							};
+							ev.Trigger(entity);
+
+							entity.Delete();
+						}
+						else
+						{
+							if (Despawn.debug_log) App.WriteLine($"{entity.GetPrefabName()}: despawn progress {despawn.sleep_count}/{despawn.sleep_count_max}");
+							despawn.sleep_count++;
+							despawn.Sync(entity);
+						}
+					}
+					else
+					{
+						despawn.last_pos = transform.position;
+
+						if (despawn.sleep_count > 0)
+						{
+							if (Despawn.debug_log) App.WriteLine($"{entity.GetPrefabName()}: despawn reset");
+							despawn.sleep_count = 0;
+							despawn.Sync(entity);
+						}
+					}
+				}
 			}
 #endif
 
@@ -517,7 +566,7 @@ namespace TC2.Conquest
 
 
 			[ISystem.Update.A(ISystem.Mode.Single, ISystem.Scope.Global)]
-			public static void UpdateActions(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, 
+			public static void OnUpdateActions(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, 
 			[Source.Global] ref World.Global world_global, [Source.Owned] ref WorldMap.Unit.Data unit, [Source.Owned] ref Transform.Data transform)
 			{
 				var time = info.WorldTime;
@@ -785,8 +834,9 @@ namespace TC2.Conquest
 			}
 
 			// TODO: probably make this serverside + skip if not moving
+			[Shitcode]
 			[ISystem.Update.B(ISystem.Mode.Single, ISystem.Scope.Global), HasRelation(Source.Modifier.Owned, Relation.Type.Child, false), HasRelation(Source.Modifier.Owned, Relation.Type.Stored, false)]
-			public static void UpdateMovement(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, 
+			public static void OnUpdateMovement(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, 
 			[Source.Global] ref World.Global world_global, [Source.Owned] ref WorldMap.Unit.Data unit, [Source.Owned] ref Transform.Data transform)
 			{
 				var dt = App.fixed_update_interval_s;
