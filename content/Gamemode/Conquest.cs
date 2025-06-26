@@ -19,7 +19,7 @@ namespace TC2.Conquest
 
 			}
 
-			public float elapsed;
+			//public float elapsed;
 			public Conquest.Gamemode.Flags flags;
 
 			public static void Configure()
@@ -160,21 +160,21 @@ namespace TC2.Conquest
 		//	}
 		//}
 
-		[ChatCommand.Region("scout", "", creative: true)]
-		public static void ScoutCommand(ref ChatCommand.Context context, int count)
-		{
-			ref var region = ref context.GetRegion();
-			ref var player = ref context.GetPlayerData();
+		//[ChatCommand.Region("scout", "", creative: true)]
+		//public static void ScoutCommand(ref ChatCommand.Context context, int count)
+		//{
+		//	ref var region = ref context.GetRegion();
+		//	ref var player = ref context.GetPlayerData();
 
-			ref var faction_data = ref player.faction_id.GetData(out var faction_asset);
-			if (faction_data.IsNotNull())
-			{
-				faction_data.scout_count += count;
-				faction_data.scout_count.Min(0);
+		//	ref var faction_data = ref player.faction_id.GetData(out var faction_asset);
+		//	if (faction_data.IsNotNull())
+		//	{
+		//		faction_data.scout_count += count;
+		//		faction_data.scout_count.Min(0);
 
-				faction_asset.Sync();
-			}
-		}
+		//		faction_asset.Sync();
+		//	}
+		//}
 #endif
 
 //		[ISystem.Event<Character.SetPlayerEvent>(ISystem.Mode.Single, ISystem.Scope.Region)]

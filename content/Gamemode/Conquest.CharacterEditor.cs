@@ -21,6 +21,11 @@ namespace TC2.Conquest
 				ref var region = ref connection.GetRegionCommon();
 				Assert.IsNotNull(ref region, Assert.Level.Error);
 
+				ref var g_world = ref region.GetGlobalComponent<World.Global>();
+				Assert.IsNotNull(ref g_world);
+
+				Assert.Check(g_world.time_total >= player.t_next_respawn);
+				
 				Assert.Check(this.vars.h_species.IsValid());
 				Assert.Check(this.vars.h_origin.IsValid());
 				Assert.Check(this.vars.h_location.IsValid());
@@ -40,7 +45,7 @@ namespace TC2.Conquest
 
 				character.gender = this.vars.gender;
 				character.prefab = props.h_prefab;
-				character.players = [connection.GetPlayerHandle()];
+				character.players = [player_asset.GetHandle()];
 
 				//character.money = props.money;
 				character.age = props.age;
@@ -166,6 +171,7 @@ namespace TC2.Conquest
 
 				//ent_asset.AddRelation(ent_location, Relation.Type.Child);
 
+				player.t_next_respawn = g_world.time_total + props.cooldown;
 				player.h_character_main = character_asset;
 				player_asset.Sync();
 
@@ -909,16 +915,53 @@ namespace TC2.Conquest
 								}
 							}
 
-							var is_valid = vars.h_origin.IsValid() && vars.h_species.IsValid() && vars.h_location.IsValid() && vars.h_kit_vehicle.IsValid();
-							if (GUI.DrawConfirmButton("character.create"u8, "Create Character"u8, "Do you want to create\n    this character?"u8, size: GUI.Rm, font_size: 24, color: GUI.col_button_ok, enabled: is_valid))
+							ref var player_data = ref Client.GetPlayerData(out var player_asset);
+							if (player_data.IsNotNull())
 							{
-								var rpc = new Conquest.CreateCharacterRPC();
-								rpc.vars = vars;
-								rpc.SendAsTask().ContinueWith((x) =>
+								ref var region_global = ref World.GetGlobalRegion();
+								if (region_global.IsNotNull())
 								{
-									//WorldMap.FocusEntity(x.ent_character_out);
-									WorldMap.SelectEntity(x.ent_character_out);
-								});
+									ref var g_world = ref region_global.GetGlobalComponent<World.Global>();
+									if (g_world.IsNotNull())
+									{
+										var respawn_seconds_rem = player_data.t_next_respawn - g_world.time_total;
+										var respawn_seconds_rem_clamped = Maths.ClampMin(respawn_seconds_rem, 0.00);
+
+										if (respawn_seconds_rem <= 0.00f)
+										{
+											var is_valid = vars.h_origin.IsValid() && vars.h_species.IsValid() && vars.h_location.IsValid() && vars.h_kit_vehicle.IsValid();
+											if (GUI.DrawConfirmButton("character.create"u8, "Create Character"u8, "Do you want to create\n    this character?"u8, size: GUI.Rm, font_size: 24, color: GUI.col_button_ok, enabled: is_valid))
+											{
+												var rpc = new Conquest.CreateCharacterRPC();
+												rpc.vars = vars;
+												rpc.SendAsTask().ContinueWith((x) =>
+												{
+													//WorldMap.FocusEntity(x.ent_character_out);
+													WorldMap.SelectEntity(x.ent_character_out);
+												});
+											}
+										}
+										else
+										{
+											if (GUI.DrawButton("Create Character"u8, size: GUI.Rm, font_size: 24, color: GUI.col_button_error, error: true))
+											{
+												
+											}
+
+											if (GUI.IsItemHovered())
+											{
+												using (var tooltip = GUI.Tooltip.New())
+												{
+													GUI.Title("Time until next character"u8, size: 22);
+													using (GUI.Group.New(size: new(GUI.RmX, 24)))
+													{
+														GUI.TitleCentered(GUI.FormatTime((float)respawn_seconds_rem_clamped), pivot: new(0.50f), size: 20);
+													}
+												}
+											}
+										}
+									}
+								}
 							}
 						}
 
@@ -960,7 +1003,7 @@ namespace TC2.Conquest
 					var color = GUI.col_button_yellow;
 
 					var is_selected = h_character_current == h_character && ((Client.GetRegionID() == character_asset.region_id && character_asset.region_id > 0) || !WorldMap.IsOpen || WorldMap.hs_selected_entities.Contains(h_character.GetGlobalEntity()));
-					using (var widget = Sidebar.Widget.New("character.main", character_data.name, character_data.sprite_head, size: new Vector2(48 * 6, 48 * 4), has_window: false, show_as_selected: is_selected, color: color, order: (10.00f - 0.10f), flags: Sidebar.Widget.Flags.Starts_Open))
+					using (var widget = Sidebar.Widget.New(identifier: "character.main", name: character_data.name, icon: character_data.sprite_head, size: new Vector2(48 * 6, 48 * 4), has_window: false, show_as_selected: is_selected, color: color, order: (10.00f - 0.10f), flags: Sidebar.Widget.Flags.Starts_Open))
 					{
 						widget.func_draw = (widget, group, icon_color) =>
 						{
@@ -1086,7 +1129,7 @@ namespace TC2.Conquest
 				}
 				else
 				{
-					using (var widget = Sidebar.Widget.New("character.main", "New Main Character", new Sprite(GUI.tex_icons_widget, 16, 16, 2, 0), size: new Vector2(48 * 18, 500), order: (10.00f - 0.10f), flags: Sidebar.Widget.Flags.Starts_Open))
+					using (var widget = Sidebar.Widget.New(identifier: "character.main", name: "New Main Character", icon: new Sprite(GUI.tex_icons_widget, 16, 16, 2, 0), size: new Vector2(48 * 18, 500), order: (10.00f - 0.10f), flags: Sidebar.Widget.Flags.Starts_Open))
 					{
 						widget.func_draw = null;
 
