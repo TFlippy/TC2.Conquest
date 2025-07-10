@@ -108,8 +108,8 @@ namespace TC2.Conquest
 
 											if (map_asset != null)
 											{
-												var color = GUI.col_button_ok;
-												var alpha = 1.00f;
+												//var color = GUI.col_button_ok;
+												//var alpha = 1.00f;
 
 												//if (GUI.DrawIconButton("info"u8, new(GUI.tex_icons_widget, 16, 16, 6, 1), size: new(48, 48)))
 												//{

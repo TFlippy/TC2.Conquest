@@ -561,7 +561,7 @@ namespace TC2.Conquest
 			if (!train.segment_b.IsValid()) return;
 			if (!train.segment_c.IsValid()) return;
 
-			var show_debug = false;
+			const bool show_debug = false;
 
 #if SERVER
 			return;
@@ -841,7 +841,7 @@ namespace TC2.Conquest
 					transform.position = train.segment_a.GetPosition() + (train.direction * train.road_distance_current);
 					//transform.SetRotation(Vector2.Lerp(train.dir_ab, train.dir_bc, ((Maths.InvLerp01(0.00f, 0.50f, train.road_distance_current) * 0.75f) + (Maths.InvLerp01(train.road_distance_target - 0.50f, train.road_distance_target, train.road_distance_current)) * 0.25f)).GetAngleRadians());
 
-					transform.SetRotation(transform.rotation, Maths.LerpAngle(train.direction_old.GetAngleRadiansFast(), train.direction.GetAngleRadiansFast(), Maths.NormalizeClamp(train.road_distance_current, 0.350f)));
+					transform.SetRotation(transform.rotation, Maths.LerpAngle(train.direction_old.GetAngleRadiansFast(), train.direction.GetAngleRadiansFast(), Maths.Normalize01Fast(train.road_distance_current, 0.350f)));
 
 				}
 			}

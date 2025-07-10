@@ -32,7 +32,7 @@
 			}
 			{
 				type: resource
-				material: ammo.sg.buck.lv
+				material: ammo.sg.buck
 				quantity: 32.000
 				flags: none
 			}

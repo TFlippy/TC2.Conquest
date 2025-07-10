@@ -157,7 +157,7 @@ namespace TC2.Conquest
 					////Assert.Check(!this.ent_enterable.TryGetParent(Relation.Type.Child, out var ent_enterable_parent));
 
 					//ref var enterable = ref this.ent_enterable.GetComponent<WorldMap.Enterable.Data>();
-					//Assert.NotNull(ref enterable);
+					//Assert.IsNotNull(ref enterable);
 
 					//Assert.Check(enterable.flags.HasNone(Enterable.Data.Flags.Hide_If_Parented) || !this.ent_enterable.GetParent(Relation.Type.Child).IsValid());
 
@@ -183,10 +183,10 @@ namespace TC2.Conquest
 					//Assert.Check(ent_enterable.GetRegionID() == entity.GetRegionID());
 
 					//ref var enterable = ref ent_enterable.GetComponent<WorldMap.Enterable.Data>();
-					//Assert.NotNull(ref enterable);
+					//Assert.IsNotNull(ref enterable);
 
 					//ref var transform = ref ent_enterable.GetComponent<Transform.Data>();
-					//Assert.NotNull(ref transform);
+					//Assert.IsNotNull(ref transform);
 
 					////var road = WorldMap.GetNearestRoad(location_data.h_prefecture, Road.Type.Road, (Vector2)location_data.point, out var dist_sq);
 					////var pos = road.GetPosition().GetRefValueOrDefault();

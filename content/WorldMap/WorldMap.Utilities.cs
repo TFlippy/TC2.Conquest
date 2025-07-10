@@ -547,7 +547,7 @@ namespace TC2.Conquest
 							connection_copy.distance += distance;
 							connection_copy.budget -= (distance / (road.speed_mult * road.integrity));
 
-							GUI.DrawLine(region.WorldToCanvas(pos_last) - depth_offset, region.WorldToCanvas(road_points_span[i]) - depth_offset, Color32BGRA.FromHSV((Maths.NormalizeClamp(connection_copy.budget, budget)) * 2.00f, 1.00f, 1.00f).WithAlphaMult(alpha), thickness: thickness * region.GetWorldToCanvasScale(), layer: GUI.Layer.Window);
+							GUI.DrawLine(region.WorldToCanvas(pos_last) - depth_offset, region.WorldToCanvas(road_points_span[i]) - depth_offset, Color32BGRA.FromHSV((Maths.Normalize01(connection_copy.budget, budget)) * 2.00f, 1.00f, 1.00f).WithAlphaMult(alpha), thickness: thickness * region.GetWorldToCanvasScale(), layer: GUI.Layer.Window);
 
 							if (connection_copy.budget <= 0.00f) break;
 
@@ -580,7 +580,7 @@ namespace TC2.Conquest
 							connection_copy.distance += distance;
 							connection_copy.budget -= (distance / (road.speed_mult * road.integrity));
 
-							GUI.DrawLine(region.WorldToCanvas(pos_last) - depth_offset, region.WorldToCanvas(road_points_span[i]) - depth_offset, Color32BGRA.FromHSV((Maths.NormalizeClamp(connection_copy.budget, budget)) * 2.00f, 1.00f, 1.00f).WithAlphaMult(alpha), thickness: thickness * region.GetWorldToCanvasScale(), layer: GUI.Layer.Window);
+							GUI.DrawLine(region.WorldToCanvas(pos_last) - depth_offset, region.WorldToCanvas(road_points_span[i]) - depth_offset, Color32BGRA.FromHSV((Maths.Normalize01(connection_copy.budget, budget)) * 2.00f, 1.00f, 1.00f).WithAlphaMult(alpha), thickness: thickness * region.GetWorldToCanvasScale(), layer: GUI.Layer.Window);
 
 							if (connection_copy.budget <= 0.00f) break;
 
