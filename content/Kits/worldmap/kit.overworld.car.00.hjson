@@ -22,7 +22,7 @@
 	character_flags:
 	{
 		require: none
-		include: bureaucrat, scientist, educated, nobility, artisan, professional, civillian, commerce, engineer, rich, chemist, sedentary, middle_class, upper_middle_class, upper_class
+		include: bureaucrat, scientist, educated, nobility, artisan, professional, civillian, commerce, engineer, rich, alchemist, sedentary, middle_class, upper_middle_class, upper_class
 		exclude: none
 		weight: 1.000
 	}

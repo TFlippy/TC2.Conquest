@@ -1,5 +1,5 @@
 ﻿{
-	name: "Magitronic Actuators"
+	name: "EC-MT Actuators"
 	desc:
 		'''
 		TODO: Desc
@@ -13,8 +13,8 @@
 	
 	character_flags:
 	{
-		require: arcane
-		include: construction, scientist, educated, professional, commerce, technician, engineer, rich, chemist, arcane, middle_class, upper_middle_class, upper_class, elite_class
+		require: arcane, engineer
+		include: construction, scientist, educated, professional, commerce, technician, engineer, rich, alchemist, arcane, middle_class, upper_middle_class, upper_class, elite_class
 		exclude: unskilled, farmer, hunter, illiterate
 		weight: 0.800
 	}
@@ -29,7 +29,7 @@
 			{
 				type: resource
 				material: "actuator"
-				quantity: 7.000
+				quantity: 2.000
 				flags: no_consume
 			}
 			null

@@ -11,7 +11,7 @@
 	character_flags:
 	{
 		require: none
-		include: scientist, criminal, educated, military, medical, professional, law, technician, engineer, chemist, insane, pet, entertainer, artist, sedentary, junkie, politician, middle_class, upper_middle_class, upper_class
+		include: scientist, criminal, educated, military, medical, professional, law, technician, engineer, alchemist, insane, pet, entertainer, artist, sedentary, junkie, politician, middle_class, upper_middle_class, upper_class
 		exclude: dumb
 		weight: 1.000
 	}

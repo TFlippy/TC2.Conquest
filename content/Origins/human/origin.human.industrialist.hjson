@@ -16,7 +16,7 @@
 	flags: selectable, special
 	
 	character_flags: construction, educated, professional, civillian, law, commerce, engineer, rich, arcane, sedentary, upper_class, elite_class
-	character_flags_optional: bureaucrat, construction, scientist, criminal, military, medical, nobility, farmer, law, social, commerce, engineer, miner, chemist, hunter, culinary, soldier, insane, alcoholic, naval, arcane, entertainer, artist, brawler, outdoor, strong, junkie, evil, politician, murderer, terrorist, fanatic, dumb, clumsy
+	character_flags_optional: bureaucrat, construction, scientist, criminal, military, medical, nobility, farmer, law, social, commerce, engineer, miner, alchemist, hunter, culinary, soldier, insane, alcoholic, naval, arcane, entertainer, artist, brawler, outdoor, strong, junkie, evil, politician, murderer, terrorist, fanatic, dumb, clumsy
 	
 	industry_flags: none
 	industry_flags_optional: agricultural, mining, manufacturing, low_tech, high_tech, metallurgy, scrap, chemical, automotive, power, military, logging, hunting, arcane, construction, food, textile, fishing, slaves, munitions, pharmaceutical, railway, tobacco, literature, propaganda, engineering, weapons, beverage, aviation, naval, furniture, luxury, jewelry, penal, alcohol
@@ -212,7 +212,7 @@
 		blades: 2
 		axes: 1
 		clubs: 3
-		chemistry: 6
+		alchemistry: 6
 		farming: 0
 		animals: 1
 		scavenging: 5

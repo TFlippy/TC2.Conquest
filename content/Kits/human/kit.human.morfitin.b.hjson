@@ -11,7 +11,7 @@
 	character_flags:
 	{
 		require: medical
-		include: educated, military, medical, professional, chemist, middle_class, upper_middle_class
+		include: educated, military, medical, professional, alchemist, middle_class, upper_middle_class
 		exclude: none
 		weight: 1.000
 	}

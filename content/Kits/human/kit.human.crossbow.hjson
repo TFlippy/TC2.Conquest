@@ -15,7 +15,7 @@
 	character_flags:
 	{
 		require: none
-		include: criminal, medical, nobility, farmer, civillian, unarmed, poor, chemist, hunter, culinary, insane, nomad, pet, entertainer, artist, outdoor, evil, thief, murderer, fanatic, dumb
+		include: criminal, medical, nobility, farmer, civillian, unarmed, poor, alchemist, hunter, culinary, insane, nomad, pet, entertainer, artist, outdoor, evil, thief, murderer, fanatic, dumb
 		exclude: construction, military, miner, soldier, alcoholic, sedentary, clumsy, huge
 		weight: 1.200
 	}

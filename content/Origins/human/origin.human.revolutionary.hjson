@@ -212,7 +212,7 @@
 		blades: 8
 		axes: 7
 		clubs: 8
-		chemistry: 3
+		alchemistry: 3
 		farming: 4
 		animals: 4
 		scavenging: 7

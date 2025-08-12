@@ -15,7 +15,7 @@
 	character_flags:
 	{
 		require: medical
-		include: medical, professional, chemist
+		include: medical, professional, alchemist
 		exclude: unskilled, farmer
 		weight: 1.000
 	}

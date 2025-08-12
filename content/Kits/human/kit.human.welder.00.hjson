@@ -15,7 +15,7 @@
 	character_flags:
 	{
 		require: none
-		include: construction, scientist, educated, artisan, professional, technician, engineer, chemist, culinary, insane, arcane, evil, middle_class, upper_middle_class
+		include: construction, scientist, educated, artisan, professional, technician, engineer, alchemist, culinary, insane, arcane, evil, middle_class, upper_middle_class
 		exclude: none
 		weight: 1.000
 	}

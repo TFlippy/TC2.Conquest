@@ -11,7 +11,7 @@
 	character_flags:
 	{
 		require: medical
-		include: educated, medical, nobility, professional, civillian, rich, chemist, arcane, sedentary, upper_middle_class, upper_class, elite_class
+		include: educated, medical, nobility, professional, civillian, rich, alchemist, arcane, sedentary, upper_middle_class, upper_class, elite_class
 		exclude: none
 		weight: 1.000
 	}

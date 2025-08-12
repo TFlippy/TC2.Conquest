@@ -11,7 +11,7 @@
 	character_flags:
 	{
 		require: none
-		include: bureaucrat, construction, scientist, educated, military, medical, artisan, laborer, civillian, law, technician, poor, miner, chemist, soldier, insane, pet, entertainer, artist, sedentary, junkie, politician, lower_class, lower_middle_class, middle_class
+		include: bureaucrat, construction, scientist, educated, military, medical, artisan, laborer, civillian, law, technician, poor, miner, alchemist, soldier, insane, pet, entertainer, artist, sedentary, junkie, politician, lower_class, lower_middle_class, middle_class
 		exclude: dumb
 		weight: 1.000
 	}

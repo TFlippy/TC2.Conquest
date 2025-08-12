@@ -14,7 +14,7 @@
 	character_flags:
 	{
 		require: none
-		include: scientist, medical, technician, chemist, insane, entertainer, evil
+		include: scientist, medical, technician, alchemist, insane, entertainer, evil
 		exclude: none
 		weight: 1.300
 	}

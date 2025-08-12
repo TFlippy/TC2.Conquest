@@ -11,7 +11,7 @@
 	character_flags:
 	{
 		require: none
-		include: military, medical, armed, chemist, insane, sedentary, junkie, evil, murderer, terrorist, fanatic
+		include: military, medical, armed, alchemist, insane, sedentary, junkie, evil, murderer, terrorist, fanatic
 		exclude: unskilled, laborer
 		weight: 1.000
 	}

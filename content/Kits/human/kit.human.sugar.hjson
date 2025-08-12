@@ -14,7 +14,7 @@
 	character_flags:
 	{
 		require: none
-		include: scientist, civillian, technician, engineer, chemist, culinary, insane, arcane, entertainer, sedentary, lower_middle_class, middle_class, upper_middle_class
+		include: scientist, civillian, technician, engineer, alchemist, culinary, insane, arcane, entertainer, sedentary, lower_middle_class, middle_class, upper_middle_class
 		exclude: none
 		weight: 1.200
 	}

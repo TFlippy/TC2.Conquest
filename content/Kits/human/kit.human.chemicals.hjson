@@ -13,8 +13,8 @@
 	
 	character_flags:
 	{
-		require: chemist
-		include: scientist, educated, medical, chemist, sedentary
+		require: alchemist
+		include: scientist, educated, medical, alchemist, sedentary
 		exclude: unskilled, poor, illiterate, lower_class, lower_middle_class
 		weight: 1.400
 	}
