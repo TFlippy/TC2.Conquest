@@ -1,0 +1,44 @@
+﻿{
+	$region_id: 0
+	$version: "0.1.65.1"
+	name: "Detonator"
+	desc:
+		'''
+		TODO: Desc
+		'''
+	
+	flags: selectable
+	slot: utility
+	categories: dangerous, explosive, destructive, small, mining, device, industrial
+	species: human
+	
+	character_flags:
+	{
+		require: none
+		include: construction, military, technician, engineer, miner, soldier, insane, thief, terrorist
+		exclude: none
+		weight: 1.200
+	}
+	
+	amount_multiplier_min: 1.000
+	amount_multiplier_max: 1.000
+	cost: 0.000
+	
+	shipment:
+	{
+		items:
+		[
+			{
+				type: prefab
+				prefab: detonator.00
+				quantity: 1.000
+				flags: no_consume
+			}
+			null
+			null
+			null
+		]
+		
+		flags: unpack
+	}
+}
