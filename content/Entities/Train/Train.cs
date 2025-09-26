@@ -59,6 +59,7 @@ namespace TC2.Conquest
 		public int CompareTo(ResolvedJunction other)
 		{
 			return other.dot.CompareTo(this.dot);
+			//return this.dot.CompareTo(other.dot);
 		}
 
 		public bool Equals(ResolvedJunction other)
@@ -113,12 +114,12 @@ namespace TC2.Conquest
 
 			public bool Equals(JunctionNode other)
 			{
-				return Unsafe.As<JunctionNode, uint>(ref this) == Unsafe.As<JunctionNode, uint>(ref other);
+				return this.GetHashCode() == other.GetHashCode(); // Unsafe.As<JunctionNode, uint>(ref this) == Unsafe.As<JunctionNode, uint>(ref other);
 			}
 
 			public override int GetHashCode()
 			{
-				return Unsafe.As<JunctionNode, int>(ref this);
+				return this.branch.GetHashCode(); // Unsafe.As<JunctionNode, int>(ref this);
 			}
 
 			public static bool operator ==(JunctionNode left, JunctionNode right) => left.Equals(right);

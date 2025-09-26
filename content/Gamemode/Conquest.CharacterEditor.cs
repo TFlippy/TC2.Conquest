@@ -1129,7 +1129,12 @@ namespace TC2.Conquest
 				}
 				else
 				{
-					using (var widget = Sidebar.Widget.New(identifier: "character.main", name: "New Main Character", icon: new Sprite(GUI.tex_icons_widget, 16, 16, 2, 0), size: new Vector2(48 * 18, 500), order: (10.00f - 0.10f), flags: Sidebar.Widget.Flags.Starts_Open))
+					using (var widget = Sidebar.Widget.New(identifier: "character.main",
+					name: "New Main Character",
+					icon: new Sprite(GUI.tex_icons_widget, 16, 16, 2, 0),
+					size: new Vector2(48 * 18, 500),
+					order: (10.00f - 0.10f),
+					flags: Sidebar.Widget.Flags.Starts_Open | Sidebar.Widget.Flags.Enabled | Sidebar.Widget.Flags.Has_Window | Sidebar.Widget.Flags.Play_Sound))
 					{
 						widget.func_draw = null;
 

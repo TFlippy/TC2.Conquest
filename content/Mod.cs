@@ -77,7 +77,7 @@ namespace TC2.Conquest
 		public static void UpdateWorldmap(ISystem.Info.Global info)
 		{
 			var has_region = Client.HasRegion() || Client.IsLoadingRegion();
-			var flags = Sidebar.Widget.Flags.No_Front_On_Focus;
+			var flags = Sidebar.Widget.Flags.No_Front_On_Focus | Sidebar.Widget.Flags.Enabled | Sidebar.Widget.Flags.Has_Window | Sidebar.Widget.Flags.Play_Sound;
 			var override_pos = default(Vector2?);
 			var override_size = GUI.worldmenu_widget_size_override;
 

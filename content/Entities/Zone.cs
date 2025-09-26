@@ -184,7 +184,8 @@ namespace TC2.Conquest
 												{
 													//if (ILocation.TryGetAsset(ent_child, out var h_location_child))
 													{
-														if (ent_child.TryGetAsset(out ILocation.Definition asset_location) || ent_child.TryGetAsset(out IEntrance.Definition asset_entrance))
+														var asset_entrance = default(IEntrance.Definition);
+														if (ent_child.TryGetAsset(out ILocation.Definition asset_location) || ent_child.TryGetAsset(out asset_entrance))
 														{
 															var h_faction_child = ent_child.GetFactionHandle();
 
@@ -272,7 +273,28 @@ namespace TC2.Conquest
 																			var color = GUI.col_button_ok;
 																			if (GUI.DrawButton("Join"u8, size: GUI.Rm, font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
 																			{
-																				Client.RequestSetActiveRegion(location_region_id, delay_seconds: 0.75f);
+																				//Client.RequestSetActiveRegion(location_region_id, delay_seconds: 0.75f);
+																				//var ent_entrance_region = asset_entrance.GetRegionEntity(location_region_id);
+
+																				//asset_entrance.data.
+
+																				// TODO: giga shithack
+																				var ent_entrance_region = asset_entrance.GetRegionEntity(location_region_id);
+																				Client.RequestSetActiveRegion(location_region_id, delay_seconds: 0.75f).ContinueWith((x) =>
+																				{
+																					if (ent_entrance_region.IsAlive())
+																					{
+																						var ent_spawn = ent_entrance_region.GetComponentOwner<Spawn.Data>(Relation.Type.Instance);
+																						if (ent_spawn.IsAlive())
+																						{
+																							var rpc = new RespawnExt.SetSpawnRPC()
+																							{
+																								ent_spawn = ent_spawn
+																							};
+																							rpc.Send(Client.GetEntity());
+																						}
+																					}
+																				});
 
 																				window.Close();
 																				GUI.RegionMenu.ToggleWidget(false);
@@ -285,7 +307,14 @@ namespace TC2.Conquest
 																			var color = GUI.col_button_error;
 																			if (GUI.DrawButton("Leave"u8, size: GUI.Rm, font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
 																			{
-																				Client.RequestSetActiveRegion(0, delay_seconds: 0.10f);
+																				Client.RequestSetActiveRegion(0, delay_seconds: 0.10f).ContinueWith(async (x) =>
+																				{
+																					await App.WaitRender();
+
+																					WorldMap.FocusLocation(location_asset);
+																				});
+
+																				//WorldMap.FocusLocation(location_asset);
 																			}
 																		}
 																	}
