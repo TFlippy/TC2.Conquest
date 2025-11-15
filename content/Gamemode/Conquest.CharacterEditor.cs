@@ -579,11 +579,9 @@ namespace TC2.Conquest
 										if (GUI.IsHoveringRect(group.GetOuterRect()))
 										{
 											using (var tooltip = GUI.Tooltip.New(size: new(300, 0)))
+											using (GUI.Wrap.Push(GUI.RmX))
 											{
-												using (GUI.Wrap.Push(GUI.RmX))
-												{
-													GUI.TextShaded(asset.data.desc);
-												}
+												GUI.TextShaded(asset.data.desc);
 											}
 										}
 									}
@@ -596,6 +594,8 @@ namespace TC2.Conquest
 									WorldMap.FocusLocation(vars.h_location, interact: false);
 									//reset = true;
 								}
+
+								//GUI.DrawHoverTooltip("* Character's starting location."u8);
 							}
 
 							using (var group_top = GUI.Group.New(size: new(GUI.RmX, 96)))
@@ -752,26 +752,26 @@ namespace TC2.Conquest
 
 										{
 											var max_flag_count = props.character_flags_default.GetCount() + Math.Min(4, props.character_flags_optional.GetCount());
-											GUI.EnumInput("flags.character"u8, ref vars.character_flags, size: new(w * 0.50f, 32), show_label: false, height: 256,
-												max_flags: max_flag_count, mask: props.character_flags_optional, required: props.character_flags_default, columns: 5);
+											GUI.EnumInput(identifier: "flags.character"u8, value: ref vars.character_flags, size: new(w * 0.50f, 32), show_label: false, show_none: true, height: 256,
+												max_flags: max_flag_count, mask: props.character_flags_optional, required: props.character_flags_default, columns: 5, tooltip: "Traits"u8);
 										}
 										GUI.SameLine();
 										{
 											var max_flag_count = props.industry_flags_default.GetCount() + Math.Min(4, props.industry_flags_optional.GetCount());
-											GUI.EnumInput("flags.industry"u8, ref vars.industry_flags, size: new(w * 0.50f, 32), show_label: false, height: 256,
-												max_flags: max_flag_count, mask: props.industry_flags_optional, required: props.industry_flags_default, columns: 5);
+											GUI.EnumInput(identifier: "flags.industry"u8, value: ref vars.industry_flags, size: new(w * 0.50f, 32), show_label: false, show_none: true, height: 256,
+												max_flags: max_flag_count, mask: props.industry_flags_optional, required: props.industry_flags_default, columns: 5, tooltip: "Industry"u8);
 										}
 
 										{
 											var max_flag_count = props.service_flags_default.GetCount() + Math.Min(4, props.service_flags_optional.GetCount());
-											GUI.EnumInput("flags.service"u8, ref vars.service_flags, size: new(w * 0.50f, 32), show_label: false, height: 256,
-												max_flags: max_flag_count, mask: props.service_flags_optional, required: props.service_flags_default, columns: 5);
+											GUI.EnumInput(identifier: "flags.service"u8, value: ref vars.service_flags, size: new(w * 0.50f, 32), show_label: false, show_none: true, height: 256,
+												max_flags: max_flag_count, mask: props.service_flags_optional, required: props.service_flags_default, columns: 5, tooltip: "Services"u8);
 										}
 										GUI.SameLine();
 										{
 											var max_flag_count = props.crime_flags_default.GetCount() + Math.Min(4, props.crime_flags_optional.GetCount());
-											GUI.EnumInput("flags.crime"u8, ref vars.crime_flags, size: new(w * 0.50f, 32), show_label: false, height: 256,
-												max_flags: max_flag_count, mask: props.crime_flags_optional, required: props.crime_flags_default, columns: 5);
+											GUI.EnumInput(identifier: "flags.crime"u8, value: ref vars.crime_flags, size: new(w * 0.50f, 32), show_label: false, show_none: true, height: 256,
+												max_flags: max_flag_count, mask: props.crime_flags_optional, required: props.crime_flags_default, columns: 5, tooltip: "Crimes"u8);
 										}
 									}
 								}
@@ -795,7 +795,7 @@ namespace TC2.Conquest
 													&& (skip_flags || kit_data.character_flags.Evaluate(props.character_flags_default | vars.character_flags) > 0.00f);
 											}
 
-											static void DrawKit(IKit.Definition asset, GUI.Group group, bool is_title)
+											static void DrawKit(IKit.Definition asset, GUI.Group group, bool is_title, Kit.Slot slot)
 											{
 												Dormitory.DrawKit(h_kit: asset?.GetHandle() ?? default,
 													rect: group.GetInnerRect(),
@@ -805,42 +805,43 @@ namespace TC2.Conquest
 													ignore_requirements: true,
 													no_select: true,
 													show_type: true,
-													show_background: true);
+													show_background: true,
+													slot: slot);
 											}
 
 											GUI.AssetInput2("edit.h_kit_primary"u8, ref vars.h_kit_primary, size: new(w * 0.50f, 48), show_label: false, tab_height: 40, close_on_select: true, show_null: true,
 												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Primary, ref custom_character.vars, ref custom_character.props, skip_flags: false),
-												draw: DrawKit);
+												draw: static (asset, group, is_title) => DrawKit(asset: asset, group: group, is_title: is_title, slot: Kit.Slot.Primary));
 
 											GUI.SameLine();
 
 											GUI.AssetInput2("edit.h_kit_secondary"u8, ref vars.h_kit_secondary, size: new(w * 0.50f, 48), show_label: false, tab_height: 40, close_on_select: true, show_null: true,
 												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Secondary, ref custom_character.vars, ref custom_character.props, skip_flags: false),
-												draw: DrawKit);
+												draw: static (asset, group, is_title) => DrawKit(asset: asset, group: group, is_title: is_title, slot: Kit.Slot.Secondary));
 
 											GUI.AssetInput2("edit.h_kit_tool"u8, ref vars.h_kit_tool, size: new(w * 0.50f, 48), show_label: false, tab_height: 40, close_on_select: true, show_null: true,
 												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Tool, ref custom_character.vars, ref custom_character.props, skip_flags: false),
-												draw: DrawKit);
+												draw: static (asset, group, is_title) => DrawKit(asset: asset, group: group, is_title: is_title, slot: Kit.Slot.Tool));
 
 											GUI.SameLine();
 
 											GUI.AssetInput2("edit.h_kit_utility"u8, ref vars.h_kit_utility, size: new(w * 0.50f, 48), show_label: false, tab_height: 40, close_on_select: true, show_null: true,
 												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Utility, ref custom_character.vars, ref custom_character.props, skip_flags: false),
-												draw: DrawKit);
+												draw: static (asset, group, is_title) => DrawKit(asset: asset, group: group, is_title: is_title, slot: Kit.Slot.Utility));
 
 											GUI.AssetInput2("edit.h_kit_head"u8, ref vars.h_kit_head, size: new(w * 0.50f, 48), show_label: false, tab_height: 40, close_on_select: true, show_null: true,
 												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Head, ref custom_character.vars, ref custom_character.props, skip_flags: false),
-												draw: DrawKit);
+												draw: static (asset, group, is_title) => DrawKit(asset: asset, group: group, is_title: is_title, slot: Kit.Slot.Head));
 
 											GUI.SameLine();
 
 											GUI.AssetInput2("edit.h_kit_chest"u8, ref vars.h_kit_chest, size: new(w * 0.50f, 48), show_label: false, tab_height: 40, close_on_select: true, show_null: true,
 												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Chest, ref custom_character.vars, ref custom_character.props, skip_flags: false),
-												draw: DrawKit);
+												draw: static (asset, group, is_title) => DrawKit(asset: asset, group: group, is_title: is_title, slot: Kit.Slot.Chest));
 
 											GUI.AssetInput2("edit.h_kit_harness"u8, ref vars.h_kit_harness, size: new(w, 48), show_label: false, tab_height: 40, close_on_select: true, show_null: true,
 												filter: static (x) => ValidateKit(ref x.data, Kit.Slot.Harness, ref custom_character.vars, ref custom_character.props, skip_flags: false),
-												draw: DrawKit);
+												draw: static (asset, group, is_title) => DrawKit(asset: asset, group: group, is_title: is_title, slot: Kit.Slot.Harness));
 										}
 
 										GUI.SameLine();
@@ -888,8 +889,6 @@ namespace TC2.Conquest
 										}
 									}
 								}
-
-
 							}
 						}
 
@@ -934,7 +933,7 @@ namespace TC2.Conquest
 											{
 												var rpc = new Conquest.CreateCharacterRPC();
 												rpc.vars = vars;
-												rpc.SendAsTask().ContinueWith((x) =>
+												rpc.SendAsTask().WaitForRender().ContinueWith((x) =>
 												{
 													//WorldMap.FocusEntity(x.ent_character_out);
 													WorldMap.SelectEntity(x.ent_character_out);
@@ -945,7 +944,7 @@ namespace TC2.Conquest
 										{
 											if (GUI.DrawButton("Create Character"u8, size: GUI.Rm, font_size: 24, color: GUI.col_button_error, error: true))
 											{
-												
+
 											}
 
 											if (GUI.IsItemHovered())
@@ -996,14 +995,21 @@ namespace TC2.Conquest
 			{
 				var h_character = player_data.h_character_main;
 				var h_character_current = Client.GetCharacterHandle();
+				var color = GUI.col_button_yellow;
 
 				ref var character_data = ref h_character.GetData(out var character_asset);
 				if (character_data.IsNotNull())
 				{
-					var color = GUI.col_button_yellow;
-
 					var is_selected = h_character_current == h_character && ((Client.GetRegionID() == character_asset.region_id && character_asset.region_id > 0) || !WorldMap.IsOpen || WorldMap.hs_selected_entities.Contains(h_character.GetGlobalEntity()));
-					using (var widget = Sidebar.Widget.New(identifier: "character.main", name: character_data.name, icon: character_data.sprite_head, size: new Vector2(48 * 6, 48 * 4), has_window: false, show_as_selected: is_selected, color: color, order: (10.00f - 0.10f), flags: Sidebar.Widget.Flags.Starts_Open))
+					using (var widget = Sidebar.Widget.New(identifier: "character.main",
+					name: character_data.name,
+					icon: character_data.sprite_head,
+					size: new Vector2(48 * 6, 48 * 4),
+					has_window: false,
+					show_as_selected: is_selected,
+					color: color,
+					order: (10.00f - 0.10f),
+					flags: Sidebar.Widget.Flags.Starts_Open))
 					{
 						widget.func_draw = (widget, group, icon_color) =>
 						{
@@ -1133,6 +1139,7 @@ namespace TC2.Conquest
 					name: "New Main Character",
 					icon: new Sprite(GUI.tex_icons_widget, 16, 16, 2, 0),
 					size: new Vector2(48 * 18, 500),
+					color: color,
 					order: (10.00f - 0.10f),
 					flags: Sidebar.Widget.Flags.Starts_Open | Sidebar.Widget.Flags.Enabled | Sidebar.Widget.Flags.Has_Window | Sidebar.Widget.Flags.Play_Sound))
 					{

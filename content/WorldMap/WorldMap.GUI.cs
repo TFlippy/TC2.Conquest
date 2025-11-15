@@ -1363,53 +1363,44 @@ namespace TC2.Conquest
 
 						using (var scroll = GUI.Scrollbox.New("units.scroll"u8, size: new(GUI.RmX, GUI.RmY - 48)))
 						{
-							using (var collapsible = GUI.Collapsible2.New("units.collapsible"u8, new Vector2(GUI.RmX, 32), default_open: true))
+							using (var collapsible = GUI.Collapsible2.New("units.regions.collapsible"u8, new Vector2(GUI.RmX, 32), default_open: true))
 							{
-								GUI.TitleCentered("Units"u8, size: 24, pivot: new(0.00f, 0.50f));
+								GUI.TitleCentered("Regions"u8, size: 24, pivot: new(0.00f, 0.50f));
 
 								if (collapsible.Inner(padding: new Vector4(12, 0, 0, 0)))
 								{
-									var rows = region.IterateQuery<WorldMap.Marker.GetAllMarkersQuery>().HasParent(Relation.Type.Child, false);
-									if (edit_unit_search_filter.HasNone(UnitSearchFilter.Units)) rows = rows.HasComponent<Unit.Data>(false);
-									if (edit_unit_search_filter.HasNone(UnitSearchFilter.Regions)) rows = rows.HasComponent<Zone.Data>(false);
-									if (edit_unit_search_filter.HasNone(UnitSearchFilter.Settlements)) rows = rows.HasComponent<Settlement.Data>(false);
-
-									foreach (ref var row in rows) //.HasComponent<Location.Data>(false))
+									for (var i = 1u; i < Region.max_count; i++)
 									{
-										row.Run((ISystem.Info.Global info, ref Region.Data.Global region, Entity entity,
-										in WorldMap.Marker.Data marker,
-										in Transform.Data transform,
-										ref Nameable.Data nameable,
-										bool has_parent) =>
+										ref var map_info = ref World.GetMapInfo((byte)i);
+										if (map_info.IsNotNull())
 										{
-											//return;
-											if (has_parent) return;
-											if (marker.flags.HasAny(Marker.Data.Flags.Hidden)) return;
-
-											//var pos = transform.GetInterpolatedPosition();
-											//var asset_scale = Maths.Clamp(marker.scale, 0.250f, 1.00f);
-
-											////if ((has_parent && marker.flags.HasAny(Marker.Data.Flags.Hide_If_Parented)))
-											//if (has_parent)
-											//{
-											//	return;
-											//}
-											//else
-											//{
-
-											//}
-
-											if (is_filtering && !nameable.name.ToString().Contains(edit_units_search, StringComparison.OrdinalIgnoreCase)) return;
-
-											using (var group_row = GUI.Group.New(size: new(GUI.RmX, 40), padding: new(4, 4)))
+											using (var group_row = GUI.Group.New(size: new(GUI.RmX, 40)))
 											{
 												if (group_row.IsVisible())
 												{
-													using (GUI.ID.Push(entity))
+													var h_location = map_info.h_location;
+													ref var location_data = ref h_location.GetData();
+
+													var ent_location = h_location.GetGlobalEntity();
+													var map_identifier = world_info.regions[i];
+
+													var map_asset = mod_context.GetMap(map_identifier);
+													//if (map_asset != null)
+													//{
+													//	var tex_thumbnail = map_asset.GetThumbnail();
+													//	if (tex_thumbnail != null)
+													//	{
+													//		GUI.DrawTexture(tex_thumbnail.Identifier, rect_icon, GUI.Layer.Window, color: color_thumbnail.WithAlphaMult(alpha));
+													//	}
+
+													//	GUI.DrawBackground(GUI.tex_frame_white, rect_icon, padding: new(2), color: color_frame.WithAlphaMult(alpha));
+													//}
+
+													using (GUI.ID<Region.Info, IMap.Info>.Push(i))
 													{
-														var is_selected = WorldMap.interacted_entity_cached == entity;
-														var contains = WorldMap.hs_selected_entities.Contains(entity);
-														var is_selectable = WorldMap.CanPlayerControlUnit(entity, Client.GetPlayerHandle());
+														var is_selected = WorldMap.interacted_entity_cached == ent_location;
+														var contains = WorldMap.hs_selected_entities.Contains(ent_location);
+														var is_selectable = WorldMap.CanPlayerControlUnit(ent_location, Client.GetPlayerHandle());
 
 														using (GUI.Alpha.Push(GUI.GetEnabledAlpha(is_selectable)))
 														//using (GUI.Disabled.Push(true, !is_selectable))
@@ -1421,31 +1412,32 @@ namespace TC2.Conquest
 															//	icon = location_data.thumbnail;
 															//}
 
-															var map_asset = default(MapAsset);
+															//var map_asset = default(MapAsset);
 															using (var group_thumbnail = GUI.Group.New(size: new(GUI.RmY)))
 															{
-																ref var location_data = ref entity.GetAssetData<ILocation.Data>();
+																//ref var location_data = ref ent_location.GetAssetData<ILocation.Data>();
 																if (map_asset != null)
 																{
 																	GUI.DrawMapThumbnail(map_asset, size: GUI.Rm, show_frame: false);
 																}
-																else if (location_data.IsNotNull())
-																{
-																	GUI.DrawSpriteCentered(location_data.thumbnail, group_thumbnail.GetInnerRect(), GUI.Layer.Window, scale: 0.25f);
-																}
-																else
-																{
-																	var icon = marker.icon;
-																	GUI.DrawSpriteCentered(icon, group_row.GetInnerRect(), layer: GUI.Layer.Window, pivot: new(1.00f, 0.50f), scale: 2.00f, color: marker.color_override.IsVisible() ? marker.color_override : marker.color);
-																	//GUI.DrawSpriteCentered(location_data.thumbnail, group_thumbnail.GetInnerRect(), GUI.Layer.Window, scale: 1.00f);
-																}
+																//else if (location_data.IsNotNull())
+																//{
+																//	GUI.DrawSpriteCentered(location_data.thumbnail, group_thumbnail.GetInnerRect(), GUI.Layer.Window, scale: 0.25f);
+																//}
+																//else
+																//{
+																//	//var icon = marker.icon;
+																//	//GUI.DrawSpriteCentered(icon, group_row.GetInnerRect(), layer: GUI.Layer.Window, pivot: new(1.00f, 0.50f), scale: 2.00f, color: marker.color_override.IsVisible() ? marker.color_override : marker.color);
+																//	//GUI.DrawSpriteCentered(location_data.thumbnail, group_thumbnail.GetInnerRect(), GUI.Layer.Window, scale: 1.00f);
+																//}
 
 																GUI.DrawBackground(GUI.tex_frame_white, rect: group_thumbnail.GetOuterRect(), padding: new(4), color: GUI.col_button);
 															}
 
 															GUI.SameLine();
 
-															GUI.TitleCentered(nameable.name, size: 16, pivot: new(0.00f, 0.00f), offset: new(0, 0));
+															GUI.TitleCentered(map_info.name, size: 20, pivot: new(0.00f, 0.00f), offset: new(2, 2));
+															GUI.TextShadedCentered(location_data.h_prefecture.GetShortName(), pivot: new(0.00f, 1.00f), offset: new(2, -2));
 
 															//var ent_parent = entity.GetParent(Relation.Type.Child);
 															//if (ent_parent.IsValid() && ent_parent.TryGetAssetName(out var name_parent))
@@ -1457,9 +1449,9 @@ namespace TC2.Conquest
 															//	//GUI.TextShadedCentered(entity.GetFaction().GetName(), size: 14, pivot: new(0.00f, 1.00f), color: GUI.font_color_desc);
 															//}
 
-															if (GUI.Selectable3(entity.GetShortID(), group_row.GetOuterRect(), is_selected || contains, is_readonly: !is_selectable))
+															if (GUI.Selectable3(ent_location.GetShortID(), group_row.GetOuterRect(), is_selected || contains, is_readonly: !is_selectable))
 															{
-																var result = WorldMap.SelectUnitBehavior(entity, SelectUnitMode.Single, SelectUnitFlags.Multiselect | SelectUnitFlags.Hold_Shift | SelectUnitFlags.Toggle, selected: is_selected);
+																var result = WorldMap.SelectUnitBehavior(ent_location, SelectUnitMode.Single, SelectUnitFlags.Multiselect | SelectUnitFlags.Hold_Shift | SelectUnitFlags.Toggle, selected: is_selected);
 																if (result.HasAny(SelectUnitResults.Changed))
 																{
 																	if (result.HasAny(SelectUnitResults.Removed))
@@ -1468,11 +1460,12 @@ namespace TC2.Conquest
 																	}
 																	else
 																	{
-																		WorldMap.interacted_entity.Toggle(entity, true);
+																		WorldMap.interacted_entity.Toggle(ent_location, true);
+																		WorldMap.FocusEntity(ent_location, interact: false);
 																	}
 																}
 
-																if (WorldMap.interacted_entity_cached == entity && (entity.TryGetAsset(out ILocation.Definition location_asset))) // || ent_parent.TryGetAsset(out location_asset)))
+																if (WorldMap.interacted_entity_cached == ent_location && (ent_location.TryGetAsset(out ILocation.Definition location_asset))) // || ent_parent.TryGetAsset(out location_asset)))
 																{
 																	WorldMap.h_selected_location = location_asset;
 																}
@@ -1487,112 +1480,251 @@ namespace TC2.Conquest
 														{
 															if (GUI.GetMouse().GetKeyDown(Mouse.Key.Right))
 															{
-																WorldMap.FocusEntity(entity, interact: false);
+																WorldMap.FocusEntity(ent_location, interact: false);
 															}
-															GUI.DrawEntityMarker(entity, cross_size: 0.125f, layer: GUI.Layer.Foreground);
+															GUI.DrawEntityMarker(ent_location, cross_size: 0.125f, layer: GUI.Layer.Foreground);
 														}
 													}
 												}
 											}
-
-											//ref var enterable = ref entity.GetComponent<Enterable.Data>();
-											//if (enterable.IsNotNull())
-											{
-												var children_list = FixedArray.CreateSpan8NoInit<Entity>(out var children_buffer).AsSpanList();
-												entity.GetChildren(ref children_list, Relation.Type.Child);
-												entity.GetChildren(ref children_list, Relation.Type.Stored);
-												var children = children_list.GetSpan();
-
-												if (!children.IsEmpty)
-												{
-													foreach (var ent_child in children)
-													{
-														GUI.NewLine(0);
-														GUI.OffsetLine(32);
-
-														using (var group_row = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(4, 4)))
-														{
-															if (group_row.IsVisible())
-															{
-																using (GUI.ID.Push(ent_child))
-																{
-																	var is_selected = WorldMap.interacted_entity_cached == ent_child; // || WorldMap.hs_selected_entities.Contains(ent_child);
-																	var contains = WorldMap.hs_selected_entities.Contains(ent_child);
-																	var is_selectable = WorldMap.CanPlayerControlUnit(ent_child, Client.GetPlayerHandle());
-
-																	using (GUI.Alpha.Push(GUI.GetEnabledAlpha(is_selectable)))
-																	{
-																		group_row.DrawBackground(GUI.tex_panel);
-
-																		ref var marker_child = ref ent_child.GetComponent<Marker.Data>();
-																		if (marker_child.IsNotNull())
-																		{
-																			GUI.DrawSpriteCentered(marker_child.icon, group_row.GetInnerRect(), layer: GUI.Layer.Window, pivot: new(1.00f, 0.50f), scale: 2.00f);
-																		}
-
-																		GUI.TitleCentered(ent_child.GetName(), size: 16, pivot: new(0.00f, 0.00f), offset: new(0, 0));
-																		//GUI.TextShadedCentered("Test", size: 14, pivot: new(0.00f, 1.00f), color: GUI.font_color_desc);
-
-																		//var selected = asset == h_selected_location; // selected_region_id == i;
-
-																		if (GUI.Selectable3(ent_child.GetShortID(), group_row.GetOuterRect(), contains || is_selected, is_readonly: !is_selectable))
-																		{
-																			var result = WorldMap.SelectUnitBehavior(ent_child, SelectUnitMode.Single, SelectUnitFlags.Multiselect | SelectUnitFlags.Hold_Shift | SelectUnitFlags.Toggle);
-																			if (result.HasAny(SelectUnitResults.Changed))
-																			{
-																				if (result.HasAny(SelectUnitResults.Removed)) WorldMap.interacted_entity = default;
-																				else
-																				{
-																					WorldMap.interacted_entity.Toggle(ent_child, true);
-																				}
-																			}
-																			//if (WorldMap.hs_selected_entities.Count <= 1 || GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
-																			//{
-																			//	if (ent_child.HasComponent<WorldMap.Unit.Data>())
-																			//	{
-																			//		WorldMap.hs_selected_entities.Toggle(ent_child, !is_selected);
-																			//	}
-																			//}
-																			//else
-																			//{
-																			//	WorldMap.selected_entity.Toggle(ent_child, !is_selected);
-																			//}
-
-
-																			var ent_parent = entity.GetParent(Relation.Type.Child);
-																			if (WorldMap.interacted_entity_cached == ent_child && (ent_child.TryGetAsset(out ILocation.Definition location_asset) || entity.TryGetAsset(out location_asset) || ent_parent.TryGetAsset(out location_asset)))
-																			{
-																				WorldMap.h_selected_location = location_asset;
-																			}
-																			else
-																			{
-																				WorldMap.h_selected_location = default;
-																			}
-																		}
-																	}
-
-																	if (GUI.IsItemHovered())
-																	{
-																		if (GUI.GetMouse().GetKeyDown(Mouse.Key.Right))
-																		{
-																			WorldMap.FocusEntity(ent_child, interact: false);
-																		}
-																		GUI.DrawEntityMarker(ent_child, cross_size: 0.125f, layer: GUI.Layer.Foreground);
-																		//hs_selected_entities.Add(ent_child);
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										});
-
+										}
 									}
-									//var ts_elapsed = ts.GetMilliseconds();
-									//GUI.DrawTextCentered($"{ts_elapsed:0.0000} ms", GUI.CanvasSize * 0.50f, layer: GUI.Layer.Foreground);
 								}
 							}
+
+							//// TODO: this is awful
+							//using (var collapsible = GUI.Collapsible2.New("units.collapsible"u8, new Vector2(GUI.RmX, 32), default_open: true))
+							//{
+							//	GUI.TitleCentered("Units"u8, size: 24, pivot: new(0.00f, 0.50f));
+
+							//	if (collapsible.Inner(padding: new Vector4(12, 0, 0, 0)))
+							//	{
+							//		var rows = region.IterateQuery<WorldMap.Marker.GetAllMarkersQuery>().HasParent(Relation.Type.Child, false);
+							//		if (edit_unit_search_filter.HasNone(UnitSearchFilter.Units)) rows = rows.HasComponent<Unit.Data>(false);
+							//		if (edit_unit_search_filter.HasNone(UnitSearchFilter.Regions)) rows = rows.HasComponent<Zone.Data>(false);
+							//		if (edit_unit_search_filter.HasNone(UnitSearchFilter.Settlements)) rows = rows.HasComponent<Settlement.Data>(false);
+
+							//		foreach (ref var row in rows) //.HasComponent<Location.Data>(false))
+							//		{
+							//			row.Run((ISystem.Info.Global info, ref Region.Data.Global region, Entity entity,
+							//			in WorldMap.Marker.Data marker,
+							//			in Transform.Data transform,
+							//			ref Nameable.Data nameable,
+							//			bool has_parent) =>
+							//			{
+							//				//return;
+							//				if (has_parent) return;
+							//				if (marker.flags.HasAny(Marker.Data.Flags.Hidden)) return;
+
+							//				//var pos = transform.GetInterpolatedPosition();
+							//				//var asset_scale = Maths.Clamp(marker.scale, 0.250f, 1.00f);
+
+							//				////if ((has_parent && marker.flags.HasAny(Marker.Data.Flags.Hide_If_Parented)))
+							//				//if (has_parent)
+							//				//{
+							//				//	return;
+							//				//}
+							//				//else
+							//				//{
+
+							//				//}
+
+							//				if (is_filtering && !nameable.name.ToString().Contains(edit_units_search, StringComparison.OrdinalIgnoreCase)) return;
+
+							//				using (var group_row = GUI.Group.New(size: new(GUI.RmX, 40), padding: new(4, 4)))
+							//				{
+							//					if (group_row.IsVisible())
+							//					{
+							//						using (GUI.ID.Push(entity))
+							//						{
+							//							var is_selected = WorldMap.interacted_entity_cached == entity;
+							//							var contains = WorldMap.hs_selected_entities.Contains(entity);
+							//							var is_selectable = WorldMap.CanPlayerControlUnit(entity, Client.GetPlayerHandle());
+
+							//							using (GUI.Alpha.Push(GUI.GetEnabledAlpha(is_selectable)))
+							//							//using (GUI.Disabled.Push(true, !is_selectable))
+							//							{
+							//								group_row.DrawBackground(GUI.tex_panel);
+
+							//								//if (location_data.IsNotNull())
+							//								//{
+							//								//	icon = location_data.thumbnail;
+							//								//}
+
+							//								var map_asset = default(MapAsset);
+							//								using (var group_thumbnail = GUI.Group.New(size: new(GUI.RmY)))
+							//								{
+							//									ref var location_data = ref entity.GetAssetData<ILocation.Data>();
+							//									if (map_asset != null)
+							//									{
+							//										GUI.DrawMapThumbnail(map_asset, size: GUI.Rm, show_frame: false);
+							//									}
+							//									else if (location_data.IsNotNull())
+							//									{
+							//										GUI.DrawSpriteCentered(location_data.thumbnail, group_thumbnail.GetInnerRect(), GUI.Layer.Window, scale: 0.25f);
+							//									}
+							//									else
+							//									{
+							//										var icon = marker.icon;
+							//										GUI.DrawSpriteCentered(icon, group_row.GetInnerRect(), layer: GUI.Layer.Window, pivot: new(1.00f, 0.50f), scale: 2.00f, color: marker.color_override.IsVisible() ? marker.color_override : marker.color);
+							//										//GUI.DrawSpriteCentered(location_data.thumbnail, group_thumbnail.GetInnerRect(), GUI.Layer.Window, scale: 1.00f);
+							//									}
+
+							//									GUI.DrawBackground(GUI.tex_frame_white, rect: group_thumbnail.GetOuterRect(), padding: new(4), color: GUI.col_button);
+							//								}
+
+							//								GUI.SameLine();
+
+							//								GUI.TitleCentered(nameable.name, size: 16, pivot: new(0.00f, 0.00f), offset: new(0, 0));
+
+							//								//var ent_parent = entity.GetParent(Relation.Type.Child);
+							//								//if (ent_parent.IsValid() && ent_parent.TryGetAssetName(out var name_parent))
+							//								//{
+							//								//	GUI.TextShadedCentered(name_parent, size: 14, pivot: new(0.00f, 1.00f), color: GUI.font_color_desc);
+							//								//}
+							//								//else
+							//								//{
+							//								//	//GUI.TextShadedCentered(entity.GetFaction().GetName(), size: 14, pivot: new(0.00f, 1.00f), color: GUI.font_color_desc);
+							//								//}
+
+							//								if (GUI.Selectable3(entity.GetShortID(), group_row.GetOuterRect(), is_selected || contains, is_readonly: !is_selectable))
+							//								{
+							//									var result = WorldMap.SelectUnitBehavior(entity, SelectUnitMode.Single, SelectUnitFlags.Multiselect | SelectUnitFlags.Hold_Shift | SelectUnitFlags.Toggle, selected: is_selected);
+							//									if (result.HasAny(SelectUnitResults.Changed))
+							//									{
+							//										if (result.HasAny(SelectUnitResults.Removed))
+							//										{
+							//											WorldMap.interacted_entity = default;
+							//										}
+							//										else
+							//										{
+							//											WorldMap.interacted_entity.Toggle(entity, true);
+							//										}
+							//									}
+
+							//									if (WorldMap.interacted_entity_cached == entity && (entity.TryGetAsset(out ILocation.Definition location_asset))) // || ent_parent.TryGetAsset(out location_asset)))
+							//									{
+							//										WorldMap.h_selected_location = location_asset;
+							//									}
+							//									else
+							//									{
+							//										WorldMap.h_selected_location = default;
+							//									}
+							//								}
+							//							}
+
+							//							if (GUI.IsItemHovered())
+							//							{
+							//								if (GUI.GetMouse().GetKeyDown(Mouse.Key.Right))
+							//								{
+							//									WorldMap.FocusEntity(entity, interact: false);
+							//								}
+							//								GUI.DrawEntityMarker(entity, cross_size: 0.125f, layer: GUI.Layer.Foreground);
+							//							}
+							//						}
+							//					}
+							//				}
+
+							//				//ref var enterable = ref entity.GetComponent<Enterable.Data>();
+							//				//if (enterable.IsNotNull())
+							//				{
+							//					var children_list = FixedArray.CreateSpan8NoInit<Entity>(out var children_buffer).AsSpanList();
+							//					entity.GetChildren(ref children_list, Relation.Type.Child);
+							//					entity.GetChildren(ref children_list, Relation.Type.Stored);
+							//					var children = children_list.GetSpan();
+
+							//					if (!children.IsEmpty)
+							//					{
+							//						foreach (var ent_child in children)
+							//						{
+							//							GUI.NewLine(0);
+							//							GUI.OffsetLine(32);
+
+							//							using (var group_row = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(4, 4)))
+							//							{
+							//								if (group_row.IsVisible())
+							//								{
+							//									using (GUI.ID.Push(ent_child))
+							//									{
+							//										var is_selected = WorldMap.interacted_entity_cached == ent_child; // || WorldMap.hs_selected_entities.Contains(ent_child);
+							//										var contains = WorldMap.hs_selected_entities.Contains(ent_child);
+							//										var is_selectable = WorldMap.CanPlayerControlUnit(ent_child, Client.GetPlayerHandle());
+
+							//										using (GUI.Alpha.Push(GUI.GetEnabledAlpha(is_selectable)))
+							//										{
+							//											group_row.DrawBackground(GUI.tex_panel);
+
+							//											ref var marker_child = ref ent_child.GetComponent<Marker.Data>();
+							//											if (marker_child.IsNotNull())
+							//											{
+							//												GUI.DrawSpriteCentered(marker_child.icon, group_row.GetInnerRect(), layer: GUI.Layer.Window, pivot: new(1.00f, 0.50f), scale: 2.00f);
+							//											}
+
+							//											GUI.TitleCentered(ent_child.GetName(), size: 16, pivot: new(0.00f, 0.00f), offset: new(0, 0));
+							//											//GUI.TextShadedCentered("Test", size: 14, pivot: new(0.00f, 1.00f), color: GUI.font_color_desc);
+
+							//											//var selected = asset == h_selected_location; // selected_region_id == i;
+
+							//											if (GUI.Selectable3(ent_child.GetShortID(), group_row.GetOuterRect(), contains || is_selected, is_readonly: !is_selectable))
+							//											{
+							//												var result = WorldMap.SelectUnitBehavior(ent_child, SelectUnitMode.Single, SelectUnitFlags.Multiselect | SelectUnitFlags.Hold_Shift | SelectUnitFlags.Toggle);
+							//												if (result.HasAny(SelectUnitResults.Changed))
+							//												{
+							//													if (result.HasAny(SelectUnitResults.Removed)) WorldMap.interacted_entity = default;
+							//													else
+							//													{
+							//														WorldMap.interacted_entity.Toggle(ent_child, true);
+							//													}
+							//												}
+							//												//if (WorldMap.hs_selected_entities.Count <= 1 || GUI.GetKeyboard().GetKeyNow(Keyboard.Key.LeftShift))
+							//												//{
+							//												//	if (ent_child.HasComponent<WorldMap.Unit.Data>())
+							//												//	{
+							//												//		WorldMap.hs_selected_entities.Toggle(ent_child, !is_selected);
+							//												//	}
+							//												//}
+							//												//else
+							//												//{
+							//												//	WorldMap.selected_entity.Toggle(ent_child, !is_selected);
+							//												//}
+
+
+							//												var ent_parent = entity.GetParent(Relation.Type.Child);
+							//												if (WorldMap.interacted_entity_cached == ent_child && (ent_child.TryGetAsset(out ILocation.Definition location_asset) || entity.TryGetAsset(out location_asset) || ent_parent.TryGetAsset(out location_asset)))
+							//												{
+							//													WorldMap.h_selected_location = location_asset;
+							//												}
+							//												else
+							//												{
+							//													WorldMap.h_selected_location = default;
+							//												}
+							//											}
+							//										}
+
+							//										if (GUI.IsItemHovered())
+							//										{
+							//											if (GUI.GetMouse().GetKeyDown(Mouse.Key.Right))
+							//											{
+							//												WorldMap.FocusEntity(ent_child, interact: false);
+							//											}
+							//											GUI.DrawEntityMarker(ent_child, cross_size: 0.125f, layer: GUI.Layer.Foreground);
+							//											//hs_selected_entities.Add(ent_child);
+							//										}
+							//									}
+							//								}
+							//							}
+							//						}
+							//					}
+							//				}
+							//			});
+
+							//		}
+							//		//var ts_elapsed = ts.GetMilliseconds();
+							//		//GUI.DrawTextCentered($"{ts_elapsed:0.0000} ms", GUI.CanvasSize * 0.50f, layer: GUI.Layer.Foreground);
+							//	}
+							//}
+
+						
 						}
 					}
 					//}
