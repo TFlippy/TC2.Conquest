@@ -40,6 +40,8 @@ namespace TC2.Conquest
 				{
 					if (window.show)
 					{
+						ref var mod_context = ref App.GetModContext();
+
 						var h_location = this.ent_site.GetAssetHandle<ILocation.Handle>();
 						ref var location_data = ref h_location.GetData(out var location_asset);
 						if (location_data.IsNotNull())
@@ -179,6 +181,7 @@ namespace TC2.Conquest
 												Span<Entity> children_span = FixedArray.CreateSpan32NoInit<Entity>(out var buffer_children);
 												//ent_asset.GetAllChildren(ref children_span, false);
 												ent_site.GetChildren(ref children_span, Relation.Type.Child);
+												children_span.Sort();
 
 												foreach (var ent_child in children_span)
 												{

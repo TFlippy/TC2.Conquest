@@ -868,7 +868,7 @@ namespace TC2.Conquest
 				&& WorldMap.IsOpen
 				//&& WorldMap.ts_last_draw.GetMilliseconds() <= 50 // TODO: shithack
 				&& interactable.flags.HasNone(Interactable.Flags.No_Window)
-				&& interactable.window_size.IsNotNil();
+				&& interactable.window_size != default;
 				//&& entity.CanPlayerControlUnit(Client.GetPlayerHandle());
 			}
 		}

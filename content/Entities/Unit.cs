@@ -1060,7 +1060,7 @@ namespace TC2.Conquest
 				return false;
 			}
 
-			public static bool enable_pathfinding = true;
+			public static bool enable_pathfinding = false;
 
 #if CLIENT
 			public partial struct UnitGUI: IGUICommand
