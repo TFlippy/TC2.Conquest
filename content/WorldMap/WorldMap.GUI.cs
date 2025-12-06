@@ -1159,7 +1159,7 @@ namespace TC2.Conquest
 										{
 											//using (GUI.Group.New(GUI.Rm))
 											//using (var scrollbox = GUI.Scrollbox.New("worldmap.interact.sub.scroll"u8, size: GUI.Rm))
-											using (var dock_misc = GUI.Dock.New("Misc"u8))
+											using (var dock_misc = GUI.Dock.New(Entity.None, "Misc"u8))
 											{
 												//GUI.DrawInventoryDock(Inventory.Type.Essence, new(48, 48));
 
@@ -2569,7 +2569,7 @@ namespace TC2.Conquest
 
 							foreach (ref var row in region.IterateQuery<WorldMap.Unit.GetAllQuery>())
 							{
-								row.Run((ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] in Unit.Data unit, [Source.Owned] in Transform.Data transform, [Source.Owned, Keg.Engine.Game.Optional(false)] in Faction.Data faction) =>
+								row.Run(static (ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] in Unit.Data unit, [Source.Owned] in Transform.Data transform, [Source.Owned, Keg.Engine.Game.Optional(false)] in Faction.Data faction) =>
 								{
 									if (drag_rect_cached_world.ContainsPoint(transform.position) && !entity.HasParent(Relation.Type.Child) && unit.CanPlayerControlUnit(entity, Client.GetPlayerHandle()))
 									{

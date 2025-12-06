@@ -55,16 +55,16 @@ namespace TC2.Conquest
 		public static void OnGUI(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, 
 		[Source.Owned] ref Settlement.Data settlement, [Source.Owned] ref Transform.Data transform)
 		{
-			if (WorldMap.IsOpen)
-			{
-				var gui = new Settlement.SettlementGUI()
-				{
-					ent_settlement = entity,
-					settlement = settlement,
-					transform = transform
-				};
-				gui.Submit();
-			}
+			//if (WorldMap.IsOpen)
+			//{
+			//	var gui = new Settlement.SettlementGUI()
+			//	{
+			//		ent_settlement = entity,
+			//		settlement = settlement,
+			//		transform = transform
+			//	};
+			//	gui.Submit();
+			//}
 
 			//App.WriteLine("GUI");
 		}

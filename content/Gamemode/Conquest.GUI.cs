@@ -257,8 +257,8 @@ namespace TC2.Conquest
 
 						using (GUI.Group.New(size: GUI.Rm, padding: new(8)))
 						{
-					
-						
+
+
 							{
 								using (GUI.Wrap.Push(GUI.RmX))
 								using (var group = GUI.Group.New(size: new(GUI.RmX, 80), padding: new(4)))
@@ -798,6 +798,21 @@ namespace TC2.Conquest
 			}
 		}
 
+		[ISystem.Add(ISystem.Mode.Single, ISystem.Scope.Global)]
+		public static void OnAddWorld(Entity entity, [Source.Owned] ref World.Global world)
+		{
+			App.WriteValue(nameof(OnAddWorld), entity, color: App.Color.Green);
+			//ref var scenario = ref world
+
+			// TODO: hack
+			ref var scenario_data = ref WorldMap.h_scenario.GetData();
+			if (scenario_data.IsNotNull())
+			{
+				WorldMap.FocusPosition(scenario_data.worldmap_position);
+				App.WriteValue(nameof(scenario_data.worldmap_position), scenario_data.worldmap_position, App.Color.Magenta);
+			}
+		}
+
 		[Shitcode]
 		[HasTag("local", true, Source.Modifier.Owned)]
 		[ISystem.PreUpdate.D(ISystem.Mode.Single, ISystem.Scope.Region, flags: ISystem.Flags.Unchecked, order: -55)]
@@ -814,6 +829,47 @@ namespace TC2.Conquest
 			}
 		}
 
+		[ISystem.Event<Interactable.DrawWindowEvent>(ISystem.Mode.Single, ISystem.Scope.Region)]
+		public static void OnDrawInteractionEvent(ISystem.Info info, ref Region.Data region, Entity ent_character, ref Interactable.DrawWindowEvent ev,
+		[Source.Owned] ref Character.Data character)
+		{
+			using (var window_child = ev.window.BeginChildWindow(identifier: "interaction.bottom"u8,
+			anchor_x: GUI.AlignX.Left,
+			anchor_y: GUI.AlignY.Bottom,
+			size: new((48 * 4) + 12, (24 * 4) + 12),
+			pivot: new(0.00f, 1.00f),
+			offset: new(0.00f, -2),
+			padding: new(6),
+			tex_bg: GUI.tex_window_sidebar_c,
+			color_bg: Color32BGRA.White,
+			open: true))
+			{
+				if (window_child.show)
+				{
+					var h_character = ent_character.GetAssetHandle<ICharacter.Handle>();
+
+					//using (GUI.Group.New(size: new(GUI.RmX, 48)))
+					//{
+					//	Dormitory.DrawCharacterHead(h_character, new(48));
+					//}
+
+					//GUI.SameLine();
+
+					using (GUI.Group.New(size: GUI.Rm))
+					{
+						var h_inventory = character.GetInventory();
+						if (h_inventory)
+						{
+							GUI.DrawInventory(h_inventory);
+						}
+					}
+						//GUI.DrawWindowBackground();
+				}
+			}
+			//App.WriteLine("yeah");
+			//GUI.Text("yeah");
+		}
+
 		[Shitcode]
 		[ISystem.GUI(ISystem.Mode.Single, ISystem.Scope.Region), HasTag("local", true, Source.Modifier.Owned)]
 		public static void OnGUIRespawn(Entity entity, [Source.Owned] in Player.Data player, [Source.Owned] in Respawn.Data respawn)
@@ -823,7 +879,7 @@ namespace TC2.Conquest
 			//if (player.IsLocal())
 			{
 				//if (!WorldMap.IsOpen && player.flags.HasNone(Player.Flags.Alive) && !(player.flags.HasAny(Player.Flags.Editor) && !Editor.show_respawn_menu))
-				if (!WorldMap.IsOpen && !player.ent_controlled.IsValid() && (player.flags.HasNone(Player.Flags.Editor) | Editor.show_respawn_menu))
+				if ((player.flags.HasNone(Player.Flags.Editor) | Editor.show_respawn_menu) && !WorldMap.IsOpen && !player.ent_controlled.IsAlive())
 				{
 					var gui = new RespawnGUI
 					{

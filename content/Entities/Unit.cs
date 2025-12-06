@@ -32,6 +32,7 @@ namespace TC2.Conquest
 		//	//return ILocation.Handle.None;
 		//}
 
+		[Shitcode]
 		public static bool CanPlayerControlUnit(this Entity ent_unit, IPlayer.Handle h_player)
 		{
 			if (ent_unit.IsAlive())
@@ -43,6 +44,7 @@ namespace TC2.Conquest
 			return false;
 		}
 
+		[Shitcode]
 		public static bool CanPlayerControlUnit(ref readonly this Unit.Data unit, Entity ent_unit, IPlayer.Handle h_player)
 		{
 			if (Unsafe.IsNullRef(in unit))
@@ -54,13 +56,14 @@ namespace TC2.Conquest
 				if (unit.flags.HasAny(Unit.Flags.Requires_Driver)) return h_player.CanControlCharacter(unit.h_character_driver);
 				else if (unit.type == Unit.Type.Character)
 				{
-					return ent_unit.TryGetAssetHandle(out ICharacter.Handle h_character) && h_player.CanControlCharacter(h_character);
+					return ent_unit.TryGetAsset(out ICharacter.Definition character_asset) && character_asset.region_id == 0 && h_player.CanControlCharacter(character_asset);
 				}
 			}
 
 			return false;
 		}
 
+		[Shitcode]
 		public static partial class Enterable
 		{
 			[Query(ISystem.Scope.Global)]

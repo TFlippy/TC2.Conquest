@@ -1,7 +1,7 @@
 ﻿{
-	$version: "0.1.63.0"
+	$version: "0.1.66.1"
 	name: "Krumpelsuter Charter Crisis"
-	worldmap_position: [0.000, 0.000]
+	worldmap_position: [27.000, -13.000]
 	
 	governorates:
 	[

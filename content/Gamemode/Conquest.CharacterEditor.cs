@@ -1009,7 +1009,7 @@ namespace TC2.Conquest
 					show_as_selected: is_selected,
 					color: color,
 					order: (10.00f - 0.10f),
-					flags: Sidebar.Widget.Flags.Starts_Open))
+					flags: Sidebar.Widget.Flags.None))
 					{
 						widget.func_draw = (widget, group, icon_color) =>
 						{
@@ -1141,7 +1141,7 @@ namespace TC2.Conquest
 					size: new Vector2(48 * 18, 500),
 					color: color,
 					order: (10.00f - 0.10f),
-					flags: Sidebar.Widget.Flags.Starts_Open | Sidebar.Widget.Flags.Enabled | Sidebar.Widget.Flags.Has_Window | Sidebar.Widget.Flags.Play_Sound))
+					flags: Sidebar.Widget.Flags.Enabled | Sidebar.Widget.Flags.Has_Window | Sidebar.Widget.Flags.Play_Sound))
 					{
 						widget.func_draw = null;
 
