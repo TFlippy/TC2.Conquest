@@ -28,9 +28,8 @@ settlement:
 interactable:
 {
 	flags: no_tab
-	window_size: [600.000, 422.000]
-	// window_size_misc: [192.000, 0.000]
-	window_offset: [0.000, 0.000]
+	window_size: [576, 384]
+	window_size_misc: [96, 0]
 }
 
 worldmap.marker:
