@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.61.2"
+	$version: "0.1.67.1"
 	name: "Politician"
 	desc:
 		'''
@@ -11,7 +11,6 @@
 	genders: male, female
 	gender_ratio: 0.270
 	species: human
-	faction: "null"
 	cost: 450.000
 	flags: selectable, special
 	
@@ -198,11 +197,11 @@
 		carpentry: 1
 		engineering: 3
 		blacksmithing: 2
-		arcanology: 4
+		arcanology: 5
 		strength: 5
 		dexterity: 6
 		endurance: 5
-		intellect: 9
+		intellect: 8
 		geology: 3
 		metallurgy: 2
 		medicine: 3

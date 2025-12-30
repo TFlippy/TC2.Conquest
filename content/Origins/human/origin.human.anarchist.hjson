@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.60.7"
+	$version: "0.1.67.1"
 	name: "Anarchist"
 	desc:
 		'''
@@ -11,7 +11,6 @@
 	genders: male, female
 	gender_ratio: 0.350
 	species: human
-	faction: "null"
 	cost: 50.000
 	flags: selectable, special
 	
@@ -193,7 +192,7 @@
 		explosives: 8
 		mining: 4
 		woodcutting: 4
-		construction: 3
+		construction: 7
 		masonry: 2
 		carpentry: 2
 		engineering: 2
@@ -202,7 +201,7 @@
 		strength: 14
 		dexterity: 7
 		endurance: 9
-		intellect: 5
+		intellect: 3
 		geology: 2
 		metallurgy: 2
 		medicine: 3

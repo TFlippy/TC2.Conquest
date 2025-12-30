@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.61.2"
+	$version: "0.1.67.1"
 	name: "Industrialist"
 	desc:
 		'''
@@ -11,7 +11,6 @@
 	genders: male, female
 	gender_ratio: 0.080
 	species: human
-	faction: "null"
 	cost: 850.000
 	flags: selectable, special
 	
@@ -193,18 +192,18 @@
 		explosives: 7
 		mining: 4
 		woodcutting: 2
-		construction: 8
+		construction: 7
 		masonry: 6
 		carpentry: 2
 		engineering: 11
 		blacksmithing: 3
-		arcanology: 7
+		arcanology: 8
 		strength: 3
 		dexterity: 4
 		endurance: 3
-		intellect: 12
+		intellect: 11
 		geology: 6
-		metallurgy: 10
+		metallurgy: 9
 		medicine: 3
 		commerce: 16
 		charisma: 7

@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.61.2"
+	$version: "0.1.67.1"
 	name: "Revolutionary"
 	desc:
 		'''
@@ -11,7 +11,6 @@
 	genders: male, female
 	gender_ratio: 0.210
 	species: human
-	faction: "null"
 	cost: 120.000
 	flags: selectable, special
 	
@@ -193,16 +192,16 @@
 		explosives: 13
 		mining: 8
 		woodcutting: 3
-		construction: 7
+		construction: 6
 		masonry: 5
 		carpentry: 7
 		engineering: 7
 		blacksmithing: 7
-		arcanology: 5
+		arcanology: 4
 		strength: 13
 		dexterity: 10
 		endurance: 14
-		intellect: 6
+		intellect: 4
 		geology: 4
 		metallurgy: 3
 		medicine: 3

@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.61.4"
+	$version: "0.1.67.1"
 	name: "Adventurer"
 	desc:
 		'''
@@ -11,7 +11,6 @@
 	genders: male, female
 	gender_ratio: 0.130
 	species: human
-	faction: "null"
 	cost: 100.000
 	flags: selectable, special
 	
@@ -193,7 +192,7 @@
 		explosives: 6
 		mining: 7
 		woodcutting: 7
-		construction: 5
+		construction: 6
 		masonry: 3
 		carpentry: 4
 		engineering: 4
@@ -202,7 +201,7 @@
 		strength: 11
 		dexterity: 15
 		endurance: 11
-		intellect: 8
+		intellect: 4
 		geology: 8
 		metallurgy: 3
 		medicine: 4

@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.61.2"
+	$version: "0.1.67.1"
 	name: "Professor"
 	desc:
 		'''
@@ -11,7 +11,6 @@
 	genders: male, female
 	gender_ratio: 0.430
 	species: human
-	faction: "null"
 	cost: 500.000
 	flags: selectable, special
 	
@@ -193,18 +192,18 @@
 		explosives: 2
 		mining: 2
 		woodcutting: 2
-		construction: 2
+		construction: 4
 		masonry: 3
 		carpentry: 2
 		engineering: 7
 		blacksmithing: 2
-		arcanology: 7
+		arcanology: 8
 		strength: 3
 		dexterity: 3
 		endurance: 2
 		intellect: 12
 		geology: 10
-		metallurgy: 12
+		metallurgy: 10
 		medicine: 9
 		commerce: 4
 		charisma: 13

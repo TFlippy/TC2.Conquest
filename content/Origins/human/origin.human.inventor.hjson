@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.61.2"
+	$version: "0.1.67.1"
 	name: "Inventor"
 	desc:
 		'''
@@ -11,7 +11,6 @@
 	genders: male, female
 	gender_ratio: 0.320
 	species: human
-	faction: "null"
 	cost: 400.000
 	flags: selectable, special
 	
@@ -193,16 +192,16 @@
 		explosives: 9
 		mining: 4
 		woodcutting: 1
-		construction: 9
+		construction: 10
 		masonry: 2
 		carpentry: 6
 		engineering: 13
 		blacksmithing: 9
-		arcanology: 11
+		arcanology: 10
 		strength: 6
 		dexterity: 6
 		endurance: 4
-		intellect: 16
+		intellect: 14
 		geology: 3
 		metallurgy: 9
 		medicine: 5

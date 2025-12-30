@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.60.7"
+	$version: "0.1.67.1"
 	name: "Prophet"
 	desc:
 		'''
@@ -11,7 +11,6 @@
 	genders: male, female
 	gender_ratio: 0.310
 	species: human
-	faction: "null"
 	cost: 50.000
 	flags: selectable, special
 	
@@ -193,7 +192,7 @@
 		explosives: 3
 		mining: 3
 		woodcutting: 2
-		construction: 3
+		construction: 4
 		masonry: 12
 		carpentry: 10
 		engineering: 3

@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.61.2"
+	$version: "0.1.67.1"
 	name: "Unionist"
 	desc:
 		'''
@@ -11,7 +11,6 @@
 	genders: male, female
 	gender_ratio: 0.250
 	species: human
-	faction: "null"
 	cost: 180.000
 	flags: selectable, special
 	
@@ -193,7 +192,7 @@
 		explosives: 5
 		mining: 7
 		woodcutting: 5
-		construction: 7
+		construction: 6
 		masonry: 5
 		carpentry: 7
 		engineering: 5
@@ -202,7 +201,7 @@
 		strength: 11
 		dexterity: 7
 		endurance: 10
-		intellect: 7
+		intellect: 5
 		geology: 4
 		metallurgy: 5
 		medicine: 3

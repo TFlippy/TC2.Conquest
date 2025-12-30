@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.61.2"
+	$version: "0.1.67.1"
 	name: "Baron"
 	desc:
 		'''
@@ -11,7 +11,6 @@
 	genders: male, female
 	gender_ratio: 0.460
 	species: human
-	faction: "null"
 	cost: 500.000
 	flags: selectable, special
 	
@@ -198,11 +197,11 @@
 		carpentry: 1
 		engineering: 7
 		blacksmithing: 3
-		arcanology: 6
+		arcanology: 5
 		strength: 6
 		dexterity: 8
 		endurance: 7
-		intellect: 10
+		intellect: 9
 		geology: 4
 		metallurgy: 5
 		medicine: 7

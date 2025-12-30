@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.61.2"
+	$version: "0.1.67.1"
 	name: "Entrepreneur"
 	desc:
 		'''
@@ -11,7 +11,6 @@
 	genders: male, female
 	gender_ratio: 0.260
 	species: human
-	faction: "null"
 	cost: 550.000
 	flags: selectable, special
 	
@@ -193,7 +192,7 @@
 		explosives: 2
 		mining: 3
 		woodcutting: 2
-		construction: 3
+		construction: 5
 		masonry: 3
 		carpentry: 3
 		engineering: 6
@@ -202,7 +201,7 @@
 		strength: 3
 		dexterity: 5
 		endurance: 4
-		intellect: 10
+		intellect: 9
 		geology: 3
 		metallurgy: 3
 		medicine: 5
