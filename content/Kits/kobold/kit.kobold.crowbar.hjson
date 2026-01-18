@@ -26,7 +26,7 @@
 		[
 			{
 				type: prefab
-				prefab: crowbar
+				prefab: crowbar.00
 				quantity: 1.000
 				flags: pickup, despawn
 			}

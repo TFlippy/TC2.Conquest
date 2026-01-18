@@ -7,7 +7,7 @@
 	
 	flags: none
 	slot: resources
-	categories: food, materials, junk, primitive, cheap
+	categories: food, materials
 	faction: "null"
 	species: "human"
 	
@@ -15,7 +15,7 @@
 	{
 		require: none
 		include: unskilled, farmer, laborer, hunter, culinary, nomad, feral, outdoor
-		exclude: military, technician, engineer, miner, upper_middle_class, upper_class, elite_class
+		exclude: military, miner, upper_class, elite_class
 		weight: 1.300
 	}
 	
@@ -28,13 +28,28 @@
 		[
 			{
 				type: resource
-				material: "mushroom.brown"
-				quantity: 25.000
-				flags: despawn, no_consume
+				material: "mushroom.red"
+				quantity: 12.000
+				flags: no_consume
 			}
-			null
-			null
-			null
+			{
+				type: resource
+				material: "mushroom.green"
+				quantity: 7.000
+				flags: no_consume
+			}
+			{
+				type: resource
+				material: "mushroom.blue"
+				quantity: 5.000
+				flags: no_consume
+			}
+			{
+				type: resource
+				material: "mushroom.yellow"
+				quantity: 13.000
+				flags: no_consume
+			}
 		]
 		flags: unpack
 	}

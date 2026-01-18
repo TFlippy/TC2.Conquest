@@ -14,7 +14,7 @@
 	character_flags:
 	{
 		require: technician
-		include: educated, professional, technician, engineer, alchemist, lower_class, lower_middle_class, middle_class, upper_middle_class
+		include: technician, construction, engineer, laborer, alchemist, lower_class, lower_middle_class, middle_class, upper_middle_class
 		exclude: none
 		weight: 1.200
 	}

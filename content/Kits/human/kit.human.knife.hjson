@@ -15,7 +15,7 @@
 	character_flags:
 	{
 		require: none
-		include: criminal, military, medical, nobility, artisan, farmer, armed, law, social, culinary
+		include: criminal, military, medical, hunter, farmer, armed, brawler, evil, insane, fanatic, social, culinary
 		exclude: unarmed
 		weight: 1.000
 	}

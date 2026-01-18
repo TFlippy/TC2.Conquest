@@ -14,13 +14,13 @@
 	character_flags:
 	{
 		require: none
-		include: bureaucrat, scientist, educated, professional, law, social, commerce, technician, engineer, alchemist, entertainer, sedentary, politician, fanatic
-		exclude: illiterate
+		include: bureaucrat, scientist, educated, professional, law, social, commerce, technician, engineer, alchemist, sedentary, politician, illiterate
+		exclude: none
 		weight: 1.000
 	}
 	
-	amount_multiplier_min: 1.000
-	amount_multiplier_max: 1.000
+	amount_multiplier_min: 0.300
+	amount_multiplier_max: 2.400
 	
 	shipment:
 	{
@@ -29,7 +29,7 @@
 			{
 				type: resource
 				material: "paper"
-				quantity: 20.000
+				quantity: 17.000
 				flags: despawn, no_consume
 			}
 			null

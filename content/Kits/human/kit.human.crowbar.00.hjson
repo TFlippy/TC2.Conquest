@@ -1,23 +1,23 @@
 ﻿{
 	$version: "0.1.62.0"
-	name: "Wrench"
+	name: "Crowbar"
 	desc:
 		'''
 		TODO: Desc
 		'''
 	
 	flags: selectable
-	slot: utility
-	categories: tools, construction, civilian, industrial
+	slot: tool
+	categories: tools, weapon, melee, mining, construction, gathering, cheap
 	faction: "null"
 	species: human
 	
 	character_flags:
 	{
-		require: none
-		include: construction, scientist, educated, artisan, laborer, civillian, technician, engineer, miner, strong
-		exclude: none
-		weight: 1.100
+		require: strong
+		include: construction, scientist, artisan, laborer, technician, engineer
+		exclude: medical, nobility, social
+		weight: 1.200
 	}
 	
 	amount_multiplier_min: 1.000
@@ -30,7 +30,7 @@
 		[
 			{
 				type: prefab
-				prefab: wrench
+				prefab: crowbar.00
 				quantity: 1.000
 				flags: despawn, no_consume
 			}
@@ -38,7 +38,6 @@
 			null
 			null
 		]
-		
 		flags: unpack
 	}
 }
