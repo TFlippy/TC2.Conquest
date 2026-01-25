@@ -108,7 +108,7 @@ namespace TC2.Conquest
 			name: "World Map",
 			icon: new Sprite(GUI.tex_icons_widget, 16, 16, 9, 1),
 			size: override_size ?? new Vector2(0, 0),
-			size_min: new Vector2(800, 640),
+			size_min: new Vector2(800, 500),
 			override_pos: override_pos,
 			order: -10.00f,
 			flags: flags))

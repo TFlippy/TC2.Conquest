@@ -151,28 +151,27 @@ namespace TC2.Conquest
 			//	Grid = grid;
 			//}
 
-			[ThreadStatic]
-			public static PriorityQueue<JunctionNode, float> tls_open_list;
-			[ThreadStatic]
-			public static Dictionary<int, JunctionNode> tls_closed_list;
+			[ThreadStatic] public static PriorityQueue<JunctionNode, float> tls_open_list;
+			[ThreadStatic] public static Dictionary<int, JunctionNode> tls_closed_list;
 			//public static Stack<Road.Junction.Branch> Path = new();
 
 			public static bool TryFindPath(Road.Junction.Branch a, Road.Junction.Branch b, ref Span<Road.Junction.Branch> out_results, bool ignore_limits = false, float dot_min = 0.50f, float dot_max = 1.00f)
 			{
 				if (a.GetHashCode() == b.GetHashCode()) return false;
 
-				ref var open_list = ref tls_open_list;
-				ref var closed_list = ref tls_closed_list;
+				var open_list = tls_open_list ??= new(64);
+				open_list.Clear();
 
-				open_list ??= new(64);
-				closed_list ??= new(64);
+				var closed_list = tls_closed_list ??= new(64);
+				closed_list.Clear();
+
+				//open_list ??= new(64);
+				//closed_list ??= new(64);
 
 				var ts = Timestamp.Now();
 				var junctions_span = WorldMap.road_junctions.AsSpan();
 
 				//Path.Clear();
-				open_list.Clear();
-				closed_list.Clear();
 
 				var current = new JunctionNode(a.junction_index, a.index, a.sign, -1.00f, 0.00f);
 
@@ -236,7 +235,7 @@ namespace TC2.Conquest
 									if (!is_found)
 									{
 										n.parent_hash = current.GetHashCode();
-										n.distance = MathF.Abs(junction.pos.X - pos_b.X) + MathF.Abs(junction.pos.Y - pos_b.Y); //  Vector2.Distance(junction.pos, junctions_span[b.junction_index].pos); //  DistanceToTarget = Math.Abs(n.Position.X - end.Position.X) + Math.Abs(n.Position.Y - end.Position.Y);
+										n.distance = Maths.Abs(junction.pos.X - pos_b.X) + Maths.Abs(junction.pos.Y - pos_b.Y); //  Vector2.Distance(junction.pos, junctions_span[b.junction_index].pos); //  DistanceToTarget = Math.Abs(n.Position.X - end.Position.X) + Math.Abs(n.Position.Y - end.Position.Y);
 										n.weight = (Vector2.Distance(seg_a_pos, junction.pos) / (road.speed_mult * road.integrity)) * 0.50f;
 										//n.weight = road.speed_mult * road.integrity;
 										n.cost = (n.weight + current.cost);

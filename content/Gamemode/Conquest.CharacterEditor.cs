@@ -423,7 +423,7 @@ namespace TC2.Conquest
 				//props.hair_color.a = 255;
 
 				props.money = props.money.SnapCeil(11);
-				props.cooldown = (MathF.Pow(props.cost + MathF.Pow(props.money, 0.86f), 1.10f)).SnapCeil(60.00f * 5);
+				props.cooldown = (Maths.Pow(props.cost + Maths.Pow(props.money, 0.86f), 1.10f)).SnapCeil(60.00f * 5);
 			}
 		}
 

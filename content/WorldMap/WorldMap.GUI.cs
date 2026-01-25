@@ -2548,14 +2548,20 @@ namespace TC2.Conquest
 				//var draw_external = true;
 
 				const float button_h = 32;
-				using (var window = GUI.Window.Standalone("worldmap.side.bottom"u8, position: rect.GetPosition(new Vector2(0.50f, 1.00f), new Vector2(0.00f, -8.00f)), size: new(64 * 8, 64 + 16 + button_h), pivot: new(0.50f, 1.00f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus | GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.Child))
+				using (var window = GUI.Window.Standalone(identifier: "worldmap.side.bottom"u8,
+				position: rect.GetPosition(pivot: new(0.00f, 1.00f), offset: new(8.00f, -8.00f)),
+				size: new(64 * 8, 64 + 16 + button_h),
+				pivot: new(0.00f, 1.00f),
+				padding: new(8),
+				force_position: true,
+				flags: GUI.Window.Flags.No_Click_Focus | GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.Child))
 				{
 					if (window.show)
 					{
 						ref var region = ref World.GetGlobalRegion();
 						var mouse = GUI.GetMouse();
 
-						GUI.DrawBackground(GUI.tex_window_chat, rect: window.group.GetOuterRect().Pad(u: button_h - 4), padding: new(4), color: GUI.col_default);
+						GUI.DrawBackground(GUI.tex_window_sidebar_b, rect: window.group.GetOuterRect().Pad(u: button_h - 4), padding: new(4), color: GUI.col_default);
 
 						//var drag_rect = default(AABB);
 
