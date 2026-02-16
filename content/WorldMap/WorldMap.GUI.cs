@@ -694,7 +694,7 @@ namespace TC2.Conquest
 
 											if (nameable.IsNotNull())
 											{
-												GUI.DrawTextCentered(nameable.name, region.WorldToCanvas(transform.position + marker.text_offset), pivot: new(0.50f, 0.50f), color: GUI.font_color_default.WithAlphaMult(alpha_mult), font: GUI.Font.Superstar, size: Maths.Clamp(region.GetWorldToCanvasScale() * asset_scale * 0.50f, 12, 32), layer: GUI.Layer.Window, box_shadow: true);
+												GUI.DrawTextCentered(nameable.name, region.WorldToCanvas(transform.GetInterpolatedPosition() + marker.text_offset), pivot: new(0.50f, 0.50f), color: GUI.font_color_default.WithAlphaMult(alpha_mult), font: GUI.Font.Superstar, size: Maths.Clamp(region.GetWorldToCanvasScale() * asset_scale * 0.50f, 12, 32), layer: GUI.Layer.Window, box_shadow: true);
 											}
 										}
 
@@ -715,7 +715,7 @@ namespace TC2.Conquest
 													var child_icon = child_marker.icon;
 													if (child_icon.texture.id != 0)
 													{
-														var rect_child = region.WorldToCanvas(AABB.Simple(transform.position + marker.text_offset + new Vector2(-0.25f + (child_i * 0.1750f), 0.125f * 0.25f), new Vector2(1, 1) * 0.20f));
+														var rect_child = region.WorldToCanvas(AABB.Simple(transform.GetInterpolatedPosition() + marker.text_offset + new Vector2(-0.25f + (child_i * 0.1750f), 0.125f * 0.25f), new Vector2(1, 1) * 0.20f));
 														//var rect_child = AABB.Simple(new Vector2(rect_button.a.X, rect_button.b.Y), new Vector2(16, 16));
 
 														//GUI.DrawRectFilled(rect_child, color: GUI.col_black.WithAlpha(150), layer: GUI.Layer.Window);
@@ -987,13 +987,13 @@ namespace TC2.Conquest
 				{
 					WorldMap.h_selected_location = location_parent_asset;
 					if (interact) WorldMap.interacted_entity = location_parent_asset.GetGlobalEntity();
-					WorldMap.worldmap_offset_target = (Vector2)location_parent_data.point;
+					WorldMap.worldmap_offset_target = location_parent_asset.GetPosition(); // (Vector2)location_parent_data.point;
 				}
 				else
 				{
 					WorldMap.h_selected_location = location_asset;
 					if (interact) WorldMap.interacted_entity = location_asset.GetGlobalEntity();
-					WorldMap.worldmap_offset_target = (Vector2)location_data.point;
+					WorldMap.worldmap_offset_target = location_asset.GetPosition(); // (Vector2)location_data.point;
 				}
 			}
 		}
@@ -1022,7 +1022,7 @@ namespace TC2.Conquest
 					ref var transform = ref entity.GetComponent<Transform.Data>();
 					if (transform.IsNotNull())
 					{
-						WorldMap.worldmap_offset_target = transform.position;
+						WorldMap.worldmap_offset_target = transform.GetInterpolatedPosition();
 					}
 				}
 			}
@@ -1051,7 +1051,7 @@ namespace TC2.Conquest
 				ref var transform = ref entity.GetComponent<Transform.Data>();
 				if (transform.IsNotNull())
 				{
-					WorldMap.worldmap_offset_target = transform.position;
+					WorldMap.worldmap_offset_target = transform.GetInterpolatedPosition();
 				}
 			}
 			else
@@ -1196,7 +1196,7 @@ namespace TC2.Conquest
 											ents_list.Add(ent_root);
 											ent_root.GetChildren(ref ents_list, Relation.Type.Child);
 											var ents_span = ents_list.GetSpan();
-											ents_span.Sort();
+											ents_span.Slice(1).Sort();
 
 											//var ent_parent = is_root ? Entity.Default : ent_interacted.GetParent(relation: Relation.Type.Child);
 
@@ -2577,7 +2577,7 @@ namespace TC2.Conquest
 							{
 								row.Run(static (ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, [Source.Owned] in Unit.Data unit, [Source.Owned] in Transform.Data transform, [Source.Owned, Keg.Engine.Game.Optional(false)] in Faction.Data faction) =>
 								{
-									if (drag_rect_cached_world.ContainsPoint(transform.position) && !entity.HasParent(Relation.Type.Child) && unit.CanPlayerControlUnit(entity, Client.GetPlayerHandle()))
+									if (drag_rect_cached_world.ContainsPoint(transform.GetInterpolatedPosition()) && !entity.HasParent(Relation.Type.Child) && unit.CanPlayerControlUnit(entity, Client.GetPlayerHandle()))
 									{
 										//GUI.DrawCircle(region.WorldToCanvas(transform.position), 0.50f * region.GetWorldToCanvasScale(), color: Color32BGRA.Green.WithAlpha(200), layer: GUI.Layer.Foreground);
 										hs_selected_entities.Add(entity);
@@ -2628,7 +2628,7 @@ namespace TC2.Conquest
 								ref var transform = ref ent_unit.GetComponent<Transform.Data>();
 								if (transform.IsNotNull())
 								{
-									GUI.DrawCircle(region.WorldToCanvas(transform.position), 0.50f * region.GetWorldToCanvasScale(), color: Color32BGRA.Green.WithAlpha(200), layer: GUI.Layer.Foreground);
+									GUI.DrawCircle(region.WorldToCanvas(transform.GetInterpolatedPosition()), 0.50f * region.GetWorldToCanvasScale(), color: Color32BGRA.Green.WithAlpha(200), layer: GUI.Layer.Foreground);
 
 									using (GUI.ID.Push(ent_unit))
 									using (var group = GUI.Group.New(size: new(slot_w, slot_h)))
@@ -2661,7 +2661,7 @@ namespace TC2.Conquest
 															var rpc = new Unit.ActionRPC();
 															rpc.action = Unit.Action.Exit;
 															rpc.ent_target = ent_parent;
-															rpc.pos_target = wpos_mouse_snapped + ((transform.position - wpos_mouse_snapped).GetNormalized(out var dist) * Maths.Min((unit_index++) * 0.30f, dist * 0.50f));
+															rpc.pos_target = wpos_mouse_snapped + ((transform.GetInterpolatedPosition() - wpos_mouse_snapped).GetNormalized(out var dist) * Maths.Min((unit_index++) * 0.30f, dist * 0.50f));
 															rpc.Send(ent_unit);
 														}
 													}
@@ -2678,17 +2678,20 @@ namespace TC2.Conquest
 
 										if (unit.IsNotNull())
 										{
-											if (!has_parent)
+											if (unit.flags.HasNone(WorldMap.Unit.Flags.Disable_Player_Control))
 											{
-												GUI.DrawLine(region.WorldToCanvas(transform.position), region.WorldToCanvas(unit.pos_next), Color32BGRA.Green.WithAlpha(80), thickness: 0.125f * canvas_scale * 0.25f, GUI.Layer.Foreground);
-
-												GUI.DrawCircleFilled(region.WorldToCanvas(unit.pos_next), 0.1250f * canvas_scale * 0.50f, Color32BGRA.Green.WithAlpha(140), segments: 4, layer: GUI.Layer.Foreground);
-												GUI.DrawCircleFilled(region.WorldToCanvas(unit.pos_target), 0.1250f * canvas_scale * 0.50f, Color32BGRA.Green.WithAlpha(140), segments: 4, layer: GUI.Layer.Foreground);
-
-												if (WorldMap.IsHovered())
+												if (!has_parent)
 												{
-													GUI.DrawLine(region.WorldToCanvas(transform.position), region.WorldToCanvas(wpos_mouse_snapped), Color32BGRA.Yellow.WithAlpha(80), thickness: 0.125f * canvas_scale * 0.25f, GUI.Layer.Foreground);
-													GUI.DrawRectFilled(region.WorldToCanvas(AABB.Centered(wpos_mouse_snapped, new Vector2(0.125f * 0.50f))), Color32BGRA.Yellow.WithAlpha(140), GUI.Layer.Foreground);
+													GUI.DrawLine(region.WorldToCanvas(transform.GetInterpolatedPosition()), region.WorldToCanvas(unit.pos_next), Color32BGRA.Green.WithAlpha(80), thickness: 0.125f * canvas_scale * 0.25f, GUI.Layer.Foreground);
+
+													GUI.DrawCircleFilled(region.WorldToCanvas(unit.pos_next), 0.1250f * canvas_scale * 0.50f, Color32BGRA.Green.WithAlpha(140), segments: 4, layer: GUI.Layer.Foreground);
+													GUI.DrawCircleFilled(region.WorldToCanvas(unit.pos_target), 0.1250f * canvas_scale * 0.50f, Color32BGRA.Green.WithAlpha(140), segments: 4, layer: GUI.Layer.Foreground);
+
+													if (WorldMap.IsHovered())
+													{
+														GUI.DrawLine(region.WorldToCanvas(transform.GetInterpolatedPosition()), region.WorldToCanvas(wpos_mouse_snapped), Color32BGRA.Yellow.WithAlpha(80), thickness: 0.125f * canvas_scale * 0.25f, GUI.Layer.Foreground);
+														GUI.DrawRectFilled(region.WorldToCanvas(AABB.Centered(wpos_mouse_snapped, new Vector2(0.125f * 0.50f))), Color32BGRA.Yellow.WithAlpha(140), GUI.Layer.Foreground);
+													}
 												}
 											}
 										}
@@ -2758,7 +2761,7 @@ namespace TC2.Conquest
 														if (has_parent && hs_selected_entities.Count == 1)
 														{
 															ref var enterable = ref ent_parent.GetComponent<Enterable.Data>();
-															if (enterable.IsNotNull() && enterable.mask_units.Has(unit.type) && transform.position.IsInRadius(wpos_mouse_snapped, enterable.radius * 2))
+															if (enterable.IsNotNull() && enterable.mask_units.Has(unit.type) && transform.GetInterpolatedPosition().IsInRadius(wpos_mouse_snapped, enterable.radius * 2))
 															{
 																GUI.SetCursor(App.CursorType.Remove, 200);
 																rpc.action = Unit.Action.Exit;
@@ -2771,7 +2774,7 @@ namespace TC2.Conquest
 
 												if (mouse.GetKeyDown(Mouse.Key.Right) && unit.CanPlayerControlUnit(ent_unit, Client.GetPlayerHandle()))
 												{
-													if (rpc.pos_target == Vector2.Zero) rpc.pos_target = wpos_mouse_snapped + ((transform.position - wpos_mouse_snapped).GetNormalized(out var dist) * Maths.Min((unit_index++) * 0.30f, dist * 0.50f));
+													if (rpc.pos_target == Vector2.Zero) rpc.pos_target = wpos_mouse_snapped + ((transform.GetInterpolatedPosition() - wpos_mouse_snapped).GetNormalized(out var dist) * Maths.Min((unit_index++) * 0.30f, dist * 0.50f));
 													rpc.Send(ent_unit);
 												}
 											}

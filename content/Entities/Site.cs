@@ -19,7 +19,7 @@ namespace TC2.Conquest
 		}
 
 		[ISystem.Update.A(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region)]
-		public static void OnUpdate(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity, 
+		public static void OnUpdate(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity,
 		[Source.Owned] ref Site.Data site, [Source.Owned] ref Transform.Data transform)
 		{
 
@@ -48,7 +48,7 @@ namespace TC2.Conquest
 						{
 							var is_loading = Client.IsLoadingRegion();
 							var location_region_id = location_asset.region_id;
-							
+
 							{
 								//var ent_asset = location_asset.GetGlobalEntity();
 								//selected_region_id = h_selected_location.GetRegionID();
@@ -248,8 +248,9 @@ namespace TC2.Conquest
 
 																GUI.SameLine();
 
-																using (var group_right = GUI.Group.New(size: GUI.Rm, padding: new(4)))
+																using (var group_right = GUI.Group.New2(size: GUI.Rm, padding: new(10, 6, 4, 6)))
 																{
+																	group_right.DrawBackground(GUI.tex_window_sidebar_b);
 																	GUI.TitleCentered(ent_child.GetName(), size: 24, pivot: new(0.00f, 0.00f));
 																	//if ( GUI.FocusableAsset()
 
@@ -274,7 +275,8 @@ namespace TC2.Conquest
 																		if (Client.GetRegionID() != location_region_id)
 																		{
 																			var color = GUI.col_button_ok;
-																			if (GUI.DrawButton("Join"u8, size: GUI.Rm, font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+																			if (GUI.DrawButton("Enter"u8, size: GUI.Rm, font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+																			//if (GUI.DrawSpriteButton("enter"u8, sprite: GUI.spr_icons_widget.WithFrame(1, 13), size: GUI.Rm, enabled: !is_loading, color: color.WithAlphaMult(alpha)))
 																			{
 																				//Client.RequestSetActiveRegion(location_region_id, delay_seconds: 0.75f);
 																				//var ent_entrance_region = asset_entrance.GetRegionEntity(location_region_id);
@@ -299,16 +301,19 @@ namespace TC2.Conquest
 																					}
 																				});
 
+
 																				window.Close();
 																				GUI.RegionMenu.ToggleWidget(false);
 
 																				//Client.TODO_LoadRegion(region_id);
 																			}
+																			GUI.DrawHoverTooltip("Switch to this region."u8);
 																		}
 																		else
 																		{
 																			var color = GUI.col_button_error;
 																			if (GUI.DrawButton("Leave"u8, size: GUI.Rm, font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+																			//if (GUI.DrawSpriteButton("exit"u8, sprite: GUI.spr_icons_widget.WithFrame(2, 13), size: GUI.Rm, enabled: !is_loading, color: color.WithAlphaMult(alpha)))
 																			{
 																				Client.RequestSetActiveRegion(0, delay_seconds: 0.10f).ContinueWith(async (x) =>
 																				{
@@ -347,7 +352,7 @@ namespace TC2.Conquest
 		}
 
 		[ISystem.LateGUI(ISystem.Mode.Single, ISystem.Scope.Global)]
-		public static void OnGUI(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity, 
+		public static void OnGUI(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity,
 		[Source.Owned] ref Site.Data site, [Source.Owned] ref Transform.Data transform)
 		{
 			if (WorldMap.IsOpen)

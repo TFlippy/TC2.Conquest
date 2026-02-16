@@ -46,6 +46,7 @@ namespace TC2.Conquest
 				character.gender = this.vars.gender;
 				character.prefab = props.h_prefab;
 				character.players = [player_asset.GetHandle()];
+				character.t_next_abandon = World.GetGlobalTime() + Constants.Characters.abandon_cooldown;
 
 				//character.money = props.money;
 				character.age = props.age;
@@ -123,14 +124,14 @@ namespace TC2.Conquest
 
 				var money = props.money;
 
-				character_asset.SpawnEntity(0).ContinueWith((ent) =>
+				character_asset.SpawnEntity(0).ContinueWith((ent_character_g) =>
 				{
-					ref var transform = ref ent.GetComponent<Transform.Data>();
+					ref var transform = ref ent_character_g.GetComponent<Transform.Data>();
 					if (transform.IsNotNull())
 					{
 						if (h_location.TryGetDefinition(out var location_asset))
 						{
-							var pos = (Vector2)location_asset.data.point;
+							var pos = location_asset.GetPosition(); // (Vector2)location_asset.data.point;
 							if (h_location.TryGetRoad(out var road))
 							{
 								pos = road.GetNearestPosition(pos, out _);
@@ -148,21 +149,39 @@ namespace TC2.Conquest
 								//}
 							}
 
-							ref var region_global = ref World.GetGlobalRegion();
-							region_global.SpawnPrefab(h_prefab_vehicle, position: pos).ContinueWith((ent_vehicle) =>
+							if (location_asset.data.flags.HasNone(ILocation.Flags.Mobile))
 							{
-								ref var enterable = ref ent_vehicle.GetComponent<WorldMap.Enterable.Data>();
+								var ent_location_g = location_asset.GetGlobalEntity();
+								ref var enterable = ref ent_location_g.GetComponent<WorldMap.Enterable.Data>();
 								if (enterable.IsNotNull())
 								{
-									WorldMap.Unit.TryEnter(ent_character, ent_vehicle);
+									WorldMap.Unit.TryEnter(ent_character_g, ent_location_g);
 								}
 
-								if (ent_vehicle.TryGetInventory(Inventory.Type.Storage, out var h_inventory))
+								if (ent_character_g.TryGetInventory(Inventory.Type.Personal, out var h_inventory))
 								{
 									var resource_money = Money.GetResource(money);
 									h_inventory.Deposit(ref resource_money, resource_money.quantity);
 								}
-							});
+							}
+							else if (h_prefab_vehicle)
+							{
+								ref var region_global = ref World.GetGlobalRegion();
+								region_global.SpawnPrefab(h_prefab_vehicle, position: pos).ContinueWith((ent_vehicle) =>
+								{
+									ref var enterable = ref ent_vehicle.GetComponent<WorldMap.Enterable.Data>();
+									if (enterable.IsNotNull())
+									{
+										WorldMap.Unit.TryEnter(ent_character_g, ent_vehicle);
+									}
+
+									if (ent_vehicle.TryGetInventory(Inventory.Type.Storage, out var h_inventory))
+									{
+										var resource_money = Money.GetResource(money);
+										h_inventory.Deposit(ref resource_money, resource_money.quantity);
+									}
+								});
+							}
 
 							transform.SetPosition(pos);
 						}

@@ -207,32 +207,35 @@ namespace TC2.Conquest
 
 					pos_hash_to_prefecture[pos_key] = asset_data.h_prefecture;
 
-					//if (asset_data.buildings.HasAny(ILocation.Buildings.Checkpoint))
+					if (asset_data.flags.HasNone(ILocation.Flags.Mobile))
 					{
-						var nearest_segment = GetNearestRoad(asset_data.h_prefecture, Road.Type.Road, (Vector2)asset_data.point, out var dist_sq);
-						if (dist_sq <= 1.50f.Pow2())
+						//if (asset_data.buildings.HasAny(ILocation.Buildings.Checkpoint))
 						{
-							location_to_road[asset] = nearest_segment;
-							road_to_location[nearest_segment] = asset;
-
-							if (road_segment_to_junction_index_tmp.ContainsKey(nearest_segment))
+							var nearest_segment = GetNearestRoad(asset_data.h_prefecture, Road.Type.Road, (Vector2)asset_data.point, out var dist_sq);
+							if (dist_sq <= 1.50f.Pow2())
 							{
-								if (App.log_filter.HasAny(App.LogFlags.Debug)) App.WriteLine($"- Location \"{asset.identifier}\"'s nearest road is a junction - this may cause issues!", App.Color.DarkYellow);
+								location_to_road[asset] = nearest_segment;
+								road_to_location[nearest_segment] = asset;
+
+								if (road_segment_to_junction_index_tmp.ContainsKey(nearest_segment))
+								{
+									if (App.log_filter.HasAny(App.LogFlags.Debug)) App.WriteLine($"- Location \"{asset.identifier}\"'s nearest road is a junction - this may cause issues!", App.Color.DarkYellow);
+								}
 							}
 						}
-					}
 
-					if (asset_data.buildings.HasAny(ILocation.Buildings.Trainyard))
-					{
-						var nearest_segment = GetNearestRoad(asset_data.h_prefecture, Road.Type.Rail, (Vector2)asset_data.point, out var dist_sq);
-						if (dist_sq <= 1.00f.Pow2())
+						if (asset_data.buildings.HasAny(ILocation.Buildings.Trainyard))
 						{
-							location_to_rail[asset] = nearest_segment;
-							rail_to_location[nearest_segment] = asset;
-
-							if (road_segment_to_junction_index_tmp.ContainsKey(nearest_segment))
+							var nearest_segment = GetNearestRoad(asset_data.h_prefecture, Road.Type.Rail, (Vector2)asset_data.point, out var dist_sq);
+							if (dist_sq <= 1.00f.Pow2())
 							{
-								if (App.log_filter.HasAny(App.LogFlags.Debug)) App.WriteLine($"- Location \"{asset.identifier}\"'s nearest rail is a junction - this may cause issues!", App.Color.DarkYellow);
+								location_to_rail[asset] = nearest_segment;
+								rail_to_location[nearest_segment] = asset;
+
+								if (road_segment_to_junction_index_tmp.ContainsKey(nearest_segment))
+								{
+									if (App.log_filter.HasAny(App.LogFlags.Debug)) App.WriteLine($"- Location \"{asset.identifier}\"'s nearest rail is a junction - this may cause issues!", App.Color.DarkYellow);
+								}
 							}
 						}
 					}

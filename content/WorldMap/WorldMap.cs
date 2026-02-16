@@ -46,6 +46,53 @@ namespace TC2.Conquest
 			return location_to_rail.TryGetValue(h_location, out rail);
 		}
 
+		public static Vec2f GetPosition(this ILocation.Definition location_asset)
+		{
+			if (location_asset is not null)
+			{
+				if (location_asset.data.flags.HasAny(ILocation.Flags.Mobile))
+				{
+					ref var transform = ref location_asset.GetGlobalEntity().GetTransform();
+					if (transform.IsNotNull())
+					{
+#if CLIENT
+						return transform.GetInterpolatedPosition();
+#else
+						return transform.position;
+#endif
+					}
+				}
+
+				return location_asset.data.point;
+			}
+
+			return Vec2f.Zero;
+		}
+
+		public static Vec2f GetPosition(this ILocation.Handle h_location)
+		{
+			ref var location_data = ref h_location.GetData();
+			if (location_data.IsNotNull())
+			{
+				if (location_data.flags.HasAny(ILocation.Flags.Mobile))
+				{
+					ref var transform = ref h_location.GetGlobalEntity().GetTransform();
+					if (transform.IsNotNull())
+					{
+#if CLIENT
+						return transform.GetInterpolatedPosition();
+#else
+						return transform.position;
+#endif
+					}
+				}
+
+				return location_data.point;
+			}
+
+			return Vec2f.Zero;
+		}
+
 		public static IPrefecture.Handle GetPrefectureAtPosition(Vector2 pos)
 		{
 			var pos_grid = new Vec2i16((short)pos.X, (short)pos.Y);
