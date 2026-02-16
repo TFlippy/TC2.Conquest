@@ -54,6 +54,7 @@ namespace TC2.Conquest
 			else
 			{
 				if (unit.flags.HasAny(Unit.Flags.Requires_Driver)) return h_player.CanControlCharacter(unit.h_character_driver);
+				else if (unit.type == Unit.Type.Airship) return true;
 				else if (unit.type == Unit.Type.Character)
 				{
 					return ent_unit.TryGetAsset(out ICharacter.Definition character_asset) && character_asset.region_id == 0 && h_player.CanControlCharacter(character_asset);
@@ -308,7 +309,8 @@ namespace TC2.Conquest
 				Undefined = 0,
 
 				Character,
-				Vehicle
+				Vehicle,
+				Airship
 			}
 
 			public enum Action: byte
@@ -332,6 +334,8 @@ namespace TC2.Conquest
 
 				[Asset.Ignore] Wants_Repath = 1 << 0,
 				Requires_Driver = 1 << 1,
+				Ignore_Roads = 1 << 2,
+				Disable_Player_Control = 1 << 3,
 			}
 
 
@@ -483,14 +487,14 @@ namespace TC2.Conquest
 			public static void UpdateParented([Source.Owned] ref Transform.Data transform_child, [Source.Parent] in Transform.Data transform_parent, 
 			[Source.Owned] in Marker.Data marker)
 			{
-				transform_child.SetPosition(transform_parent.position + marker.relative_offset);
+				transform_child.position = (transform_parent.position + marker.relative_offset);
 			}
 
 			[ISystem.PostUpdate.A(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region)]
 			public static void UpdateStored([Source.Owned] ref Transform.Data transform_child, [Source.Stored] in Transform.Data transform_parent, 
 			[Source.Owned] in Marker.Data marker)
 			{
-				transform_child.SetPosition(transform_parent.position + marker.relative_offset);
+				transform_child.position = (transform_parent.position + marker.relative_offset);
 			}
 
 #if CLIENT
@@ -762,7 +766,7 @@ namespace TC2.Conquest
 			[Source.Stored] ref WorldMap.Enterable.Data enterable,
 			[Source.Stored, Optional(true)] ref WorldMap.Unit.Data unit_parent, [Source.Owned] ref WorldMap.Unit.Data unit_child)
 			{
-				App.WriteLine($"OnUnitEnter() {info.EventType}");
+				//App.WriteLine($"OnUnitEnter() {info.EventType}");
 				//App.WriteValue(ent_unit_parent);
 				//App.WriteValue(ent_unit_child);
 				//App.WriteValue(ent_enterable);
@@ -846,7 +850,7 @@ namespace TC2.Conquest
 
 				//App.WriteLine("unit");
 
-				if (unit.flags.TrySetFlag(Unit.Flags.Wants_Repath, false))
+				if (unit.flags.TryRemoveFlag(Unit.Flags.Wants_Repath))
 				{
 					unit.current_branch_index = 0;
 					unit.branches_count = 0;
@@ -870,7 +874,7 @@ namespace TC2.Conquest
 				const float s_to_h = 1.00f / 60.00f / 60.00f;
 				var time_scale = world_global.speed;
 
-				if (unit.next_segment.IsValid())
+				if (unit.flags.HasNone(WorldMap.Unit.Flags.Ignore_Roads) && unit.next_segment.IsValid())
 				{
 					GetNextSegment(transform.position, ref unit.next_segment, ref unit.end_segment, ref unit.current_branch_index, unit.branches.Slice(unit.branches_count));
 
@@ -899,10 +903,13 @@ namespace TC2.Conquest
 
 				speed_mult *= Maths.Clamp(dist * 4.50f, 0.20f, 1.00f);
 
-				unit.speed_current.MoveTowards(Maths.Min(unit.speed, unit.speed * 0.90f * speed_mult), unit.acc * dt * time_scale);
+				//unit.speed_current.MoveTowards(Maths.Min(unit.speed, unit.speed * 0.90f * speed_mult), unit.acc * dt * time_scale);
+				unit.speed_current.MoveTowards(Maths.Min(unit.speed, unit.speed * speed_mult), unit.acc * dt * time_scale);
 				//unit.target_dist = dist;
 				if (dist > 0.01f) unit.dir_last = dir;
 
+				//transform.position += (dir * Maths.Min(dist, ((unit.speed_current * dt * s_to_h) * time_scale)) * WorldMap.km_per_unit_inv);
+				//transform.GetPositionOldRef() = transform.GetPositionNew();
 				transform.position += (dir * Maths.Min(dist, ((unit.speed_current * dt * s_to_h) * time_scale)) * WorldMap.km_per_unit_inv);
 			}
 
@@ -1244,58 +1251,61 @@ namespace TC2.Conquest
 
 								//GUI.Text($"{ent_unit}; {pos:0.00} {pos_w:0.00}; {pos_c:0.00}");
 
-								if (!this.has_parent)
+								if (this.unit.flags.HasNone(WorldMap.Unit.Flags.Disable_Player_Control))
 								{
-									GUI.DrawLine(pos_c_current, pos_c_next, Color32BGRA.Green.WithAlphaMult(0.25f), thickness: 0.125f * scale * 0.25f, GUI.Layer.Foreground);
+									if (!this.has_parent)
+									{
+										GUI.DrawLine(pos_c_current, pos_c_next, Color32BGRA.Green.WithAlphaMult(0.25f), thickness: 0.125f * scale * 0.25f, GUI.Layer.Foreground);
+									}
+
+									//GUI.DrawCircle(pos_c_current, 0.750f * scale, Color32BGRA.Green, segments: 16, layer: GUI.Layer.Foreground);
+
+									if (!this.has_parent)
+									{
+										GUI.DrawCircleFilled(pos_c_next, 0.1250f * scale * 0.50f, Color32BGRA.Green.WithAlphaMult(0.50f), segments: 4, layer: GUI.Layer.Foreground);
+										GUI.DrawCircleFilled(pos_c_target, 0.1250f * scale * 0.50f, Color32BGRA.Green.WithAlphaMult(0.50f), segments: 4, layer: GUI.Layer.Foreground);
+									}
+
+									//var is_mouse_dragging_cached = is_mouse_dragging;
+									//is_mouse_dragging = mouse.GetKeyNow(Mouse.Key.Left);
+
+									//if (is_mouse_dragging)
+									//{
+									//	mouse_drag_b = pos_w_snapped;
+									//}
+									//else if (is_mouse_dragging_cached)
+									//{
+									//	mouse_drag_a = null;
+									//	mouse_drag_b = null;
+									//	mouse_drag_rect = null;
+									//}
+
+									//if (is_mouse_dragging && mouse_drag_a.HasValue && mouse_drag_b.HasValue)
+									//{
+									//	mouse_drag_rect = new AABB(mouse_drag_a.Value, mouse_drag_b.Value);
+
+									//	if (mouse_drag_rect.TryGetValue(out var rect))
+									//	{
+									//		var rect_c = region.WorldToCanvas(rect);
+
+									//		GUI.DrawRectFilled(rect_c, color: Color32BGRA.Yellow.WithAlphaMult(0.10f), layer: GUI.Layer.Foreground);
+									//		GUI.DrawRect(rect_c, color: Color32BGRA.Yellow, layer: GUI.Layer.Foreground);
+									//	}
+									//}
+
+									//ref var current_branch = ref unit.branches[unit.current_branch_index];
+									//if (current_branch.sign != 0)
+									//{
+									//	GUI.DrawCircleFilled(region.WorldToCanvas(WorldMap.road_junctions[current_branch.junction_index].pos), 0.5f * scale * 0.50f, Color32BGRA.Orange.WithAlphaMult(0.50f), segments: 16, layer: GUI.Layer.Foreground);
+									//}
+
+									//GUI.Text($"{unit.current_branch_index}/{unit.branches_count}");
+									//if (unit.next_segment.IsValid())
+									//{
+									//	GUI.DrawCircleFilled(region.WorldToCanvas(unit.next_segment.GetPosition()), 0.5f * scale * 0.50f, Color32BGRA.Cyan.WithAlphaMult(0.50f), segments: 16, layer: GUI.Layer.Foreground);
+									//	GUI.Text($"{unit.next_segment.index}; {unit.next_segment.GetPosition()}");
+									//}
 								}
-
-								//GUI.DrawCircle(pos_c_current, 0.750f * scale, Color32BGRA.Green, segments: 16, layer: GUI.Layer.Foreground);
-
-								if (!this.has_parent)
-								{
-									GUI.DrawCircleFilled(pos_c_next, 0.1250f * scale * 0.50f, Color32BGRA.Green.WithAlphaMult(0.50f), segments: 4, layer: GUI.Layer.Foreground);
-									GUI.DrawCircleFilled(pos_c_target, 0.1250f * scale * 0.50f, Color32BGRA.Green.WithAlphaMult(0.50f), segments: 4, layer: GUI.Layer.Foreground);
-								}
-
-								//var is_mouse_dragging_cached = is_mouse_dragging;
-								//is_mouse_dragging = mouse.GetKeyNow(Mouse.Key.Left);
-
-								//if (is_mouse_dragging)
-								//{
-								//	mouse_drag_b = pos_w_snapped;
-								//}
-								//else if (is_mouse_dragging_cached)
-								//{
-								//	mouse_drag_a = null;
-								//	mouse_drag_b = null;
-								//	mouse_drag_rect = null;
-								//}
-
-								//if (is_mouse_dragging && mouse_drag_a.HasValue && mouse_drag_b.HasValue)
-								//{
-								//	mouse_drag_rect = new AABB(mouse_drag_a.Value, mouse_drag_b.Value);
-
-								//	if (mouse_drag_rect.TryGetValue(out var rect))
-								//	{
-								//		var rect_c = region.WorldToCanvas(rect);
-
-								//		GUI.DrawRectFilled(rect_c, color: Color32BGRA.Yellow.WithAlphaMult(0.10f), layer: GUI.Layer.Foreground);
-								//		GUI.DrawRect(rect_c, color: Color32BGRA.Yellow, layer: GUI.Layer.Foreground);
-								//	}
-								//}
-
-								//ref var current_branch = ref unit.branches[unit.current_branch_index];
-								//if (current_branch.sign != 0)
-								//{
-								//	GUI.DrawCircleFilled(region.WorldToCanvas(WorldMap.road_junctions[current_branch.junction_index].pos), 0.5f * scale * 0.50f, Color32BGRA.Orange.WithAlphaMult(0.50f), segments: 16, layer: GUI.Layer.Foreground);
-								//}
-
-								//GUI.Text($"{unit.current_branch_index}/{unit.branches_count}");
-								//if (unit.next_segment.IsValid())
-								//{
-								//	GUI.DrawCircleFilled(region.WorldToCanvas(unit.next_segment.GetPosition()), 0.5f * scale * 0.50f, Color32BGRA.Cyan.WithAlphaMult(0.50f), segments: 16, layer: GUI.Layer.Foreground);
-								//	GUI.Text($"{unit.next_segment.index}; {unit.next_segment.GetPosition()}");
-								//}
 
 								var path_distance = dist;
 
@@ -1318,37 +1328,41 @@ namespace TC2.Conquest
 									//	mouse_drag_a = pos_w_snapped;
 									//}
 
-									if (!this.has_parent)
+
+									if (this.unit.flags.HasNone(WorldMap.Unit.Flags.Disable_Player_Control))
 									{
-										if (this.unit.road_type != Road.Type.Undefined)
+										if (!this.has_parent)
 										{
-											var road_a = default(Road.Segment);
-											var road_b = default(Road.Segment);
-
-											var ts = Timestamp.Now();
-											Span<Road.Junction.Branch> branches_span = stackalloc Road.Junction.Branch[32];
-											if (Repath(this.unit.road_type, this.transform.position, pos_w_snapped, out var pos_end, ref road_a, ref road_b, ref branches_span))
+											if (this.unit.road_type != Road.Type.Undefined)
 											{
-												var ts_elapsed = ts.GetMilliseconds();
-												//GUI.Text($"{ts_elapsed:0.0000} ms");
+												var road_a = default(Road.Segment);
+												var road_b = default(Road.Segment);
 
-												DrawPath(ref region, road_a, road_b, pos_end, branches_span, color: GUI.col_button_yellow.WithAlphaMult(0.20f), thickness: 0.125f, distance: out path_distance);
+												var ts = Timestamp.Now();
+												Span<Road.Junction.Branch> branches_span = stackalloc Road.Junction.Branch[32];
+												if (Repath(this.unit.road_type, this.transform.GetInterpolatedPosition(), pos_w_snapped, out var pos_end, ref road_a, ref road_b, ref branches_span))
+												{
+													var ts_elapsed = ts.GetMilliseconds();
+													//GUI.Text($"{ts_elapsed:0.0000} ms");
 
-												//foreach (ref var branch in branches_span)
-												//{
-												//	WorldMap.DrawBranch(ref branch);
-												//}
+													DrawPath(ref region, road_a, road_b, pos_end, branches_span, color: GUI.col_button_yellow.WithAlphaMult(0.20f), thickness: 0.125f, distance: out path_distance);
+
+													//foreach (ref var branch in branches_span)
+													//{
+													//	WorldMap.DrawBranch(ref branch);
+													//}
+												}
 											}
+
+											GUI.DrawLine(pos_c_current, pos_c_current + (dir * 100), layer: GUI.Layer.Foreground);
+											GUI.DrawLine(pos_c_current, pos_c_hover, Color32BGRA.Yellow.WithAlphaMult(0.25f), thickness: 0.125f * scale * 0.25f, GUI.Layer.Foreground);
+
+											//GUI.DrawTextCentered($"{dist * WorldMap.km_per_unit:0.00} km", (pos_c_current + pos_c_hover) * 0.50f, layer: GUI.Layer.Foreground, box_shadow: true);
+
+											GUI.DrawCircleFilled(pos_c_hover, 0.125f * scale * 0.50f, Color32BGRA.Yellow.WithAlphaMult(0.50f), segments: 4, layer: GUI.Layer.Foreground);
+
+											GUI.DrawTextCentered($"{path_distance * WorldMap.km_per_unit:0.00} km", pos_c_hover - ((pos_c_hover - pos_c_current).GetNormalized() * 0.50f * scale), layer: GUI.Layer.Foreground, box_shadow: true);
 										}
-
-										GUI.DrawLine(pos_c_current, pos_c_current + (dir * 100), layer: GUI.Layer.Foreground);
-										GUI.DrawLine(pos_c_current, pos_c_hover, Color32BGRA.Yellow.WithAlphaMult(0.25f), thickness: 0.125f * scale * 0.25f, GUI.Layer.Foreground);
-
-										//GUI.DrawTextCentered($"{dist * WorldMap.km_per_unit:0.00} km", (pos_c_current + pos_c_hover) * 0.50f, layer: GUI.Layer.Foreground, box_shadow: true);
-
-										GUI.DrawCircleFilled(pos_c_hover, 0.125f * scale * 0.50f, Color32BGRA.Yellow.WithAlphaMult(0.50f), segments: 4, layer: GUI.Layer.Foreground);
-
-										GUI.DrawTextCentered($"{path_distance * WorldMap.km_per_unit:0.00} km", pos_c_hover - ((pos_c_hover - pos_c_current).GetNormalized() * 0.50f * scale), layer: GUI.Layer.Foreground, box_shadow: true);
 									}
 
 									//if (!this.has_parent)

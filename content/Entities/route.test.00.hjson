@@ -1,34 +1,131 @@
 ﻿{
+	$version: "0.1.68.2"
 	name: "Test Route"
 	
 	targets:
 	[
 		{
-			h_location: "krachtel"
+			h_location: velka.bobnica
 			branch_entry:
 			{
 				junction_index: 70
-				index: 0
 				sign: -1
 			}
 			stop_time: 1.000
 		}
 		{
-			h_location: "skumpus"
+			h_location: jezibabus
 			branch_entry:
 			{
 				junction_index: 51
-				index: 0
 				sign: 1
 			}
 			stop_time: 1.000
 		}
 		{
-			h_location: "kolomaz"
+			h_location: koleno
+			branch_entry:
+			{
+				junction_index: 51
+				sign: 1
+			}
+			stop_time: 1.000
+		}
+		{
+			h_location: lopat
+			branch_entry:
+			{
+				junction_index: 51
+				sign: 1
+			}
+			stop_time: 1.000
+		}
+		{
+			h_location: tanhauzrgejt
 			branch_entry:
 			{
 				junction_index: 75
-				index: 0
+				sign: -1
+			}
+			stop_time: 1.000
+		}
+		{
+			h_location: brymtel
+			branch_entry:
+			{
+				junction_index: 75
+				sign: -1
+			}
+			stop_time: 1.000
+		}
+		{
+			h_location: otrava
+			branch_entry:
+			{
+				junction_index: 75
+				sign: -1
+			}
+			stop_time: 1.000
+		}
+		{
+			h_location: snycl
+			branch_entry:
+			{
+				junction_index: 75
+				sign: -1
+			}
+			stop_time: 1.000
+		}
+		{
+			h_location: ryma
+			branch_entry:
+			{
+				junction_index: 75
+				sign: -1
+			}
+			stop_time: 1.000
+		}
+		{
+			h_location: vostarec
+			branch_entry:
+			{
+				junction_index: 75
+				sign: -1
+			}
+			stop_time: 1.000
+		}
+		{
+			h_location: popelnitz
+			branch_entry:
+			{
+				junction_index: 75
+				sign: -1
+			}
+			stop_time: 1.000
+		}
+		{
+			h_location: krachtel
+			branch_entry:
+			{
+				junction_index: 75
+				sign: -1
+			}
+			stop_time: 1.000
+		}
+		{
+			h_location: strdi
+			branch_entry:
+			{
+				junction_index: 75
+				sign: -1
+			}
+			stop_time: 1.000
+		}
+		{
+			h_location: velka.bobnica
+			branch_entry:
+			{
+				junction_index: 75
 				sign: -1
 			}
 			stop_time: 1.000
