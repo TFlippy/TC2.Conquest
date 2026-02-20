@@ -1,0 +1,107 @@
+﻿{
+	$version: "0.1.68.2"
+	name: "Fun Stuff"
+	
+	h_company: postus
+	
+	date_created: 0
+	
+	items:
+	[
+		{
+			type: resource
+			h_material: mayo
+			quantity: 400.000
+		}
+		{
+			type: resource
+			h_material: limelight
+			quantity: 100.000
+		}
+		{
+			type: resource
+			h_material: machine_parts
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: meth
+			quantity: 100.000
+		}
+		{
+			type: resource
+			h_material: lubricant
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: actuator
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: alcohol
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: cmajzl
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: cloth
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: leather
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: mushroom.blue
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: mushroom.green
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: mushroom.yellow
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: naphtha
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: nitric_acid
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: oil
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: onion.juice
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: paper
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: phlogiston
+			quantity: 0.000
+		}
+	]
+}

@@ -1,15 +1,6 @@
 $name: "Zeppelin"
 $tags: []
 
-worldmap.airship:
-{
-	h_route: test.00
-	h_transport: zeppelin.00
-	h_prefab_region: zeppelin.00
-	brake: 1.000
-	acceleration: 0.120
-}
-
 transform:
 {
 	scale: [1.000, 1.000]
@@ -23,24 +14,36 @@ sound.emitter:
 interactable:
 {
 	flags: none
-	window_size: [672, 568]
-	window_size_misc: [96, 0]
+	window_size: [600, 568]
+	window_size_misc: [192, 0]
 }
 
 company:
 {
-	h_company: "postus"
+	h_company: postus
 }
 
 faction:
 {
-	id: "postus"
+	id: postus
+	flags: use_asset
+}
+
+claimable:
+{
+
+}
+
+headquarters:
+{
+	flags: manage_members, show_members
 }
 
 stockpile:
 {
-	request_types: pack, unpack, move, send, load
+	request_types: pack, unpack, move
 	flags: public, auto_create, full_access, show_addresses, edit_addresses
+	flags_stockpile: mobile, vendor, npc
 	grid_column_count: 6
 	capacity_items: 18
 	capacity_shipments: 9
@@ -48,7 +51,7 @@ stockpile:
 
 market:
 {
-	
+	flags: no_evict, no_claim, no_editing, public, npc
 }
 
 nameable:
@@ -56,6 +59,24 @@ nameable:
 	tags: tech, industrial, fancy, tool, market
 	flags: no_export, use_asset_name
 	type: vehicle
+}
+
+worldmap.airship:
+{
+	h_route: test.00
+	h_transport: zeppelin.00
+	h_prefab_region: zeppelin.00
+	dock_radius_max: 1.000
+}
+
+worldmap.trader:
+{
+	@inventory1:
+	{
+		type: money
+		flags: standalone, ignore_mass, no_auto_pickup, faction, locked
+		stack_size_multiplier: 100.000
+	}
 }
 
 worldmap.unit:
@@ -70,12 +91,12 @@ worldmap.unit:
 	speed_mult_rugged: 1.000
 	speed_mult_water: 1.000
 
-	@inventory8:
-	{
-		type: storage
-		flags: standalone, vertical
-		stack_size_multiplier: 4.000
-	}
+	// @inventory8:
+	// {
+	// 	type: storage
+	// 	flags: standalone, vertical
+	// 	stack_size_multiplier: 4.000
+	// }
 }
 
 worldmap.enterable:
@@ -105,6 +126,16 @@ worldmap.marker:
 
 // }
 
+storage:
+{
+	@inventory32:
+	{
+		type: storage
+		flags: standalone, ignore_mass, no_auto_pickup, faction, vertical
+		stack_size_multiplier: 10.000
+	}
+}
+
 address:
 {
 	code: 2
@@ -125,7 +156,7 @@ location:
 {
 	transform:
 	{
-		
+		scale: [1.000, 1.000]
 	}
 
 	interactable:
@@ -189,10 +220,15 @@ location:
 		tags: tech, industrial, fancy, tool, market
 		flags: no_rename
 		type: vehicle
-		name: "Ship"
+		name: "Deck A"
 	}
 
 	faction:
+	{
+
+	}
+
+	company:
 	{
 
 	}
@@ -202,34 +238,51 @@ location:
 
 	}
 
+	office:
+	{
+		
+	}
+
 	shop:
 	{
 		tags_filter:
 		{
-			require: manual
-			include: manual, munitions, tailoring, engineering, salvaging, medical, research, social, science
-			exclude: advanced, medium, large, huge, vehicle, blacksmithing, smelting, fermenting, heating, overworld
+			include: manual, vehicle, munitions, assembling, industrial, metalworking, engineering, salvaging, medical, research, social, science, construction
+			exclude: huge, vehicle, agriculture, gathering, forestry, explosive
 		}
-		tags_preferred: crafting, small, device, weapon, tool, munitions, delicate, assembling, tailoring, engineering, cooking, social, construction
 		
-		tools: pencil, paper, ruler, hammer, hand_drill, screwdriver, magnifying_glass, bucket, towel, knife, sandpaper, needle, pins, scissors
-		infrastructure: dishes, bottle, table, chair, rack, bed, stationery, bucket, surface, office, building
-		environment: office, stationary, cozy, quiet, flammable, cramped, small
+		tools: pencil, paper, ruler, hammer, cutters, saw, hand_drill, screwdriver, wrench, spanner, pliers, cleaver, tweezers, magnifying_glass, bucket, paintbrush, axe, shovel, syringe, stapler, file, chisel, towel, spatula, tongs, pick, crowbar, knife, sandpaper, needle, pins, scissors, ladle, typewriter, calculator, utensils
+		infrastructure: anvil, lab_glassware, dishes, bottle, barrel, table, chair, rack, pulley, stationery, bucket, surface, large_surface, hard_surface, liquid_container, lathe, heater, telephone, radio, stamping_press, press, crane, structure, workbench
+		environment: workshop, noisy, reinforced, durable, cramped, factory, building, large
 		connotations: none
 		
 		flags: embed_gui
 		menu_columns: 4
 		recipe_type: workshop
 		
-		name: "Zeppelin"
+		name: "Factory"
 	}
 
 	workshop:
 	{
 		orders_capacity: 2
+		
 		h_sound_order_complete: computer.bell.00
-		max_order_mass: 70.000
+		
 		gui_info_size_x: 252.000
+		max_order_mass: 200.000
+
+		@inventory16:
+		{
+			type: workshop
+			flags: standalone, ignore_mass, public, no_auto_pickup, faction, vertical
+			stack_size_multiplier: 1.000
+			
+			filter:
+			{
+				exclude: gas, large
+			}
+		}
 	}
 
 	crafter:
@@ -238,26 +291,26 @@ location:
 		temperature_max: 493.150
 	}
 
-	storage:
-	{
-		@inventory16:
-		{
-			type: storage
-			flags: standalone, ignore_mass, no_auto_pickup, public, faction
-			stack_size_multiplier: 2.000
+	// storage:
+	// {
+	// 	@inventory16:
+	// 	{
+	// 		type: storage
+	// 		flags: standalone, ignore_mass, no_auto_pickup, public, faction
+	// 		stack_size_multiplier: 2.000
 			
-			filter:
-			{
-				exclude: gas, large
-			}
+	// 		filter:
+	// 		{
+	// 			exclude: gas, large
+	// 		}
 
-			offset: [-0.375, -0.250]
-		}
-	}
+	// 		offset: [-0.375, -0.250]
+	// 	}
+	// }
 
 	headquarters:
 	{
-		flags: enable_join, enable_leave, manage_members, manage_leader, manage_style, manage_policies, show_members
+		flags: enable_join, enable_leave, manage_members, manage_leader, manage_style, manage_policies, allow_create_faction, show_members
 	}
 }
 
@@ -265,7 +318,7 @@ location:
 {
 	transform:
 	{
-		
+		scale: [1.000, 1.000]
 	}
 
 	interactable:
@@ -285,6 +338,34 @@ location:
 		tags: tech, industrial, fancy, tool, market
 		flags: no_rename
 		type: vehicle
-		name: "Ship2"
+		name: "Deck B"
+	}
+}
+
++attached.02|child:
+{
+	transform:
+	{
+		scale: [1.000, 1.000]
+	}
+
+	interactable:
+	{
+		flags: none
+		window_size: [672, 568]
+		window_size_misc: [96, 0]
+	}
+
+	personnel:
+	{
+
+	}
+
+	nameable:
+	{
+		tags: tech, industrial, fancy, tool, market
+		flags: no_rename
+		type: vehicle
+		name: "Deck C"
 	}
 }
