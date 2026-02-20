@@ -5,6 +5,10 @@ namespace TC2.Conquest
 {
 	public static partial class Conquest
 	{
+		public const bool enable_starter_vehicles = false;
+		public const bool enable_starter_cities = false;
+
+
 		[IGamemode.Data("Conquest", "")]
 		public partial struct Gamemode(): IGamemode
 		{

@@ -106,9 +106,9 @@ namespace TC2.Conquest
 
 				var ent_location = h_location.GetGlobalEntity();
 				var ent_character = character_asset.GetGlobalEntity();
+				var h_character = character_asset.GetHandle();
 
 				var h_kit_vehicle = this.vars.h_kit_vehicle;
-				var h_character = character_asset.GetHandle();
 				var h_prefab_vehicle = default(Prefab.Handle);
 
 				if (h_kit_vehicle.TryGetDefinition(out var kit_vehicle) && kit_vehicle.data.slot == Kit.Slot.Vehicle)
@@ -149,7 +149,7 @@ namespace TC2.Conquest
 								//}
 							}
 
-							if (location_asset.data.flags.HasNone(ILocation.Flags.Mobile))
+							if (location_asset.data.flags.HasAny(ILocation.Flags.Mobile))
 							{
 								var ent_location_g = location_asset.GetGlobalEntity();
 								ref var enterable = ref ent_location_g.GetComponent<WorldMap.Enterable.Data>();
@@ -202,6 +202,8 @@ namespace TC2.Conquest
 
 		public sealed class CustomCharacter
 		{
+			//public const bool enable_starter_vehicles = false;
+
 			public struct Vars()
 			{
 				public ISpecies.Handle h_species;
@@ -338,7 +340,7 @@ namespace TC2.Conquest
 				this.vars.h_location = h_location;
 				this.vars.h_species = h_species;
 				this.vars.h_origin = h_origin;
-				this.vars.h_kit_vehicle = "overworld.car.00";
+				if (Conquest.enable_starter_vehicles) this.vars.h_kit_vehicle = "overworld.car.00";
 				this.vars.gender = gender;
 
 				this.vars.h_hair_male = h_hair_male;
@@ -564,7 +566,8 @@ namespace TC2.Conquest
 								group_b.DrawBackground(GUI.tex_window);
 
 								if (GUI.AssetInput2("edit.location"u8, ref vars.h_location, size: new(GUI.RmX, GUI.RmY), show_label: false, tab_height: 40.00f, close_on_select: false,
-								filter: static (x) => x.data.flags.HasNone(ILocation.Flags.Hidden | ILocation.Flags.Restricted) && x.data.buildings.HasAny(ILocation.Buildings.Train_Station | ILocation.Buildings.Trainyard | ILocation.Buildings.Fuel_Depot | ILocation.Buildings.Docks | ILocation.Buildings.Hotel | ILocation.Buildings.Apartments | ILocation.Buildings.Barracks) && x.data.flags.HasAny(ILocation.Flags.Spawn),
+								//filter: static (x) => x.data.flags.HasNone(ILocation.Flags.Hidden | ILocation.Flags.Restricted) && x.data.buildings.HasAny(ILocation.Buildings.Train_Station | ILocation.Buildings.Trainyard | ILocation.Buildings.Fuel_Depot | ILocation.Buildings.Docks | ILocation.Buildings.Hotel | ILocation.Buildings.Apartments | ILocation.Buildings.Barracks) && x.data.flags.HasAny(ILocation.Flags.Spawn),
+								filter: static (x) => x.data.flags.HasNone(ILocation.Flags.Hidden | ILocation.Flags.Restricted) && x.data.flags.HasAll(ILocation.Flags.Spawn | ILocation.Flags.Mobile) && x.data.buildings.HasAny(ILocation.Buildings.Train_Station | ILocation.Buildings.Trainyard | ILocation.Buildings.Fuel_Depot | ILocation.Buildings.Docks | ILocation.Buildings.Hotel | ILocation.Buildings.Apartments | ILocation.Buildings.Barracks),
 								draw: (asset, group, is_title) =>
 								{
 									if (asset != null)
@@ -869,35 +872,38 @@ namespace TC2.Conquest
 										{
 											group_items.DrawBackground(GUI.tex_panel);
 
-											if (GUI.AssetInput2("edit.vehicle"u8, ref vars.h_kit_vehicle, size: new(GUI.RmX, 64), show_label: false, tab_height: 64.00f, close_on_select: true,
-											filter: static (x) => x.data.slot == Kit.Slot.Vehicle && x.data.flags.HasAll(Kit.Flags.Overworld),
-											draw: (asset, group, is_title) =>
+											if (Conquest.enable_starter_vehicles)
 											{
-												if (asset != null)
+												if (GUI.AssetInput2("edit.vehicle"u8, ref vars.h_kit_vehicle, size: new(GUI.RmX, 64), show_label: false, tab_height: 64.00f, close_on_select: true,
+												filter: static (x) => x.data.slot == Kit.Slot.Vehicle && x.data.flags.HasAll(Kit.Flags.Overworld),
+												draw: (asset, group, is_title) =>
 												{
-													using (var group_icon = GUI.Group.New(size: new(80, GUI.RmY)))
+													if (asset != null)
 													{
-														using (var clip = GUI.Clip.Push(group_icon.GetInnerRect()))
+														using (var group_icon = GUI.Group.New(size: new(80, GUI.RmY)))
 														{
-															GUI.DrawSpriteCentered(asset.data.icon, clip.rect, GUI.Layer.Window, scale: 3.00f);
+															using (var clip = GUI.Clip.Push(group_icon.GetInnerRect()))
+															{
+																GUI.DrawSpriteCentered(asset.data.icon, clip.rect, GUI.Layer.Window, scale: 3.00f);
+															}
+															group_icon.DrawBackground(GUI.tex_frame);
 														}
-														group_icon.DrawBackground(GUI.tex_frame);
+
+														GUI.SameLine();
+
+														using (var group_right = GUI.Group.New(size: GUI.Rm))
+														{
+															GUI.TitleCentered(asset.data.name, rect: group_right.GetInnerRect(), pivot: new(0.00f, 0.00f), offset: new(4, 4), size: 24);
+														}
 													}
-
-													GUI.SameLine();
-
-													using (var group_right = GUI.Group.New(size: GUI.Rm))
+													else
 													{
-														GUI.TitleCentered(asset.data.name, rect: group_right.GetInnerRect(), pivot: new(0.00f, 0.00f), offset: new(4, 4), size: 24);
+														GUI.TitleCentered("<vehicle>"u8, pivot: new(0.00f, 0.50f), offset: new(4, 0), size: 24);
 													}
-												}
-												else
+												}))
 												{
-													GUI.TitleCentered("<vehicle>"u8, pivot: new(0.00f, 0.50f), offset: new(4, 0), size: 24);
+													//reset = true;
 												}
-											}))
-											{
-												//reset = true;
 											}
 
 											GUI.SeparatorThick();
@@ -947,7 +953,9 @@ namespace TC2.Conquest
 
 										if (respawn_seconds_rem <= 0.00f)
 										{
-											var is_valid = vars.h_origin.IsValid() && vars.h_species.IsValid() && vars.h_location.IsValid() && vars.h_kit_vehicle.IsValid();
+											var is_valid = vars.h_origin.IsValid() && vars.h_species.IsValid() && vars.h_location.IsValid(); // && (vars.h_kit_vehicle.IsValid());
+											if (Conquest.enable_starter_vehicles) is_valid &= vars.h_kit_vehicle.IsValid();
+
 											if (GUI.DrawConfirmButton("character.create"u8, "Create Character"u8, "Do you want to create\n    this character?"u8, size: GUI.Rm, font_size: 24, color: GUI.col_button_ok, enabled: is_valid))
 											{
 												var rpc = new Conquest.CreateCharacterRPC();
