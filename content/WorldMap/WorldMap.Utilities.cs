@@ -259,11 +259,37 @@ namespace TC2.Conquest
 			var nearest_handle = default(ILocation.Handle);
 			var nearest_distance_sq = float.MaxValue;
 
-			foreach (var asset in ILocation.Database.GetAssetsSpan())
+			var assets_span = ILocation.Database.GetAssetsSpan();
+			for (var i = 0; i < assets_span.Length; i++)
 			{
-				if (asset.id == 0) continue;
+				var asset = assets_span[i];
+				ref var asset_data = ref asset.data; // .GetData();
 
-				ref var asset_data = ref asset.GetData();
+				var distance_sq_tmp = Vector2.DistanceSquared((Vector2)asset_data.point, position);
+				if (distance_sq_tmp < nearest_distance_sq)
+				{
+					nearest_handle = asset;
+					nearest_distance_sq = distance_sq_tmp;
+				}
+			}
+
+			distance_sq = nearest_distance_sq;
+			return nearest_handle;
+		}
+
+		// TODO: implement a faster lookup
+		public static ILocation.Handle GetNearestLocation(Vector2 position, out float distance_sq, Filter.Mask2x<ILocation.Flags> filter)
+		{
+			var nearest_handle = default(ILocation.Handle);
+			var nearest_distance_sq = float.MaxValue;
+
+			var assets_span = ILocation.Database.GetAssetsSpan();
+			for (var i = 0; i < assets_span.Length; i++)
+			{
+				var asset = assets_span[i];
+
+				ref var asset_data = ref asset.data; // .GetData();
+				if (!filter.Evaluate(asset_data.flags)) continue;
 
 				var distance_sq_tmp = Vector2.DistanceSquared((Vector2)asset_data.point, position);
 				if (distance_sq_tmp < nearest_distance_sq)

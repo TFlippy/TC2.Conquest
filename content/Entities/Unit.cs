@@ -360,6 +360,7 @@ namespace TC2.Conquest
 				// speed in km/h
 				public float speed = 10.00f;
 				[Asset.Ignore] public float speed_current;
+				[Asset.Ignore] public float speed_limit_override;
 				public float acc = 3.00f;
 
 				public float speed_mult_road = 1.00f;
@@ -415,6 +416,7 @@ namespace TC2.Conquest
 #if SERVER
 				public void Invoke(Net.IRPC.Context rpc, ref Unit.Data data)
 				{
+					Assert.Check(data.flags.HasNone(Unit.Flags.Disable_Player_Control));
 					Assert.Check(data.CanPlayerControlUnit(rpc.entity, rpc.connection.GetPlayerHandle()));
 
 					//App.WriteLine(this.action);
@@ -901,10 +903,13 @@ namespace TC2.Conquest
 				var pos_target = unit.pos_next;
 				var dir = (pos_target - transform.position).GetNormalized(out var dist);
 
-				speed_mult *= Maths.Clamp(dist * 4.50f, 0.20f, 1.00f);
+				speed_mult *= Maths.Clamp(dist * 4.50f, unit.action != Action.None ? 0.20f : 0.00f, 1.00f);
 
 				//unit.speed_current.MoveTowards(Maths.Min(unit.speed, unit.speed * 0.90f * speed_mult), unit.acc * dt * time_scale);
-				unit.speed_current.MoveTowards(Maths.Min(unit.speed, unit.speed * speed_mult), unit.acc * dt * time_scale);
+
+				var speed_target = Maths.Min(unit.speed, unit.speed * speed_mult);
+				if (unit.speed_limit_override.IsNotNil()) speed_target = Maths.Min(speed_target, unit.speed_limit_override);
+				unit.speed_current.MoveTowards(speed_target, unit.acc * dt * time_scale);
 				//unit.target_dist = dist;
 				if (dist > 0.01f) unit.dir_last = dir;
 

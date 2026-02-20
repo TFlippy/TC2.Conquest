@@ -2772,7 +2772,7 @@ namespace TC2.Conquest
 													}
 												}
 
-												if (mouse.GetKeyDown(Mouse.Key.Right) && unit.CanPlayerControlUnit(ent_unit, Client.GetPlayerHandle()))
+												if (mouse.GetKeyDown(Mouse.Key.Right) && unit.flags.HasNone(Unit.Flags.Disable_Player_Control) && unit.CanPlayerControlUnit(ent_unit, Client.GetPlayerHandle()))
 												{
 													if (rpc.pos_target == Vector2.Zero) rpc.pos_target = wpos_mouse_snapped + ((transform.GetInterpolatedPosition() - wpos_mouse_snapped).GetNormalized(out var dist) * Maths.Min((unit_index++) * 0.30f, dist * 0.50f));
 													rpc.Send(ent_unit);

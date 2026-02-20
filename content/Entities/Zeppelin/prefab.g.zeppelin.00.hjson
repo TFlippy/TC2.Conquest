@@ -66,11 +66,20 @@ worldmap.airship:
 	h_route: test.00
 	h_transport: zeppelin.00
 	h_prefab_region: zeppelin.00
-	dock_radius_max: 1.000
+
+	mask_nearby_flags:
+	{
+		require: region
+		exclude: mobile
+	}
+	duration_docked: 15.000
+	dock_radius_max: 1.250
 }
 
 worldmap.trader:
 {
+	h_catalogue: test.00
+
 	@inventory1:
 	{
 		type: money
@@ -84,8 +93,8 @@ worldmap.unit:
 	type: airship
 	flags: ignore_roads, disable_player_control
 	road_type: air
-	speed: 70.000
-	acc: 0.500
+	speed: 40.000
+	acc: 0.180
 	speed_mult_offroad: 1.000
 	speed_mult_forest: 1.000
 	speed_mult_rugged: 1.000
