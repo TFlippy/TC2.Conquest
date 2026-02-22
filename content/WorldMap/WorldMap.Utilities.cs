@@ -98,7 +98,7 @@ namespace TC2.Conquest
 						{
 							ref var point = ref points_span[point_index];
 
-							var pos_grid = new Vec2i16((short)point.X, (short)point.Y);
+							var pos_grid = point.ToVec2i16(); // new Vec2i16((short)point.X, (short)point.Y);
 							var pos_key = Maths.ToInt32BitCast(pos_grid);
 
 							pos_hash_to_prefecture[pos_key] = h_prefecture;

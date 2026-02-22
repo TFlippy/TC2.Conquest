@@ -92,10 +92,10 @@ namespace TC2.Conquest
 
 				public float dock_radius_max = 1.00f;
 
-				[Asset.Ignore, WIP] public FixedArray8<ILocation.Handle> dock_request_locations; 
+				[Asset.Ignore, WIP] public FixedArray8<ILocation.Handle> dock_request_locations;
 
-				[Asset.Ignore, WIP] public float t_stop_departing;
-				[Asset.Ignore, WIP] public float t_last_sync;
+				[Asset.Ignore, WIP, Save.Ignore] public float t_stop_departing; // TODO: make this use world ticks instead of world time, so it persist through savefiles
+				[Asset.Ignore, WIP, Save.Ignore] public float t_last_sync; // TODO: make this use world ticks instead of world time, so it persist through savefiles
 
 				[Asset.Ignore, WIP] public ImperialDateTime date_arrived;
 				[Asset.Ignore, WIP] public ImperialDateTime date_departing;
@@ -141,7 +141,7 @@ namespace TC2.Conquest
 			[Shitcode]
 			[ISystem.Update.A(ISystem.Mode.Single, ISystem.Scope.Global)]
 			public static void OnUpdate(ISystem.Info.Global info, ref Region.Data.Global region, Entity ent_airship, [Source.Global] ref World.Global world_global,
-			[Source.Owned] ref WorldMap.Airship.Data airship, [Source.Owned] ref Transform.Data transform, 
+			[Source.Owned] ref WorldMap.Airship.Data airship, [Source.Owned] ref Transform.Data transform,
 			[Source.Owned] ref WorldMap.Unit.Data unit, [Source.Owned] ref WorldMap.Marker.Data marker)
 			{
 				ref var route_data = ref airship.h_route.GetData();
@@ -314,8 +314,10 @@ namespace TC2.Conquest
 				public void Draw()
 				{
 					ref var region = ref this.ent_airship.GetRegionCommon();
+					ref var route_data = ref this.airship.h_route.GetData();
 
-					var pos_world = transform.GetInterpolatedPosition();
+					var pos_world = this.transform.GetInterpolatedPosition();
+					WorldMap.worldmap_offset_target = pos_world;
 
 					var h_location_nearest = this.airship.h_location_nearby; // WorldMap.GetNearestLocation(pos_world, out var nearest_location_dist_sq);
 					var pos_location_nearest = h_location_nearest.GetPosition();
@@ -328,7 +330,83 @@ namespace TC2.Conquest
 						this.StoreCurrentWindowTypeID(order: -200);
 						if (window.show)
 						{
-							using (var group = GUI.Group.New(size: new(GUI.RmX, 224), padding: new(6)))
+							using (var scroll = GUI.Scrollbox.New("sb.route"u8, size: new(256, GUI.RmY - 32), padding: new(6)))
+							{
+								scroll.group_frame.DrawBackground(GUI.tex_window, inner: true);
+
+								if (route_data.IsNotNull())
+								{
+									var targets = route_data.targets.AsSpan();
+									for (var i = 0; i < targets.Length; i++)
+									{
+										ref var target = ref targets[i];
+
+										ref var location_data = ref target.h_location.GetData();
+										if (location_data.IsNotNull())
+										{
+											// TODO: clean up and optimize this garbage
+											using (var group_row = GUI.Group.New(size: new(GUI.RmX, 24)))
+											{
+												group_row.DrawBackground(GUI.tex_panel);
+
+												//GUI.DrawSprite(GUI.tex_icons_widget.GetSprite(8, 16, 5, 8), scale: 2);
+												//GUI.SameLine();
+
+
+												var color = GUI.font_color_title;
+												if (target.h_location == this.airship.h_location_docked)
+												{
+													//GUI.TitleCentered(location_data.GetName(), pivot: new(0.00f, 0.50f), offset: new(4, 0), color: GUI.font_color_green_b);
+													color = GUI.font_color_green_b;
+												}
+												else if (!this.airship.h_location_docked && i == this.airship.current_route_index)
+												{
+													//GUI.TitleCentered(location_data.GetName(), pivot: new(0.00f, 0.50f), offset: new(4, 0), color: GUI.font_color_yellow_b);
+													color = GUI.font_color_yellow_b;
+												}
+												else if (i >= this.airship.current_route_index)
+												{
+													//GUI.TitleCentered(location_data.GetName(), pivot: new(0.00f, 0.50f), offset: new(4, 0));
+												}
+												else
+												{
+													color = GUI.font_color_title.WithAlpha(128);
+													//GUI.TitleCentered(location_data.GetName(), pivot: new(0.00f, 0.50f), offset: new(4, 0));
+												}
+
+												GUI.TitleCentered(location_data.GetName(), pivot: new(0.00f, 0.50f), offset: new(4, 0), color: color);
+												GUI.DrawHoverTooltip(location_data.GetDescription());
+
+												GUI.FocusableAsset(target.h_location);
+
+												//if (i == this.airship.current_route_index)
+												if (this.airship.h_location_docked)
+												{
+													if (target.h_location == this.airship.h_location_docked)
+													{
+														GUI.DrawSpriteCentered(GUI.tex_icons_widget.GetSprite(8, 16, 4, 8),
+															rect: group_row.GetOuterRect().GetFittedSquareRight(), layer: GUI.Layer.Window, scale: 2, color: GUI.font_color_green_b);
+													}
+													//else if (i == this.airship.current_route_index)
+													//{
+													//	GUI.DrawSpriteCentered(GUI.tex_icons_widget.GetSprite(8, 16, 4, 8),
+													//		rect: group_row.GetOuterRect().GetFittedSquareRight(), layer: GUI.Layer.Window, scale: 2);
+													//}
+												}
+												else if (i == this.airship.current_route_index)
+												{
+													GUI.DrawSpriteCentered(GUI.tex_icons_widget.GetSprite(8, 16, 4, 8),
+														rect: group_row.GetOuterRect().GetFittedSquareRight(), layer: GUI.Layer.Window, scale: 2, color: GUI.font_color_yellow_b);
+												}
+											}
+										}
+									}
+								}
+							}
+
+							GUI.SameLine();
+
+							using (var group = GUI.Group.New(size: new(GUI.RmX, 224), padding: new(12, 6)))
 							{
 								group.DrawBackground(GUI.tex_window);
 
@@ -337,43 +415,51 @@ namespace TC2.Conquest
 									ref var location_target_data = ref this.airship.h_location_target.GetData();
 									if (location_target_data.IsNotNull())
 									{
-										GUI.TitleCentered(location_target_data.name, size: 24, pivot: new(0.00f, 0.50f), offset: new(4, 0));
+										GUI.TitleCentered(location_target_data.name, size: 24, pivot: new(0.00f, 0.50f), offset: new(0, 0));
 									}
 								}
 
-								GUI.Title(is_nearest_in_range ? h_location_nearest.GetName() : "N/A");
-								GUI.LabelShaded("Distance:"u8, dist_location_nearest, format: "0.00' km'");
+								if (is_nearest_in_range)
+								{
+									GUI.Title(h_location_nearest.GetName());
+									GUI.LabelShaded("Distance:"u8, dist_location_nearest * WorldMap.km_per_unit, format: "0.00' km'");
+								}
+								else
+								{
+									GUI.Title("N/A"u8);
+								}
 							}
 						}
 					}
 
-					WorldMap.worldmap_offset_target = pos_world;
-
-					if (is_nearest_in_range)
+					using (GUI.Clip.Push(rect: WorldMap.camera_rect_canvas.Pad(6), layer: GUI.Layer.Foreground, intersect: true))
 					{
-						GUI.DrawLine(region.WorldToCanvas(pos_world), region.WorldToCanvas(pos_location_nearest), 
-							color: GUI.font_color_orange.WithAlpha(200), thickness: 2.00f, layer: GUI.Layer.Foreground);
-					}
-
-					GUI.DrawCircle(region.WorldToCanvas(pos_world), radius: this.airship.dock_radius_max * region.GetWorldToCanvasScale() * WorldMap.km_per_unit, 
-						color: GUI.font_color_orange.WithAlpha(150), segments: 32, layer: GUI.Layer.Foreground);
-
-					ref var route_data = ref airship.h_route.GetData();
-					if (route_data.IsNotNull())
-					{
-						Vector2 pos_prev_tmp = pos_world;
-
-						var targets = route_data.targets.AsSpan();
-						for (var i = 0; i < targets.Length; i++)
+						if (is_nearest_in_range)
 						{
-							ref var target = ref targets[i];
-							ref var location_data = ref target.h_location.GetData();
-							if (location_data.IsNotNull())
+							GUI.DrawLine(region.WorldToCanvas(pos_world), region.WorldToCanvas(pos_location_nearest),
+								color: GUI.font_color_orange.WithAlpha(200), thickness: 2.00f, layer: GUI.Layer.Foreground);
+						}
+
+						GUI.DrawCircle(region.WorldToCanvas(pos_world), radius: this.airship.dock_radius_max * region.GetWorldToCanvasScale() * WorldMap.km_per_unit,
+							color: GUI.font_color_orange.WithAlpha(150), segments: 32, layer: GUI.Layer.Foreground);
+
+						//ref var route_data = ref this.airship.h_route.GetData();
+						if (route_data.IsNotNull())
+						{
+							var pos_prev_tmp = pos_world;
+
+							var targets = route_data.targets.AsSpan();
+							for (var i = 0; i < targets.Length; i++)
 							{
-								var pos_tmp = (Vector2)location_data.point;
-								//if (i > 0) GUI.DrawLine(region.WorldToCanvas(pos_prev), region.WorldToCanvas(pos), color: GUI.font_color_yellow.WithAlpha(200), thickness: 4.00f, layer: GUI.Layer.Foreground);
-								if (i > 0) GUI.DrawLine(region.WorldToCanvas(pos_prev_tmp), region.WorldToCanvas(pos_tmp), color: GUI.col_default.WithAlpha(200), thickness: 1.00f, layer: GUI.Layer.Foreground);
-								pos_prev_tmp = pos_tmp;
+								ref var target = ref targets[i];
+								ref var location_data = ref target.h_location.GetData();
+								if (location_data.IsNotNull())
+								{
+									var pos_tmp = (Vector2)location_data.point;
+									//if (i > 0) GUI.DrawLine(region.WorldToCanvas(pos_prev), region.WorldToCanvas(pos), color: GUI.font_color_yellow.WithAlpha(200), thickness: 4.00f, layer: GUI.Layer.Foreground);
+									if (i > 0) GUI.DrawLine(region.WorldToCanvas(pos_prev_tmp), region.WorldToCanvas(pos_tmp), color: GUI.col_default.WithAlpha(200), thickness: 1.00f, layer: GUI.Layer.Foreground);
+									pos_prev_tmp = pos_tmp;
+								}
 							}
 						}
 					}

@@ -6,10 +6,10 @@ transform:
 	scale: [1.000, 1.000]
 }
 
-sound.emitter:
-{
+// sound.emitter:
+// {
 	
-}
+// }
 
 interactable:
 {
@@ -29,15 +29,15 @@ faction:
 	flags: use_asset
 }
 
-claimable:
-{
+// claimable:
+// {
 
-}
+// }
 
-headquarters:
-{
-	flags: manage_members, show_members
-}
+// headquarters:
+// {
+// 	flags: manage_members, show_members
+// }
 
 stockpile:
 {
@@ -148,7 +148,7 @@ storage:
 address:
 {
 	code: 2
-	flags: auto_generate, no_editing, public
+	flags: auto_generate, no_editing, no_gui, public
 }
 
 settlement:
@@ -161,220 +161,220 @@ location:
 
 }
 
-+attached.00|child:
-{
-	transform:
-	{
-		scale: [1.000, 1.000]
-	}
+// +attached.00|child:
+// {
+// 	transform:
+// 	{
+// 		scale: [1.000, 1.000]
+// 	}
 
-	interactable:
-	{
-		flags: none
-		window_size: [672, 568]
-		window_size_misc: [96, 0]
-	}
+// 	interactable:
+// 	{
+// 		flags: none
+// 		window_size: [672, 568]
+// 		window_size_misc: [96, 0]
+// 	}
 
-	// dormitory:
-	// {
-	// 	species: human
-	// 	flags: no_kit_selection, no_kit_requirements, repopulate_needs_faction, region_only
-	// 	// kit_default: default.outpost
-	// 	characters_capacity: 3
-	// 	characters_initial_count: 0
-	// 	repopulate_interval: 180.000
-	// 	repopulate_interval_extra: 300.000
-	// 	repopulate_num_extra: 1
-	// 	repopulate_max: 3
-	// 	repopulate_character_flags_add: recruitable
-	// 	asset_flags: recycle
+// 	// dormitory:
+// 	// {
+// 	// 	species: human
+// 	// 	flags: no_kit_selection, no_kit_requirements, repopulate_needs_faction, region_only
+// 	// 	// kit_default: default.outpost
+// 	// 	characters_capacity: 3
+// 	// 	characters_initial_count: 0
+// 	// 	repopulate_interval: 180.000
+// 	// 	repopulate_interval_extra: 300.000
+// 	// 	repopulate_num_extra: 1
+// 	// 	repopulate_max: 3
+// 	// 	repopulate_character_flags_add: recruitable
+// 	// 	asset_flags: recycle
 
-	// 	character_flags_filter:
-	// 	{
-	// 		include: unskilled, military, farmer, laborer, civillian, armed, hunter, soldier, nomad, brawler, outdoor, strong, lower_middle_class, middle_class
-	// 		exclude: sedentary, upper_middle_class, upper_class, elite_class
-	// 	}
-	// }
+// 	// 	character_flags_filter:
+// 	// 	{
+// 	// 		include: unskilled, military, farmer, laborer, civillian, armed, hunter, soldier, nomad, brawler, outdoor, strong, lower_middle_class, middle_class
+// 	// 		exclude: sedentary, upper_middle_class, upper_class, elite_class
+// 	// 	}
+// 	// }
 
-	personnel:
-	{
-		flags: store_characters
+// 	personnel:
+// 	{
+// 		flags: store_characters
 
-		slots:
-		[
-			{
-				role: officer
-				tags: management, administrative, military, paperwork, sedentary
-				color: "0xff719240"
-				multiplier: 3.000
-			}
-			{
-				role: clerk
-				tags: administrative, civil, paperwork, sedentary
-				color: "0x8f005ec2"
-				multiplier: 2.000
-			}
-			{
-				role: guard
-				tags: security, combat, military
-				color: "0xff719240"
-				multiplier: 1.000
-			}
-		]
-		characters_capacity: 3
-	}
+// 		slots:
+// 		[
+// 			{
+// 				role: officer
+// 				tags: management, administrative, military, paperwork, sedentary
+// 				color: "0xff719240"
+// 				multiplier: 3.000
+// 			}
+// 			{
+// 				role: clerk
+// 				tags: administrative, civil, paperwork, sedentary
+// 				color: "0x8f005ec2"
+// 				multiplier: 2.000
+// 			}
+// 			{
+// 				role: guard
+// 				tags: security, combat, military
+// 				color: "0xff719240"
+// 				multiplier: 1.000
+// 			}
+// 		]
+// 		characters_capacity: 3
+// 	}
 
-	nameable:
-	{
-		tags: tech, industrial, fancy, tool, market
-		flags: no_rename
-		type: vehicle
-		name: "Deck A"
-	}
+// 	nameable:
+// 	{
+// 		tags: tech, industrial, fancy, tool, market
+// 		flags: no_rename
+// 		type: vehicle
+// 		name: "Deck A"
+// 	}
 
-	faction:
-	{
+// 	faction:
+// 	{
 
-	}
+// 	}
 
-	company:
-	{
+// 	company:
+// 	{
 
-	}
+// 	}
 
-	claimable:
-	{
+// 	claimable:
+// 	{
 
-	}
+// 	}
 
-	office:
-	{
+// 	office:
+// 	{
 		
-	}
+// 	}
 
-	shop:
-	{
-		tags_filter:
-		{
-			include: manual, vehicle, munitions, assembling, industrial, metalworking, engineering, salvaging, medical, research, social, science, construction
-			exclude: huge, vehicle, agriculture, gathering, forestry, explosive
-		}
+// 	shop:
+// 	{
+// 		tags_filter:
+// 		{
+// 			include: manual, vehicle, munitions, assembling, industrial, metalworking, engineering, salvaging, medical, research, social, science, construction
+// 			exclude: huge, vehicle, agriculture, gathering, forestry, explosive
+// 		}
 		
-		tools: pencil, paper, ruler, hammer, cutters, saw, hand_drill, screwdriver, wrench, spanner, pliers, cleaver, tweezers, magnifying_glass, bucket, paintbrush, axe, shovel, syringe, stapler, file, chisel, towel, spatula, tongs, pick, crowbar, knife, sandpaper, needle, pins, scissors, ladle, typewriter, calculator, utensils
-		infrastructure: anvil, lab_glassware, dishes, bottle, barrel, table, chair, rack, pulley, stationery, bucket, surface, large_surface, hard_surface, liquid_container, lathe, heater, telephone, radio, stamping_press, press, crane, structure, workbench
-		environment: workshop, noisy, reinforced, durable, cramped, factory, building, large
-		connotations: none
+// 		tools: pencil, paper, ruler, hammer, cutters, saw, hand_drill, screwdriver, wrench, spanner, pliers, cleaver, tweezers, magnifying_glass, bucket, paintbrush, axe, shovel, syringe, stapler, file, chisel, towel, spatula, tongs, pick, crowbar, knife, sandpaper, needle, pins, scissors, ladle, typewriter, calculator, utensils
+// 		infrastructure: anvil, lab_glassware, dishes, bottle, barrel, table, chair, rack, pulley, stationery, bucket, surface, large_surface, hard_surface, liquid_container, lathe, heater, telephone, radio, stamping_press, press, crane, structure, workbench
+// 		environment: workshop, noisy, reinforced, durable, cramped, factory, building, large
+// 		connotations: none
 		
-		flags: embed_gui
-		menu_columns: 4
-		recipe_type: workshop
+// 		flags: embed_gui
+// 		menu_columns: 4
+// 		recipe_type: workshop
 		
-		name: "Factory"
-	}
+// 		name: "Factory"
+// 	}
 
-	workshop:
-	{
-		orders_capacity: 2
+// 	workshop:
+// 	{
+// 		orders_capacity: 2
 		
-		h_sound_order_complete: computer.bell.00
+// 		h_sound_order_complete: computer.bell.00
 		
-		gui_info_size_x: 252.000
-		max_order_mass: 200.000
+// 		gui_info_size_x: 252.000
+// 		max_order_mass: 200.000
 
-		@inventory16:
-		{
-			type: workshop
-			flags: standalone, ignore_mass, public, no_auto_pickup, faction, vertical
-			stack_size_multiplier: 1.000
+// 		@inventory16:
+// 		{
+// 			type: workshop
+// 			flags: standalone, ignore_mass, public, no_auto_pickup, faction, vertical
+// 			stack_size_multiplier: 1.000
 			
-			filter:
-			{
-				exclude: gas, large
-			}
-		}
-	}
+// 			filter:
+// 			{
+// 				exclude: gas, large
+// 			}
+// 		}
+// 	}
 
-	crafter:
-	{
-		flags: no_gui
-		temperature_max: 493.150
-	}
+// 	crafter:
+// 	{
+// 		flags: no_gui
+// 		temperature_max: 493.150
+// 	}
 
-	// storage:
-	// {
-	// 	@inventory16:
-	// 	{
-	// 		type: storage
-	// 		flags: standalone, ignore_mass, no_auto_pickup, public, faction
-	// 		stack_size_multiplier: 2.000
+// 	// storage:
+// 	// {
+// 	// 	@inventory16:
+// 	// 	{
+// 	// 		type: storage
+// 	// 		flags: standalone, ignore_mass, no_auto_pickup, public, faction
+// 	// 		stack_size_multiplier: 2.000
 			
-	// 		filter:
-	// 		{
-	// 			exclude: gas, large
-	// 		}
+// 	// 		filter:
+// 	// 		{
+// 	// 			exclude: gas, large
+// 	// 		}
 
-	// 		offset: [-0.375, -0.250]
-	// 	}
-	// }
+// 	// 		offset: [-0.375, -0.250]
+// 	// 	}
+// 	// }
 
-	headquarters:
-	{
-		flags: enable_join, enable_leave, manage_members, manage_leader, manage_style, manage_policies, allow_create_faction, show_members
-	}
-}
+// 	headquarters:
+// 	{
+// 		flags: enable_join, enable_leave, manage_members, manage_leader, manage_style, manage_policies, allow_create_faction, show_members
+// 	}
+// }
 
-+attached.01|child:
-{
-	transform:
-	{
-		scale: [1.000, 1.000]
-	}
+// +attached.01|child:
+// {
+// 	transform:
+// 	{
+// 		scale: [1.000, 1.000]
+// 	}
 
-	interactable:
-	{
-		flags: none
-		window_size: [672, 568]
-		window_size_misc: [96, 0]
-	}
+// 	interactable:
+// 	{
+// 		flags: none
+// 		window_size: [672, 568]
+// 		window_size_misc: [96, 0]
+// 	}
 
-	personnel:
-	{
+// 	personnel:
+// 	{
 
-	}
+// 	}
 
-	nameable:
-	{
-		tags: tech, industrial, fancy, tool, market
-		flags: no_rename
-		type: vehicle
-		name: "Deck B"
-	}
-}
+// 	nameable:
+// 	{
+// 		tags: tech, industrial, fancy, tool, market
+// 		flags: no_rename
+// 		type: vehicle
+// 		name: "Deck B"
+// 	}
+// }
 
-+attached.02|child:
-{
-	transform:
-	{
-		scale: [1.000, 1.000]
-	}
+// +attached.02|child:
+// {
+// 	transform:
+// 	{
+// 		scale: [1.000, 1.000]
+// 	}
 
-	interactable:
-	{
-		flags: none
-		window_size: [672, 568]
-		window_size_misc: [96, 0]
-	}
+// 	interactable:
+// 	{
+// 		flags: none
+// 		window_size: [672, 568]
+// 		window_size_misc: [96, 0]
+// 	}
 
-	personnel:
-	{
+// 	personnel:
+// 	{
 
-	}
+// 	}
 
-	nameable:
-	{
-		tags: tech, industrial, fancy, tool, market
-		flags: no_rename
-		type: vehicle
-		name: "Deck C"
-	}
-}
+// 	nameable:
+// 	{
+// 		tags: tech, industrial, fancy, tool, market
+// 		flags: no_rename
+// 		type: vehicle
+// 		name: "Deck C"
+// 	}
+// }

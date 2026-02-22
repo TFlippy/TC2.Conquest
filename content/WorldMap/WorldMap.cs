@@ -95,7 +95,7 @@ namespace TC2.Conquest
 
 		public static IPrefecture.Handle GetPrefectureAtPosition(Vector2 pos)
 		{
-			var pos_grid = new Vec2i16((short)pos.X, (short)pos.Y);
+			var pos_grid = pos.ToVec2i16(); // new Vec2i16((short)pos.X, (short)pos.Y);
 			var pos_key = Maths.ToInt32BitCast(pos_grid);
 
 			pos_hash_to_prefecture.TryGetValue(pos_key, out var h_prefecture);

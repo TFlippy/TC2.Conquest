@@ -533,9 +533,13 @@ namespace TC2.Conquest
 			//public static IOrigin.Handle h_selected_origin;
 			//public static Organic.Gender selected_gender = Organic.Gender.Male;
 
-			public static CustomCharacter custom_character = new("krachtel", "human", "human.adventurer", Organic.Gender.Male, "human.male.wings", "human.female.updo", "human.male.beard.bartender", default);
+			public static CustomCharacter custom_character = new(h_location: "zeppelin.00", h_species: "human", h_origin: "human.adventurer", gender: Organic.Gender.Male, 
+				h_hair_male: "human.male.wings", h_hair_female: "human.female.updo", 
+				h_beard_male: "human.male.beard.bartender", h_beard_female: default);
+
 			public static Sprite icons_gender = new Sprite("ui_icons_gender", 16, 16, 0, 0);
 
+			[Shitcode]
 			public void Draw()
 			{
 				//var size = new Vector2(48 * 18, 600);
@@ -1174,7 +1178,10 @@ namespace TC2.Conquest
 
 						if (widget.state_flags.HasAny(Sidebar.Widget.StateFlags.Show))
 						{
-							if (widget.IsAppearing()) WorldMap.FocusLocation(Conquest.CreationGUI.custom_character.vars.h_location, interact: false);
+							if (widget.IsAppearing()) WorldMap.FocusLocation(Conquest.CreationGUI.custom_character.vars.h_location, interact: true);
+
+							//var pos_world = this.transform.GetInterpolatedPosition();
+							WorldMap.worldmap_offset_target = Conquest.CreationGUI.custom_character.vars.h_location.GetPosition();
 
 							var gui = new Conquest.CreationGUI();
 							gui.Draw();
