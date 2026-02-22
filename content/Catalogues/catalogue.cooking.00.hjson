@@ -1,6 +1,7 @@
 ﻿{
+	$region_id: 0
 	$version: "0.1.68.2"
-	name: "Test Catalogue"
+	name: "Grandma's Choice"
 	
 	h_company: postus
 	
@@ -10,37 +11,12 @@
 	[
 		{
 			type: resource
-			h_material: mayo
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: limelight
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: machine_parts
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: meth
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: lubricant
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: actuator
-			quantity: 0.000
-		}
-		{
-			type: resource
 			h_material: alcohol
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: chow
 			quantity: 0.000
 		}
 		{
@@ -50,37 +26,42 @@
 		}
 		{
 			type: resource
-			h_material: cloth
+			h_material: eggs
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: leather
+			h_material: flour
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: mushroom.blue
+			h_material: grain
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: mushroom.green
+			h_material: insect
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: mushroom.yellow
+			h_material: mayo
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: naphtha
+			h_material: meat
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: nitric_acid
+			h_material: mushroom.brown
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: mushroom.juice
 			quantity: 0.000
 		}
 		{
@@ -95,32 +76,57 @@
 		}
 		{
 			type: resource
-			h_material: paper
+			h_material: porridge
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: phlogiston
+			h_material: red_sugar
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: gold.ingot
+			h_material: salmiac
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: ammonia
+			h_material: salt
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: smirglum.plate
+			h_material: sauce
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: water.sea
+			h_material: starch
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: sugar
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: tallow
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: vinegar
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: water.clean
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: water.red
 			quantity: 0.000
 		}
 	]

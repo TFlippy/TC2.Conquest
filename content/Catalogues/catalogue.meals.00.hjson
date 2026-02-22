@@ -1,0 +1,93 @@
+﻿{
+	$region_id: 0
+	$version: "0.1.68.2"
+	name: "Hungry Chef's Feast"
+	
+	h_company: smejdum
+	
+	date_created: 0
+	
+	items:
+	[
+		{
+			type: resource
+			h_material: mush
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: sauce
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: rot
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: porridge
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: oil
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: mushroom
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: woodchips
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: meat
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: insect
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: chow
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: alcohol
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: water.red
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: vinegar
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: scrap.fur
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: sawdust
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: shite
+			quantity: 0.000
+		}
+	]
+}

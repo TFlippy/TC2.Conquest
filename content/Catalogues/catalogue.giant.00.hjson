@@ -1,8 +1,9 @@
 ﻿{
+	$region_id: 0
 	$version: "0.1.68.2"
-	name: "Test Catalogue"
+	name: "The Greater Goods"
 	
-	h_company: postus
+	h_company: houfmistr
 	
 	date_created: 0
 	
@@ -10,22 +11,22 @@
 	[
 		{
 			type: resource
-			h_material: mayo
+			h_material: steel.ingot
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: limelight
+			h_material: niklajzner.ingot
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: machine_parts
+			h_material: steel.rod
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: meth
+			h_material: copper.rod
 			quantity: 0.000
 		}
 		{
@@ -35,57 +36,12 @@
 		}
 		{
 			type: resource
-			h_material: actuator
+			h_material: water.red
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: alcohol
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: cmajzl
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: cloth
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: leather
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: mushroom.blue
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: mushroom.green
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: mushroom.yellow
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: naphtha
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: nitric_acid
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: oil
+			h_material: mayo
 			quantity: 0.000
 		}
 		{
@@ -95,32 +51,62 @@
 		}
 		{
 			type: resource
-			h_material: paper
+			h_material: ammo.mg.lv
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: phlogiston
+			h_material: ammo.mg.hv
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: gold.ingot
+			h_material: ammo.ac.lv
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: ammonia
+			h_material: ammo.ac.hv
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: smirglum.plate
+			h_material: ammo.kn
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: water.sea
+			h_material: ammo.sg.grenade
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: ammo.sg.emt
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: ammo.hw.kinetic
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: porridge
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: eggs
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: lye
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: salmiac
 			quantity: 0.000
 		}
 	]
