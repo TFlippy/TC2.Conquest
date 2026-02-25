@@ -35,6 +35,7 @@ interactable:
 worldmap.marker:
 {
 	radius: 0.375
+	flags: no_interact, no_select
 }
 
 nameable:
