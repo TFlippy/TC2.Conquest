@@ -35,6 +35,81 @@ namespace TC2.Conquest
 
 		public static class Airship
 		{
+			public ref struct FetchArgs
+			{
+
+				public FetchArgs()
+				{
+
+				}
+			}
+
+			[ISystem.Manual(ISystem.Mode.Single, ISystem.Scope.Global)]
+			public static void System_Fetch(ISystem.Info.Global info, ref Region.Data.Global region, Entity entity,
+			[ISystem.Parameter] ref FetchArgs args,
+			[Source.Owned] in WorldMap.Airship.Data airship, [Source.Owned] in WorldMap.Unit.Data unit, [Source.Owned] in WorldMap.Marker.Data marker, [Source.Owned] in Transform.Data transform)
+			{
+				if (args.IsNotNull())
+				{
+					var h_location_airship = entity.GetAssetHandle<ILocation.Handle>();
+					ref var location_airship_data = ref h_location_airship.GetData();
+
+#if CLIENT
+					using (var id = GUI.ID<WorldMap.Airship.Data>.Push(entity))
+					using (var group = GUI.Group.New(size: new(GUI.RmX, 80)))
+					{
+						group.DrawBackground(GUI.tex_window);
+						var is_selected = WorldMap.interacted_entity == entity;
+
+						using (var group_icon = GUI.Group.New(size: new Vec2f(GUI.RmY).AddX(16)))
+						{
+							group_icon.DrawBackground(GUI.tex_window);
+
+							if (location_airship_data.IsNotNull())
+							{
+								GUI.DrawSpriteCentered(location_airship_data.icon, rect: group_icon.GetOuterRect(), layer: GUI.Layer.Window, scale: 3, pivot: new(0.50f, 0.50f), color: marker.color);
+							}
+						}
+
+						GUI.SameLine();
+
+						using (var group_text = GUI.Group.New(size: GUI.Rm, padding: new(4)))
+						{
+							using (var group_title = GUI.Group.New(size: new(GUI.RmX, 26)))
+							{
+								GUI.TitleCentered(entity.GetName(), size: 24, pivot: new(0.00f, 1.00f));
+								if (location_airship_data.IsNotNull())
+								{
+									GUI.TextShadedCentered(location_airship_data.type.ToStringUtf8(), pivot: new(1.00f, 0.50f), offset: new(-6, 0));
+								}
+							}
+
+							GUI.SeparatorThick();
+
+							if (airship.h_location_docked)
+							{
+								GUI.Title($"Docked at {airship.h_location_docked.GetShortName()}");
+							}
+							else
+							{
+								GUI.Title($"Flying to {airship.h_location_target.GetShortName()}");
+							}
+							//GUI.LabelShaded("")
+						}
+
+						if (GUI.Selectable3(id.hash, rect: group.GetInnerRect(), selected: is_selected))
+						{
+							WorldMap.SelectEntity(is_selected ? default : entity);
+						}
+					}
+#endif
+				}
+				else
+				{
+					//info.SetInterrupted(entity);
+				}
+			}
+
 			// TODO: split this into a Trader component
 			[IComponent.Data(Net.SendType.Reliable, IComponent.Scope.Global)]
 			public partial struct Data(): IComponent
@@ -317,7 +392,7 @@ namespace TC2.Conquest
 					ref var route_data = ref this.airship.h_route.GetData();
 
 					var pos_world = this.transform.GetInterpolatedPosition();
-					WorldMap.worldmap_offset_target = pos_world;
+					//WorldMap.worldmap_offset_target = pos_world;
 
 					var h_location_nearest = this.airship.h_location_nearby; // WorldMap.GetNearestLocation(pos_world, out var nearest_location_dist_sq);
 					var pos_location_nearest = h_location_nearest.GetPosition();

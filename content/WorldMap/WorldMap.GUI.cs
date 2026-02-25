@@ -497,7 +497,14 @@ namespace TC2.Conquest
 
 											if (entity.TryGetAsset(out ILocation.Definition location_asset) || ent_parent.TryGetAsset(out location_asset))
 											{
-												GUI.FocusableAsset(location_asset, rect: rect_button);
+												if (entity.TryGetAsset(out IEntrance.Definition entrance_asset))
+												{
+													GUI.FocusableAsset(entrance_asset, rect: rect_button);
+												}
+												else
+												{
+													GUI.FocusableAsset(location_asset, rect: rect_button);
+												}
 
 												//location_asset = asset as ILocation.Definition; // TODO: shithack
 
@@ -965,6 +972,19 @@ namespace TC2.Conquest
 				#region Debug
 				if (World.GetConfig().enable_mod_editing)
 				{
+					if (GUI.ShowDebugGUI)
+					{
+						GUI.DrawTextCentered(
+							$"{nameof(h_selected_location)}: {h_selected_location}" +
+							$"\n{nameof(selected_region_id)}: {selected_region_id}" +
+							$"\n{nameof(hovered_entity)}: {hovered_entity}" +
+							$"\n{nameof(worldmap_offset_target)}: {worldmap_offset_target}" +
+							$"\n{nameof(interacted_entity)}: {interacted_entity}",
+							position: GUI.GetCanvasRect().bl + new Vec2f(530, -16), pivot: new(0.00f, 1.00f), layer: GUI.Layer.Foreground, box_shadow: true, color: Color32BGRA.Magenta);
+
+						//GUI.DrawTextCentered($"{nameof(h_selected_location)}: {h_selected_location}", position: GUI.GetCanvasRect().bl + new Vec2f(16), pivot: new(0.00f, 1.00f), layer: GUI.Layer.Foreground);
+					}
+
 					DrawDebugWindow(ref rect);
 				}
 				#endregion
@@ -1099,7 +1119,6 @@ namespace TC2.Conquest
 
 							Interactable.Hide();
 
-
 							if (window.show)
 							{
 
@@ -1127,8 +1146,12 @@ namespace TC2.Conquest
 
 										if (GUI.DrawSpriteButton("close"u8, new("ui_icons_window", 16, 16, 0, 0), size: GUI.Rm, color: GUI.font_color_red_b.WithColorMult(0.75f), color_hover: GUI.font_color_red_b.WithColorMult(1.00f), play_sound: false))
 										{
-											//window.Close();
+											WorldMap.selected_region_id = 0;
 											WorldMap.interacted_entity = default;
+											WorldMap.h_selected_location = default;
+
+											//window.Close();
+											//WorldMap.interacted_entity = default;
 										}
 										GUI.DrawHoverTooltip("Close"u8);
 									}
@@ -1140,7 +1163,11 @@ namespace TC2.Conquest
 
 								if (GUI.GetKeyboard().GetKeyDown(Keyboard.Key.Escape | Keyboard.Key.E) && window.Close())
 								{
+									WorldMap.selected_region_id = 0;
 									WorldMap.interacted_entity = default;
+									WorldMap.h_selected_location = default;
+
+									//WorldMap.interacted_entity = default;
 									//Sound.PlayGUI(GUI.sound_window_open, volume: 0.40f);
 
 								}
@@ -1464,6 +1491,7 @@ namespace TC2.Conquest
 																		if (result.HasAny(SelectUnitResults.Removed))
 																		{
 																			WorldMap.interacted_entity = default;
+																			WorldMap.selected_region_id = 0;
 																		}
 																		else
 																		{
@@ -1472,7 +1500,7 @@ namespace TC2.Conquest
 																		}
 																	}
 
-																	if (WorldMap.interacted_entity_cached == ent_location && (ent_location.TryGetAsset(out ILocation.Definition location_asset))) // || ent_parent.TryGetAsset(out location_asset)))
+																	if (WorldMap.interacted_entity == ent_location && (ent_location.TryGetAsset(out ILocation.Definition location_asset))) // || ent_parent.TryGetAsset(out location_asset)))
 																	{
 																		WorldMap.h_selected_location = location_asset;
 																	}

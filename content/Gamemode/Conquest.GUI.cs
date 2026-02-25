@@ -20,24 +20,24 @@ namespace TC2.Conquest
 				//	if (window.show)
 				//	{
 
-				using (var widget = Sidebar.Widget.New(identifier: "intro", name: "Scoreboard",
+				using (var widget = Sidebar.Widget.New(identifier: "intro", name: "Overview",
 				icon: new Sprite(GUI.tex_icons_widget, 16, 16, 13, 3), size: size,
-				enabled: true, lockable: false, order: 1000.00f, flags: Sidebar.Widget.Flags.Open_Centered | Sidebar.Widget.Flags.No_Collapse | Sidebar.Widget.Flags.Starts_Open))
+				enabled: true, lockable: false, order: 10000.00f, flags: Sidebar.Widget.Flags.Open_Centered | Sidebar.Widget.Flags.No_Collapse | Sidebar.Widget.Flags.Starts_Open))
 				{
-					//ref readonly var kb = ref Control.GetKeyboard();
-					//if (kb.GetKeyDown(Keyboard.Key.G))
-					//{
-					//	if (widget.state_flags.HasAny(Sidebar.Widget.StateFlags.Show))
-					//	{
-					//		if (widget.IsActive()) Sound.PlayGUI(GUI.sound_window_close, volume: 0.30f);
-					//		widget.SetActive(false);
-					//	}
-					//	else
-					//	{
-					//		Sound.PlayGUI(GUI.sound_window_open, volume: 0.30f);
-					//		widget.SetActive(true);
-					//	}
-					//}
+					ref readonly var kb = ref Control.GetKeyboard();
+					if (kb.GetKeyDown(Keyboard.Key.Tab))
+					{
+						if (widget.state_flags.HasAny(Sidebar.Widget.StateFlags.Show))
+						{
+							if (widget.IsActive()) Sound.PlayGUI(GUI.sound_window_close, volume: 0.30f);
+							widget.SetActive(false);
+						}
+						else
+						{
+							Sound.PlayGUI(GUI.sound_window_open, volume: 0.30f);
+							widget.SetActive(true);
+						}
+					}
 
 					if (widget.state_flags.HasAny(Sidebar.Widget.StateFlags.Show))
 					{
@@ -45,6 +45,7 @@ namespace TC2.Conquest
 						{
 							//GUI.DrawWindowBackground(GUI.tex_window_character, new Vector4(16, 16, 16, 16));
 
+							ref var g_region = ref World.GetGlobalRegion();
 							ref var game_info = ref Client.GetGameInfo();
 							ref var scenario_data = ref WorldMap.h_scenario.GetData();
 
@@ -135,6 +136,13 @@ namespace TC2.Conquest
 											}
 										}
 									}
+								
+									using (var group_airships = GUI.Group.New(size: GUI.Rm, padding: new(4)))
+									{
+										group_airships.DrawBackground(GUI.tex_frame);
+
+										//g_region.RunSystem(WorldMap.Airship.System_Fetch);
+									}
 								}
 
 								GUI.SameLine();
@@ -142,6 +150,17 @@ namespace TC2.Conquest
 								using (var group_r = GUI.Group.New(size: GUI.Rm))
 								{
 									//group_r.DrawBackground(GUI.tex_window_widget);
+
+									using (var group_title = GUI.Group.New(size: new(GUI.RmX, 32)))
+									{
+										group_title.DrawBackground(GUI.tex_slot_filled);
+
+										//GUI.Title(map_info.name, size: 24);
+										GUI.TitleCentered("Region List"u8, size: 28, pivot: new(0.00f, 0.50f), offset: new(8, 0));
+										//GUI.TextShadedCentered("derp"u8, pivot: new(1.00f, 0.50f));
+									}
+
+									GUI.SeparatorThick();
 
 									using (var group_a = GUI.Scrollbox.New("sb.regions"u8, size: GUI.Rm, padding: new(6)))
 									{
@@ -202,9 +221,12 @@ namespace TC2.Conquest
 											ref var mod_context = ref App.GetModContext();
 											ref var world_info = ref Client.GetWorldInfo();
 
-											for (var i = 1u; i < Region.max_count; i++)
+											var is_loading = Client.IsLoadingRegion();
+											var has_region = is_loading || Client.HasRegion();
+
+											for (var region_id = 1u; region_id < Region.max_count; region_id++)
 											{
-												ref var map_info = ref World.GetMapInfo((byte)i);
+												ref var map_info = ref World.GetMapInfo((byte)region_id);
 												if (map_info.IsNotNull())
 												{
 													var h_location = map_info.h_location;
@@ -219,7 +241,7 @@ namespace TC2.Conquest
 																//ref var location_data = ref h_location.GetData();
 
 																var ent_location = h_location.GetGlobalEntity();
-																var map_identifier = world_info.regions[i];
+																var map_identifier = world_info.regions[region_id];
 
 																var player_count = (byte)0;
 
@@ -241,12 +263,13 @@ namespace TC2.Conquest
 																//	GUI.DrawBackground(GUI.tex_frame_white, rect_icon, padding: new(2), color: color_frame.WithAlphaMult(alpha));
 																//}
 
-																using (GUI.ID<Region.Info, IMap.Info>.Push(i))
+																using (GUI.ID<Region.Info, IMap.Info>.Push(region_id))
 																{
 																	var is_selected = WorldMap.interacted_entity_cached == ent_location;
 																	var contains = WorldMap.hs_selected_entities.Contains(ent_location);
-																	var is_selectable = WorldMap.CanPlayerControlUnit(ent_location, Client.GetPlayerHandle());
-
+																	var is_selectable = true; // WorldMap.CanPlayerControlUnit(ent_location, Client.GetPlayerHandle());
+																	var is_current_region = region_id == Client.GetRegionID();
+																	//var is_current_region = 
 																	using (GUI.Alpha.Push(GUI.GetEnabledAlpha(is_selectable)))
 																	//using (GUI.Disabled.Push(true, !is_selectable))
 																	{
@@ -271,6 +294,7 @@ namespace TC2.Conquest
 																				//GUI.Title(map_info.name, size: 24);
 																				GUI.TitleCentered(map_info.name, size: 24, pivot: new(0.00f, 0.50f));
 																				//GUI.TextShadedCentered("derp"u8, pivot: new(1.00f, 0.50f));
+																				//GUI.TextShadedCentered(player_count, format: "'Players: '0", font: GUI.Font.Superstar, size: 16, pivot: new(1.00f, 0.50f));
 																				GUI.TextShadedCentered(player_count, format: "'Players: '0", font: GUI.Font.Superstar, size: 16, pivot: new(1.00f, 0.50f));
 
 																			}
@@ -282,10 +306,28 @@ namespace TC2.Conquest
 
 																			using (var group_bottom = GUI.Group.New(size: GUI.Rm))
 																			{
-																				if (GUI.DrawButton("Join"u8, size: new(64, GUI.RmY), color: GUI.col_button_ok))
+																				if (is_current_region)
 																				{
-
+																					if (GUI.DrawButton("Exit"u8, size: new(64, GUI.RmY), error: is_loading, color: GUI.col_button_error))
+																					{
+																						Client.RequestSetActiveRegion(0, delay_seconds: 0.50f);
+																						//GUI.RegionMenu.ToggleWidget(false);
+																					}
 																				}
+																				else
+																				{
+																					if (GUI.DrawButton("Join"u8, size: new(64, GUI.RmY), error: is_loading, color: GUI.col_button_ok))
+																					{
+																						Client.RequestSetActiveRegion((byte)region_id, delay_seconds: 0.50f);
+																					}
+																				}
+
+																				//GUI.SameLine();
+
+																				//if (GUI.DrawButton("View"u8, size: new(64, GUI.RmY), error: is_loading, color: GUI.col_button))
+																				//{
+
+																				//}
 
 																				GUI.SameLine();
 
@@ -293,35 +335,10 @@ namespace TC2.Conquest
 																				{
 																					//GUI.LabelShaded("Players:"u8, player_count, font_a: GUI.Font.Superstar, font_b: GUI.Font.Superstar, size_a: 16, size_b: 16, width: 80);
 																					//GUI.LabelShaded("Players:"u8, player_count * 16, width: 72);
-																					GUI.LabelShaded("Hazard:"u8, player_count, width: 72);
+																					//GUI.LabelShaded("Hazard:"u8, player_count, width: 72);
 																				}
-
-																				
-
-																				//if (GUI.DrawButton("Join"u8, size: new(64, GUI.RmY), color: GUI.col_button_ok))
-																				//{
-
-																				//}
 																			}
-
-																			//using (GUI.Wrap.Push(GUI.RmX))
-																			//{
-																			//	//GUI.TextShadedCentered(location_data.desc, pivot: new(0.00f, 1.00f), offset: new(2, -2));
-																			//	GUI.TextShaded(location_data.desc);
-																			//}
 																		}
-
-
-
-																		//var ent_parent = entity.GetParent(Relation.Type.Child);
-																		//if (ent_parent.IsValid() && ent_parent.TryGetAssetName(out var name_parent))
-																		//{
-																		//	GUI.TextShadedCentered(name_parent, size: 14, pivot: new(0.00f, 1.00f), color: GUI.font_color_desc);
-																		//}
-																		//else
-																		//{
-																		//	//GUI.TextShadedCentered(entity.GetFaction().GetName(), size: 14, pivot: new(0.00f, 1.00f), color: GUI.font_color_desc);
-																		//}
 
 																		if (GUI.Selectable3(ent_location.GetShortID(), group_row.GetOuterRect(), is_selected || contains, is_readonly: !is_selectable))
 																		{
@@ -350,14 +367,14 @@ namespace TC2.Conquest
 																		}
 																	}
 
-																	if (GUI.IsItemHovered())
-																	{
-																		if (GUI.GetMouse().GetKeyDown(Mouse.Key.Right))
-																		{
-																			WorldMap.FocusEntity(ent_location, interact: false);
-																		}
-																		GUI.DrawEntityMarker(ent_location, cross_size: 0.125f, layer: GUI.Layer.Foreground);
-																	}
+																	//if (GUI.IsItemHovered())
+																	//{
+																	//	if (GUI.GetMouse().GetKeyDown(Mouse.Key.Right))
+																	//	{
+																	//		WorldMap.FocusEntity(ent_location, interact: false);
+																	//	}
+																	//	GUI.DrawEntityMarker(ent_location, cross_size: 0.125f, layer: GUI.Layer.Foreground);
+																	//}
 																}
 															}
 														}

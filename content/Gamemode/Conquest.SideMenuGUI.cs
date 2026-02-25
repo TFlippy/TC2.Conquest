@@ -76,7 +76,7 @@ namespace TC2.Conquest
 
 							using (var scrollbox = GUI.Scrollbox.New("sidemenu.scroll"u8, size: GUI.Rm))
 							{
-								if (true)
+								if (App.IsModEditing)
 								{
 									using (var collapsible = GUI.Collapsible2.New("col.help"u8, size: new(GUI.RmX, 32), default_open: true))
 									{
