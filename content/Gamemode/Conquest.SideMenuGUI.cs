@@ -27,7 +27,7 @@ namespace TC2.Conquest
 		// WIP/experimental stuff
 		public partial struct SideMenuGUI: IGUICommand
 		{
-			public Entity ent_player;
+			//public Entity ent_player;
 
 			public static readonly HashSet<IHelp.Handle> hs_selected_handles = new(32);
 
@@ -41,15 +41,15 @@ namespace TC2.Conquest
 
 			public void Draw()
 			{
-				ref var region = ref this.ent_player.GetRegion();
-				if (region.IsNull()) return;
+				ref var region_common = ref Client.GetRegionCommon();
+				if (region_common.IsNull()) return;
 
 				ref var player_data = ref Client.GetPlayerData();
 				if (player_data.IsNull()) return;
 
 				var h_character = Client.GetCharacterHandle();
-				ref var character = ref region.GetCharacter(h_character);
-				if (character.IsNotNull())
+				//ref var character = ref region.GetCharacter(h_character);
+				//if (character.IsNotNull())
 				{
 					using (var window = GUI.Window.Standalone("sidemenu"u8, position: new(GUI.CanvasSize.X - 8, 36),
 					pivot: new(1.00f, 0.00f), size: new((24 * 9) + 14, 48 * 10), padding: new(8)))
@@ -86,11 +86,11 @@ namespace TC2.Conquest
 										{
 											//using (var group_help = GUI.Group.New(size: new(GUI.RmX, 0)))
 											{
-												if (GUI.TextInput("help.search"u8, "<search>"u8, ref edit_help_filter, size: new(GUI.RmX, 32), max_length: 32))
-												{
+												//if (GUI.TextInput("help.search"u8, "<search>"u8, ref edit_help_filter, size: new(GUI.RmX, 32), max_length: 32))
+												//{
 
-												}
-												GUI.FocusOnCtrlF();
+												//}
+												//GUI.FocusOnCtrlF();
 
 												//var assets = IHelp.Database.GetAssetsSpan();
 												var categories = IHelp.Database.GetAssets().GroupBy(x => x.data.category, StringComparer.Ordinal).OrderBy(x => x.Key);
@@ -254,75 +254,83 @@ namespace TC2.Conquest
 										{
 											using (var group_interactables = GUI.Group.New(size: new(GUI.RmX, 0)))
 											{
-												var results_span = FixedArray.CreateSpan32NoInit<OverlapResult>(out var results_buffer);
-												if (region.TryOverlapPointAll(world_position: character.world_position.Snap(1.00f), radius: Interactor.c_max_distance,
-												hits: ref results_span, mask: Physics.Layer.Interactable, exclude: Physics.Layer.Ignore_Hover))
+												ref var region = ref region_common.AsRegion();
+												if (region.IsNotNull())
 												{
-													results_span.Sort(static (a, b) => a.entity.lower.CompareToFast(b.entity.lower));
-													//results_span.SortByDistance();
-													var ent_controlled = character.ent_controlled;
-													var ent_prev = Entity.None;
-
-													foreach (var result in results_span)
+													ref var character = ref region.GetCharacter(h_character, out var ent_character);
+													if (character.IsNotNull())
 													{
-														//ref var faction = ref ent_squad.GetComponent<Faction.Data>();
-														//if (faction.IsNotNull() && faction.id == player.faction_id)
-														//{
-
-														var ent_result = result.entity;
-														if (ent_result == ent_controlled) continue;
-														if (ent_result == ent_prev) continue;
-
-														const float slot_size = 56.00f;
-
-														GUI.TrySameLine(slot_size);
-
-														using (var push_id = GUI.ID<Interactable.Data, Selection.Data>.Push(ent_result))
-														//using (var group_row = GUI.Group.New(new Vector2(GUI.RmX, 24)))
-														using (var group_row = GUI.Group.New(new Vector2(slot_size)))
+														var results_span = FixedArray.CreateSpan32NoInit<OverlapResult>(out var results_buffer);
+														if (region.TryOverlapPointAll(world_position: character.world_position.Snap(1.00f), radius: Interactor.c_max_distance,
+														hits: ref results_span, mask: Physics.Layer.Interactable, exclude: Physics.Layer.Ignore_Hover))
 														{
-															//group_row.DrawBackground(GUI.tex_panel);
-															//GUI.TitleCentered(ent_result.GetName(), pivot: new(0.00f, 0.50f), offset: new(6, 0));
+															results_span.Sort(static (a, b) => a.entity.lower.CompareToFast(b.entity.lower));
+															//results_span.SortByDistance();
+															var ent_controlled = character.ent_controlled;
+															var ent_prev = Entity.None;
 
-															group_row.DrawBackground(GUI.tex_slot_simple);
-															GUI.DrawEntityIcon(ent_result);
-
-															var selected = ent_result == Interactable.GetCurrentTarget();
-															if (GUI.Selectable3("select"u8, group_row.GetOuterRect(), selected: selected))
+															foreach (var result in results_span)
 															{
-																if (selected)
-																{
-																	Interactable.Close();
-																}
-																else
-																{
-																	Interactable.Open(ent_result);
-																}
-
-																//var rpc = new Selection.SelectSquadRPC()
+																//ref var faction = ref ent_squad.GetComponent<Faction.Data>();
+																//if (faction.IsNotNull() && faction.id == player.faction_id)
 																//{
-																//	ent_squad = ent_squad
-																//};
-																//rpc.Send(this.ent_selection);
 
-																//dropdown.Close();
+																var ent_result = result.entity;
+																if (ent_result == ent_controlled) continue;
+																if (ent_result == ent_prev) continue;
+
+																const float slot_size = 56.00f;
+
+																GUI.TrySameLine(slot_size);
+
+																using (var push_id = GUI.ID<Interactable.Data, Selection.Data>.Push(ent_result))
+																//using (var group_row = GUI.Group.New(new Vector2(GUI.RmX, 24)))
+																using (var group_row = GUI.Group.New(new Vector2(slot_size)))
+																{
+																	//group_row.DrawBackground(GUI.tex_panel);
+																	//GUI.TitleCentered(ent_result.GetName(), pivot: new(0.00f, 0.50f), offset: new(6, 0));
+
+																	group_row.DrawBackground(GUI.tex_slot_simple);
+																	GUI.DrawEntityIcon(ent_result);
+
+																	var selected = ent_result == Interactable.GetCurrentTarget();
+																	if (GUI.Selectable3("select"u8, group_row.GetOuterRect(), selected: selected))
+																	{
+																		if (selected)
+																		{
+																			Interactable.Close();
+																		}
+																		else
+																		{
+																			Interactable.Open(ent_result);
+																		}
+
+																		//var rpc = new Selection.SelectSquadRPC()
+																		//{
+																		//	ent_squad = ent_squad
+																		//};
+																		//rpc.Send(this.ent_selection);
+
+																		//dropdown.Close();
+																	}
+																}
+
+																if (GUI.IsItemHovered())
+																{
+																	using (var tooltip = GUI.Tooltip.New(pivot: new(1.00f, 0.125f), offset: new(-16, 0)))
+																	{
+																		GUI.HighlightEntity(ent_result, color: GUI.col_button_yellow.WithAlpha(128), layer: GUI.Layer.Background);
+																		GUI.DrawEntityMarker(ent_result);
+
+																		//GUI.Title(ent_result.GetName());
+																	}
+																}
+
+																// to avoid duplicates on entities that have more than 1 shape
+																ent_prev = ent_result;
+																//}
 															}
 														}
-
-														if (GUI.IsItemHovered())
-														{
-															using (var tooltip = GUI.Tooltip.New(pivot: new(1.00f, 0.125f), offset: new(-16, 0)))
-															{
-																GUI.HighlightEntity(ent_result, color: GUI.col_button_yellow.WithAlpha(128), layer: GUI.Layer.Background);
-																GUI.DrawEntityMarker(ent_result);
-
-																//GUI.Title(ent_result.GetName());
-															}
-														}
-
-														// to avoid duplicates on entities that have more than 1 shape
-														ent_prev = ent_result;
-														//}
 													}
 												}
 											}
@@ -337,14 +345,15 @@ namespace TC2.Conquest
 			}
 		}
 
-		[ISystem.EarlyGUI(ISystem.Mode.Single, ISystem.Scope.Region), HasTag("local", true, Source.Modifier.Owned)]
-		public static void OnGUI_SideMenu(Entity ent_player, [Source.Owned] in Player.Data player)
+		//[ISystem.EarlyGUI(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region), HasTag("local", true, Source.Modifier.Owned)]
+		[ISystem.EarlyGUI(ISystem.Mode.Single, ISystem.Scope.Global)]
+		public static void OnGUI_SideMenu(ISystem.Info.Global info, ref Region.Data.Global region, [Source.Owned] ref World.Global world)
 		{
 			if (true)
 			{
 				var gui = new SideMenuGUI()
 				{
-					ent_player = ent_player,
+					//ent_player = ent_player,
 				};
 				gui.Submit();
 			}

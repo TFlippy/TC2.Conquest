@@ -14,16 +14,49 @@ namespace TC2.Conquest
 				None = 0u,
 			}
 
+			[Flags]
+			public enum Status: ushort
+			{
+				None = 0,
+			}
+
 			public Site.Data.Flags flags;
 
+			[Asset.Ignore, Save.Ignore] public byte player_count;
+			public byte unused_00;
+			public Site.Data.Status status;
 		}
 
-		[ISystem.Update.A(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region)]
-		public static void OnUpdate(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity,
-		[Source.Owned] ref Site.Data site, [Source.Owned] ref Transform.Data transform)
+		//[ISystem.Update.A(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region)]
+		//public static void OnUpdate(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity,
+		//[Source.Owned] ref Site.Data site, [Source.Owned] ref Transform.Data transform)
+		//{
+
+//}
+
+#if SERVER
+		[ISystem.PreUpdate.A(ISystem.Mode.Single, ISystem.Scope.Global, interval: 1.00f)]
+		public static void OnUpdate_Stats(ISystem.Info.Global info, ref Region.Data.Global region_global, Entity entity,
+		[Source.Owned] ref Site.Data site, [Source.Owned] ref Transform.Data transform, [Source.Owned] ref Location.Data location)
 		{
-
+			var region_id = location.h_location.GetRegionID();
+			if (region_id != 0)
+			{
+				ref var region_data = ref World.GetRegion(region_id);
+				if (region_data.IsNotNull())
+				{
+					var sync = false;
+					sync |= site.player_count.TryChange((byte)region_data.GetConnectedPlayerCount());
+				
+					if (sync)
+					{
+						site.Sync(entity);
+						App.WriteValue("synced region stats", region_id, color: App.Color.Magenta);
+					}
+				}
+			}
 		}
+#endif
 
 #if CLIENT
 		public partial struct SiteGUI: IGUICommand

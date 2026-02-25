@@ -456,19 +456,19 @@ namespace TC2.Conquest
 										{
 											is_hovered = false;
 										}
-											//is_hovered |= WorldMap.hovered_entity.current == entity;
+										//is_hovered |= WorldMap.hovered_entity.current == entity;
 										//is_hovered &= is_selectable;
-										
+
 
 										ref var unit = ref entity.GetComponent<WorldMap.Unit.Data>();
 										if (unit.IsNotNull())
 										{
-											is_interactable &= unit.CanPlayerControlUnit(entity, Client.GetPlayerHandle());
+											if (is_interactable) is_interactable = unit.CanPlayerControlUnit(entity, Client.GetPlayerHandle());
 										}
 
 										//var color = (is_selected || is_hovered) ? Color32BGRA.White : (marker.color_override.a > 0 ? marker.color_override : marker.color);
 										var color = (marker.color_override.a > 0 ? marker.color_override : marker.color);
-										var alpha_mult = is_interactable ? 1.00f : 0.75f;
+										var alpha_mult = is_interactable ? 1.00f : 0.60f;
 
 										if ((is_selected | is_hovered) || WorldMap.hs_selected_entities.Contains(entity))
 										{
@@ -536,7 +536,7 @@ namespace TC2.Conquest
 												}
 											}
 
-											if (is_pressed & is_selectable & is_interactable)
+											if (is_pressed && is_selectable && is_interactable)
 											{
 												selected_region_id = 0;
 
@@ -1333,7 +1333,7 @@ namespace TC2.Conquest
 		[Shitcode]
 		private static void DrawLeftWindow(ref AABB rect)
 		{
-			using (var window = GUI.Window.Standalone("worldmap.side.left"u8, position: rect.a + new Vector2(6, 80), size: new(284, Maths.Min(rect.GetHeight() - 8, 550)), pivot: new(0.00f, 0.00f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus | GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.Child))
+			using (var window = GUI.Window.Standalone("worldmap.side.left"u8, position: rect.a + new Vector2(6, 84), size: new(284, Maths.Min(rect.GetHeight() - 8, 550)), pivot: new(0.00f, 0.00f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus | GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.Child))
 			{
 				if (window.show)
 				{
@@ -1349,20 +1349,22 @@ namespace TC2.Conquest
 					using (var group_list = GUI.Group.New(size: GUI.Rm, padding: new(4, 4)))
 					{
 						//if (GUI.TextInput("worldmap.left.search"u8, "<search>"u8, ref edit_units_search, size: new(GUI.RmX * 0.50f, 32), max_length: 32))
-						if (GUI.TextInput("worldmap.left.search"u8, "<search>"u8, ref edit_units_search, size: new(GUI.RmX, 32), max_length: 32))
-						{
+						//if (GUI.TextInput("worldmap.left.search"u8, "<search>"u8, ref edit_units_search, size: new(GUI.RmX, 32), max_length: 32))
+						//{
 
-						}
-						GUI.FocusOnCtrlF();
+						//}
+						//GUI.FocusOnCtrlF();
 
-						//GUI.SameLine();
+						////GUI.SameLine();
 
+						////GUI.EnumInput("worldmap.left.filter"u8, ref edit_unit_search_filter, size: new(GUI.RmX, 32), show_label: false);
 						//GUI.EnumInput("worldmap.left.filter"u8, ref edit_unit_search_filter, size: new(GUI.RmX, 32), show_label: false);
-						GUI.EnumInput("worldmap.left.filter"u8, ref edit_unit_search_filter, size: new(GUI.RmX, 32), show_label: false);
+
+						GUI.SeparatorThick();
 
 						var is_filtering = !edit_units_search.IsNullOrEmpty();
 
-						using (var scroll = GUI.Scrollbox.New("units.scroll"u8, size: new(GUI.RmX, GUI.RmY - 48)))
+						using (var scroll = GUI.Scrollbox.New("units.scroll"u8, size: GUI.Rm.SubY(48 * 3)))
 						{
 							using (var collapsible = GUI.Collapsible2.New("units.regions.collapsible"u8, new Vector2(GUI.RmX, 32), default_open: true))
 							{
@@ -1730,7 +1732,14 @@ namespace TC2.Conquest
 							//	}
 							//}
 
-						
+
+						}
+
+						GUI.SeparatorThick();
+
+						using (var group = GUI.Group.New(size: GUI.Rm, padding: new(6)))
+						{
+							group.DrawBackground(GUI.tex_frame);
 						}
 					}
 					//}

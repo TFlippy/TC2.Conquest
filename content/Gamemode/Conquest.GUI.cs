@@ -13,168 +13,362 @@ namespace TC2.Conquest
 			{
 				var size = new Vector2(48 * 16, 48 * 12);
 
-				using (var window = GUI.Window.Standalone("Intro"u8, size: size,
-				position: new(GUI.CanvasSize.X * 0.50f, 96), pivot: new(0.50f, 0.00f), force_position: true))
+				//using (var window = GUI.Window.Standalone("Intro"u8, size: size,
+				//position: new(GUI.CanvasSize.X * 0.50f, 96), pivot: new(0.50f, 0.00f), force_position: false))
+				//{
+				//	this.StoreCurrentWindowTypeID();
+				//	if (window.show)
+				//	{
+
+				using (var widget = Sidebar.Widget.New(identifier: "intro", name: "Scoreboard",
+				icon: new Sprite(GUI.tex_icons_widget, 16, 16, 13, 3), size: size,
+				enabled: true, lockable: false, order: 1000.00f, flags: Sidebar.Widget.Flags.Open_Centered | Sidebar.Widget.Flags.No_Collapse | Sidebar.Widget.Flags.Starts_Open))
 				{
-					this.StoreCurrentWindowTypeID();
-					if (window.show)
+					//ref readonly var kb = ref Control.GetKeyboard();
+					//if (kb.GetKeyDown(Keyboard.Key.G))
+					//{
+					//	if (widget.state_flags.HasAny(Sidebar.Widget.StateFlags.Show))
+					//	{
+					//		if (widget.IsActive()) Sound.PlayGUI(GUI.sound_window_close, volume: 0.30f);
+					//		widget.SetActive(false);
+					//	}
+					//	else
+					//	{
+					//		Sound.PlayGUI(GUI.sound_window_open, volume: 0.30f);
+					//		widget.SetActive(true);
+					//	}
+					//}
+
+					if (widget.state_flags.HasAny(Sidebar.Widget.StateFlags.Show))
 					{
-						//GUI.DrawWindowBackground(GUI.tex_window_character, new Vector4(16, 16, 16, 16));
-
-						ref var game_info = ref Client.GetGameInfo();
-						ref var scenario_data = ref WorldMap.h_scenario.GetData();
-
-						using (var group_header = GUI.Group.New(size: new(512, 64)))
+						using (var group_main = GUI.Group.New(size: GUI.Av))
 						{
-							group_header.DrawBackground(GUI.tex_window);
+							//GUI.DrawWindowBackground(GUI.tex_window_character, new Vector4(16, 16, 16, 16));
 
-							GUI.TitleCentered("Welcome to Territory Control 2"u8, size: 32, pivot: new(0.50f, 0.50f), offset: new(0, -8));
+							ref var game_info = ref Client.GetGameInfo();
+							ref var scenario_data = ref WorldMap.h_scenario.GetData();
 
-							//GUI.TitleCentered(game_info.name, size: 20, pivot: new(0.50f, 0.50f), offset: new(0, 14));
-							GUI.TitleCentered("(still work in progress)"u8, size: 20, pivot: new(0.50f, 0.50f), offset: new(0, 14), color: GUI.font_color_desc);
-
-						}
-
-						GUI.SameLine();
-
-						using (var group_header = GUI.Group.New(size: new(GUI.RmX, 64), padding: new(4)))
-						{
-							group_header.DrawBackground(GUI.tex_window);
-
-							if (GUI.DrawButton("DEV: Hide"u8, size: new(96, 40)))
+							using (var group_header = GUI.Group.New(size: new(512, 64)))
 							{
-								hide = true;
-							}
-							//group_header.DrawBackground(GUI.tex_panel);
+								group_header.DrawBackground(GUI.tex_window);
 
-						}
+								GUI.TitleCentered("Welcome to Territory Control 2"u8, size: 32, pivot: new(0.50f, 0.50f), offset: new(0, -8));
 
-						GUI.SeparatorThick();
+								//GUI.TitleCentered(game_info.name, size: 20, pivot: new(0.50f, 0.50f), offset: new(0, 14));
+								GUI.TitleCentered("(still work in progress)"u8, size: 20, pivot: new(0.50f, 0.50f), offset: new(0, 14), color: GUI.font_color_desc);
 
-						using (var group_body = GUI.Group.New2(size: GUI.Rm, padding: new(8, 10, 8, 8)))
-						{
-							group_body.DrawBackground(GUI.tex_scoreboard_bg);
-
-							//GUI.DrawSprite("ui_logo_title");
-
-							using (var group_l = GUI.Group.New(size: new(GUI.RmX * 0.50f, GUI.RmY)))
-							{
-								using (var group_a = GUI.Group.New(size: new(GUI.RmX, 256), padding: new(4)))
-								{
-									group_a.DrawBackground(GUI.tex_window_widget);
-
-									if (false) // lol exactly same intro message as in TC1
-									{
-										GUI.Title("Territory Control 2's world is a cruel place."u8);
-										GUI.NewLine(4);
-										GUI.Title("You may end up getting shot, slaved, stabbed,\nblown up, turned into a monster and such."u8);
-										GUI.NewLine(8);
-										GUI.Title("If you're a beginner, consider joining an existing faction by asking one of its members to join."u8);
-									}
-									else
-									{
-										if (true)
-										{
-											GUI.Title("Introduction"u8, size: 24);
-											//GUI.TextShaded("- <TODO: >"u8);
-
-											GUI.Title("Getting Started"u8, size: 16);
-											GUI.TextShaded("- <TODO: >"u8);
-
-											GUI.NewLine(4);
-
-											GUI.Title("Regions"u8, size: 16);
-											GUI.TextShaded("- <TODO: multiple regions with entrances on worldmap>"u8);
-											GUI.TextShaded("\t- <TODO: entrances link places in regions to worldmap>"u8);
-											GUI.TextShaded("\t- <TODO: how to enter a region>"u8);
-
-											GUI.TextShaded("- <TODO: >"u8);
-
-											if (true) // if multiplayer
-											{
-												GUI.TextShaded("- "u8);
-											}
-											else
-											{
-												GUI.TextShaded("- "u8);
-											}
-
-											GUI.Separator(spacing: 8);
-
-											//GUI.TextShaded("- Select your starting region"u8);
-											//GUI.DrawHoverTooltip("Either in the menu on the left side of your screen, or directly on the World Map (orange symbol)."u8);
-										}
-										else if (scenario_data.IsNotNull())
-										{
-											GUI.Title(scenario_data.name, size: 24);
-											GUI.TextShaded(scenario_data.desc);
-										}
-									}
-								}
 							}
 
 							GUI.SameLine();
 
-							using (var group_r = GUI.Group.New(size: GUI.Rm))
+							using (var group_header = GUI.Group.New(size: new(GUI.RmX, 64), padding: new(4)))
 							{
-								//group_r.DrawBackground(GUI.tex_window_widget);
+								group_header.DrawBackground(GUI.tex_window);
 
-								using (var group_a = GUI.Group.New(size: new(GUI.RmX, GUI.RmY - 48), padding: new(6)))
+								//if (GUI.DrawButton("DEV: Hide"u8, size: new(96, 40)))
+								//{
+								//	hide = true;
+								//}
+								//group_header.DrawBackground(GUI.tex_panel);
+
+							}
+
+							GUI.SeparatorThick();
+
+							using (var group_body = GUI.Group.New2(size: GUI.Rm, padding: new(8, 10, 8, 8)))
+							{
+								group_body.DrawBackground(GUI.tex_scoreboard_bg);
+
+								//GUI.DrawSprite("ui_logo_title");
+
+								using (var group_l = GUI.Group.New(size: new(GUI.RmX * 0.50f, GUI.RmY)))
 								{
-									group_a.DrawBackground(GUI.tex_window);
-
-									const bool enable_quick_start = false;
-									if (enable_quick_start)
+									using (var group_a = GUI.Group.New(size: new(GUI.RmX, 256), padding: new(4)))
 									{
-										using (var group_top = GUI.Group.New(size: new(GUI.RmX, 32)))
+										group_a.DrawBackground(GUI.tex_window_widget);
+
+										if (false) // lol exactly same intro message as in TC1
 										{
-											GUI.TitleCentered("Quick Start"u8, size: 32, pivot: new(0.00f, 0.50f), offset: new(4, 0));
+											GUI.Title("Territory Control 2's world is a cruel place."u8);
+											GUI.NewLine(4);
+											GUI.Title("You may end up getting shot, slaved, stabbed,\nblown up, turned into a monster and such."u8);
+											GUI.NewLine(8);
+											GUI.Title("If you're a beginner, consider joining an existing faction by asking one of its members to join."u8);
 										}
-
-										GUI.SeparatorThick();
-
-										using (GUI.ID<IntroGUI>.Push("ps.industrialized"u8))
-										using (var group_playstyle = GUI.Group.New(size: new(GUI.RmX, 80), padding: new(4)))
+										else
 										{
-											group_playstyle.DrawBackground(GUI.tex_window);
-
-											if (GUI.DrawIconButton("btn.test"u8, sprite: new("specialization_icons", 32, 32, 0, 0), size: new(GUI.RmY)))
+											if (true)
 											{
+												GUI.Title("Introduction"u8, size: 24);
+												//GUI.TextShaded("- <TODO: >"u8);
+
+												GUI.Title("Getting Started"u8, size: 16);
+												GUI.TextShaded("- <TODO: >"u8);
+
+												GUI.NewLine(4);
+
+												GUI.Title("Regions"u8, size: 16);
+												GUI.TextShaded("- <TODO: multiple regions with entrances on worldmap>"u8);
+												GUI.TextShaded("\t- <TODO: entrances link places in regions to worldmap>"u8);
+												GUI.TextShaded("\t- <TODO: how to enter a region>"u8);
+
+												GUI.TextShaded("- <TODO: >"u8);
+
+												if (true) // if multiplayer
+												{
+													GUI.TextShaded("- "u8);
+												}
+												else
+												{
+													GUI.TextShaded("- "u8);
+												}
+
+												GUI.Separator(spacing: 8);
+
+												//GUI.TextShaded("- Select your starting region"u8);
+												//GUI.DrawHoverTooltip("Either in the menu on the left side of your screen, or directly on the World Map (orange symbol)."u8);
 											}
-
-											GUI.SameLine();
-
-											using (var group_text = GUI.Group.New(size: GUI.Rm.SubY(24), padding: new(2)))
+											else if (scenario_data.IsNotNull())
 											{
-												GUI.Title("Industrialized"u8, size: 24);
-												GUI.TextShaded("- <TODO>"u8);
-												GUI.TextShaded("- Fewer natural resources and wildlife"u8);
+												GUI.Title(scenario_data.name, size: 24);
+												GUI.TextShaded(scenario_data.desc);
 											}
-											//GUI.TitleCentered("Builder"u8, size: 24, pivot: new(0.00f, 0.00f), offset: new(2));
-										}
-
-										using (GUI.ID<IntroGUI>.Push("ps.frontier"u8))
-										using (var group_playstyle = GUI.Group.New(size: new(GUI.RmX, 80), padding: new(4)))
-										{
-											group_playstyle.DrawBackground(GUI.tex_window);
-
-											if (GUI.DrawIconButton("btn.test"u8, sprite: new("specialization_icons", 32, 32, 0, 0), size: new(GUI.RmY)))
-											{
-											}
-
-											GUI.SameLine();
-
-											using (var group_text = GUI.Group.New(size: GUI.Rm.SubY(24), padding: new(2)))
-											{
-												GUI.Title("Frontier"u8, size: 24);
-												GUI.TextShaded("- <TODO>"u8);
-											}
-											//GUI.TitleCentered("Builder"u8, size: 24, pivot: new(0.00f, 0.00f), offset: new(2));
 										}
 									}
 								}
 
+								GUI.SameLine();
 
+								using (var group_r = GUI.Group.New(size: GUI.Rm))
+								{
+									//group_r.DrawBackground(GUI.tex_window_widget);
+
+									using (var group_a = GUI.Scrollbox.New("sb.regions"u8, size: GUI.Rm, padding: new(6)))
+									{
+										group_a.group_frame.DrawBackground(GUI.tex_window, inner: true);
+
+										const bool enable_quick_start = false;
+										if (enable_quick_start)
+										{
+											using (var group_top = GUI.Group.New(size: new(GUI.RmX, 32)))
+											{
+												GUI.TitleCentered("Quick Start"u8, size: 32, pivot: new(0.00f, 0.50f), offset: new(4, 0));
+											}
+
+											GUI.SeparatorThick();
+
+											using (GUI.ID<IntroGUI>.Push("ps.industrialized"u8))
+											using (var group_playstyle = GUI.Group.New(size: new(GUI.RmX, 80), padding: new(4)))
+											{
+												group_playstyle.DrawBackground(GUI.tex_window);
+
+												if (GUI.DrawIconButton("btn.test"u8, sprite: new("specialization_icons", 32, 32, 0, 0), size: new(GUI.RmY)))
+												{
+												}
+
+												GUI.SameLine();
+
+												using (var group_text = GUI.Group.New(size: GUI.Rm.SubY(24), padding: new(2)))
+												{
+													GUI.Title("Industrialized"u8, size: 24);
+													GUI.TextShaded("- <TODO>"u8);
+													GUI.TextShaded("- Fewer natural resources and wildlife"u8);
+												}
+												//GUI.TitleCentered("Builder"u8, size: 24, pivot: new(0.00f, 0.00f), offset: new(2));
+											}
+
+											using (GUI.ID<IntroGUI>.Push("ps.frontier"u8))
+											using (var group_playstyle = GUI.Group.New(size: new(GUI.RmX, 80), padding: new(4)))
+											{
+												group_playstyle.DrawBackground(GUI.tex_window);
+
+												if (GUI.DrawIconButton("btn.test"u8, sprite: new("specialization_icons", 32, 32, 0, 0), size: new(GUI.RmY)))
+												{
+												}
+
+												GUI.SameLine();
+
+												using (var group_text = GUI.Group.New(size: GUI.Rm.SubY(24), padding: new(2)))
+												{
+													GUI.Title("Frontier"u8, size: 24);
+													GUI.TextShaded("- <TODO>"u8);
+												}
+												//GUI.TitleCentered("Builder"u8, size: 24, pivot: new(0.00f, 0.00f), offset: new(2));
+											}
+										}
+
+										if (true)
+										{
+											ref var mod_context = ref App.GetModContext();
+											ref var world_info = ref Client.GetWorldInfo();
+
+											for (var i = 1u; i < Region.max_count; i++)
+											{
+												ref var map_info = ref World.GetMapInfo((byte)i);
+												if (map_info.IsNotNull())
+												{
+													var h_location = map_info.h_location;
+													ref var location_data = ref h_location.GetData();
+													if (location_data.IsNotNull())
+													{
+														using (var group_row = GUI.Group.New(size: new(GUI.RmX, 64)))
+														{
+															if (group_row.IsVisible())
+															{
+																//var h_location = map_info.h_location;
+																//ref var location_data = ref h_location.GetData();
+
+																var ent_location = h_location.GetGlobalEntity();
+																var map_identifier = world_info.regions[i];
+
+																var player_count = (byte)0;
+
+																ref var site = ref ent_location.GetComponent<Site.Data>();
+																if (site.IsNotNull())
+																{
+																	player_count = site.player_count;
+																}
+
+																//var map_asset = mod_context.GetMap(map_identifier);
+																//if (map_asset != null)
+																//{
+																//	var tex_thumbnail = map_asset.GetThumbnail();
+																//	if (tex_thumbnail != null)
+																//	{
+																//		GUI.DrawTexture(tex_thumbnail.Identifier, rect_icon, GUI.Layer.Window, color: color_thumbnail.WithAlphaMult(alpha));
+																//	}
+
+																//	GUI.DrawBackground(GUI.tex_frame_white, rect_icon, padding: new(2), color: color_frame.WithAlphaMult(alpha));
+																//}
+
+																using (GUI.ID<Region.Info, IMap.Info>.Push(i))
+																{
+																	var is_selected = WorldMap.interacted_entity_cached == ent_location;
+																	var contains = WorldMap.hs_selected_entities.Contains(ent_location);
+																	var is_selectable = WorldMap.CanPlayerControlUnit(ent_location, Client.GetPlayerHandle());
+
+																	using (GUI.Alpha.Push(GUI.GetEnabledAlpha(is_selectable)))
+																	//using (GUI.Disabled.Push(true, !is_selectable))
+																	{
+																		group_row.DrawBackground(GUI.tex_panel);
+
+																		using (var group_thumbnail = GUI.Group.New(size: new(GUI.RmY)))
+																		{
+																			GUI.DrawMapThumbnail(h_location, size: GUI.Rm, show_frame: false);
+																			GUI.DrawBackground(GUI.tex_frame_white, rect: group_thumbnail.GetOuterRect(), padding: new(4), color: GUI.col_button);
+																		}
+
+																		GUI.SameLine();
+
+																		using (var group_info = GUI.Group.New(size: GUI.Rm, padding: new(4, 2)))
+																		{
+																			//group_info.DrawBackground(GUI.tex_slot_simple);
+
+																			//GUI.TitleCentered(map_info.name, size: 24, pivot: new(0.00f, 0.00f), offset: new(4, 2));
+
+																			using (var group_title = GUI.Group.New(size: new(GUI.RmX, 24)))
+																			{
+																				//GUI.Title(map_info.name, size: 24);
+																				GUI.TitleCentered(map_info.name, size: 24, pivot: new(0.00f, 0.50f));
+																				//GUI.TextShadedCentered("derp"u8, pivot: new(1.00f, 0.50f));
+																				GUI.TextShadedCentered(player_count, format: "'Players: '0", font: GUI.Font.Superstar, size: 16, pivot: new(1.00f, 0.50f));
+
+																			}
+
+																			GUI.SeparatorThick();
+
+																			//GUI.TextShadedCentered(location_data.h_prefecture.GetShortName(), pivot: new(0.00f, 1.00f), offset: new(2, -2));
+																			//GUI.NewLine();
+
+																			using (var group_bottom = GUI.Group.New(size: GUI.Rm))
+																			{
+																				if (GUI.DrawButton("Join"u8, size: new(64, GUI.RmY), color: GUI.col_button_ok))
+																				{
+
+																				}
+
+																				GUI.SameLine();
+
+																				using (var group_left = GUI.Group.New(size: GUI.Rm, padding: new(3)))
+																				{
+																					//GUI.LabelShaded("Players:"u8, player_count, font_a: GUI.Font.Superstar, font_b: GUI.Font.Superstar, size_a: 16, size_b: 16, width: 80);
+																					//GUI.LabelShaded("Players:"u8, player_count * 16, width: 72);
+																					GUI.LabelShaded("Hazard:"u8, player_count, width: 72);
+																				}
+
+																				
+
+																				//if (GUI.DrawButton("Join"u8, size: new(64, GUI.RmY), color: GUI.col_button_ok))
+																				//{
+
+																				//}
+																			}
+
+																			//using (GUI.Wrap.Push(GUI.RmX))
+																			//{
+																			//	//GUI.TextShadedCentered(location_data.desc, pivot: new(0.00f, 1.00f), offset: new(2, -2));
+																			//	GUI.TextShaded(location_data.desc);
+																			//}
+																		}
+
+
+
+																		//var ent_parent = entity.GetParent(Relation.Type.Child);
+																		//if (ent_parent.IsValid() && ent_parent.TryGetAssetName(out var name_parent))
+																		//{
+																		//	GUI.TextShadedCentered(name_parent, size: 14, pivot: new(0.00f, 1.00f), color: GUI.font_color_desc);
+																		//}
+																		//else
+																		//{
+																		//	//GUI.TextShadedCentered(entity.GetFaction().GetName(), size: 14, pivot: new(0.00f, 1.00f), color: GUI.font_color_desc);
+																		//}
+
+																		if (GUI.Selectable3(ent_location.GetShortID(), group_row.GetOuterRect(), is_selected || contains, is_readonly: !is_selectable))
+																		{
+																			var result = WorldMap.SelectUnitBehavior(ent_location, WorldMap.SelectUnitMode.Single, WorldMap.SelectUnitFlags.Multiselect | WorldMap.SelectUnitFlags.Hold_Shift | WorldMap.SelectUnitFlags.Toggle, selected: is_selected);
+																			if (result.HasAny(WorldMap.SelectUnitResults.Changed))
+																			{
+																				if (result.HasAny(WorldMap.SelectUnitResults.Removed))
+																				{
+																					WorldMap.interacted_entity = default;
+																				}
+																				else
+																				{
+																					WorldMap.interacted_entity.Toggle(ent_location, true);
+																					WorldMap.FocusEntity(ent_location, interact: false);
+																				}
+																			}
+
+																			if (WorldMap.interacted_entity_cached == ent_location && (ent_location.TryGetAsset(out ILocation.Definition location_asset))) // || ent_parent.TryGetAsset(out location_asset)))
+																			{
+																				WorldMap.h_selected_location = location_asset;
+																			}
+																			else
+																			{
+																				WorldMap.h_selected_location = default;
+																			}
+																		}
+																	}
+
+																	if (GUI.IsItemHovered())
+																	{
+																		if (GUI.GetMouse().GetKeyDown(Mouse.Key.Right))
+																		{
+																			WorldMap.FocusEntity(ent_location, interact: false);
+																		}
+																		GUI.DrawEntityMarker(ent_location, cross_size: 0.125f, layer: GUI.Layer.Foreground);
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+
+
+								}
 							}
 						}
 					}
@@ -185,17 +379,19 @@ namespace TC2.Conquest
 		[ISystem.GUI(ISystem.Mode.Single, ISystem.Scope.Global)]
 		public static void OnIntroGUI(ISystem.Info.Global info, ref Region.Data.Global region, [Source.Owned] ref World.Global world)
 		{
-			ref var player_data = ref Client.GetPlayerData(out var player_asset);
-			if (player_data.IsNotNull())
+			//return;
+
+			//ref var player_data = ref Client.GetPlayerData(out var player_asset);
+			//if (player_data.IsNotNull())
 			{
-				var h_character = player_data.h_character_main;
-				var h_character_current = Client.GetCharacterHandle();
+				//var h_character = player_data.h_character_main;
+				//var h_character_current = Client.GetCharacterHandle();
 
 				//Conquest.IntroGUI.hide = false;
-				if (!Conquest.IntroGUI.hide)
+				//if (!Conquest.IntroGUI.hide)
 				{
 					var gui = new Conquest.IntroGUI();
-					gui.Draw();
+					gui.Submit();
 				}
 			}
 		}
