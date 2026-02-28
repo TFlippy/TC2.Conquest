@@ -11,7 +11,7 @@ namespace TC2.Conquest
 
 			public void Draw()
 			{
-				var size = new Vector2(48 * 16, 48 * 12);
+				var size = new Vector2(24 * 33, 48 * 12);
 
 				//using (var window = GUI.Window.Standalone("Intro"u8, size: size,
 				//position: new(GUI.CanvasSize.X * 0.50f, 96), pivot: new(0.50f, 0.00f), force_position: false))
@@ -62,9 +62,14 @@ namespace TC2.Conquest
 
 							GUI.SameLine();
 
-							using (var group_header = GUI.Group.New(size: new(GUI.RmX, 64), padding: new(4)))
+							using (var group_header = GUI.Group.New(size: new(GUI.RmX, 64), padding: new(8, 4)))
 							{
 								group_header.DrawBackground(GUI.tex_window);
+
+								if (GUI.DrawDiscordButton("btn.discord"u8, "SdRrPGbp2G", size: new(64, GUI.RmY), scale: 2))
+								{
+
+								}
 
 								//if (GUI.DrawButton("DEV: Hide"u8, size: new(96, 40)))
 								//{
@@ -82,9 +87,9 @@ namespace TC2.Conquest
 
 								//GUI.DrawSprite("ui_logo_title");
 
-								using (var group_l = GUI.Group.New(size: new(GUI.RmX * 0.50f, GUI.RmY)))
+								using (var group_l = GUI.Group.New(size: new(GUI.RmX * 0.52f, GUI.RmY)))
 								{
-									using (var group_a = GUI.Group.New(size: new(GUI.RmX, 256), padding: new(4)))
+									using (var group_a = GUI.Group.New(size: new(GUI.RmX, 48 * 7), padding: new(4)))
 									{
 										group_a.DrawBackground(GUI.tex_window_widget);
 
@@ -100,34 +105,44 @@ namespace TC2.Conquest
 										{
 											if (true)
 											{
-												GUI.Title("Introduction"u8, size: 24);
-												//GUI.TextShaded("- <TODO: >"u8);
-
-												GUI.Title("Getting Started"u8, size: 16);
-												GUI.TextShaded("- <TODO: >"u8);
-
-												GUI.NewLine(4);
-
-												GUI.Title("Regions"u8, size: 16);
-												GUI.TextShaded("- <TODO: multiple regions with entrances on worldmap>"u8);
-												GUI.TextShaded("\t- <TODO: entrances link places in regions to worldmap>"u8);
-												GUI.TextShaded("\t- <TODO: how to enter a region>"u8);
-
-												GUI.TextShaded("- <TODO: >"u8);
-
-												if (true) // if multiplayer
+												using (GUI.Wrap.Push(GUI.RmX))
 												{
-													GUI.TextShaded("- "u8);
-												}
-												else
-												{
-													GUI.TextShaded("- "u8);
-												}
+													GUI.Title("Introduction"u8, size: 24);
+													//GUI.TextShaded("- <TODO: >"u8);
 
-												GUI.Separator(spacing: 8);
+													GUI.Title("Getting Started"u8, size: 16);
+													GUI.TextShaded("- Consider joining a faction, and feel free to ask others for help!"u8);
+													GUI.TextShaded("- You can enter a region immediately and play as a random character."u8);
+													GUI.TextShaded("- Create a character by pressing \"New Main Character\" in the top menu."u8);
+													GUI.TextShaded("- Move your character to one of a region's checkpoint icons to enter the region."u8);
 
-												//GUI.TextShaded("- Select your starting region"u8);
-												//GUI.DrawHoverTooltip("Either in the menu on the left side of your screen, or directly on the World Map (orange symbol)."u8);
+													GUI.NewLine(4);
+
+													GUI.Title("Regions"u8, size: 16);
+													GUI.TextShaded("- All regions contain different resources and challenges."u8);
+													GUI.TextShaded("- Start new factions, mass-produce stupidly powerful weapons, build a mining and processing company, expand your territory!"u8);
+
+													GUI.NewLine(4);
+
+													GUI.Title("Basic Gameplay"u8, size: 16);
+													GUI.TextShaded("- To build, equip a wrench for access to the build menu."u8);
+													GUI.TextShaded("- Press E on buildings to interact with them."u8);
+													GUI.TextShaded("- Beware of NPCs and players, for death is quick and violence is plenty."u8);
+
+													//if (true) // if multiplayer
+													//{
+													//	GUI.TextShaded("- "u8);
+													//}
+													//else
+													//{
+													//	GUI.TextShaded("- "u8);
+													//}
+
+													//GUI.Separator(spacing: 8);
+
+													//GUI.TextShaded("- Select your starting region"u8);
+													//GUI.DrawHoverTooltip("Either in the menu on the left side of your screen, or directly on the World Map (orange symbol)."u8);
+												}
 											}
 											else if (scenario_data.IsNotNull())
 											{
@@ -316,9 +331,17 @@ namespace TC2.Conquest
 																				}
 																				else
 																				{
+																					//widget.SetActive(false);
+
 																					if (GUI.DrawButton("Join"u8, size: new(64, GUI.RmY), error: is_loading, color: GUI.col_button_ok))
 																					{
-																						Client.RequestSetActiveRegion((byte)region_id, delay_seconds: 0.50f);
+																						Client.RequestSetActiveRegion((byte)region_id, delay_seconds: 0.50f).ContinueWith(async (x) =>
+																						{
+																							await App.WaitRender();
+																							GUI.RegionMenu.ToggleWidget(false);
+																							widget.SetActive(false);
+
+																						});
 																					}
 																				}
 

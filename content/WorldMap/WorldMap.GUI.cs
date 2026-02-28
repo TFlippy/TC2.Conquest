@@ -1765,10 +1765,20 @@ namespace TC2.Conquest
 
 						GUI.SeparatorThick();
 
-						using (var group = GUI.Group.New(size: GUI.Rm, padding: new(6)))
+						using (var group_airships = GUI.Group.New(size: GUI.Rm, padding: new(4)))
 						{
-							group.DrawBackground(GUI.tex_frame);
+							group_airships.DrawBackground(GUI.tex_frame);
+
+							if (region.IsNotNull())
+							{
+								region.RunSystem(WorldMap.Airship.System_Fetch);
+							}
 						}
+
+						//using (var group = GUI.Group.New(size: GUI.Rm, padding: new(6)))
+						//{
+						//	group.DrawBackground(GUI.tex_frame);
+						//}
 					}
 					//}
 				}

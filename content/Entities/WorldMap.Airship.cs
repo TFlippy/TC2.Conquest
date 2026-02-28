@@ -56,7 +56,7 @@ namespace TC2.Conquest
 
 #if CLIENT
 					using (var id = GUI.ID<WorldMap.Airship.Data>.Push(entity))
-					using (var group = GUI.Group.New(size: new(GUI.RmX, 80)))
+					using (var group = GUI.Group.New(size: new(GUI.RmX, 64)))
 					{
 						group.DrawBackground(GUI.tex_window);
 						var is_selected = WorldMap.interacted_entity == entity;
@@ -80,19 +80,22 @@ namespace TC2.Conquest
 								GUI.TitleCentered(entity.GetName(), size: 24, pivot: new(0.00f, 1.00f));
 								if (location_airship_data.IsNotNull())
 								{
-									GUI.TextShadedCentered(location_airship_data.type.ToStringUtf8(), pivot: new(1.00f, 0.50f), offset: new(-6, 0));
+									//GUI.TextShadedCentered(location_airship_data.type.ToStringUtf8(), pivot: new(1.00f, 0.50f), offset: new(-6, 0));
 								}
 							}
 
 							GUI.SeparatorThick();
 
-							if (airship.h_location_docked)
+							using (GUI.Wrap.Push(GUI.RmX))
 							{
-								GUI.Title($"Docked at {airship.h_location_docked.GetShortName()}");
-							}
-							else
-							{
-								GUI.Title($"Flying to {airship.h_location_target.GetShortName()}");
+								if (airship.h_location_docked)
+								{
+									GUI.Title($"Docked at {airship.h_location_docked.GetShortName()}");
+								}
+								else
+								{
+									GUI.Title($"Flying to {airship.h_location_target.GetShortName()}");
+								}
 							}
 							//GUI.LabelShaded("")
 						}
