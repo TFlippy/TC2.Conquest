@@ -39,6 +39,9 @@ namespace TC2.Conquest
 			public const bool enable_pins = false;
 			public const bool enable_interact = true;
 
+			public static Vec2f pos_cached_interact;
+			public static Vec2f pos_cached_pickup;
+
 			public void Draw()
 			{
 				ref var region_common = ref Client.GetRegionCommon();
@@ -51,8 +54,11 @@ namespace TC2.Conquest
 				//ref var character = ref region.GetCharacter(h_character);
 				//if (character.IsNotNull())
 				{
+					var window_size_base = new Vec2f((24 * 9) + 14, 48 * 10);
+
 					using (var window = GUI.Window.Standalone("sidemenu"u8, position: new(GUI.CanvasSize.X - 8, 36),
-					pivot: new(1.00f, 0.00f), size: new((24 * 9) + 14, 48 * 10), padding: new(8)))
+					pivot: new(1.00f, 0.00f), size: window_size_base, size_min: window_size_base.WithY(136), size_max: window_size_base.WithY(512), padding: new(8), flags: GUI.Window.Flags.Resizable))
+					//pivot: new(1.00f, 0.00f), size: window_size_base, padding: new(8), flags: GUI.Window.Flags.Resizable))
 					{
 						if (window.show)
 						{
@@ -73,6 +79,20 @@ namespace TC2.Conquest
 							//}
 
 							//GUI.SeparatorThick();
+
+							ref var region = ref region_common.AsRegion();
+							ref var character = ref region.GetCharacter(h_character, out var ent_character);
+							if (character.IsNotNull())
+							{
+								pos_cached_interact.UpdateCachedPosition(character.world_position, 0.50f);
+								pos_cached_pickup.UpdateCachedPosition(character.world_position, 0.50f);
+							}
+
+							if (region.IsNotNull())
+							{
+								GUI.DrawPoint(region.WorldToCanvas(pos_cached_interact), color: Color32BGRA.Cyan, layer: GUI.Layer.Foreground);
+								GUI.DrawPoint(region.WorldToCanvas(pos_cached_pickup), color: Color32BGRA.Yellow, layer: GUI.Layer.Foreground);
+							}
 
 							using (var scrollbox = GUI.Scrollbox.New("sidemenu.scroll"u8, size: GUI.Rm))
 							{
@@ -254,14 +274,14 @@ namespace TC2.Conquest
 										{
 											using (var group_interactables = GUI.Group.New(size: new(GUI.RmX, 0)))
 											{
-												ref var region = ref region_common.AsRegion();
+												//ref var region = ref region_common.AsRegion();
 												if (region.IsNotNull())
 												{
-													ref var character = ref region.GetCharacter(h_character, out var ent_character);
+													//ref var character = ref region.GetCharacter(h_character, out var ent_character);
 													if (character.IsNotNull())
 													{
 														var results_span = FixedArray.CreateSpan32NoInit<OverlapResult>(out var results_buffer);
-														if (region.TryOverlapPointAll(world_position: character.world_position.Snap(1.00f), radius: Interactor.c_max_distance,
+														if (region.TryOverlapPointAll(world_position: pos_cached_interact, radius: Interactor.c_max_distance,
 														hits: ref results_span, mask: Physics.Layer.Interactable, exclude: Physics.Layer.Ignore_Hover))
 														{
 															results_span.Sort(static (a, b) => a.entity.lower.CompareToFast(b.entity.lower));
@@ -269,7 +289,7 @@ namespace TC2.Conquest
 															var ent_controlled = character.ent_controlled;
 															var ent_prev = Entity.None;
 
-															foreach (var result in results_span)
+															foreach (ref var result in results_span)
 															{
 																//ref var faction = ref ent_squad.GetComponent<Faction.Data>();
 																//if (faction.IsNotNull() && faction.id == player.faction_id)
@@ -290,10 +310,11 @@ namespace TC2.Conquest
 																	//group_row.DrawBackground(GUI.tex_panel);
 																	//GUI.TitleCentered(ent_result.GetName(), pivot: new(0.00f, 0.50f), offset: new(6, 0));
 
-																	group_row.DrawBackground(GUI.tex_slot_simple);
-																	GUI.DrawEntityIcon(ent_result);
-
 																	var selected = ent_result == Interactable.GetCurrentTarget();
+																	group_row.DrawBackground(selected ? GUI.tex_slot_white_hover : GUI.tex_slot_white, color: GUI.col_frame);
+																	//group_row.DrawBackground(GUI.tex_slot_simple);
+																	GUI.DrawEntityIcon(ent_result, draw_tooltip: false);
+
 																	if (GUI.Selectable3("select"u8, group_row.GetOuterRect(), selected: selected))
 																	{
 																		if (selected)
@@ -315,12 +336,206 @@ namespace TC2.Conquest
 																	}
 																}
 
-																if (GUI.IsItemHovered())
+																if (GUI.IsItemHovered(out var rect_hovered))
 																{
-																	using (var tooltip = GUI.Tooltip.New(pivot: new(1.00f, 0.125f), offset: new(-16, 0)))
+																	using (var tooltip = GUI.Tooltip.New(rect: rect_hovered, anchor: GUI.Anchor.Left, pivot: new(0.50f, 0.50f), size: new(0, 0), offset: new(0, 0)))
 																	{
-																		GUI.HighlightEntity(ent_result, color: GUI.col_button_yellow.WithAlpha(128), layer: GUI.Layer.Background);
-																		GUI.DrawEntityMarker(ent_result);
+																		var has_inventories = false;
+																		var inventories = ent_result.GetInventories();
+																		using (var group_inventories = GUI.Group.New(size: new(0, 0)))
+																		{
+																			foreach (var h_inventory in inventories)
+																			{
+																				if (!h_inventory.Flags.HasAny(Inventory.Flags.Hidden))
+																				{
+																					if (has_inventories) GUI.NewLine(8);
+																					has_inventories = true;
+
+																					GUI.DrawSmallInventory(h_inventory, is_readonly: true, text_color: GUI.font_color_default, icon_color: Color32BGRA.White);
+																				}
+																			}
+																		}
+
+																		if (has_inventories)
+																		{
+																			GUI.SameLine(8);
+																		}
+
+																		using (var group_info = GUI.Group.New(size: new(48 * 4, 0)))
+																		using (GUI.Wrap.Push(GUI.RmX))
+																		{
+																			if (ent_result.TryGetPrefab(out var prefab))
+																			{
+																				var root = prefab.root;
+																				if (root is not null)
+																				{
+																					GUI.TextShaded(root.Name.OrDefault(prefab.GetName));
+																					GUI.TextShaded(root.Description, color: GUI.font_color_default.WithColorMult(0.75f));
+																				}
+																			}
+
+																			GUI.HighlightEntity(ent_result, color: GUI.col_button_yellow.WithAlpha(128), layer: GUI.Layer.Background);
+																			GUI.DrawEntityMarker(ent_result);
+																		}
+																		
+
+																		//GUI.Title(ent_result.GetName());
+																	}
+																}
+
+																// to avoid duplicates on entities that have more than 1 shape
+																ent_prev = ent_result;
+																//}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+
+								if (true)
+								{
+									using (var collapsible = GUI.Collapsible2.New("col.pickups"u8, size: new(GUI.RmX, 32), default_open: true))
+									{
+										GUI.TitleCentered("Nearby Items"u8, size: 24, pivot: new(0.00f, 0.50f));
+
+										if (collapsible.Inner())
+										{
+											using (var group_pickups = GUI.Group.New(size: new(GUI.RmX, 0)))
+											{
+												//ref var region = ref region_common.AsRegion();
+												if (region.IsNotNull())
+												{
+													//ref var character = ref region.GetCharacter(h_character, out var ent_character);
+													if (character.IsNotNull())
+													{
+														var max_pickup_distance = 2.00f;
+														var results_span = FixedArray.CreateSpan32NoInit<OverlapResult>(out var results_buffer);
+														if (region.TryOverlapPointAll(world_position: pos_cached_pickup, radius: max_pickup_distance,
+														hits: ref results_span, require: Physics.Layer.Dynamic | Physics.Layer.Holdable, 
+														mask: Physics.Layer.Item | Physics.Layer.Resource | Physics.Layer.Furniture | Physics.Layer.Holdable, 
+														exclude: Physics.Layer.Ignore_Hover | Physics.Layer.Stored | Physics.Layer.Static | Physics.Layer.World | Physics.Layer.Attached | Physics.Layer.Zone | Physics.Layer.Bounds | Physics.Layer.Gas | Physics.Layer.Fire | Physics.Layer.Water))
+														{
+															results_span.Sort(static (a, b) => a.entity.lower.CompareToFast(b.entity.lower));
+															//results_span.SortByDistance();
+															var ent_controlled = character.ent_controlled;
+															var ent_prev = Entity.None;
+															var ent_pickup = character.ent_pickup;
+															var ent_pickup_target = character.ent_pickup_target;
+
+															foreach (ref var result in results_span)
+															{
+																//ref var faction = ref ent_squad.GetComponent<Faction.Data>();
+																//if (faction.IsNotNull() && faction.id == player.faction_id)
+																//{
+
+																var ent_result = result.entity;
+																if (ent_result == ent_controlled) continue;
+																if (ent_result == ent_prev) continue;
+
+																var ent_result_parent = result.entity_parent;
+																if (ent_result_parent != 0 && ent_result != ent_pickup_target) continue;
+
+																const float slot_size = 48.00f;
+
+																GUI.TrySameLine(slot_size);
+
+																using (var push_id = GUI.ID<Holdable.Data, Selection.Data>.Push(ent_result))
+																//using (var group_row = GUI.Group.New(new Vector2(GUI.RmX, 24)))
+																using (var group_row = GUI.Group.New(new Vector2(slot_size)))
+																{
+																	//group_row.DrawBackground(GUI.tex_panel);
+																	//GUI.TitleCentered(ent_result.GetName(), pivot: new(0.00f, 0.50f), offset: new(6, 0));
+
+																	var h_material = result.GetMaterialHandle();
+																	ref var material_data = ref h_material.GetData();
+
+																	var selected = ent_result == ent_pickup_target; // Interactable.GetCurrentTarget();
+
+																	//group_row.DrawBackground(selected ? GUI.tex_slot_white_hover : GUI.tex_slot_white, color: selected ? GUI.col_button_ok : GUI.col_frame);
+																	group_row.DrawBackground(selected ? GUI.tex_slot_white_hover : GUI.tex_slot_white, color: GUI.col_frame);
+																	GUI.DrawEntityIcon(ent_result, draw_tooltip: false);
+
+																	if (GUI.Selectable3("select"u8, group_row.GetOuterRect(), selected: selected))
+																	{
+																		if (selected)
+																		{
+																			Arm.SendDrop(ent_parent: ent_pickup, direction: default);
+																		}
+																		else
+																		{
+																			if (ent_pickup_target != 0)
+																			{
+																				Arm.SendDrop(ent_parent: ent_pickup, ent_target: ent_result, direction: default);
+																				//Inventory.send
+																				Arm.SendPickup(ent_parent: ent_pickup, ent_target: ent_result, local_position: default, drop_held: true);
+
+																				//Arm.SendDrop(ent_parent: ent_pickup, ent_target: ent_result, direction: default)
+																				//	.ContinueWith(() => Arm.SendPickup(ent_parent: ent_pickup, ent_target: ent_result, local_position: default, drop_held: true));
+																			}
+																			else
+																			{
+																				Arm.SendPickup(ent_parent: ent_pickup, ent_target: ent_result, local_position: default, drop_held: true);
+																			}
+																		}
+
+																		//var rpc = new Selection.SelectSquadRPC()
+																		//{
+																		//	ent_squad = ent_squad
+																		//};
+																		//rpc.Send(this.ent_selection);
+
+																		//dropdown.Close();
+																	}
+																}
+
+																if (GUI.IsItemHovered(out var rect_hovered))
+																{
+																	using (var tooltip = GUI.Tooltip.New(rect: rect_hovered, anchor: GUI.Anchor.Left, pivot: new(0.50f, 0.50f), size: new(0, 0), offset: new(0, 0)))
+																	{
+																		var has_inventories = false;
+																		if (result.layer.HasNone(Physics.Layer.Resource))
+																		{
+																			var inventories = ent_result.GetInventories();
+																			using (var group_inventories = GUI.Group.New(size: new(0, 0)))
+																			{
+																				foreach (var h_inventory in inventories)
+																				{
+																					if (!h_inventory.Flags.HasAny(Inventory.Flags.Hidden))
+																					{
+																						if (has_inventories) GUI.NewLine(8);
+																						has_inventories = true;
+
+																						GUI.DrawSmallInventory(h_inventory, is_readonly: true, text_color: GUI.font_color_default, icon_color: Color32BGRA.White);
+																					}
+																				}
+																			}
+
+																			if (has_inventories)
+																			{
+																				GUI.SameLine(8);
+																			}
+																		}
+
+																		using (var group_info = GUI.Group.New(size: new(48 * 4, 0)))
+																		using (GUI.Wrap.Push(GUI.RmX))
+																		{
+																			if (ent_result.TryGetPrefab(out var prefab))
+																			{
+																				var root = prefab.root;
+																				if (root is not null)
+																				{
+																					GUI.TextShaded(root.Name.OrDefault(prefab.GetName));
+																					GUI.TextShaded(root.Description, color: GUI.font_color_default.WithColorMult(0.75f));
+																				}
+																			}
+
+																			GUI.HighlightEntity(ent_result, color: GUI.col_button_yellow.WithAlpha(128), layer: GUI.Layer.Background);
+																			GUI.DrawEntityMarker(ent_result);
+																		}
+
 
 																		//GUI.Title(ent_result.GetName());
 																	}
