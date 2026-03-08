@@ -1,15 +1,14 @@
 ﻿{
-	$version: "0.1.62.0"
+	$version: "0.1.70.1"
 	name: "Machine Pistol"
 	desc:
 		'''
 		TODO: Desc
 		'''
 	
-	flags: selectable
+	flags: custom, selectable
 	slot: secondary
 	categories: weapon, gun, short_range, small, fancy
-	faction: "null"
 	species: human
 	
 	character_flags:
@@ -43,6 +42,7 @@
 			null
 			null
 		]
+		
 		flags: unpack
 	}
 }

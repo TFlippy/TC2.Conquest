@@ -22,7 +22,7 @@ namespace TC2.Conquest
 
 				using (var widget = Sidebar.Widget.New(identifier: "intro", name: "Overview",
 				icon: new Sprite(GUI.tex_icons_widget, 16, 16, 13, 3), size: size,
-				enabled: true, lockable: false, order: 10000.00f, flags: Sidebar.Widget.Flags.Open_Centered | Sidebar.Widget.Flags.No_Collapse | Sidebar.Widget.Flags.Starts_Open))
+				enabled: true, lockable: false, order: 1000.00f, flags: Sidebar.Widget.Flags.Open_Centered | Sidebar.Widget.Flags.No_Collapse | Sidebar.Widget.Flags.Starts_Open))
 				{
 					ref readonly var kb = ref Control.GetKeyboard();
 					if (kb.GetKeyDown(Keyboard.Key.Tab))

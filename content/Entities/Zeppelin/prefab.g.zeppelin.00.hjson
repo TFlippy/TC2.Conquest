@@ -121,7 +121,7 @@ worldmap.enterable:
 worldmap.marker:
 {
 	flags: directional
-	radius: 0.250
+	radius: 0.500
 	scale: 0.500
 	color: "0xc0ffffff"
 	text_offset: [0.000, 0.125]

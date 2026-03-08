@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.62.5"
+	$version: "0.1.70.1"
 	name: "Pocket Breechloader"
 	desc:
 		'''
@@ -8,14 +8,13 @@
 	
 	flags: selectable
 	slot: secondary
-	categories: weapon, junk, gun, short_range, weak, inaccurate, small, cheap, civilian, slow
-	faction: "null"
+	categories: weapon, gun, short_range, weak, inaccurate, small, cheap, civilian, fast
 	species: human
 	
 	character_flags:
 	{
-		require: strong
-		include: criminal, farmer, civillian, insane, nomad, outdoor, junkie, evil, murderer
+		require: none
+		include: civillian
 		exclude: none
 		weight: 1.350
 	}

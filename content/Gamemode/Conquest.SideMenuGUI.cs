@@ -88,11 +88,11 @@ namespace TC2.Conquest
 								pos_cached_pickup.UpdateCachedPosition(character.world_position, 0.50f);
 							}
 
-							if (region.IsNotNull())
-							{
-								GUI.DrawPoint(region.WorldToCanvas(pos_cached_interact), color: Color32BGRA.Cyan, layer: GUI.Layer.Foreground);
-								GUI.DrawPoint(region.WorldToCanvas(pos_cached_pickup), color: Color32BGRA.Yellow, layer: GUI.Layer.Foreground);
-							}
+							//if (region.IsNotNull())
+							//{
+							//	GUI.DrawPoint(region.WorldToCanvas(pos_cached_interact), color: Color32BGRA.Cyan, layer: GUI.Layer.Foreground);
+							//	GUI.DrawPoint(region.WorldToCanvas(pos_cached_pickup), color: Color32BGRA.Yellow, layer: GUI.Layer.Foreground);
+							//}
 
 							using (var scrollbox = GUI.Scrollbox.New("sidemenu.scroll"u8, size: GUI.Rm))
 							{
@@ -415,8 +415,8 @@ namespace TC2.Conquest
 														var results_span = FixedArray.CreateSpan32NoInit<OverlapResult>(out var results_buffer);
 														if (region.TryOverlapPointAll(world_position: pos_cached_pickup, radius: max_pickup_distance,
 														hits: ref results_span, require: Physics.Layer.Dynamic | Physics.Layer.Holdable, 
-														mask: Physics.Layer.Item | Physics.Layer.Resource | Physics.Layer.Furniture | Physics.Layer.Holdable, 
-														exclude: Physics.Layer.Ignore_Hover | Physics.Layer.Stored | Physics.Layer.Static | Physics.Layer.World | Physics.Layer.Attached | Physics.Layer.Zone | Physics.Layer.Bounds | Physics.Layer.Gas | Physics.Layer.Fire | Physics.Layer.Water))
+														mask: Physics.Layer.Item | Physics.Layer.Resource | Physics.Layer.Furniture | Physics.Layer.Attachable | Physics.Layer.Wheel | Physics.Layer.Crate | Physics.Layer.Shipment | Physics.Layer.Decoration | Physics.Layer.Vehicle | Physics.Layer.Background,
+														exclude: Physics.Layer.Ignore_Hover | Physics.Layer.Stored | Physics.Layer.Static | Physics.Layer.World | Physics.Layer.Attached | Physics.Layer.Zone | Physics.Layer.Bounds | Physics.Layer.Gas | Physics.Layer.Fire | Physics.Layer.Water | Physics.Layer.Essence))
 														{
 															results_span.Sort(static (a, b) => a.entity.lower.CompareToFast(b.entity.lower));
 															//results_span.SortByDistance();
@@ -462,7 +462,15 @@ namespace TC2.Conquest
 																	{
 																		if (selected)
 																		{
-																			Arm.SendDrop(ent_parent: ent_pickup, direction: default);
+																			if (h_material && GUI.GetKeyboard().GetKey(Keyboard.Key.LeftShift))
+																			{
+																				var h_inventory = character.GetInventory();
+																				Inventory.SendDeposit(index: null, resource_ent: ent_result, storage_dst_ent: h_inventory.Entity, storage_dst_id: h_inventory.ID, amount: 50000.00f);
+																			}
+																			else
+																			{
+																				Arm.SendDrop(ent_parent: ent_pickup, direction: default);
+																			}
 																		}
 																		else
 																		{
@@ -470,14 +478,22 @@ namespace TC2.Conquest
 																			{
 																				Arm.SendDrop(ent_parent: ent_pickup, ent_target: ent_result, direction: default);
 																				//Inventory.send
-																				Arm.SendPickup(ent_parent: ent_pickup, ent_target: ent_result, local_position: default, drop_held: true);
+																				//Arm.SendPickup(ent_parent: ent_pickup, ent_target: ent_result, local_position: default, drop_held: true);
 
 																				//Arm.SendDrop(ent_parent: ent_pickup, ent_target: ent_result, direction: default)
 																				//	.ContinueWith(() => Arm.SendPickup(ent_parent: ent_pickup, ent_target: ent_result, local_position: default, drop_held: true));
 																			}
 																			else
 																			{
-																				Arm.SendPickup(ent_parent: ent_pickup, ent_target: ent_result, local_position: default, drop_held: true);
+																				if (h_material && GUI.GetKeyboard().GetKey(Keyboard.Key.LeftShift))
+																				{
+																					var h_inventory = character.GetInventory();
+																					Inventory.SendDeposit(index: null, resource_ent: ent_result, storage_dst_ent: h_inventory.Entity, storage_dst_id: h_inventory.ID, amount: 50000.00f);
+																				}
+																				else
+																				{
+																					Arm.SendPickup(ent_parent: ent_pickup, ent_target: ent_result, local_position: default, drop_held: true);
+																				}
 																			}
 																		}
 

@@ -189,16 +189,16 @@
 	{
 		handguns: 8
 		rifles: 4
-		explosives: 8
+		explosives: 7
 		mining: 4
 		woodcutting: 4
-		construction: 7
+		construction: 6
 		masonry: 2
 		carpentry: 2
 		engineering: 2
 		blacksmithing: 3
-		arcanology: 2
-		strength: 14
+		arcanology: 4
+		strength: 8
 		dexterity: 7
 		endurance: 9
 		intellect: 3
@@ -206,15 +206,15 @@
 		metallurgy: 2
 		medicine: 3
 		commerce: 2
-		charisma: 5
-		leadership: 3
+		charisma: 6
+		leadership: 1
 		blades: 9
 		axes: 7
 		clubs: 8
 		alchemistry: 2
 		farming: 3
-		animals: 6
-		scavenging: 11
-		law: 1
+		animals: 8
+		scavenging: 12
+		law: 3
 	}
 }

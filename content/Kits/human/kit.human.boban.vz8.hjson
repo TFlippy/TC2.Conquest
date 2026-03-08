@@ -1,11 +1,10 @@
 ﻿{
-	$version: "0.1.62.0"
+	$version: "0.1.70.1"
 	name: "Boban vz.8"
 	
 	flags: selectable
 	slot: utility
 	categories: weapon, dangerous, explosive, powerful, destructive, small, device
-	faction: "null"
 	species: human
 	
 	character_flags:
@@ -13,7 +12,7 @@
 		require: none
 		include: military, farmer, armed, technician, engineer, hunter, soldier, evil, terrorist, fanatic
 		exclude: none
-		weight: 0.800
+		weight: 0.400
 	}
 	
 	amount_multiplier_min: 1.000
@@ -35,6 +34,7 @@
 			null
 			null
 		]
+		
 		flags: allow_withdraw, allow_deposit, storable
 	}
 }

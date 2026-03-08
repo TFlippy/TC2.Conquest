@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.62.0"
+	$version: "0.1.70.1"
 	name: "Pistol"
 	desc:
 		'''
@@ -9,7 +9,6 @@
 	flags: selectable
 	slot: secondary
 	categories: weapon, gun, short_range, weak, small
-	faction: "null"
 	species: human
 	
 	character_flags:
@@ -17,7 +16,7 @@
 		require: none
 		include: bureaucrat, educated, professional, civillian, armed, law, social, commerce, rich, entertainer, artist, sedentary, politician, thief, lower_middle_class, middle_class, upper_middle_class
 		exclude: unarmed
-		weight: 0.900
+		weight: 0.600
 	}
 	
 	amount_multiplier_min: 1.000
@@ -43,6 +42,7 @@
 			null
 			null
 		]
+		
 		flags: unpack
 	}
 }

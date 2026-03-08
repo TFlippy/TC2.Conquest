@@ -1,0 +1,67 @@
+﻿{
+	$version: "0.1.68.2"
+	name: "Military Surplus"
+	
+	h_company: postus
+	
+	date_created: 0
+	
+	items:
+	[
+		{
+			type: resource
+			h_material: ammo.lc.lv
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: ammo.lc.hv
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: ammo.hc.lv
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: ammo.hc.hv
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: ammo.mg.lv
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: ammo.mg.hv
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: ammo.ac.lv
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: ammo.ac.hv
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: ammo.sg.bird
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: ammo.sg.buck
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: ammo.sg.slug
+			quantity: 0.000
+		}
+	]
+}

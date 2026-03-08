@@ -444,7 +444,8 @@ namespace TC2.Conquest
 				//props.hair_color.a = 255;
 
 				props.money = props.money.SnapCeil(11);
-				props.cooldown = (Maths.Pow(props.cost + Maths.Pow(props.money, 0.86f), 1.10f)).SnapCeil(60.00f * 5);
+				//props.cooldown = (Maths.Pow((props.cost * 0.50f) + Maths.Pow(props.money, 0.86f), 1.10f)).SnapCeil(60.00f * 3);
+				props.cooldown = (60.00f + Maths.Pow((props.cost) + Maths.Pow(props.money, 0.86f), 1.10f)).SnapCeil(60.00f * 3);
 			}
 		}
 
@@ -533,8 +534,8 @@ namespace TC2.Conquest
 			//public static IOrigin.Handle h_selected_origin;
 			//public static Organic.Gender selected_gender = Organic.Gender.Male;
 
-			public static CustomCharacter custom_character = new(h_location: "zeppelin.00", h_species: "human", h_origin: "human.adventurer", gender: Organic.Gender.Male, 
-				h_hair_male: "human.male.wings", h_hair_female: "human.female.updo", 
+			public static CustomCharacter custom_character = new(h_location: "zeppelin.00", h_species: "human", h_origin: "human.adventurer", gender: Organic.Gender.Male,
+				h_hair_male: "human.male.wings", h_hair_female: "human.female.updo",
 				h_beard_male: "human.male.beard.bartender", h_beard_female: default);
 
 			public static Sprite icons_gender = new Sprite("ui_icons_gender", 16, 16, 0, 0);
