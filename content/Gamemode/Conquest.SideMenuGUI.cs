@@ -187,57 +187,108 @@ namespace TC2.Conquest
 
 
 																	//if (!GUI.IsAnyTooltipVisible() && (is_selected || GUI.IsItemHovered()))
-																	if (GUI.IsItemHovered())
+																	if (GUI.IsItemHovered() || is_selected)
 																	{
-																		using (var tooltip = GUI.Tooltip.New(pos: GUI.GetLastItemRect().tl, pivot: new(1.00f, 0.00f), size: new(244.00f, 0.00f)))
-																		using (GUI.Wrap.Push(GUI.RmX))
+																		using (var tooltip = GUI.Tooltip.New(pos: GUI.GetLastItemRect().tl,
+																		pivot: new(1.00f, 0.00f), size: help_data.size.ToVec2f()))
 																		{
-																			GUI.Title(help_data.name);
-
-																			GUI.SeparatorThick(spacing: 2);
-
-																			GUI.NewLine(4);
-																			GUI.TextShaded(help_data.desc);
-
-																			var entries = help_data.entries.AsSpan();
-																			if (!entries.IsEmpty)
+																			using (var group_top = GUI.Group.New(size: new(GUI.RmX, 128)))
 																			{
-																				GUI.NewLine(4);
-
-																				var entry_index = 0;
-																				foreach (ref var entry in entries)
+																				ref var sprite = ref help_data.sprite;
+																				if (sprite.texture)
 																				{
-																					if (entry_index != 0)
+																					var sprite_scale = help_data.sprite_scale;
+																					using (var group_sprite = GUI.Group.New(size: sprite.size.ToVec2f() * sprite_scale))
 																					{
+																						var rect_sprite = GUI.GetRemainingRect(); // AABB.Simple(GUI.GetCursorScreenPos(), size: Maths.ScaleToWidth(GUI.Rm, width: GUI.RmX));
+																						GUI.DrawSpriteCentered(sprite: sprite, rect: rect_sprite, constrain: false,
+																						layer: GUI.Layer.Window, dummy: false, scale: sprite_scale);
+
+																						GUI.Draw9Slice(texture: GUI.tex_frame, padding: new(4), rect: rect_sprite);
+
+																						//GUI.DrawRect(rect_sprite, layer: GUI.Layer.Foreground);
+
+																						//GUI.SeparatorThick();
+																					}
+
+																					GUI.SameLine();
+
+																					using (var group_title = GUI.Group.New(size: GUI.Rm, padding: new(6, 2)))
+																					using (GUI.Wrap.Push(GUI.RmX))
+																					{
+																						GUI.Title(text: help_data.title.OrDefault(help_data.name), size: help_data.title_size);
+
+																						GUI.SeparatorThick(spacing: 2);
+
 																						GUI.NewLine(4);
+																						GUI.TextShaded(help_data.desc);
 																					}
-																					//else if (entry.flags.HasAny(IHelp.Entry.Flags.Newline))
-																					//{
-																					//	GUI.NewLine(4);
-																					//}
-
-																					if (entry.flags.HasAny(IHelp.Entry.Flags.Bullet))
-																					{
-																						if (entry.flags.HasAny(IHelp.Entry.Flags.Nested))
-																						{
-																							GUI.SameLine(10);
-																						}
-
-																						GUI.Text("-"u8, color: entry.color);
-																						GUI.SameLine(2);
-																					}
-																					//GUI.Text("- "u8);
-																					//GUI.SameLine();
-																					GUI.TextShaded(entry.text, color: entry.color);
-
-																					entry_index++;
 																				}
 																			}
-																			//GUI.DrawHoverTooltip(help_data.desc);
-																		}
-																	}
 
-																	GUI.FocusableAsset(asset);
+																			using (GUI.Wrap.Push(GUI.RmX))
+																			{
+																				//GUI.Title(help_data.name);
+
+																				//GUI.SeparatorThick(spacing: 2);
+
+																				//GUI.NewLine(4);
+																				//GUI.TextShaded(help_data.desc);
+
+
+
+
+																				var entries = help_data.entries.AsSpan();
+																				if (!entries.IsEmpty)
+																				{
+																					GUI.NewLine(4);
+
+																					var entry_index = 0;
+																					foreach (ref var entry in entries)
+																					{
+																						var entry_flags = entry.flags;
+																						if (entry_index != 0)
+																						{
+																							GUI.NewLine(4);
+																						}
+																						//else if (entry_flags.HasAny(IHelp.Entry.Flags.Newline))
+																						//{
+																						//	GUI.NewLine(4);
+																						//}
+
+																						if (entry_flags.HasAny(IHelp.Entry.Flags.Bullet))
+																						{
+																							if (entry_flags.HasAny(IHelp.Entry.Flags.Nested))
+																							{
+																								GUI.SameLine(10);
+																							}
+
+																							GUI.Text("-"u8, color: entry.color);
+																							GUI.SameLine(2);
+																						}
+																						//GUI.Text("- "u8);
+																						//GUI.SameLine();
+
+																						if (entry_flags.HasAny(IHelp.Entry.Flags.Bold))
+																						{
+																							GUI.TextShaded(text: entry.text, color: entry.color, font: GUI.Font.Superstar, size: 16);
+																						}
+																						else
+																						{
+																							GUI.TextShaded(text: entry.text, color: entry.color);
+																						}
+
+																						entry_index++;
+																					}
+																				}
+
+																				GUI.NewLine(4);
+																				//GUI.DrawHoverTooltip(help_data.desc);
+																			}
+																		}
+
+																		GUI.FocusableAsset(asset);
+																	}
 																}
 															}
 														}
@@ -377,7 +428,7 @@ namespace TC2.Conquest
 																			GUI.HighlightEntity(ent_result, color: GUI.col_button_yellow.WithAlpha(128), layer: GUI.Layer.Background);
 																			GUI.DrawEntityMarker(ent_result);
 																		}
-																		
+
 
 																		//GUI.Title(ent_result.GetName());
 																	}
@@ -414,7 +465,7 @@ namespace TC2.Conquest
 														var max_pickup_distance = 2.00f;
 														var results_span = FixedArray.CreateSpan32NoInit<OverlapResult>(out var results_buffer);
 														if (region.TryOverlapPointAll(world_position: pos_cached_pickup, radius: max_pickup_distance,
-														hits: ref results_span, require: Physics.Layer.Dynamic | Physics.Layer.Holdable, 
+														hits: ref results_span, require: Physics.Layer.Dynamic | Physics.Layer.Holdable,
 														mask: Physics.Layer.Item | Physics.Layer.Resource | Physics.Layer.Furniture | Physics.Layer.Attachable | Physics.Layer.Wheel | Physics.Layer.Crate | Physics.Layer.Shipment | Physics.Layer.Decoration | Physics.Layer.Vehicle | Physics.Layer.Background,
 														exclude: Physics.Layer.Ignore_Hover | Physics.Layer.Stored | Physics.Layer.Static | Physics.Layer.World | Physics.Layer.Attached | Physics.Layer.Zone | Physics.Layer.Bounds | Physics.Layer.Gas | Physics.Layer.Fire | Physics.Layer.Water | Physics.Layer.Essence))
 														{
