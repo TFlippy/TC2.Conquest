@@ -57,7 +57,8 @@ namespace TC2.Conquest
 					var window_size_base = new Vec2f((24 * 9) + 14, 48 * 10);
 
 					using (var window = GUI.Window.Standalone("sidemenu"u8, position: new(GUI.CanvasSize.X - 8, 36),
-					pivot: new(1.00f, 0.00f), size: window_size_base, size_min: window_size_base.WithY(136), size_max: window_size_base.WithY(512), padding: new(8), flags: GUI.Window.Flags.Resizable))
+					pivot: new(1.00f, 0.00f), size: window_size_base, size_min: window_size_base.WithY(136), size_max: window_size_base.WithY(512), 
+					padding: new(8), flags: GUI.Window.Flags.Resizable))
 					//pivot: new(1.00f, 0.00f), size: window_size_base, padding: new(8), flags: GUI.Window.Flags.Resizable))
 					{
 						if (window.show)
@@ -96,7 +97,7 @@ namespace TC2.Conquest
 
 							using (var scrollbox = GUI.Scrollbox.New("sidemenu.scroll"u8, size: GUI.Rm))
 							{
-								if (App.IsModEditing)
+								//if (App.IsModEditing)
 								{
 									using (var collapsible = GUI.Collapsible2.New("col.help"u8, size: new(GUI.RmX, 32), default_open: true))
 									{
@@ -112,15 +113,7 @@ namespace TC2.Conquest
 												//}
 												//GUI.FocusOnCtrlF();
 
-												//var assets = IHelp.Database.GetAssetsSpan();
 												var categories = IHelp.Database.GetAssets().GroupBy(x => x.data.category, StringComparer.Ordinal).OrderBy(x => x.Key);
-												//foreach (var asset in assets)
-
-												//var ts = Timestamp.Now();
-
-												//var categories = IHelp.category_to_handles;
-												//foreach (var (category, list) in categories.OrderBy(x => x.Key, StringComparer.Ordinal))
-												//foreach (var pair in categories.OrderBy(x => x.Key, StringComparer.Ordinal))
 												foreach (var pair in categories)
 												{
 													var category = pair.Key;
@@ -132,10 +125,13 @@ namespace TC2.Conquest
 
 														if (collapsible_category.Inner())
 														{
-															foreach (var asset in pair.OrderByDescending(x => x.data.order))
+															foreach (var asset in pair.OrderBy(x => x.data.order))
 															//foreach (var asset in assets)
 															{
 																ref var help_data = ref asset.GetData(out var h_help);
+																if (help_data.flags.HasAny(IHelp.Flags.Hidden)) continue;
+																//if (help_data.flags.HasAny(IHelp.Flags.Disabled)) continue;
+
 																//if (help_data.IsNull()) continue;
 
 																var is_visible = false;
@@ -153,7 +149,6 @@ namespace TC2.Conquest
 																		using (var group_icon = GUI.Group.New(size: new(GUI.RmY)))
 																		{
 																			group_icon.DrawBackground(GUI.tex_slot_filled);
-
 																		}
 
 																		GUI.SameLine(-4);
@@ -166,11 +161,9 @@ namespace TC2.Conquest
 																		}
 
 																		var row_rect = group_row.GetOuterRect();
-
 																		if (GUI.Selectable3(id: push_id.hash, rect: row_rect, selected: is_selected))
 																		{
 																			edit_h_selected.Toggle(h_help);
-																			//hs_selected_handles.Toggle(h_help);
 																		}
 																	}
 																}
@@ -187,103 +180,113 @@ namespace TC2.Conquest
 
 
 																	//if (!GUI.IsAnyTooltipVisible() && (is_selected || GUI.IsItemHovered()))
-																	if (GUI.IsItemHovered() || is_selected)
+																	if ((edit_h_selected == 0 && GUI.IsItemHovered()) || (edit_h_selected == h_help))
 																	{
-																		using (var tooltip = GUI.Tooltip.New(pos: GUI.GetLastItemRect().tl,
-																		pivot: new(1.00f, 0.00f), size: help_data.size.ToVec2f()))
+																		//using (var tooltip = GUI.Tooltip.New(pos: GUI.GetLastItemRect().tl, override_prev: true,
+																		//pivot: new(1.00f, 0.00f), size: help_data.size.ToVec2f()))
+
+																		using (var tooltip = GUI.Window.Standalone("tutorial"u8, position: GUI.GetLastItemRect().tl,
+																		pivot: new(1.00f, 0.00f), size: help_data.size.ToVec2f(), padding: new(8), force_position: true,
+																		flags: GUI.Window.Flags.No_Input))
 																		{
-																			using (var group_top = GUI.Group.New(size: new(GUI.RmX, 128)))
+																			tooltip.BringToFront();
+
+																			if (tooltip.show)
 																			{
-																				ref var sprite = ref help_data.sprite;
-																				if (sprite.texture)
+																				GUI.DrawWindowBackground();
+																				using (var group_top = GUI.Group.New(size: new(GUI.RmX, 128)))
 																				{
-																					var sprite_scale = help_data.sprite_scale;
-																					using (var group_sprite = GUI.Group.New(size: sprite.size.ToVec2f() * sprite_scale))
+																					ref var sprite = ref help_data.sprite;
+																					if (sprite.texture)
 																					{
-																						var rect_sprite = GUI.GetRemainingRect(); // AABB.Simple(GUI.GetCursorScreenPos(), size: Maths.ScaleToWidth(GUI.Rm, width: GUI.RmX));
-																						GUI.DrawSpriteCentered(sprite: sprite, rect: rect_sprite, constrain: false,
-																						layer: GUI.Layer.Window, dummy: false, scale: sprite_scale);
+																						var sprite_scale = help_data.sprite_scale;
+																						using (var group_sprite = GUI.Group.New(size: sprite.size.ToVec2f() * sprite_scale))
+																						{
+																							var rect_sprite = GUI.GetRemainingRect(); // AABB.Simple(GUI.GetCursorScreenPos(), size: Maths.ScaleToWidth(GUI.Rm, width: GUI.RmX));
+																							GUI.DrawSpriteCentered(sprite: sprite, rect: rect_sprite, constrain: false,
+																							layer: GUI.Layer.Window, dummy: false, scale: sprite_scale);
 
-																						GUI.Draw9Slice(texture: GUI.tex_frame, padding: new(4), rect: rect_sprite);
+																							GUI.Draw9Slice(texture: GUI.tex_frame, padding: new(4), rect: rect_sprite);
 
-																						//GUI.DrawRect(rect_sprite, layer: GUI.Layer.Foreground);
+																							//GUI.DrawRect(rect_sprite, layer: GUI.Layer.Foreground);
 
-																						//GUI.SeparatorThick();
-																					}
+																							//GUI.SeparatorThick();
+																						}
 
-																					GUI.SameLine();
+																						GUI.SameLine();
 
-																					using (var group_title = GUI.Group.New(size: GUI.Rm, padding: new(6, 2)))
-																					using (GUI.Wrap.Push(GUI.RmX))
-																					{
-																						GUI.Title(text: help_data.title.OrDefault(help_data.name), size: help_data.title_size);
+																						using (var group_title = GUI.Group.New(size: GUI.Rm, padding: new(6, 2)))
+																						using (GUI.Wrap.Push(GUI.RmX))
+																						{
+																							GUI.Title(text: help_data.title.OrDefault(help_data.name), size: help_data.title_size);
 
-																						GUI.SeparatorThick(spacing: 2);
+																							GUI.SeparatorThick(spacing: 2);
 
-																						GUI.NewLine(4);
-																						GUI.TextShaded(help_data.desc);
+																							GUI.NewLine(4);
+																							GUI.TextShaded(help_data.desc);
+																						}
 																					}
 																				}
-																			}
 
-																			using (GUI.Wrap.Push(GUI.RmX))
-																			{
-																				//GUI.Title(help_data.name);
-
-																				//GUI.SeparatorThick(spacing: 2);
-
-																				//GUI.NewLine(4);
-																				//GUI.TextShaded(help_data.desc);
-
-
-
-
-																				var entries = help_data.entries.AsSpan();
-																				if (!entries.IsEmpty)
+																				using (GUI.Wrap.Push(GUI.RmX))
 																				{
-																					GUI.NewLine(4);
+																					//GUI.Title(help_data.name);
 
-																					var entry_index = 0;
-																					foreach (ref var entry in entries)
+																					//GUI.SeparatorThick(spacing: 2);
+
+																					//GUI.NewLine(4);
+																					//GUI.TextShaded(help_data.desc);
+
+
+
+
+																					var entries = help_data.entries.AsSpan();
+																					if (!entries.IsEmpty)
 																					{
-																						var entry_flags = entry.flags;
-																						if (entry_index != 0)
-																						{
-																							GUI.NewLine(4);
-																						}
-																						//else if (entry_flags.HasAny(IHelp.Entry.Flags.Newline))
-																						//{
-																						//	GUI.NewLine(4);
-																						//}
+																						GUI.NewLine(4);
 
-																						if (entry_flags.HasAny(IHelp.Entry.Flags.Bullet))
+																						var entry_index = 0;
+																						foreach (ref var entry in entries)
 																						{
-																							if (entry_flags.HasAny(IHelp.Entry.Flags.Nested))
+																							var entry_flags = entry.flags;
+																							if (entry_index != 0)
 																							{
-																								GUI.SameLine(10);
+																								GUI.NewLine(4);
+																							}
+																							//else if (entry_flags.HasAny(IHelp.Entry.Flags.Newline))
+																							//{
+																							//	GUI.NewLine(4);
+																							//}
+
+																							if (entry_flags.HasAny(IHelp.Entry.Flags.Bullet))
+																							{
+																								if (entry_flags.HasAny(IHelp.Entry.Flags.Nested))
+																								{
+																									GUI.SameLine(10);
+																								}
+
+																								GUI.Text("-"u8, color: entry.color);
+																								GUI.SameLine(2);
+																							}
+																							//GUI.Text("- "u8);
+																							//GUI.SameLine();
+
+																							if (entry_flags.HasAny(IHelp.Entry.Flags.Bold))
+																							{
+																								GUI.TextShaded(text: entry.text, color: entry.color, font: GUI.Font.Superstar, size: 16);
+																							}
+																							else
+																							{
+																								GUI.TextShaded(text: entry.text, color: entry.color);
 																							}
 
-																							GUI.Text("-"u8, color: entry.color);
-																							GUI.SameLine(2);
+																							entry_index++;
 																						}
-																						//GUI.Text("- "u8);
-																						//GUI.SameLine();
-
-																						if (entry_flags.HasAny(IHelp.Entry.Flags.Bold))
-																						{
-																							GUI.TextShaded(text: entry.text, color: entry.color, font: GUI.Font.Superstar, size: 16);
-																						}
-																						else
-																						{
-																							GUI.TextShaded(text: entry.text, color: entry.color);
-																						}
-
-																						entry_index++;
 																					}
-																				}
 
-																				GUI.NewLine(4);
-																				//GUI.DrawHoverTooltip(help_data.desc);
+																					GUI.NewLine(4);
+																					//GUI.DrawHoverTooltip(help_data.desc);
+																				}
 																			}
 																		}
 
