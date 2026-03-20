@@ -512,6 +512,26 @@ namespace TC2.Conquest
 																	group_row.DrawBackground(selected ? GUI.tex_slot_white_hover : GUI.tex_slot_white, color: GUI.col_frame);
 																	GUI.DrawEntityIcon(ent_result, draw_tooltip: false);
 
+																	if (result.layer.HasAny(Physics.Layer.Destructible))
+																	{
+																		ref var health = ref ent_result.GetComponent<Health.Data>();
+																		if (health.IsNotNull())
+																		{
+																			//var rect_health = group_row.GetOuterRect().Pad(l: 6, u: 6, r: 6);
+																			//rect_health.
+
+																			var rect_health = group_row.GetInnerRect().GetPaddedRect(inner_size: new(40, 6), pivot: new(0.50f, 1.00f));
+																			//rect_health.bottom -= 6;
+
+																			var health_val = health.GetHealthNormalized();
+
+																			rect_health.width *= health_val;
+																			GUI.Draw9Slice(GUI.tex_bar_solid_01, padding: new(4), rect: rect_health, color: Color32BGRA.RedGreen(health_val.Pow2()));
+
+																			//GUI.DrawRect(rect_health, color: Color32BGRA.Red, layer: GUI.Layer.Window);
+																		}
+																	}
+
 																	if (GUI.Selectable3("select"u8, group_row.GetOuterRect(), selected: selected))
 																	{
 																		if (selected)

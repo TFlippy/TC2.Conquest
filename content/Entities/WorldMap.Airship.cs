@@ -315,7 +315,7 @@ namespace TC2.Conquest
 								{
 									if (airship.current_route_index == 0)
 									{
-										App.WriteLine("zero");
+										//App.WriteLine("zero");
 										//airship.dock_request_locations.Clear();
 									}
 
