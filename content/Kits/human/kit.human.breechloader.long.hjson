@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.62.0"
+	$version: "0.1.72.0"
 	name: "Long Breechloader"
 	desc:
 		'''
@@ -8,14 +8,13 @@
 	
 	flags: selectable
 	slot: primary
-	categories: weapon, dangerous, heavy, gun, long_range, short_range, powerful, inaccurate, cheap, civilian, industrial, arcane, slow, unstable
-	faction: "null"
+	categories: weapon, dangerous, heavy, melee, gun, long_range, short_range, powerful, inaccurate, cheap, civilian, industrial, slow, unstable, ranged
 	species: human
 	
 	character_flags:
 	{
 		require: strong
-		include: criminal, farmer, laborer, armed, lowlife, hunter, insane, alcoholic, nomad, brawler, outdoor, strong, evil, murderer, terrorist, fanatic
+		include: criminal, farmer, laborer, armed, lowlife, hunter, soldier, insane, alcoholic, nomad, illiterate, feral, brawler, outdoor, strong, junkie, evil, murderer, terrorist, fanatic, dumb, clumsy, huge
 		exclude: bureaucrat, unarmed, sedentary
 		weight: 1.350
 	}
@@ -43,6 +42,7 @@
 			null
 			null
 		]
+		
 		flags: unpack
 	}
 }

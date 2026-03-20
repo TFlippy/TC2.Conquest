@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.70.1"
+	$version: "0.1.72.0"
 	name: "Pistol"
 	desc:
 		'''
@@ -8,7 +8,7 @@
 	
 	flags: selectable
 	slot: secondary
-	categories: weapon, gun, short_range, weak, small
+	categories: weapon, gun, short_range, advanced, weak, small, civilian, military, fast, ranged
 	species: human
 	
 	character_flags:

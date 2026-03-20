@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.62.5"
+	$version: "0.1.72.0"
 	name: "Short Breechloader"
 	desc:
 		'''
@@ -8,15 +8,14 @@
 	
 	flags: selectable
 	slot: secondary
-	categories: weapon, junk, gun, short_range, inaccurate, cheap, civilian, industrial, slow, unstable
-	faction: "null"
+	categories: weapon, melee, gun, short_range, defensive, inaccurate, small, civilian, industrial, ranged
 	species: human
 	
 	character_flags:
 	{
 		require: none
-		include: criminal, artisan, farmer, laborer, civillian, armed, hunter, soldier, insane, alcoholic, nomad, brawler, outdoor, strong, junkie, evil, murderer, terrorist, lower_class, lower_middle_class
-		exclude: unarmed, sedentary, upper_class, elite_class
+		include: criminal, artisan, farmer, laborer, civillian, armed, miner, hunter, culinary, soldier, insane, alcoholic, nomad, brawler, outdoor, strong, junkie, evil, murderer, terrorist, clumsy, lower_class, lower_middle_class
+		exclude: unarmed, upper_class, elite_class
 		weight: 1.350
 	}
 	
@@ -36,7 +35,7 @@
 			}
 			{
 				type: resource
-				material: ammo.mg.hv
+				material: ammo.mg.lv
 				quantity: 12.000
 				flags: despawn, no_consume
 			}

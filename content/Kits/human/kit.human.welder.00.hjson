@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.70.1"
+	$version: "0.1.72.0"
 	name: "Phlogiston Sprayer"
 	desc:
 		'''
@@ -8,7 +8,7 @@
 	
 	flags: custom
 	slot: tool
-	categories: tools, short_range, advanced, machine, construction, device, industrial, arcane, tech
+	categories: tools, dangerous, short_range, advanced, machine, destructive, construction, device, industrial, arcane, tech
 	species: human
 	
 	character_flags:

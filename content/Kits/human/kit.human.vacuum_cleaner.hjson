@@ -1,4 +1,5 @@
 ﻿{
+	$version: "0.1.72.0"
 	name: "Vacuum Cleaner"
 	desc:
 		'''
@@ -7,9 +8,8 @@
 	
 	flags: none
 	slot: tool
-	categories: tools, advanced, machine, device
-	faction: "null"
-	species: "human"
+	categories: tools, advanced, device, expensive, civilian, arcane, tech, propulsion
+	species: human
 	
 	character_flags:
 	{
@@ -21,6 +21,7 @@
 	
 	amount_multiplier_min: 1.000
 	amount_multiplier_max: 1.000
+	cost: 0.000
 	
 	shipment:
 	{
@@ -28,7 +29,7 @@
 		[
 			{
 				type: prefab
-				prefab: "vacuum_cleaner"
+				prefab: vacuum_cleaner
 				quantity: 1.000
 				flags: despawn, no_consume
 			}
@@ -36,6 +37,7 @@
 			null
 			null
 		]
+		
 		flags: unpack
 	}
 }

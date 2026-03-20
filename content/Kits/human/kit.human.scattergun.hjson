@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.62.0"
+	$version: "0.1.72.0"
 	name: "Scattergun"
 	desc:
 		'''
@@ -8,15 +8,14 @@
 	
 	flags: selectable
 	slot: primary
-	categories: weapon, gun, short_range, inaccurate
-	faction: "null"
+	categories: weapon, gun, short_range, military, ranged
 	species: human
 	
 	character_flags:
 	{
 		require: none
 		include: criminal, farmer, civillian, armed, miner, hunter, culinary, soldier, alcoholic, nomad, outdoor, strong, thief, murderer
-		exclude: unarmed
+		exclude: bureaucrat, unarmed, clumsy
 		weight: 0.800
 	}
 	
@@ -43,6 +42,7 @@
 			null
 			null
 		]
+		
 		flags: unpack
 	}
 }

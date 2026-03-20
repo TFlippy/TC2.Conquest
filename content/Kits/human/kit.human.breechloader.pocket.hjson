@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.70.1"
+	$version: "0.1.72.0"
 	name: "Pocket Breechloader"
 	desc:
 		'''
@@ -8,7 +8,7 @@
 	
 	flags: selectable
 	slot: secondary
-	categories: weapon, gun, short_range, weak, inaccurate, small, cheap, civilian, fast
+	categories: weapon, gun, short_range, weak, inaccurate, small, cheap, civilian, fast, ranged
 	species: human
 	
 	character_flags:
