@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.70.0"
+	$version: "0.1.72.0"
 	name: "The Most Rushed Catalogue"
 	
 	h_company: postus
@@ -10,7 +10,7 @@
 	[
 		{
 			type: resource
-			h_material: mayo
+			h_material: money
 			quantity: 0.000
 		}
 		{
@@ -25,7 +25,7 @@
 		}
 		{
 			type: resource
-			h_material: meth
+			h_material: toluene
 			quantity: 0.000
 		}
 		{
@@ -35,27 +35,17 @@
 		}
 		{
 			type: resource
-			h_material: actuator
-			quantity: 0.000
-		}
-		{
-			type: resource
 			h_material: alcohol
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: cmajzl
+			h_material: actuator
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: cloth
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: leather
+			h_material: directors
 			quantity: 0.000
 		}
 		{
@@ -65,17 +55,17 @@
 		}
 		{
 			type: resource
-			h_material: mushroom.green
-			quantity: 0.000
-		}
-		{
-			type: resource
 			h_material: mushroom.yellow
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: naphtha
+			h_material: cmajzl
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: mayo
 			quantity: 0.000
 		}
 		{
@@ -85,17 +75,12 @@
 		}
 		{
 			type: resource
-			h_material: oil
+			h_material: smrad
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: onion.juice
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: paper
+			h_material: putty
 			quantity: 0.000
 		}
 		{
@@ -105,7 +90,37 @@
 		}
 		{
 			type: resource
+			h_material: smirglum.plate
+			quantity: 0.000
+		}
+		{
+			type: resource
 			h_material: computer
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: oil
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: cloth
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: paper
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: starch
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: meth
 			quantity: 0.000
 		}
 		{
@@ -115,17 +130,42 @@
 		}
 		{
 			type: resource
-			h_material: smirglum.plate
+			h_material: glass
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: toluene
+			h_material: steel.rod
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: putty
+			h_material: copper.rod
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: graphite
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: glue
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: cement
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: porridge
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: nitrosugar
 			quantity: 0.000
 		}
 	]
