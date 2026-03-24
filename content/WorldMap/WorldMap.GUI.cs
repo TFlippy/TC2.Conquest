@@ -1785,6 +1785,7 @@ namespace TC2.Conquest
 			}
 		}
 
+		[Shitcode] // TODO: giga shitcode
 		private static void DrawRightWindow(bool is_loading, ref AABB rect)
 		{
 			if (selected_region_id != 0 || h_selected_location != 0)

@@ -12,6 +12,8 @@ namespace TC2.Conquest
 			public enum Flags: uint
 			{
 				None = 0u,
+
+				Locked = 1u << 0
 			}
 
 			[Flags]
@@ -22,9 +24,13 @@ namespace TC2.Conquest
 
 			public Site.Data.Flags flags;
 
+			[Save.NewLine]
 			[Asset.Ignore, Save.Ignore] public byte player_count;
 			public byte unused_00;
 			public Site.Data.Status status;
+
+			[Save.NewLine]
+			public ImperialDateTime date_unlock = new(729025920000);
 		}
 
 		//[ISystem.Update.A(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region)]
@@ -36,7 +42,7 @@ namespace TC2.Conquest
 
 #if SERVER
 		[ISystem.PreUpdate.A(ISystem.Mode.Single, ISystem.Scope.Global, interval: 1.00f)]
-		public static void OnUpdate_Stats(ISystem.Info.Global info, ref Region.Data.Global region_global, Entity entity,
+		public static void OnUpdate_Stats(ISystem.Info.Global info, ref Region.Data.Global region_global, Entity ent_site,
 		[Source.Owned] ref Site.Data site, [Source.Owned] ref Transform.Data transform, [Source.Owned] ref Location.Data location)
 		{
 			var region_id = location.h_location.GetRegionID();
@@ -50,7 +56,7 @@ namespace TC2.Conquest
 				
 					if (sync)
 					{
-						site.Sync(entity);
+						site.Sync(ent_site);
 						App.WriteValue("synced region stats", region_id, color: App.Color.Magenta);
 					}
 				}
