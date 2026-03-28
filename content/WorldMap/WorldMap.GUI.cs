@@ -1785,573 +1785,573 @@ namespace TC2.Conquest
 			}
 		}
 
-		[Shitcode] // TODO: giga shitcode
-		private static void DrawRightWindow(bool is_loading, ref AABB rect)
-		{
-			if (selected_region_id != 0 || h_selected_location != 0)
-			{
-				//var draw_external = true;
-
-				using (var window = GUI.Window.Standalone("worldmap.side.right"u8, position: new Vector2(rect.b.X, rect.a.Y) + new Vector2(-6, 12), size: new(348, Maths.Min(rect.GetHeight() - 8, 550)), pivot: new(1.00f, 0.00f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus | GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.Child))
-				{
-					if (window.show)
-					{
-						if (false)
-						{
-							window.group.DrawBackground(GUI.tex_window_popup_l, color: GUI.col_default);
-
-							var h_player = Client.GetPlayerHandle();
-							ref var player_data = ref h_player.GetData();
-
-							var h_character_main = player_data.IsNotNull() ? player_data.h_character_main : default;
-							ref var character_main_data = ref h_character_main.GetData();
-
-							var h_character_current = Client.GetCharacterHandle();
-							ref var character_current_data = ref h_character_current.GetData();
-
-							var h_company = Client.GetCompanyHandle();
-							ref var company_data = ref h_company.GetData();
-
-							using (GUI.Group.New(size: GUI.Rm))
-							{
-								using (var group_title = GUI.Group.New(size: new(GUI.RmX, 64), padding: new(0, 0)))
-								{
-									var button_size = new Vec2f(GUI.RmY);
-
-									using (var button = GUI.CustomButton.New(GUI.Hash<ICharacter.Handle>.New(1), size: button_size, sound: GUI.sound_button))
-									{
-										Dormitory.DrawCharacterHead(h_character_main, new(GUI.RmY));
-										if (button.pressed)
-										{
-											ent_context_current = h_character_main.GetGlobalEntity();
-											GUI.selected_entity = ent_context_current;
-										}
-									}
-
-									GUI.SameLine();
-
-									using (var button = GUI.CustomButton.New(GUI.Hash<ICharacter.Handle>.New(2), size: button_size, sound: GUI.sound_button))
-									{
-										Dormitory.DrawCharacterHead(h_character_current, new(GUI.RmY));
-										if (button.pressed)
-										{
-											ent_context_current = Client.GetControlledEntity();
-											GUI.selected_entity = ent_context_current;
-										}
-									}
-
-									GUI.SameLine();
-
-									using (var button = GUI.CustomButton.New(GUI.Hash<ICompany.Handle>.New(1), size: button_size, sound: GUI.sound_button))
-									{
-										if (button.pressed)
-										{
-											ent_context_current = default;
-											GUI.selected_entity = ent_context_current;
-										}
-									}
-									//GUI.TitleCentered(location_data.name, size: 32, pivot: new(0.00f, 0.50f));
-								}
-								//GUI.FocusableAsset(location_asset.GetHandle());
-
-								GUI.SeparatorThick();
-
-								//var map_asset = default(MapAsset);
-
-								//ref var region_info = ref World.GetRegionInfo(selected_region_id);
-								//if (region_info.IsNotNull())
-								//{
-								//	ref var map_info = ref region_info.map_info.GetRefOrNull();
-								//	if (map_info.IsNotNull() && map_info.h_location == h_selected_location)
-								//	{
-								//		map_asset = App.GetModContext().GetMap(region_info.map);
-								//	}
-								//}
-
-								using (var group_top = GUI.Group.New(size: new(GUI.RmX, 200), padding: new(4, 4)))
-								{
-									using (var group_desc = GUI.Group.New(size: GUI.Rm - new Vec2f(48 * 2, 0), padding: new(4, 4)))
-									{
-										group_desc.DrawBackground(GUI.tex_panel, inner: false);
-
-										using (GUI.Wrap.Push(GUI.RmX))
-										{
-											//GUI.LabelShaded("Name:"u8, ent_context_current.GetName(), font_a: GUI.Font.Superstar, font_b: GUI.Font.Monaco, size_a: 16, size_b: 14);
-											//GUI.TitleCentered(ent_context_current.GetName(), size: 24, pivot: new(0.00f, 0.00f));
-											GUI.Title(ent_context_current.GetName(), size: 24);
-
-											GUI.SeparatorThick();
-
-											GUI.NewLine(6);
-
-											//ref var origin_data = ref character_data_selected.origin.GetData();
-											//ref var species_data = ref character_data_selected.species.GetData();
-											//ref var faction_data = ref character_data_selected.faction.GetData();
-											////ref var company_data = ref character_data.h_company.GetData();
-
-											//if (species_data.IsNotNull())
-											//{
-											//	GUI.LabelShaded("Species:"u8, species_data.name, font_a: GUI.Font.Superstar, font_b: GUI.Font.Monaco, size_a: 16, size_b: 14);
-											//}
-
-											//GUI.LabelShaded("Date of Birth:"u8, current_year - character_data_selected.age, format: "0' S.D.'", font_a: GUI.Font.Superstar, font_b: GUI.Font.Monaco, size_a: 16, size_b: 14);
-
-											//GUI.NewLine(6);
-
-											////if (origin_data.IsNotNull())
-											////{
-											//GUI.LabelShaded("Occupation:"u8, character_data_selected.origin.GetName().OrDefault("N/A"), font_a: GUI.Font.Superstar, font_b: GUI.Font.Monaco, size_a: 16, size_b: 14);
-											////}
-
-											//GUI.LabelShaded("Company:"u8, character_data_selected.h_company.GetName().OrDefault("N/A"), font_a: GUI.Font.Superstar, font_b: GUI.Font.Monaco, size_a: 16, size_b: 14);
-
-											////if (company_data.IsNotNull())
-											////{
-											////}
-
-											//GUI.NewLine(6);
-
-											//GUI.LabelShaded("Faction:"u8, character_data_selected.faction.GetName().OrDefault("N/A"), font_a: GUI.Font.Superstar, font_b: GUI.Font.Monaco, size_a: 16, size_b: 14);
-
-										}
-									}
-
-									GUI.SameLine();
-
-									using (var group_inventories = GUI.Group.New(size: new(48 * 2, GUI.RmY)))
-									{
-										if (ent_context_current.IsAlive())
-										{
-											var inventories = ent_context_current.GetInventories();
-											foreach (var h_inventory in inventories)
-											{
-												if (h_inventory.IsValid() && h_inventory.Flags.HasNone(Inventory.Flags.Hidden))
-												{
-													using (GUI.Group.New(size: h_inventory.GetFrameSize(0, 2)))
-													{
-														GUI.DrawInventory(h_inventory, is_readonly: false);
-													}
-												}
-											}
-										}
-									}
-
-									//using (var group_left = GUI.Group.New(size: new(128 + 12, 0)))
-									//{
-									//	//using (var group_thumbnail = GUI.Group.New(size: new(GUI.RmX)))
-									//	//{
-									//	//	//if (map_asset != null)
-									//	//	//{
-									//	//	//	GUI.DrawMapThumbnail(map_asset, size: GUI.Rm, show_frame: false);
-									//	//	//}
-									//	//	//else
-									//	//	//{
-									//	//	//	//GUI.DrawSpriteCentered(location_data.thumbnail, group_thumbnail.GetInnerRect(), GUI.Layer.Window, scale: 1.00f);
-									//	//	//	//GUI.DrawSpriteCentered(location_data.thumbnail, group_thumbnail.GetInnerRect(), GUI.Layer.Window, scale: 1.00f);
-									//	//	//}
-
-									//	//	GUI.DrawBackground(GUI.tex_frame_white, rect: group_thumbnail.GetOuterRect(), padding: new(4), color: GUI.col_button);
-									//	//}
-
-									//	//if (map_asset != null)
-									//	//{
-									//	//	var color = GUI.col_button_ok;
-									//	//	var alpha = 1.00f;
-
-									//	//	if (GUI.DrawIconButton("info"u8, new(GUI.tex_icons_widget, 16, 16, 6, 1), size: new(48, 48)))
-									//	//	{
-
-									//	//	}
-
-									//	//	GUI.SameLine();
-
-									//	//	if (Client.GetRegionID() != selected_region_id)
-									//	//	{
-									//	//		if (GUI.DrawButton("Join"u8, size: new(GUI.RmX, 48), font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
-									//	//		{
-									//	//			Client.RequestSetActiveRegion(selected_region_id, delay_seconds: 0.75f);
-
-									//	//			window.Close();
-									//	//			GUI.RegionMenu.ToggleWidget(false);
-
-									//	//			//Client.TODO_LoadRegion(region_id);
-									//	//		}
-									//	//	}
-									//	//	else
-									//	//	{
-									//	//		color = GUI.col_button_error;
-									//	//		if (GUI.DrawButton("Leave"u8, size: new(GUI.RmX, 48), font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
-									//	//		{
-									//	//			Client.RequestSetActiveRegion(0, delay_seconds: 0.10f);
-									//	//		}
-									//	//	}
-									//	//}
-									//	//else
-									//	//{
-									//	//	//if (GUI.DrawButton("Button"u8, size: new(GUI.RmX, 48), font_size: 24, enabled: false, color: GUI.col_button, text_color: GUI.font_color_button_text))
-									//	//	//{
-
-									//	//	//}
-									//	//}
-									//}
-
-									//GUI.SameLine();
-
-									//using (var group_desc = GUI.Group.New(size: GUI.Rm, padding: new(4, 4)))
-									//{
-									//	group_desc.DrawBackground(GUI.tex_panel, inner: true);
-
-									//	using (GUI.Wrap.Push(GUI.RmX))
-									//	{
-									//		//if (map_asset != null)
-									//		//{
-									//		//	GUI.TextShaded(map_asset.Description);
-									//		//}
-									//		//else
-									//		//{
-									//		//	GUI.TextShaded(location_data.desc);
-									//		//}
-									//	}
-									//}
-								}
-
-								GUI.SeparatorThick();
-
-								using (var group_info = GUI.Group.New(size: new(GUI.RmX, GUI.RmY), padding: new(2, 2)))
-								{
-									using (var group_bottom = GUI.Group.New2(size: GUI.Rm))
-									{
-										using (var scrollbox = GUI.Scrollbox.New("scroll.bottom"u8, size: GUI.Rm))
-										{
-											//Span<Entity> children_span = FixedArray.CreateSpan32NoInit<Entity>(out var buffer_children);
-											//ent_asset.GetAllChildren(ref children_span, false);
-											//ent_asset.GetChildren(ref children_span, Relation.Type.Child);
-
-											//foreach (var ent_child in children_span)
-											//{
-											//	//if (ILocation.TryGetAsset(ent_child, out var h_location_child))
-											//	{
-											//		if (ent_child.TryGetAsset(out ILocation.Definition asset_location) || ent_child.TryGetAsset(out IEntrance.Definition asset_entrance))
-											//		{
-											//			using (GUI.ID.Push(ent_child))
-											//			using (var group_row = GUI.Group.New(size: new(GUI.RmX, 48)))
-											//			{
-											//				using (var group_icon = GUI.Group.New(size: new(GUI.RmY)))
-											//				{
-											//					var color_frame = Color32BGRA.GUI;
-
-											//					ref var faction_data = ref ent_child.GetFactionHandle().GetData();
-											//					if (faction_data.IsNotNull())
-											//					{
-											//						color_frame = faction_data.color_a;
-											//					}
-
-											//					group_icon.DrawBackground(GUI.tex_slot_white, color: color_frame);
-											//				}
-
-											//				GUI.SameLine();
-
-											//				using (var group_right = GUI.Group.New(size: GUI.Rm, padding: new(4)))
-											//				{
-											//					GUI.Title(ent_child.GetName(), size: 24);
-											//					//group_right.DrawBackground(GUI.tex_window_popup);
-											//				}
-
-											//				var is_selected = WorldMap.interacted_entity == ent_child;
-											//				if (GUI.Selectable3(ent_child.GetShortID(), group_row.GetInnerRect(), selected: is_selected))
-											//				{
-											//					WorldMap.interacted_entity.Toggle(ent_child, !is_selected);
-											//					GUI.SetDebugEntity(ent_child);
-											//				}
-											//			}
-
-											//			GUI.SeparatorThick();
-											//		}
-											//	}
-											//}
-										}
-									}
-								}
-							}
-						}
-						else
-						{
-							window.group.DrawBackground(GUI.tex_window_popup_l, color: GUI.col_default);
-
-							if (h_selected_location != 0)
-							{
-								ref var location_data = ref h_selected_location.GetData(out var location_asset);
-								if (location_data.IsNotNull())
-								{
-									var ent_asset = location_asset.GetGlobalEntity();
-									selected_region_id = h_selected_location.GetRegionID();
-
-									//for (var i = 0; i < Region.max_count; i++)
-									//{
-									//	ref var region_info = ref World.GetRegionInfo((byte)i);
-									//	if (region_info.IsNotNull())
-									//	{
-									//		ref var map_info = ref region_info.map_info.GetRefOrNull();
-									//		if (map_info.IsNotNull() && map_info.h_location == h_selected_location)
-									//		{
-									//			selected_region_id = (byte)i;
-									//			break;
-									//		}
-									//	}
-									//}
-
-									using (GUI.Group.New(size: GUI.Rm))
-									{
-										using (var group_title = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(8, 0)))
-										{
-											GUI.TitleCentered(location_data.name, size: 32, pivot: new(0.00f, 0.50f));
-										}
-										GUI.FocusableAsset(location_asset.GetHandle());
-
-										GUI.SeparatorThick();
-
-										var map_asset = default(MapAsset);
-
-										ref var region_info = ref World.GetRegionInfo(selected_region_id);
-										if (region_info.IsNotNull())
-										{
-											ref var map_info = ref region_info.map_info.GetRefOrNull();
-											if (map_info.IsNotNull() && map_info.h_location == h_selected_location)
-											{
-												map_asset = App.GetModContext().GetMap(region_info.map);
-											}
-										}
-
-										using (var group_top = GUI.Group.New(size: new(GUI.RmX, 0), padding: new(4, 4)))
-										{
-											using (var group_left = GUI.Group.New(size: new(128 + 12, 0)))
-											{
-												using (var group_thumbnail = GUI.Group.New(size: new(GUI.RmX)))
-												{
-													if (map_asset != null)
-													{
-														GUI.DrawMapThumbnail(map_asset, size: GUI.Rm, show_frame: false);
-													}
-													else
-													{
-														//GUI.DrawSpriteCentered(location_data.thumbnail, group_thumbnail.GetInnerRect(), GUI.Layer.Window, scale: 1.00f);
-														GUI.DrawSpriteCentered(location_data.thumbnail, group_thumbnail.GetInnerRect(), GUI.Layer.Window, scale: 1.00f);
-													}
-
-													GUI.DrawBackground(GUI.tex_frame_white, rect: group_thumbnail.GetOuterRect(), padding: new(4), color: GUI.col_button);
-												}
-
-												if (map_asset != null)
-												{
-													var color = GUI.col_button_ok;
-													var alpha = 1.00f;
-
-													//if (GUI.DrawIconButton("info"u8, new(GUI.tex_icons_widget, 16, 16, 6, 1), size: new(48, 48)))
-													//{
-
-													//}
-
-													//GUI.SameLine();
-
-													//if (Client.GetRegionID() != selected_region_id)
-													//{
-													//	if (GUI.DrawButton("Join"u8, size: new(GUI.RmX, 48), font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
-													//	{
-													//		Client.RequestSetActiveRegion(selected_region_id, delay_seconds: 0.75f);
-
-													//		window.Close();
-													//		GUI.RegionMenu.ToggleWidget(false);
-
-													//		//Client.TODO_LoadRegion(region_id);
-													//	}
-													//}
-													//else
-													//{
-													//	color = GUI.col_button_error;
-													//	if (GUI.DrawButton("Leave"u8, size: new(GUI.RmX, 48), font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
-													//	{
-													//		Client.RequestSetActiveRegion(0, delay_seconds: 0.10f);
-													//	}
-													//}
-												}
-												else
-												{
-													//if (GUI.DrawButton("Button"u8, size: new(GUI.RmX, 48), font_size: 24, enabled: false, color: GUI.col_button, text_color: GUI.font_color_button_text))
-													//{
-
-													//}
-												}
-											}
-
-											GUI.SameLine();
-
-											using (var group_desc = GUI.Group.New(size: GUI.Rm, padding: new(4, 4)))
-											{
-												group_desc.DrawBackground(GUI.tex_panel, inner: true);
-
-												using (GUI.Wrap.Push(GUI.RmX))
-												{
-													if (map_asset != null)
-													{
-														GUI.TextShaded(map_asset.Description);
-													}
-													else
-													{
-														GUI.TextShaded(location_data.desc);
-													}
-												}
-											}
-										}
-
-										GUI.SeparatorThick();
-
-										using (var group_info = GUI.Group.New(size: new(GUI.RmX, GUI.RmY), padding: new(2, 2)))
-										{
-											using (var group_bottom = GUI.Group.New2(size: GUI.Rm))
-											{
-												using (var scrollbox = GUI.Scrollbox.New("scroll.bottom"u8, size: GUI.Rm))
-												{
-													Span<Entity> children_span = FixedArray.CreateSpan32NoInit<Entity>(out var buffer_children);
-													//ent_asset.GetAllChildren(ref children_span, false);
-													ent_asset.GetChildren(ref children_span, Relation.Type.Child);
-													children_span.Sort();
-
-													foreach (var ent_child in children_span)
-													{
-														//if (ILocation.TryGetAsset(ent_child, out var h_location_child))
-														{
-															if (ent_child.TryGetAsset(out ILocation.Definition asset_location) || ent_child.TryGetAsset(out IEntrance.Definition asset_entrance))
-															{
-																using (GUI.ID.Push(ent_child))
-																using (var group_row = GUI.Group.New(size: new(GUI.RmX, 48)))
-																{
-																	using (var group_icon = GUI.Group.New(size: new(GUI.RmY)))
-																	{
-																		var color_frame = Color32BGRA.GUI;
-
-																		ref var faction_data = ref ent_child.GetFactionHandle().GetData();
-																		if (faction_data.IsNotNull())
-																		{
-																			color_frame = faction_data.color_a;
-																		}
-
-																		group_icon.DrawBackground(GUI.tex_slot_white, color: color_frame);
-
-																		//ref var marker = ref ent_child.GetComponent<Marker.Data>();
-																		//if (marker.IsNotNull())
-																		//{
-																		//	GUI.DrawSpriteCentered(marker.icon, group_icon.GetInnerRect(), layer: GUI.Layer.Window, scale: 2.00f);
-																		//}
-
-																		//if (GUI.Selectable3(ent_child.GetShortID(), group_icon.GetInnerRect(), selected: selected))
-																		//{
-																		//	WorldMap.selected_entity = selected ? default : ent_child;
-																		//	GUI.SetDebugEntity(ent_child);
-																		//}
-																	}
-																	//if (GUI.IsItemHovered())
-																	//{
-																	//	using (GUI.Tooltip.New(size: new(128, 0)))
-																	//	{
-																	//		using (GUI.Wrap.Push(GUI.RmX))
-																	//		{
-																	//			//GUI.Title(location_data_child.name_short, size: 20);
-																	//			GUI.Title(ent_child.GetName(), size: 20);
-																	//		}
-
-																	//		GUI.SeparatorThick(new(-4, -4));
-
-																	//		using (GUI.Group.New(size: new(GUI.RmX, 0.00f), padding: new(4)))
-																	//		{
-																	//			using (GUI.Wrap.Push(GUI.RmX))
-																	//			{
-																	//				//GUI.Text(location_data_child.desc);
-																	//			}
-																	//		}
-																	//	}
-																	//}
-																	//GUI.FocusableAsset(h_location_child);
-
-																	GUI.SameLine();
-
-																	using (var group_right = GUI.Group.New(size: GUI.Rm, padding: new(4)))
-																	{
-																		GUI.TitleCentered(ent_child.GetName(), size: 24, pivot: new(0.00f, 0.50f));
-																		//group_right.DrawBackground(GUI.tex_window_popup);
-
-																		//if (GUI.DrawIconButton("info"u8, new(GUI.tex_icons_widget, 16, 16, 6, 1), size: new(48, 48)))
-																		//{
-
-																		//}
-
-																		//GUI.SameLine();
-
-																		using (var group_button = group_right.Split(size: new(80, GUI.RmY), align_x: GUI.AlignX.Right, align_y: GUI.AlignY.Center))
-																		{
-																			var alpha = 1.00f;
-																			if (Client.GetRegionID() != selected_region_id)
-																			{
-																				var color = GUI.col_button_ok;
-																				if (GUI.DrawButton("Join"u8, size: GUI.Rm, font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
-																				{
-																					Client.RequestSetActiveRegion(selected_region_id, delay_seconds: 0.75f);
-
-																					window.Close();
-																					GUI.RegionMenu.ToggleWidget(false);
-
-																					//Client.TODO_LoadRegion(region_id);
-																				}
-																			}
-																			else
-																			{
-																				var color = GUI.col_button_error;
-																				if (GUI.DrawButton("Leave"u8, size: GUI.Rm, font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
-																				{
-																					Client.RequestSetActiveRegion(0, delay_seconds: 0.10f);
-																				}
-																			}
-																		}
-																	}
-
-																	var is_selected = WorldMap.interacted_entity_cached == ent_child;
-																	if (GUI.Selectable3(ent_child.GetShortID(), group_row.GetInnerRect(), selected: is_selected))
-																	{
-																		WorldMap.interacted_entity.Toggle(ent_child, !is_selected);
-																		GUI.SetDebugEntity(ent_child);
-																	}
-																}
-
-																GUI.SeparatorThick();
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-
-								if (GUI.GetKeyboard().GetKeyDown(Keyboard.Key.Escape | Keyboard.Key.E) && window.Close())
-								{
-									WorldMap.selected_region_id = 0;
-									WorldMap.h_selected_location = 0;
-									if (location_asset.GetGlobalEntity() == WorldMap.interacted_entity_cached) WorldMap.interacted_entity = default;
-								}
-
-								if (WorldMap.h_selected_location == 0 && WorldMap.selected_region_id == 0)
-								{
-									Sound.PlayGUI(GUI.sound_window_close, volume: 0.30f);
-								}
-							}
-							else
-							{
-								selected_region_id = 0;
-							}
-						}
-					}
-				}
-			}
-		}
+		//[Shitcode] // TODO: giga shitcode
+		//private static void DrawRightWindow(bool is_loading, ref AABB rect)
+		//{
+		//	if (selected_region_id != 0 || h_selected_location != 0)
+		//	{
+		//		//var draw_external = true;
+
+		//		using (var window = GUI.Window.Standalone("worldmap.side.right"u8, position: new Vector2(rect.b.X, rect.a.Y) + new Vector2(-6, 12), size: new(348, Maths.Min(rect.GetHeight() - 8, 550)), pivot: new(1.00f, 0.00f), padding: new(8), force_position: true, flags: GUI.Window.Flags.No_Click_Focus | GUI.Window.Flags.No_Appear_Focus | GUI.Window.Flags.Child))
+		//		{
+		//			if (window.show)
+		//			{
+		//				if (false)
+		//				{
+		//					window.group.DrawBackground(GUI.tex_window_popup_l, color: GUI.col_default);
+
+		//					var h_player = Client.GetPlayerHandle();
+		//					ref var player_data = ref h_player.GetData();
+
+		//					var h_character_main = player_data.IsNotNull() ? player_data.h_character_main : default;
+		//					ref var character_main_data = ref h_character_main.GetData();
+
+		//					var h_character_current = Client.GetCharacterHandle();
+		//					ref var character_current_data = ref h_character_current.GetData();
+
+		//					var h_company = Client.GetCompanyHandle();
+		//					ref var company_data = ref h_company.GetData();
+
+		//					using (GUI.Group.New(size: GUI.Rm))
+		//					{
+		//						using (var group_title = GUI.Group.New(size: new(GUI.RmX, 64), padding: new(0, 0)))
+		//						{
+		//							var button_size = new Vec2f(GUI.RmY);
+
+		//							using (var button = GUI.CustomButton.New(GUI.Hash<ICharacter.Handle>.New(1), size: button_size, sound: GUI.sound_button))
+		//							{
+		//								Dormitory.DrawCharacterHead(h_character_main, new(GUI.RmY));
+		//								if (button.pressed)
+		//								{
+		//									ent_context_current = h_character_main.GetGlobalEntity();
+		//									GUI.selected_entity = ent_context_current;
+		//								}
+		//							}
+
+		//							GUI.SameLine();
+
+		//							using (var button = GUI.CustomButton.New(GUI.Hash<ICharacter.Handle>.New(2), size: button_size, sound: GUI.sound_button))
+		//							{
+		//								Dormitory.DrawCharacterHead(h_character_current, new(GUI.RmY));
+		//								if (button.pressed)
+		//								{
+		//									ent_context_current = Client.GetControlledEntity();
+		//									GUI.selected_entity = ent_context_current;
+		//								}
+		//							}
+
+		//							GUI.SameLine();
+
+		//							using (var button = GUI.CustomButton.New(GUI.Hash<ICompany.Handle>.New(1), size: button_size, sound: GUI.sound_button))
+		//							{
+		//								if (button.pressed)
+		//								{
+		//									ent_context_current = default;
+		//									GUI.selected_entity = ent_context_current;
+		//								}
+		//							}
+		//							//GUI.TitleCentered(location_data.name, size: 32, pivot: new(0.00f, 0.50f));
+		//						}
+		//						//GUI.FocusableAsset(location_asset.GetHandle());
+
+		//						GUI.SeparatorThick();
+
+		//						//var map_asset = default(MapAsset);
+
+		//						//ref var region_info = ref World.GetRegionInfo(selected_region_id);
+		//						//if (region_info.IsNotNull())
+		//						//{
+		//						//	ref var map_info = ref region_info.map_info.GetRefOrNull();
+		//						//	if (map_info.IsNotNull() && map_info.h_location == h_selected_location)
+		//						//	{
+		//						//		map_asset = App.GetModContext().GetMap(region_info.map);
+		//						//	}
+		//						//}
+
+		//						using (var group_top = GUI.Group.New(size: new(GUI.RmX, 200), padding: new(4, 4)))
+		//						{
+		//							using (var group_desc = GUI.Group.New(size: GUI.Rm - new Vec2f(48 * 2, 0), padding: new(4, 4)))
+		//							{
+		//								group_desc.DrawBackground(GUI.tex_panel, inner: false);
+
+		//								using (GUI.Wrap.Push(GUI.RmX))
+		//								{
+		//									//GUI.LabelShaded("Name:"u8, ent_context_current.GetName(), font_a: GUI.Font.Superstar, font_b: GUI.Font.Monaco, size_a: 16, size_b: 14);
+		//									//GUI.TitleCentered(ent_context_current.GetName(), size: 24, pivot: new(0.00f, 0.00f));
+		//									GUI.Title(ent_context_current.GetName(), size: 24);
+
+		//									GUI.SeparatorThick();
+
+		//									GUI.NewLine(6);
+
+		//									//ref var origin_data = ref character_data_selected.origin.GetData();
+		//									//ref var species_data = ref character_data_selected.species.GetData();
+		//									//ref var faction_data = ref character_data_selected.faction.GetData();
+		//									////ref var company_data = ref character_data.h_company.GetData();
+
+		//									//if (species_data.IsNotNull())
+		//									//{
+		//									//	GUI.LabelShaded("Species:"u8, species_data.name, font_a: GUI.Font.Superstar, font_b: GUI.Font.Monaco, size_a: 16, size_b: 14);
+		//									//}
+
+		//									//GUI.LabelShaded("Date of Birth:"u8, current_year - character_data_selected.age, format: "0' S.D.'", font_a: GUI.Font.Superstar, font_b: GUI.Font.Monaco, size_a: 16, size_b: 14);
+
+		//									//GUI.NewLine(6);
+
+		//									////if (origin_data.IsNotNull())
+		//									////{
+		//									//GUI.LabelShaded("Occupation:"u8, character_data_selected.origin.GetName().OrDefault("N/A"), font_a: GUI.Font.Superstar, font_b: GUI.Font.Monaco, size_a: 16, size_b: 14);
+		//									////}
+
+		//									//GUI.LabelShaded("Company:"u8, character_data_selected.h_company.GetName().OrDefault("N/A"), font_a: GUI.Font.Superstar, font_b: GUI.Font.Monaco, size_a: 16, size_b: 14);
+
+		//									////if (company_data.IsNotNull())
+		//									////{
+		//									////}
+
+		//									//GUI.NewLine(6);
+
+		//									//GUI.LabelShaded("Faction:"u8, character_data_selected.faction.GetName().OrDefault("N/A"), font_a: GUI.Font.Superstar, font_b: GUI.Font.Monaco, size_a: 16, size_b: 14);
+
+		//								}
+		//							}
+
+		//							GUI.SameLine();
+
+		//							using (var group_inventories = GUI.Group.New(size: new(48 * 2, GUI.RmY)))
+		//							{
+		//								if (ent_context_current.IsAlive())
+		//								{
+		//									var inventories = ent_context_current.GetInventories();
+		//									foreach (var h_inventory in inventories)
+		//									{
+		//										if (h_inventory.IsValid() && h_inventory.Flags.HasNone(Inventory.Flags.Hidden))
+		//										{
+		//											using (GUI.Group.New(size: h_inventory.GetFrameSize(0, 2)))
+		//											{
+		//												GUI.DrawInventory(h_inventory, is_readonly: false);
+		//											}
+		//										}
+		//									}
+		//								}
+		//							}
+
+		//							//using (var group_left = GUI.Group.New(size: new(128 + 12, 0)))
+		//							//{
+		//							//	//using (var group_thumbnail = GUI.Group.New(size: new(GUI.RmX)))
+		//							//	//{
+		//							//	//	//if (map_asset != null)
+		//							//	//	//{
+		//							//	//	//	GUI.DrawMapThumbnail(map_asset, size: GUI.Rm, show_frame: false);
+		//							//	//	//}
+		//							//	//	//else
+		//							//	//	//{
+		//							//	//	//	//GUI.DrawSpriteCentered(location_data.thumbnail, group_thumbnail.GetInnerRect(), GUI.Layer.Window, scale: 1.00f);
+		//							//	//	//	//GUI.DrawSpriteCentered(location_data.thumbnail, group_thumbnail.GetInnerRect(), GUI.Layer.Window, scale: 1.00f);
+		//							//	//	//}
+
+		//							//	//	GUI.DrawBackground(GUI.tex_frame_white, rect: group_thumbnail.GetOuterRect(), padding: new(4), color: GUI.col_button);
+		//							//	//}
+
+		//							//	//if (map_asset != null)
+		//							//	//{
+		//							//	//	var color = GUI.col_button_ok;
+		//							//	//	var alpha = 1.00f;
+
+		//							//	//	if (GUI.DrawIconButton("info"u8, new(GUI.tex_icons_widget, 16, 16, 6, 1), size: new(48, 48)))
+		//							//	//	{
+
+		//							//	//	}
+
+		//							//	//	GUI.SameLine();
+
+		//							//	//	if (Client.GetRegionID() != selected_region_id)
+		//							//	//	{
+		//							//	//		if (GUI.DrawButton("Join"u8, size: new(GUI.RmX, 48), font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+		//							//	//		{
+		//							//	//			Client.RequestSetActiveRegion(selected_region_id, delay_seconds: 0.75f);
+
+		//							//	//			window.Close();
+		//							//	//			GUI.RegionMenu.ToggleWidget(false);
+
+		//							//	//			//Client.TODO_LoadRegion(region_id);
+		//							//	//		}
+		//							//	//	}
+		//							//	//	else
+		//							//	//	{
+		//							//	//		color = GUI.col_button_error;
+		//							//	//		if (GUI.DrawButton("Leave"u8, size: new(GUI.RmX, 48), font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+		//							//	//		{
+		//							//	//			Client.RequestSetActiveRegion(0, delay_seconds: 0.10f);
+		//							//	//		}
+		//							//	//	}
+		//							//	//}
+		//							//	//else
+		//							//	//{
+		//							//	//	//if (GUI.DrawButton("Button"u8, size: new(GUI.RmX, 48), font_size: 24, enabled: false, color: GUI.col_button, text_color: GUI.font_color_button_text))
+		//							//	//	//{
+
+		//							//	//	//}
+		//							//	//}
+		//							//}
+
+		//							//GUI.SameLine();
+
+		//							//using (var group_desc = GUI.Group.New(size: GUI.Rm, padding: new(4, 4)))
+		//							//{
+		//							//	group_desc.DrawBackground(GUI.tex_panel, inner: true);
+
+		//							//	using (GUI.Wrap.Push(GUI.RmX))
+		//							//	{
+		//							//		//if (map_asset != null)
+		//							//		//{
+		//							//		//	GUI.TextShaded(map_asset.Description);
+		//							//		//}
+		//							//		//else
+		//							//		//{
+		//							//		//	GUI.TextShaded(location_data.desc);
+		//							//		//}
+		//							//	}
+		//							//}
+		//						}
+
+		//						GUI.SeparatorThick();
+
+		//						using (var group_info = GUI.Group.New(size: new(GUI.RmX, GUI.RmY), padding: new(2, 2)))
+		//						{
+		//							using (var group_bottom = GUI.Group.New2(size: GUI.Rm))
+		//							{
+		//								using (var scrollbox = GUI.Scrollbox.New("scroll.bottom"u8, size: GUI.Rm))
+		//								{
+		//									//Span<Entity> children_span = FixedArray.CreateSpan32NoInit<Entity>(out var buffer_children);
+		//									//ent_asset.GetAllChildren(ref children_span, false);
+		//									//ent_asset.GetChildren(ref children_span, Relation.Type.Child);
+
+		//									//foreach (var ent_child in children_span)
+		//									//{
+		//									//	//if (ILocation.TryGetAsset(ent_child, out var h_location_child))
+		//									//	{
+		//									//		if (ent_child.TryGetAsset(out ILocation.Definition asset_location) || ent_child.TryGetAsset(out IEntrance.Definition asset_entrance))
+		//									//		{
+		//									//			using (GUI.ID.Push(ent_child))
+		//									//			using (var group_row = GUI.Group.New(size: new(GUI.RmX, 48)))
+		//									//			{
+		//									//				using (var group_icon = GUI.Group.New(size: new(GUI.RmY)))
+		//									//				{
+		//									//					var color_frame = Color32BGRA.GUI;
+
+		//									//					ref var faction_data = ref ent_child.GetFactionHandle().GetData();
+		//									//					if (faction_data.IsNotNull())
+		//									//					{
+		//									//						color_frame = faction_data.color_a;
+		//									//					}
+
+		//									//					group_icon.DrawBackground(GUI.tex_slot_white, color: color_frame);
+		//									//				}
+
+		//									//				GUI.SameLine();
+
+		//									//				using (var group_right = GUI.Group.New(size: GUI.Rm, padding: new(4)))
+		//									//				{
+		//									//					GUI.Title(ent_child.GetName(), size: 24);
+		//									//					//group_right.DrawBackground(GUI.tex_window_popup);
+		//									//				}
+
+		//									//				var is_selected = WorldMap.interacted_entity == ent_child;
+		//									//				if (GUI.Selectable3(ent_child.GetShortID(), group_row.GetInnerRect(), selected: is_selected))
+		//									//				{
+		//									//					WorldMap.interacted_entity.Toggle(ent_child, !is_selected);
+		//									//					GUI.SetDebugEntity(ent_child);
+		//									//				}
+		//									//			}
+
+		//									//			GUI.SeparatorThick();
+		//									//		}
+		//									//	}
+		//									//}
+		//								}
+		//							}
+		//						}
+		//					}
+		//				}
+		//				else
+		//				{
+		//					window.group.DrawBackground(GUI.tex_window_popup_l, color: GUI.col_default);
+
+		//					if (h_selected_location != 0)
+		//					{
+		//						ref var location_data = ref h_selected_location.GetData(out var location_asset);
+		//						if (location_data.IsNotNull())
+		//						{
+		//							var ent_asset = location_asset.GetGlobalEntity();
+		//							selected_region_id = h_selected_location.GetRegionID();
+
+		//							//for (var i = 0; i < Region.max_count; i++)
+		//							//{
+		//							//	ref var region_info = ref World.GetRegionInfo((byte)i);
+		//							//	if (region_info.IsNotNull())
+		//							//	{
+		//							//		ref var map_info = ref region_info.map_info.GetRefOrNull();
+		//							//		if (map_info.IsNotNull() && map_info.h_location == h_selected_location)
+		//							//		{
+		//							//			selected_region_id = (byte)i;
+		//							//			break;
+		//							//		}
+		//							//	}
+		//							//}
+
+		//							using (GUI.Group.New(size: GUI.Rm))
+		//							{
+		//								using (var group_title = GUI.Group.New(size: new(GUI.RmX, 32), padding: new(8, 0)))
+		//								{
+		//									GUI.TitleCentered(location_data.name, size: 32, pivot: new(0.00f, 0.50f));
+		//								}
+		//								GUI.FocusableAsset(location_asset.GetHandle());
+
+		//								GUI.SeparatorThick();
+
+		//								var map_asset = default(MapAsset);
+
+		//								ref var region_info = ref World.GetRegionInfo(selected_region_id);
+		//								if (region_info.IsNotNull())
+		//								{
+		//									ref var map_info = ref region_info.map_info.GetRefOrNull();
+		//									if (map_info.IsNotNull() && map_info.h_location == h_selected_location)
+		//									{
+		//										map_asset = App.GetModContext().GetMap(region_info.map);
+		//									}
+		//								}
+
+		//								using (var group_top = GUI.Group.New(size: new(GUI.RmX, 0), padding: new(4, 4)))
+		//								{
+		//									using (var group_left = GUI.Group.New(size: new(128 + 12, 0)))
+		//									{
+		//										using (var group_thumbnail = GUI.Group.New(size: new(GUI.RmX)))
+		//										{
+		//											if (map_asset != null)
+		//											{
+		//												GUI.DrawMapThumbnail(map_asset, size: GUI.Rm, show_frame: false);
+		//											}
+		//											else
+		//											{
+		//												//GUI.DrawSpriteCentered(location_data.thumbnail, group_thumbnail.GetInnerRect(), GUI.Layer.Window, scale: 1.00f);
+		//												GUI.DrawSpriteCentered(location_data.thumbnail, group_thumbnail.GetInnerRect(), GUI.Layer.Window, scale: 1.00f);
+		//											}
+
+		//											GUI.DrawBackground(GUI.tex_frame_white, rect: group_thumbnail.GetOuterRect(), padding: new(4), color: GUI.col_button);
+		//										}
+
+		//										if (map_asset != null)
+		//										{
+		//											var color = GUI.col_button_ok;
+		//											var alpha = 1.00f;
+
+		//											//if (GUI.DrawIconButton("info"u8, new(GUI.tex_icons_widget, 16, 16, 6, 1), size: new(48, 48)))
+		//											//{
+
+		//											//}
+
+		//											//GUI.SameLine();
+
+		//											//if (Client.GetRegionID() != selected_region_id)
+		//											//{
+		//											//	if (GUI.DrawButton("Join"u8, size: new(GUI.RmX, 48), font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+		//											//	{
+		//											//		Client.RequestSetActiveRegion(selected_region_id, delay_seconds: 0.75f);
+
+		//											//		window.Close();
+		//											//		GUI.RegionMenu.ToggleWidget(false);
+
+		//											//		//Client.TODO_LoadRegion(region_id);
+		//											//	}
+		//											//}
+		//											//else
+		//											//{
+		//											//	color = GUI.col_button_error;
+		//											//	if (GUI.DrawButton("Leave"u8, size: new(GUI.RmX, 48), font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+		//											//	{
+		//											//		Client.RequestSetActiveRegion(0, delay_seconds: 0.10f);
+		//											//	}
+		//											//}
+		//										}
+		//										else
+		//										{
+		//											//if (GUI.DrawButton("Button"u8, size: new(GUI.RmX, 48), font_size: 24, enabled: false, color: GUI.col_button, text_color: GUI.font_color_button_text))
+		//											//{
+
+		//											//}
+		//										}
+		//									}
+
+		//									GUI.SameLine();
+
+		//									using (var group_desc = GUI.Group.New(size: GUI.Rm, padding: new(4, 4)))
+		//									{
+		//										group_desc.DrawBackground(GUI.tex_panel, inner: true);
+
+		//										using (GUI.Wrap.Push(GUI.RmX))
+		//										{
+		//											if (map_asset != null)
+		//											{
+		//												GUI.TextShaded(map_asset.Description);
+		//											}
+		//											else
+		//											{
+		//												GUI.TextShaded(location_data.desc);
+		//											}
+		//										}
+		//									}
+		//								}
+
+		//								GUI.SeparatorThick();
+
+		//								using (var group_info = GUI.Group.New(size: new(GUI.RmX, GUI.RmY), padding: new(2, 2)))
+		//								{
+		//									using (var group_bottom = GUI.Group.New2(size: GUI.Rm))
+		//									{
+		//										using (var scrollbox = GUI.Scrollbox.New("scroll.bottom"u8, size: GUI.Rm))
+		//										{
+		//											Span<Entity> children_span = FixedArray.CreateSpan32NoInit<Entity>(out var buffer_children);
+		//											//ent_asset.GetAllChildren(ref children_span, false);
+		//											ent_asset.GetChildren(ref children_span, Relation.Type.Child);
+		//											children_span.Sort();
+
+		//											foreach (var ent_child in children_span)
+		//											{
+		//												//if (ILocation.TryGetAsset(ent_child, out var h_location_child))
+		//												{
+		//													if (ent_child.TryGetAsset(out ILocation.Definition asset_location) || ent_child.TryGetAsset(out IEntrance.Definition asset_entrance))
+		//													{
+		//														using (GUI.ID.Push(ent_child))
+		//														using (var group_row = GUI.Group.New(size: new(GUI.RmX, 48)))
+		//														{
+		//															using (var group_icon = GUI.Group.New(size: new(GUI.RmY)))
+		//															{
+		//																var color_frame = Color32BGRA.GUI;
+
+		//																ref var faction_data = ref ent_child.GetFactionHandle().GetData();
+		//																if (faction_data.IsNotNull())
+		//																{
+		//																	color_frame = faction_data.color_a;
+		//																}
+
+		//																group_icon.DrawBackground(GUI.tex_slot_white, color: color_frame);
+
+		//																//ref var marker = ref ent_child.GetComponent<Marker.Data>();
+		//																//if (marker.IsNotNull())
+		//																//{
+		//																//	GUI.DrawSpriteCentered(marker.icon, group_icon.GetInnerRect(), layer: GUI.Layer.Window, scale: 2.00f);
+		//																//}
+
+		//																//if (GUI.Selectable3(ent_child.GetShortID(), group_icon.GetInnerRect(), selected: selected))
+		//																//{
+		//																//	WorldMap.selected_entity = selected ? default : ent_child;
+		//																//	GUI.SetDebugEntity(ent_child);
+		//																//}
+		//															}
+		//															//if (GUI.IsItemHovered())
+		//															//{
+		//															//	using (GUI.Tooltip.New(size: new(128, 0)))
+		//															//	{
+		//															//		using (GUI.Wrap.Push(GUI.RmX))
+		//															//		{
+		//															//			//GUI.Title(location_data_child.name_short, size: 20);
+		//															//			GUI.Title(ent_child.GetName(), size: 20);
+		//															//		}
+
+		//															//		GUI.SeparatorThick(new(-4, -4));
+
+		//															//		using (GUI.Group.New(size: new(GUI.RmX, 0.00f), padding: new(4)))
+		//															//		{
+		//															//			using (GUI.Wrap.Push(GUI.RmX))
+		//															//			{
+		//															//				//GUI.Text(location_data_child.desc);
+		//															//			}
+		//															//		}
+		//															//	}
+		//															//}
+		//															//GUI.FocusableAsset(h_location_child);
+
+		//															GUI.SameLine();
+
+		//															using (var group_right = GUI.Group.New(size: GUI.Rm, padding: new(4)))
+		//															{
+		//																GUI.TitleCentered(ent_child.GetName(), size: 24, pivot: new(0.00f, 0.50f));
+		//																//group_right.DrawBackground(GUI.tex_window_popup);
+
+		//																//if (GUI.DrawIconButton("info"u8, new(GUI.tex_icons_widget, 16, 16, 6, 1), size: new(48, 48)))
+		//																//{
+
+		//																//}
+
+		//																//GUI.SameLine();
+
+		//																using (var group_button = group_right.Split(size: new(80, GUI.RmY), align_x: GUI.AlignX.Right, align_y: GUI.AlignY.Center))
+		//																{
+		//																	var alpha = 1.00f;
+		//																	if (Client.GetRegionID() != selected_region_id)
+		//																	{
+		//																		var color = GUI.col_button_ok;
+		//																		if (GUI.DrawButton("Join"u8, size: GUI.Rm, font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+		//																		{
+		//																			Client.RequestSetActiveRegion(selected_region_id, delay_seconds: 0.75f);
+
+		//																			window.Close();
+		//																			GUI.RegionMenu.ToggleWidget(false);
+
+		//																			//Client.TODO_LoadRegion(region_id);
+		//																		}
+		//																	}
+		//																	else
+		//																	{
+		//																		var color = GUI.col_button_error;
+		//																		if (GUI.DrawButton("Leave"u8, size: GUI.Rm, font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+		//																		{
+		//																			Client.RequestSetActiveRegion(0, delay_seconds: 0.10f);
+		//																		}
+		//																	}
+		//																}
+		//															}
+
+		//															var is_selected = WorldMap.interacted_entity_cached == ent_child;
+		//															if (GUI.Selectable3(ent_child.GetShortID(), group_row.GetInnerRect(), selected: is_selected))
+		//															{
+		//																WorldMap.interacted_entity.Toggle(ent_child, !is_selected);
+		//																GUI.SetDebugEntity(ent_child);
+		//															}
+		//														}
+
+		//														GUI.SeparatorThick();
+		//													}
+		//												}
+		//											}
+		//										}
+		//									}
+		//								}
+		//							}
+		//						}
+
+		//						if (GUI.GetKeyboard().GetKeyDown(Keyboard.Key.Escape | Keyboard.Key.E) && window.Close())
+		//						{
+		//							WorldMap.selected_region_id = 0;
+		//							WorldMap.h_selected_location = 0;
+		//							if (location_asset.GetGlobalEntity() == WorldMap.interacted_entity_cached) WorldMap.interacted_entity = default;
+		//						}
+
+		//						if (WorldMap.h_selected_location == 0 && WorldMap.selected_region_id == 0)
+		//						{
+		//							Sound.PlayGUI(GUI.sound_window_close, volume: 0.30f);
+		//						}
+		//					}
+		//					else
+		//					{
+		//						selected_region_id = 0;
+		//					}
+		//				}
+		//			}
+		//		}
+		//	}
+		//}
 
 		[Flags]
 		public enum SelectUnitFlags: uint

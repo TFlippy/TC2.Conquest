@@ -293,7 +293,7 @@ namespace TC2.Conquest
 																{
 																	var is_selected = WorldMap.interacted_entity_cached == ent_location;
 																	var contains = WorldMap.hs_selected_entities.Contains(ent_location);
-																	var is_selectable = true; // !is_locked; // WorldMap.CanPlayerControlUnit(ent_location, Client.GetPlayerHandle());
+																	var is_selectable = !is_locked; // WorldMap.CanPlayerControlUnit(ent_location, Client.GetPlayerHandle());
 																	var is_current_region = region_id == Client.GetRegionID();
 																	//var is_current_region = 
 																	//using (GUI.Disabled.Push(!is_selectable)) //, GUI.GetEnabledAlpha(is_selectable)))
@@ -393,7 +393,7 @@ namespace TC2.Conquest
 
 																								//Math.DivRem()
 
-																								var days = Math.DivRem(((int)date_delta.ticks).ClampMax(0), (int)ImperialDateTime.ticks_per_day, out var ticks_rem);
+																								var days = Math.DivRem(((int)date_delta.ticks).ClampMin(0), (int)ImperialDateTime.ticks_per_day, out var ticks_rem);
 																								var hours = Math.DivRem(ticks_rem, (int)ImperialDateTime.ticks_per_hour, out ticks_rem);
 																								var minutes = Math.DivRem(ticks_rem, (int)ImperialDateTime.ticks_per_minute, out ticks_rem);
 
@@ -420,7 +420,7 @@ namespace TC2.Conquest
 																								var time_delta_irl_s = ((double)(date_delta.ticks / App.tickrate) / (double)x.arg.speed);
 																								var timespan_irl = TimeSpan.FromSeconds(time_delta_irl_s);
 
-																								var days = Math.DivRem(((int)date_delta.ticks).ClampMax(0), (int)ImperialDateTime.ticks_per_day, out var ticks_rem);
+																								var days = Math.DivRem(((int)date_delta.ticks).ClampMin(0), (int)ImperialDateTime.ticks_per_day, out var ticks_rem);
 																								var hours = Math.DivRem(ticks_rem, (int)ImperialDateTime.ticks_per_hour, out ticks_rem);
 																								var minutes = Math.DivRem(ticks_rem, (int)ImperialDateTime.ticks_per_minute, out ticks_rem);
 

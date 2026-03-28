@@ -575,13 +575,13 @@ namespace TC2.Conquest
 								filter: static (x) => x.data.flags.HasNone(ILocation.Flags.Hidden | ILocation.Flags.Restricted) && x.data.flags.HasAll(ILocation.Flags.Spawn | ILocation.Flags.Mobile) && x.data.buildings.HasAny(ILocation.Buildings.Train_Station | ILocation.Buildings.Trainyard | ILocation.Buildings.Fuel_Depot | ILocation.Buildings.Docks | ILocation.Buildings.Hotel | ILocation.Buildings.Apartments | ILocation.Buildings.Barracks),
 								draw: (asset, group, is_title) =>
 								{
-									if (asset != null)
+									if (asset is not null)
 									{
 										using (var group_icon = GUI.Group.New(size: new(GUI.RmY)))
 										{
 											using (var clip = GUI.Clip.Push(group_icon.GetInnerRect()))
 											{
-												if (asset.data.thumbnail.texture.id != 0)
+												if (asset.data.thumbnail.texture)
 												{
 													GUI.DrawSpriteCentered(asset.data.thumbnail, clip.rect, GUI.Layer.Window, scale: 0.25f);
 												}
@@ -646,7 +646,7 @@ namespace TC2.Conquest
 										filter: static (x) => x.data.flags.HasAny(ISpecies.Flags.Sapient) && x.data.flags.HasNone(ISpecies.Flags.Feral | ISpecies.Flags.Wild),
 										draw: (asset, group, is_title) =>
 										{
-											if (asset != null)
+											if (asset is not null)
 											{
 												GUI.TitleCentered(asset.data.name, pivot: new(0.00f, 0.50f), offset: new(8, 0), size: 24);
 											}
@@ -665,7 +665,7 @@ namespace TC2.Conquest
 										filter: static (x) => x.data.species == custom_character.vars.h_species && x.data.flags.HasAny(IOrigin.Flags.Special | IOrigin.Flags.Selectable),
 										draw: (asset, group, is_title) =>
 										{
-											if (asset != null)
+											if (asset is not null)
 											{
 												GUI.TitleCentered(asset.data.name, pivot: new(0.00f, 0.50f), offset: new(8, 0), size: 24);
 											}
@@ -701,7 +701,7 @@ namespace TC2.Conquest
 											&& (x.data.character_flags.IsEmpty() || custom_character.vars.character_flags.HasAny(x.data.character_flags)) && (x.data.character_flags_exclude.IsEmpty() || !custom_character.vars.character_flags.HasAny(x.data.character_flags_exclude)),
 											draw: (asset, group, is_title) =>
 											{
-												if (asset != null)
+												if (asset is not null)
 												{
 													//GUI.TitleCentered(asset.data.name, pivot: new(0.00f, 0.50f), offset: new(8, 0), size: 16);
 													if (is_title)
@@ -729,7 +729,7 @@ namespace TC2.Conquest
 											&& (x.data.character_flags.IsEmpty() || custom_character.vars.character_flags.HasAny(x.data.character_flags)) && (x.data.character_flags_exclude.IsEmpty() || !custom_character.vars.character_flags.HasAny(x.data.character_flags_exclude)),
 											draw: (asset, group, is_title) =>
 											{
-												if (asset != null)
+												if (asset is not null)
 												{
 													//GUI.TitleCentered(asset.data.name, pivot: new(0.00f, 0.50f), offset: new(8, 0), size: 16);
 													if (is_title)
@@ -824,7 +824,7 @@ namespace TC2.Conquest
 
 											static void DrawKit(IKit.Definition asset, GUI.Group group, bool is_title, Kit.Slot slot)
 											{
-												Dormitory.DrawKit(h_kit: asset?.GetHandle() ?? default,
+												Dormitory.DrawKit(h_kit: asset.GetHandle(),
 													rect: group.GetInnerRect(),
 													valid: true, //asset?.data.character_flags.Evaluate(custom_character.props.character_flags_default) > 0.00f,
 													selected: false,
@@ -883,7 +883,7 @@ namespace TC2.Conquest
 												filter: static (x) => x.data.slot == Kit.Slot.Vehicle && x.data.flags.HasAll(Kit.Flags.Overworld),
 												draw: (asset, group, is_title) =>
 												{
-													if (asset != null)
+													if (asset is not null)
 													{
 														using (var group_icon = GUI.Group.New(size: new(80, GUI.RmY)))
 														{

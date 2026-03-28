@@ -190,6 +190,7 @@ namespace TC2.Conquest
 
 			// TODO: temporary workaround, make it update when the asset is modified
 			//[ISystem.LateUpdate(ISystem.Mode.Single, ISystem.Scope.Global, interval: 1.00f)]
+			//[ISystem.Modified.Component<Transform.Data>(ISystem.Mode.Single, ISystem.Scope.Global)]
 			[ISystem.Event<ILocation.RefreshEvent>(ISystem.Mode.Single, ISystem.Scope.Global)]
 			public static void UpdateMarkerLocation(ISystem.Info.Common info, Entity entity, ref ILocation.RefreshEvent ev,
 			[Source.Owned] ref WorldMap.Marker.Data marker, [Source.Owned] in Location.Data location, [Source.Owned] ref Transform.Data transform)
@@ -204,7 +205,7 @@ namespace TC2.Conquest
 					transform.SetPosition(ev.data.point.ToVec2f());
 				}
 
-				////App.WriteLine($"UpdateMarkerLocation(): {entity.GetName()}; {ev.h_asset}; {ev.data}; {ev.data.point}");
+				App.WriteLine($"UpdateMarkerLocation(): {entity.GetName()}; {ev.h_asset}; {ev.data}; {ev.data.point}");
 			}
 
 			// TODO: temporary workaround, make it update when the asset is modified

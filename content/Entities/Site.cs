@@ -163,7 +163,7 @@ namespace TC2.Conquest
 										{
 											using (var group_thumbnail = GUI.Group.New(size: new(GUI.RmX)))
 											{
-												if (map_asset != null)
+												if (map_asset is not null)
 												{
 													GUI.DrawMapThumbnail(map_asset, size: GUI.Rm, show_frame: false);
 												}
@@ -176,7 +176,7 @@ namespace TC2.Conquest
 												GUI.DrawBackground(GUI.tex_frame_white, rect: group_thumbnail.GetOuterRect(), padding: new(4), color: GUI.col_button);
 											}
 
-											if (map_asset != null)
+											if (map_asset is not null)
 											{
 												//var color = GUI.col_button_ok;
 												//var alpha = 1.00f;
@@ -226,7 +226,7 @@ namespace TC2.Conquest
 
 											using (GUI.Wrap.Push(GUI.RmX))
 											{
-												if (map_asset != null)
+												if (map_asset is not null)
 												{
 													GUI.TextShaded(map_asset.Description);
 												}
@@ -343,7 +343,7 @@ namespace TC2.Conquest
 																		if (Client.GetRegionID() != location_region_id)
 																		{
 																			var color = GUI.col_button_ok;
-																			if (GUI.DrawButton("Enter"u8, size: GUI.Rm, font_size: 24, enabled: !is_loading, color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
+																			if (GUI.DrawButton("Enter"u8, size: GUI.Rm, font_size: 24, enabled: !is_loading, error: site.flags.HasAny(Data.Flags.Locked), color: color.WithAlphaMult(alpha), text_color: GUI.font_color_button_text.WithAlphaMult(alpha)))
 																			//if (GUI.DrawSpriteButton("enter"u8, sprite: GUI.spr_icons_widget.WithFrame(1, 13), size: GUI.Rm, enabled: !is_loading, color: color.WithAlphaMult(alpha)))
 																			{
 																				//Client.RequestSetActiveRegion(location_region_id, delay_seconds: 0.75f);
@@ -368,7 +368,6 @@ namespace TC2.Conquest
 																						}
 																					}
 																				});
-
 
 																				window.Close();
 																				GUI.RegionMenu.ToggleWidget(false);
