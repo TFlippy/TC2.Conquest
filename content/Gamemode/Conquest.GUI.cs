@@ -378,7 +378,25 @@ namespace TC2.Conquest
 																						var date_unlock = conquest.region_unlock_dates[site.region_id];
 																						if (site.flags.HasAny(Site.Data.Flags.Locked))
 																						{
+																							//GUI.TitleCentered($"CLOSED UNTIL {date_unlock.ToDateString()} S.D.", size: 12, font: GUI.Font.Editia, color: GUI.font_color_red_b, pivot: new(1.00f, 0.50f), offset: new(0, 0));
 																							GUI.TitleCentered($"CLOSED UNTIL {date_unlock.ToDateString()} S.D.", size: 12, font: GUI.Font.Editia, color: GUI.font_color_red_b, pivot: new(1.00f, 0.50f), offset: new(0, 0));
+																							GUI.DrawHoverTooltip(arg: (world_global.date, date_unlock, world_global.speed), draw: static (x) =>
+																							{
+																								var date_delta = (x.arg.date_unlock - x.arg.date);
+																								var time_delta_irl_s = ((double)(date_delta.ticks / App.tickrate) / (double)x.arg.speed);
+																								var timespan_irl = TimeSpan.FromSeconds(time_delta_irl_s);
+
+																								var (days, ticks_rem) = Math.DivRem((int)date_delta.ticks, (int)ImperialDateTime.ticks_per_day);
+																								var hours = ticks_rem / ImperialDateTime.ticks_per_hour;
+
+																								GUI.Title("This map is currently locked."u8);
+																								//GUI.LabelShaded(text: "Unlocks in:"u8, value: days, format: "0 'hours'", width: 192);
+																								GUI.TextShaded($"Unlocks in {days} days and {hours} hours, S.D.");
+																								//GUI.TextShaded($"({timespan_irl:%d'.'hh':'mm':'ss} irl)");
+																								//GUI.TextShaded($"{timespan_irl.TotalDays:0} days, {timespan_irl:hh':'mm':'ss}");
+																								GUI.TextShaded($"({timespan_irl.TotalHours:0}h {timespan_irl.Minutes}min irl)");
+																								//GUI.TextShaded($"({TimeSpan.FromSeconds(time_delta_irl_s).TotalSeconds:0} s irl)");
+																							});
 																						}
 																						else
 																						{
