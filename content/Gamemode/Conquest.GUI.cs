@@ -153,7 +153,7 @@ namespace TC2.Conquest
 											}
 										}
 									}
-								
+
 									using (var group_airships = GUI.Group.New(size: GUI.Rm, padding: new(4)))
 									{
 										group_airships.DrawBackground(GUI.tex_frame);
@@ -176,7 +176,7 @@ namespace TC2.Conquest
 										GUI.TitleCentered("Region List"u8, size: 28, pivot: new(0.00f, 0.50f), offset: new(8, 0));
 										if (world_global.IsNotNull())
 										{
-											GUI.TitleCentered($"{world_global.date.ToDateString()} S.D.", size: 20, color: GUI.font_color_default, 
+											GUI.TitleCentered($"{world_global.date.ToDateString()} S.D.", size: 20, color: GUI.font_color_default,
 											pivot: new(1.00f, 0.50f), offset: new(-6, -1));
 											GUI.DrawHoverTooltip("Current in-game calendar date."u8);
 										}
@@ -344,7 +344,7 @@ namespace TC2.Conquest
 																				{
 																					if (GUI.DrawButton("Locked"u8, size: new(72, GUI.RmY), error: true, color: GUI.col_button))
 																					{
-																						
+
 																					}
 																				}
 																				else
@@ -378,20 +378,58 @@ namespace TC2.Conquest
 																						var date_unlock = conquest.region_unlock_dates[site.region_id];
 																						if (site.flags.HasAny(Site.Data.Flags.Locked))
 																						{
+																							const bool show_time_left = true;
+
 																							//GUI.TitleCentered($"CLOSED UNTIL {date_unlock.ToDateString()} S.D.", size: 12, font: GUI.Font.Editia, color: GUI.font_color_red_b, pivot: new(1.00f, 0.50f), offset: new(0, 0));
-																							GUI.TitleCentered($"CLOSED UNTIL {date_unlock.ToDateString()} S.D.", size: 12, font: GUI.Font.Editia, color: GUI.font_color_red_b, pivot: new(1.00f, 0.50f), offset: new(0, 0));
-																							GUI.DrawHoverTooltip(arg: (world_global.date, date_unlock, world_global.speed), draw: static (x) =>
+																							//GUI.TitleCentered($"CLOSED UNTIL {date_unlock.ToDateString()} S.D.", size: 12, font: GUI.Font.Editia, color: GUI.font_color_red_b, pivot: new(1.00f, 0.50f), offset: new(0, 0));
+																							if (show_time_left)
+																							{
+																								var date_delta = (date_unlock - world_global.date);
+																								var time_delta_irl_s = ((double)(date_delta.ticks / App.tickrate) / (double)world_global.speed);
+																								//var timespan_irl = TimeSpan.FromSeconds(time_delta_irl_s);
+
+																								//var (days, ticks_rem) = Math.DivRem((int)date_delta.ticks, (int)ImperialDateTime.ticks_per_day);
+																								//var hours = ticks_rem / ImperialDateTime.ticks_per_hour;
+
+																								//Math.DivRem()
+
+																								var days = Math.DivRem(((int)date_delta.ticks).ClampMax(0), (int)ImperialDateTime.ticks_per_day, out var ticks_rem);
+																								var hours = Math.DivRem(ticks_rem, (int)ImperialDateTime.ticks_per_hour, out ticks_rem);
+																								var minutes = Math.DivRem(ticks_rem, (int)ImperialDateTime.ticks_per_minute, out ticks_rem);
+
+																								//GUI.Title("This map is currently locked."u8);
+																								//GUI.LabelShaded(text: "Unlocks in:"u8, value: days, format: "0 'hours'", width: 192);
+																								//GUI.TextShaded($"Unlocks in {days} days and {hours} hours, S.D.");
+																								//GUI.TextShaded($"({timespan_irl:%d'.'hh':'mm':'ss} irl)");
+																								//GUI.TextShaded($"{timespan_irl.TotalDays:0} days, {timespan_irl:hh':'mm':'ss}");
+																								//GUI.TextShaded($"({timespan_irl.TotalHours:0}h {timespan_irl.Minutes}min irl)");
+																								//GUI.TextShaded($"({TimeSpan.FromSeconds(time_delta_irl_s).TotalSeconds:0} s irl)");
+
+																								//GUI.TitleCentered($"UNLOCKS IN {days}d {hours:00}:{minutes:00} S.D.", size: 12, font: GUI.Font.Editia, color: GUI.font_color_red_b, pivot: new(1.00f, 0.50f), offset: new(0, 0));
+																								//GUI.TitleCentered($"UNLOCKS IN {days}d {hours:00}:{minutes:00} S.D.", size: 12, font: GUI.Font.Editia, color: GUI.font_color_red_b, pivot: new(1.00f, 0.50f), offset: new(0, 0));
+																								GUI.TitleCentered($"UNLOCKS IN {days}d {hours:00} S.D.", size: 12, font: GUI.Font.Editia, color: GUI.font_color_red_b, pivot: new(1.00f, 0.50f), offset: new(0, 0));
+																							}
+																							else
+																							{
+																								GUI.TitleCentered($"CLOSED UNTIL {date_unlock.ToDateStringSD()}", size: 12, font: GUI.Font.Editia, color: GUI.font_color_red_b, pivot: new(1.00f, 0.50f), offset: new(0, 0));
+																							}
+																							//GUI.TitleCentered($"CLOSED UNTIL S.D. {date_unlock.Year}/{date_unlock.GetDayOfYear()}", size: 12, font: GUI.Font.Editia, color: GUI.font_color_red_b, pivot: new(1.00f, 0.50f), offset: new(0, 0));
+																							GUI.DrawHoverTooltip(arg: (date_unlock, world_global.date, world_global.speed), draw: static (x) =>
 																							{
 																								var date_delta = (x.arg.date_unlock - x.arg.date);
 																								var time_delta_irl_s = ((double)(date_delta.ticks / App.tickrate) / (double)x.arg.speed);
 																								var timespan_irl = TimeSpan.FromSeconds(time_delta_irl_s);
 
-																								var (days, ticks_rem) = Math.DivRem((int)date_delta.ticks, (int)ImperialDateTime.ticks_per_day);
-																								var hours = ticks_rem / ImperialDateTime.ticks_per_hour;
+																								var days = Math.DivRem(((int)date_delta.ticks).ClampMax(0), (int)ImperialDateTime.ticks_per_day, out var ticks_rem);
+																								var hours = Math.DivRem(ticks_rem, (int)ImperialDateTime.ticks_per_hour, out ticks_rem);
+																								var minutes = Math.DivRem(ticks_rem, (int)ImperialDateTime.ticks_per_minute, out ticks_rem);
+
+																								//var (days, ticks_rem) = Math.DivRem((int)date_delta.ticks, (int)ImperialDateTime.ticks_per_day);
+																								//var hours = ticks_rem / ImperialDateTime.ticks_per_hour;
 
 																								GUI.Title("This map is currently locked."u8);
 																								//GUI.LabelShaded(text: "Unlocks in:"u8, value: days, format: "0 'hours'", width: 192);
-																								GUI.TextShaded($"Unlocks in {days} days and {hours} hours, S.D.");
+																								GUI.TextShaded($"Unlocks in {days} days and {hours:00}:{minutes:00} S.D.");
 																								//GUI.TextShaded($"({timespan_irl:%d'.'hh':'mm':'ss} irl)");
 																								//GUI.TextShaded($"{timespan_irl.TotalDays:0} days, {timespan_irl:hh':'mm':'ss}");
 																								GUI.TextShaded($"({timespan_irl.TotalHours:0}h {timespan_irl.Minutes}min irl)");
