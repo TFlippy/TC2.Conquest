@@ -25,12 +25,12 @@ namespace TC2.Conquest
 			public Site.Data.Flags flags;
 
 			[Save.NewLine]
+			[Asset.Ignore] public byte region_id;
 			[Asset.Ignore, Save.Ignore] public byte player_count;
-			public byte unused_00;
 			public Site.Data.Status status;
 
-			[Save.NewLine]
-			public ImperialDateTime date_unlock = new(729025920000);
+			//[Save.NewLine]
+			//public ImperialDateTime date_unlock = new(729025920000);
 		}
 
 		//[ISystem.Update.A(ISystem.Mode.Single, ISystem.Scope.Global | ISystem.Scope.Region)]
@@ -38,27 +38,56 @@ namespace TC2.Conquest
 		//[Source.Owned] ref Site.Data site, [Source.Owned] ref Transform.Data transform)
 		//{
 
-//}
+		//}
+
+		[ISystem.Modified(ISystem.Mode.Single, ISystem.Scope.Global)]
+		[ISystem.Add(ISystem.Mode.Single, ISystem.Scope.Global), HasTag("initialized", true, Source.Modifier.Owned)]
+		public static void OnModified(ISystem.Info.Global info, ref Region.Data.Global region_global, Entity ent_site,
+		[Source.Owned] ref Site.Data site, [Source.Owned] ref Location.Data location)
+		{
+			site.region_id = location.h_location.GetRegionID();
+		}
+
+		//[ISystem.PreUpdate.A(ISystem.Mode.Single, ISystem.Scope.Global, interval: 1.00f)]
+		//public static void OnUpdate_Gamemode(ISystem.Info.Global info, ref Region.Data.Global region_global, Entity ent_site,
+		//[Source.Global] ref Conquest.Gamemode gamemode, [Source.Global] ref World.Global world_global,
+		//[Source.Owned] ref Site.Data site, [Source.Owned] ref Transform.Data transform, [Source.Owned] ref Location.Data location)
+		//{
+		//	if (site.region_id != 0)
+		//	{
+		//		var sync = false;
+		//		sync |= site.flags.TrySetFlag(Site.Data.Flags.Locked, world_global.date < gamemode.region_unlock_dates[site.region_id]);
+
+		//		if (sync)
+		//		{
+		//			site.Sync(ent_site, true);
+		//			App.WriteValue("synced region info", site.flags, color: App.Color.Magenta);
+		//		}
+		//	}
+		//}
 
 #if SERVER
 		[ISystem.PreUpdate.A(ISystem.Mode.Single, ISystem.Scope.Global, interval: 1.00f)]
-		public static void OnUpdate_Stats(ISystem.Info.Global info, ref Region.Data.Global region_global, Entity ent_site,
+		public static void OnUpdate_Status(ISystem.Info.Global info, ref Region.Data.Global region_global, Entity ent_site,
+		[Source.Global] ref Conquest.Gamemode gamemode, [Source.Global] ref World.Global world_global,
 		[Source.Owned] ref Site.Data site, [Source.Owned] ref Transform.Data transform, [Source.Owned] ref Location.Data location)
 		{
-			var region_id = location.h_location.GetRegionID();
-			if (region_id != 0)
+			var region_id = site.region_id;
+			if (site.region_id != 0)
 			{
+				var sync = false;
+				sync |= site.flags.TrySetFlag(Site.Data.Flags.Locked, world_global.date < gamemode.region_unlock_dates[site.region_id]);
+
 				ref var region_data = ref World.GetRegion(region_id);
 				if (region_data.IsNotNull())
 				{
-					var sync = false;
 					sync |= site.player_count.TryChange((byte)region_data.GetConnectedPlayerCount());
-				
-					if (sync)
-					{
-						site.Sync(ent_site);
-						App.WriteValue("synced region stats", region_id, color: App.Color.Magenta);
-					}
+				}
+
+				if (sync)
+				{
+					site.Sync(ent_site, true);
+					App.WriteValue("synced region status", (region_id, site.player_count, site.flags, site.status), color: App.Color.Magenta);
 				}
 			}
 		}

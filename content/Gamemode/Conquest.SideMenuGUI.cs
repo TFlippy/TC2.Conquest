@@ -465,7 +465,7 @@ namespace TC2.Conquest
 													//ref var character = ref region.GetCharacter(h_character, out var ent_character);
 													if (character.IsNotNull())
 													{
-														var max_pickup_distance = 2.00f;
+														var max_pickup_distance = 2.50f;
 														var results_span = FixedArray.CreateSpan32NoInit<OverlapResult>(out var results_buffer);
 														if (region.TryOverlapPointAll(world_position: pos_cached_pickup, radius: max_pickup_distance,
 														hits: ref results_span, require: Physics.Layer.Dynamic | Physics.Layer.Holdable,

@@ -26,6 +26,36 @@ namespace TC2.Conquest
 			//public float elapsed;
 			public Conquest.Gamemode.Flags flags;
 
+
+			[Save.NewLine]
+			[Save.Force] public FixedArray32<ImperialDateTime> region_unlock_dates = InitCalendar();
+
+			public static FixedArray32<ImperialDateTime> InitCalendar()
+			{
+				var date_start = World.imperial_date_start;
+				var date_base = new ImperialDateTime(date_start.Year, date_start.Month + 1, 0);
+
+				var num_maps_start = 3;
+
+				var dates = new FixedArray32<ImperialDateTime>();
+				var region_current = 0;
+				dates[region_current++] = default; // world/null region
+
+				// starter maps
+				for (var i = 0; i < num_maps_start; region_current++, i++)
+				{
+					dates[region_current] = date_start;
+				}
+
+				// unlocking maps
+				for (var i = 0; region_current < dates.Length; i++, region_current++)
+				{
+					dates[region_current] = date_base.WithAddWeeks(i);
+				}
+
+				return dates;
+			}
+
 			public static void Configure()
 			{
 

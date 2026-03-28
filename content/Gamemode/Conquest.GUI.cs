@@ -48,6 +48,8 @@ namespace TC2.Conquest
 							ref var g_region = ref World.GetGlobalRegion();
 							ref var game_info = ref Client.GetGameInfo();
 							ref var scenario_data = ref WorldMap.h_scenario.GetData();
+							ref var world_global = ref g_region.GetGlobalComponent<World.Global>();
+							ref var conquest = ref g_region.GetGlobalComponent<Conquest.Gamemode>();
 
 							using (var group_header = GUI.Group.New(size: new(512, 64)))
 							{
@@ -87,7 +89,7 @@ namespace TC2.Conquest
 
 								//GUI.DrawSprite("ui_logo_title");
 
-								using (var group_l = GUI.Group.New(size: new(GUI.RmX * 0.52f, GUI.RmY)))
+								using (var group_l = GUI.Group.New(size: new(384, GUI.RmY)))
 								{
 									using (var group_a = GUI.Group.New(size: new(GUI.RmX, 48 * 7), padding: new(4)))
 									{
@@ -172,6 +174,12 @@ namespace TC2.Conquest
 
 										//GUI.Title(map_info.name, size: 24);
 										GUI.TitleCentered("Region List"u8, size: 28, pivot: new(0.00f, 0.50f), offset: new(8, 0));
+										if (world_global.IsNotNull())
+										{
+											GUI.TitleCentered($"{world_global.date.ToDateString()} S.D.", size: 20, color: GUI.font_color_default, 
+											pivot: new(1.00f, 0.50f), offset: new(-6, -1));
+											GUI.DrawHoverTooltip("Current in-game calendar date."u8);
+										}
 										//GUI.TextShadedCentered("derp"u8, pivot: new(1.00f, 0.50f));
 									}
 
@@ -198,6 +206,7 @@ namespace TC2.Conquest
 
 												if (GUI.DrawIconButton("btn.test"u8, sprite: new("specialization_icons", 32, 32, 0, 0), size: new(GUI.RmY)))
 												{
+
 												}
 
 												GUI.SameLine();
@@ -259,11 +268,13 @@ namespace TC2.Conquest
 																var map_identifier = world_info.regions[region_id];
 
 																var player_count = (byte)0;
+																var is_locked = false;
 
 																ref var site = ref ent_location.GetComponent<Site.Data>();
 																if (site.IsNotNull())
 																{
 																	player_count = site.player_count;
+																	is_locked = site.flags.HasAny(Site.Data.Flags.Locked);
 																}
 
 																//var map_asset = mod_context.GetMap(map_identifier);
@@ -282,10 +293,10 @@ namespace TC2.Conquest
 																{
 																	var is_selected = WorldMap.interacted_entity_cached == ent_location;
 																	var contains = WorldMap.hs_selected_entities.Contains(ent_location);
-																	var is_selectable = true; // WorldMap.CanPlayerControlUnit(ent_location, Client.GetPlayerHandle());
+																	var is_selectable = true; // !is_locked; // WorldMap.CanPlayerControlUnit(ent_location, Client.GetPlayerHandle());
 																	var is_current_region = region_id == Client.GetRegionID();
 																	//var is_current_region = 
-																	using (GUI.Alpha.Push(GUI.GetEnabledAlpha(is_selectable)))
+																	//using (GUI.Disabled.Push(!is_selectable)) //, GUI.GetEnabledAlpha(is_selectable)))
 																	//using (GUI.Disabled.Push(true, !is_selectable))
 																	{
 																		group_row.DrawBackground(GUI.tex_panel);
@@ -310,7 +321,7 @@ namespace TC2.Conquest
 																				GUI.TitleCentered(map_info.name, size: 24, pivot: new(0.00f, 0.50f));
 																				//GUI.TextShadedCentered("derp"u8, pivot: new(1.00f, 0.50f));
 																				//GUI.TextShadedCentered(player_count, format: "'Players: '0", font: GUI.Font.Superstar, size: 16, pivot: new(1.00f, 0.50f));
-																				GUI.TextShadedCentered(player_count, format: "'Players: '0", font: GUI.Font.Superstar, size: 16, pivot: new(1.00f, 0.50f));
+																				GUI.TextShadedCentered(player_count, format: "'Players: '0", font: GUI.Font.Superstar, size: 16, pivot: new(1.00f, 0.50f), color: GUI.font_color_default.WithAlphaMult(GUI.GetEnabledAlpha(!is_locked)));
 
 																			}
 
@@ -329,6 +340,13 @@ namespace TC2.Conquest
 																						//GUI.RegionMenu.ToggleWidget(false);
 																					}
 																				}
+																				else if (is_locked)
+																				{
+																					if (GUI.DrawButton("Locked"u8, size: new(72, GUI.RmY), error: true, color: GUI.col_button))
+																					{
+																						
+																					}
+																				}
 																				else
 																				{
 																					//widget.SetActive(false);
@@ -340,7 +358,6 @@ namespace TC2.Conquest
 																							await App.WaitRender();
 																							GUI.RegionMenu.ToggleWidget(false);
 																							widget.SetActive(false);
-
 																						});
 																					}
 																				}
@@ -356,6 +373,19 @@ namespace TC2.Conquest
 
 																				using (var group_left = GUI.Group.New(size: GUI.Rm, padding: new(3)))
 																				{
+																					if (site.IsNotNull())
+																					{
+																						var date_unlock = conquest.region_unlock_dates[site.region_id];
+																						if (site.flags.HasAny(Site.Data.Flags.Locked))
+																						{
+																							GUI.TitleCentered($"CLOSED UNTIL {date_unlock.ToDateString()} S.D.", size: 12, font: GUI.Font.Editia, color: GUI.font_color_red_b, pivot: new(1.00f, 0.50f), offset: new(0, 0));
+																						}
+																						else
+																						{
+																							GUI.TitleCentered("UNLOCKED"u8, size: 12, font: GUI.Font.Editia, color: GUI.font_color_green_b.WithAlpha(224), pivot: new(1.00f, 0.50f), offset: new(0, 0));
+																						}
+																					}
+
 																					//GUI.LabelShaded("Players:"u8, player_count, font_a: GUI.Font.Superstar, font_b: GUI.Font.Superstar, size_a: 16, size_b: 16, width: 80);
 																					//GUI.LabelShaded("Players:"u8, player_count * 16, width: 72);
 																					//GUI.LabelShaded("Hazard:"u8, player_count, width: 72);
