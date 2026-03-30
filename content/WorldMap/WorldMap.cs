@@ -205,7 +205,7 @@ namespace TC2.Conquest
 					transform.SetPosition(ev.data.point.ToVec2f());
 				}
 
-				App.WriteLine($"UpdateMarkerLocation(): {entity.GetName()}; {ev.h_asset}; {ev.data}; {ev.data.point}");
+				//App.WriteLine($"UpdateMarkerLocation(): {entity.GetName()}; {ev.h_asset}; {ev.data}; {ev.data.point}");
 			}
 
 			// TODO: temporary workaround, make it update when the asset is modified

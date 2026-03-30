@@ -27,6 +27,7 @@ namespace TC2.Conquest
 					ref readonly var kb = ref Control.GetKeyboard();
 					if (kb.GetKeyDown(Keyboard.Key.Tab))
 					{
+						//App.WriteLine("widget");
 						if (widget.state_flags.HasAny(Sidebar.Widget.StateFlags.Show))
 						{
 							if (widget.IsActive()) Sound.PlayGUI(GUI.sound_window_close, volume: 0.30f);
@@ -429,10 +430,10 @@ namespace TC2.Conquest
 
 																								GUI.Title("This map is currently locked."u8);
 																								//GUI.LabelShaded(text: "Unlocks in:"u8, value: days, format: "0 'hours'", width: 192);
-																								GUI.TextShaded($"Unlocks in {days} days and {hours:00}:{minutes:00} S.D.");
+																								GUI.TextShaded($"Unlocks in {days}d {hours:00}:{minutes:00} S.D.");
 																								//GUI.TextShaded($"({timespan_irl:%d'.'hh':'mm':'ss} irl)");
 																								//GUI.TextShaded($"{timespan_irl.TotalDays:0} days, {timespan_irl:hh':'mm':'ss}");
-																								GUI.TextShaded($"({timespan_irl.TotalHours:0}h {timespan_irl.Minutes}min irl)");
+																								GUI.TextShaded($"({timespan_irl.TotalHours:0}:{timespan_irl.Minutes:00}:{timespan_irl.Seconds:00} real time)");
 																								//GUI.TextShaded($"({TimeSpan.FromSeconds(time_delta_irl_s).TotalSeconds:0} s irl)");
 																							});
 																						}
@@ -485,6 +486,8 @@ namespace TC2.Conquest
 																	//	GUI.DrawEntityMarker(ent_location, cross_size: 0.125f, layer: GUI.Layer.Foreground);
 																	//}
 																}
+
+																GUI.FocusableAsset(h_location, rect: group_row);
 															}
 														}
 													}

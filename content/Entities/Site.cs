@@ -76,7 +76,14 @@ namespace TC2.Conquest
 			if (site.region_id != 0)
 			{
 				var sync = false;
-				sync |= site.flags.TrySetFlag(Site.Data.Flags.Locked, world_global.date < gamemode.region_unlock_dates[site.region_id]);
+				if (site.flags.TrySetFlag(Site.Data.Flags.Locked, world_global.date < gamemode.region_unlock_dates[site.region_id]))
+				{
+					sync = true;
+					if (site.flags.HasNone(Site.Data.Flags.Locked))
+					{
+						Notification.Push($"Region {location.h_location.GetShortName()} is now available for colonization.", color: Color32BGRA.Yellow, lifetime: 30.00f, sound: "alert.12", volume: 0.80f, send_type: Net.SendType.Reliable, write_console: true);
+					}
+				}
 
 				ref var region_data = ref World.GetRegion(region_id);
 				if (region_data.IsNotNull())
