@@ -81,7 +81,8 @@ namespace TC2.Conquest
 					sync = true;
 					if (site.flags.HasNone(Site.Data.Flags.Locked))
 					{
-						Notification.Push($"Region {location.h_location.GetShortName()} is now available for colonization.", color: Color32BGRA.Yellow, lifetime: 30.00f, sound: "alert.12", volume: 0.80f, send_type: Net.SendType.Reliable, write_console: true);
+						Notification.Push($"Region {location.h_location.GetShortName()} is now available for colonization.", 
+						color: Color32BGRA.Yellow, lifetime: 30.00f, sound: "ui.alert.bwoing.02", volume: 0.80f, send_type: Net.SendType.Reliable, write_console: true);
 					}
 				}
 

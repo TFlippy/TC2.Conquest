@@ -1,10 +1,10 @@
 ﻿{
-	$version: "0.1.72.0"
+	$version: "0.1.72.1"
 	name: "The Most Rushed Catalogue"
 	
 	h_company: postus
 	
-	date_created: 0
+	date_created: "000.00.00 00:00:00"
 	
 	items:
 	[
@@ -60,12 +60,12 @@
 		}
 		{
 			type: resource
-			h_material: cmajzl
+			h_material: mayo
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: mayo
+			h_material: glue
 			quantity: 0.000
 		}
 		{
@@ -95,6 +95,11 @@
 		}
 		{
 			type: resource
+			h_material: steel.plate
+			quantity: 0.000
+		}
+		{
+			type: resource
 			h_material: computer
 			quantity: 0.000
 		}
@@ -120,17 +125,17 @@
 		}
 		{
 			type: resource
-			h_material: meth
-			quantity: 0.000
-		}
-		{
-			type: resource
 			h_material: sugar
 			quantity: 0.000
 		}
 		{
 			type: resource
 			h_material: glass
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: copper.plate
 			quantity: 0.000
 		}
 		{
@@ -145,27 +150,22 @@
 		}
 		{
 			type: resource
-			h_material: graphite
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: glue
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: cement
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: porridge
+			h_material: brick.concrete
 			quantity: 0.000
 		}
 		{
 			type: resource
 			h_material: nitrosugar
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: sulfur
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: porridge
 			quantity: 0.000
 		}
 	]
