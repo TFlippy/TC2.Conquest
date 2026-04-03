@@ -1,7 +1,17 @@
 ﻿{
-	$version: "0.1.66.1"
+	$version: "0.1.72.1"
 	name: "Krumpelstejn Charter Crisis"
+	desc:
+		'''
+		Guvernorat-Krumpelstejn, one of the Central Imperial Governorates, 
+		is facing civil unrest after a legal document granting rights to the island was lost in a disastrous game of dice.
+
+		In the meantime, Imperial Government's Designated Expansion Zones are being overrun 
+		by various opportunistic settlers without any regard for the official regulations and properly following proper protocols.
+		'''
+	
 	worldmap_position: [27.000, -13.000]
+	date_start: "752.02.23 10:00:00"
 	
 	governorates:
 	[
@@ -16,7 +26,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 			}
 			
@@ -29,7 +38,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -44,7 +52,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -59,7 +66,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -73,7 +79,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -88,7 +93,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -103,7 +107,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -118,7 +121,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -132,7 +134,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -147,7 +148,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -162,7 +162,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -176,7 +175,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -190,7 +188,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -204,7 +201,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -218,7 +214,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -233,7 +228,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -247,7 +241,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -262,7 +255,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -277,7 +269,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -292,7 +283,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -307,7 +297,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -322,7 +311,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -336,7 +324,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -350,7 +337,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -365,7 +351,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -380,7 +365,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -395,7 +379,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [1, 1]
 			}
@@ -410,7 +393,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 1]
 			}
@@ -424,7 +406,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -438,7 +419,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -453,7 +433,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -467,7 +446,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -482,7 +460,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -497,7 +474,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -511,7 +487,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -526,7 +501,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -540,7 +514,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -555,7 +528,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -570,7 +542,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -585,7 +556,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -600,7 +570,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -615,7 +584,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -630,7 +598,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -645,7 +612,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -660,7 +626,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -675,7 +640,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -690,7 +654,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -705,7 +668,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -720,7 +682,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -734,7 +695,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -749,7 +709,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -764,7 +723,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -779,7 +737,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -794,7 +751,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -809,7 +765,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -823,7 +778,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -837,7 +791,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -852,7 +805,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -866,7 +818,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -880,7 +831,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -894,7 +844,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -908,7 +857,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -922,7 +870,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -936,7 +883,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -950,7 +896,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -964,7 +909,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -979,7 +923,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -994,7 +937,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 4]
 			}
@@ -1009,7 +951,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 4]
 			}
@@ -1024,7 +965,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 4]
 			}
@@ -1039,7 +979,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 4]
 			}
@@ -1054,7 +993,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 4]
 			}
@@ -1069,7 +1007,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -1084,7 +1021,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -1099,7 +1035,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -1114,7 +1049,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -1129,7 +1063,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -1144,7 +1077,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -1159,7 +1091,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -1174,7 +1105,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -1187,7 +1117,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -1202,7 +1131,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -1217,7 +1145,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -1232,7 +1159,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -1247,7 +1173,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -1262,7 +1187,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -1275,7 +1199,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -1290,7 +1213,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -1305,7 +1227,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -1320,7 +1241,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -1335,7 +1255,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -1350,7 +1269,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -1365,7 +1283,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -1379,7 +1296,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -1393,7 +1309,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -1408,7 +1323,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 4]
 			}
@@ -1423,7 +1337,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 4]
 			}
@@ -1438,7 +1351,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -1452,7 +1364,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -1465,7 +1376,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -1478,7 +1388,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 4]
 			}
@@ -1493,7 +1402,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -1508,7 +1416,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -1522,7 +1429,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -1537,7 +1443,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -1552,7 +1457,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -1567,7 +1471,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -1581,7 +1484,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -1595,7 +1497,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -1610,7 +1511,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 1]
 			}
@@ -1624,7 +1524,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -1639,7 +1538,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -1654,7 +1552,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 4]
 			}
@@ -1669,7 +1566,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -1684,7 +1580,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 4]
 			}
@@ -1699,7 +1594,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -1713,7 +1607,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -1727,7 +1620,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 4]
 			}
@@ -1742,7 +1634,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 4]
 			}
@@ -1757,7 +1648,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -1772,7 +1662,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 4]
 			}
@@ -1786,7 +1675,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 4]
 			}
@@ -1801,7 +1689,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 4]
 			}
@@ -1816,7 +1703,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 4]
 			}
@@ -1830,7 +1716,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 4]
 			}
@@ -1845,7 +1730,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 4]
 			}
@@ -1860,7 +1744,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 4]
 			}
@@ -1875,7 +1758,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 4]
 			}
@@ -1890,7 +1772,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -1904,7 +1785,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -1919,7 +1799,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -1934,7 +1813,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -1949,7 +1827,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -1963,7 +1840,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -1978,7 +1854,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -1993,7 +1868,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -2007,7 +1881,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -2022,7 +1895,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -2037,7 +1909,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -2051,7 +1922,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -2066,7 +1936,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -2081,7 +1950,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -2096,7 +1964,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -2111,7 +1978,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -2126,7 +1992,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -2141,7 +2006,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -2156,7 +2020,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -2171,7 +2034,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -2186,7 +2048,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -2201,7 +2062,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -2216,7 +2076,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -2231,7 +2090,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -2246,7 +2104,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -2260,7 +2117,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -2275,7 +2131,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 5]
 			}
@@ -2289,7 +2144,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -2304,7 +2158,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 5]
 			}
@@ -2319,7 +2172,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -2334,7 +2186,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -2349,7 +2200,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -2364,7 +2214,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 4]
 			}
@@ -2379,7 +2228,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -2394,7 +2242,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -2409,7 +2256,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -2424,7 +2270,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 4]
 			}
@@ -2439,7 +2284,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -2453,7 +2297,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -2468,7 +2311,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -2482,7 +2324,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -2497,7 +2338,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -2510,7 +2350,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 4]
 			}
@@ -2525,7 +2364,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -2540,7 +2378,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [1, 1]
 			}
@@ -2555,7 +2392,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -2570,7 +2406,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -2585,7 +2420,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -2600,7 +2434,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -2614,7 +2447,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 4]
 			}
@@ -2629,7 +2461,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -2644,7 +2475,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -2659,7 +2489,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 1]
 			}
@@ -2673,7 +2502,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -2688,7 +2516,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -2702,7 +2529,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -2716,7 +2542,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -2730,7 +2555,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -2745,7 +2569,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -2760,7 +2583,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -2775,7 +2597,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 4]
 			}
@@ -2789,7 +2610,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 4]
 			}
@@ -2804,7 +2624,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -2819,7 +2638,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -2834,7 +2652,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -2849,7 +2666,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -2863,7 +2679,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -2877,7 +2692,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -2892,7 +2706,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -2907,7 +2720,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -2922,7 +2734,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -2937,7 +2748,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -2951,7 +2761,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -2966,7 +2775,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -2981,7 +2789,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -2996,7 +2803,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 5]
 			}
@@ -3011,7 +2817,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 4]
 			}
@@ -3025,7 +2830,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [1, 5]
 			}
@@ -3039,7 +2843,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [1, 5]
 			}
@@ -3054,7 +2857,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [1, 5]
 			}
@@ -3068,7 +2870,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -3083,7 +2884,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -3098,7 +2898,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -3113,7 +2912,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -3128,7 +2926,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -3143,7 +2940,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -3158,7 +2954,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -3173,7 +2968,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -3187,7 +2981,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -3202,7 +2995,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -3217,7 +3009,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -3232,7 +3023,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -3247,7 +3037,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -3262,7 +3051,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -3277,7 +3065,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -3292,7 +3079,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -3307,7 +3093,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -3322,7 +3107,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -3337,7 +3121,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -3352,7 +3135,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 4]
 			}
@@ -3367,7 +3149,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 4]
 			}
@@ -3382,7 +3163,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 4]
 			}
@@ -3397,7 +3177,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -3412,7 +3191,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -3427,7 +3205,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -3442,7 +3219,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 4]
 			}
@@ -3457,7 +3233,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 7]
 			}
@@ -3471,7 +3246,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -3484,7 +3258,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 6]
 			}
@@ -3497,7 +3270,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -3510,7 +3282,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 7]
 			}
@@ -3523,7 +3294,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -3536,7 +3306,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 7]
 			}
@@ -3549,7 +3318,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [0, 7]
 			}
@@ -3562,7 +3330,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -3576,7 +3343,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 7]
 			}
@@ -3589,7 +3355,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -3602,7 +3367,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -3616,7 +3380,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -3629,7 +3392,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 7]
 			}
@@ -3642,7 +3404,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 7]
 			}
@@ -3655,7 +3416,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -3669,7 +3429,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -3682,7 +3441,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -3696,7 +3454,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -3711,7 +3468,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 4]
 			}
@@ -3725,7 +3481,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 4]
 			}
@@ -3740,7 +3495,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -3755,7 +3509,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -3770,7 +3523,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -3785,7 +3537,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 48]
 				frame: [2, 0]
 			}
@@ -3800,7 +3551,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [3, 0]
 			}
@@ -3815,7 +3565,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [3, 1]
 			}
@@ -3830,7 +3579,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [3, 1]
 			}
@@ -3845,7 +3593,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [4, 0]
 			}
@@ -3860,7 +3607,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [4, 0]
 			}
@@ -3875,7 +3621,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 4]
 			}
@@ -3890,7 +3635,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [3, 2]
 			}
@@ -3905,7 +3649,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [3, 2]
 			}
@@ -3920,7 +3663,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [3, 3]
 			}
@@ -3935,7 +3677,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [4, 2]
 			}
@@ -3950,7 +3691,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [4, 2]
 			}
@@ -3965,7 +3705,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [3, 3]
 			}
@@ -3980,7 +3719,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [3, 3]
 			}
@@ -3995,7 +3733,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [3, 2]
 			}
@@ -4010,7 +3747,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [3, 3]
 			}
@@ -4025,7 +3761,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -4039,7 +3774,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -4052,7 +3786,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -4066,7 +3799,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -4079,7 +3811,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -4093,7 +3824,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 7]
 			}
@@ -4106,7 +3836,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -4119,7 +3848,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -4132,7 +3860,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -4145,7 +3872,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -4158,7 +3884,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -4171,7 +3896,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -4184,7 +3908,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -4197,7 +3920,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -4211,7 +3933,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -4224,7 +3945,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 7]
 			}
@@ -4237,7 +3957,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -4250,7 +3969,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -4263,7 +3981,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -4276,7 +3993,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 7]
 			}
@@ -4289,7 +4005,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -4303,7 +4018,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -4317,7 +4031,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -4330,7 +4043,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -4344,7 +4056,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -4358,7 +4069,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -4371,7 +4081,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -4385,7 +4094,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 7]
 			}
@@ -4398,7 +4106,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [0, 7]
 			}
@@ -4412,7 +4119,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 6]
 			}
@@ -4426,7 +4132,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -4440,7 +4145,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 48]
 				frame: [2, 0]
 			}
@@ -4455,7 +4159,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [3, 2]
 			}
@@ -4470,7 +4173,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -4484,7 +4186,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -4497,7 +4198,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -4510,7 +4210,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 6]
 			}
@@ -4524,7 +4223,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -4537,7 +4235,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 7]
 			}
@@ -4550,7 +4247,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -4563,7 +4259,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -4578,7 +4273,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -4592,7 +4286,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -4606,7 +4299,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [4, 0]
 			}
@@ -4621,7 +4313,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -4636,7 +4327,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -4651,7 +4341,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 6]
 			}
@@ -4665,7 +4354,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -4680,7 +4368,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -4694,7 +4381,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -4709,7 +4395,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -4724,7 +4409,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -4739,7 +4423,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -4754,7 +4437,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -4769,7 +4451,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -4784,7 +4465,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -4799,7 +4479,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -4814,7 +4493,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -4829,7 +4507,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -4844,7 +4521,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -4859,7 +4535,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 4]
 			}
@@ -4874,7 +4549,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -4889,7 +4563,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -4904,7 +4577,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -4919,7 +4591,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -4934,7 +4605,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -4949,7 +4619,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -4964,7 +4633,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -4979,7 +4647,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -4994,7 +4661,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -5009,7 +4675,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -5024,7 +4689,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -5039,7 +4703,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -5054,7 +4717,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -5069,7 +4731,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -5084,7 +4745,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -5099,7 +4759,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -5114,7 +4773,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -5129,7 +4787,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -5144,7 +4801,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -5159,7 +4815,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -5172,7 +4827,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -5185,7 +4839,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -5198,7 +4851,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -5211,7 +4863,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -5224,7 +4875,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -5238,7 +4888,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -5252,7 +4901,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -5265,7 +4913,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -5278,7 +4925,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 5]
 			}
@@ -5292,7 +4938,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -5307,7 +4952,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -5321,7 +4965,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -5336,7 +4979,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -5351,7 +4993,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -5366,7 +5007,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -5381,7 +5021,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -5396,7 +5035,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -5411,7 +5049,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -5424,7 +5061,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -5437,7 +5073,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -5450,7 +5085,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -5463,7 +5097,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -5477,7 +5110,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -5490,7 +5122,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [0, 7]
 			}
@@ -5503,7 +5134,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -5518,7 +5148,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -5533,7 +5162,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -5548,7 +5176,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -5562,7 +5189,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -5576,7 +5202,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -5589,7 +5214,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 7]
 			}
@@ -5603,7 +5227,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 7]
 			}
@@ -5617,7 +5240,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 6]
 			}
@@ -5631,7 +5253,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -5644,7 +5265,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -5657,7 +5277,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -5670,7 +5289,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -5685,7 +5303,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -5700,7 +5317,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -5715,7 +5331,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -5730,7 +5345,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -5745,7 +5359,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -5760,7 +5373,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -5775,7 +5387,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -5790,7 +5401,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -5804,7 +5414,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -5819,7 +5428,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 5]
 			}
@@ -5834,7 +5442,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -5849,7 +5456,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [3, 3]
 			}
@@ -5864,7 +5470,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [3, 1]
 			}
@@ -5879,7 +5484,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [3, 1]
 			}
@@ -5894,7 +5498,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -5909,7 +5512,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [4, 2]
 			}
@@ -5924,7 +5526,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [3, 1]
 			}
@@ -5939,7 +5540,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [4, 2]
 			}
@@ -5954,7 +5554,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -5969,7 +5568,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 4]
 			}
@@ -5984,7 +5582,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -5997,7 +5594,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -6012,7 +5608,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -6027,7 +5622,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -6042,7 +5636,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [3, 1]
 			}
@@ -6057,7 +5650,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -6072,7 +5664,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -6087,7 +5678,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -6102,7 +5692,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 7]
 			}
@@ -6116,7 +5705,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -6129,7 +5717,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -6142,7 +5729,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -6156,7 +5742,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -6171,7 +5756,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -6186,7 +5770,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -6201,7 +5784,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 7]
 			}
@@ -6214,7 +5796,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -6228,7 +5809,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -6243,7 +5823,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -6258,7 +5837,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -6273,7 +5851,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -6287,7 +5864,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 6]
 			}
@@ -6301,7 +5877,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -6315,7 +5890,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -6329,7 +5903,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -6344,7 +5917,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -6359,7 +5931,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -6374,7 +5945,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -6389,7 +5959,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -6404,7 +5973,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -6419,7 +5987,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 6]
 			}
@@ -6433,7 +6000,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -6448,7 +6014,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -6463,7 +6028,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -6478,7 +6042,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -6492,7 +6055,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -6507,7 +6069,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -6522,7 +6083,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [1, 5]
 			}
@@ -6536,7 +6096,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -6551,7 +6110,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -6566,7 +6124,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -6581,7 +6138,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -6596,7 +6152,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -6611,7 +6166,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -6626,7 +6180,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -6641,7 +6194,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -6656,7 +6208,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -6671,7 +6222,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -6686,7 +6236,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -6701,7 +6250,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -6716,7 +6264,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -6731,7 +6278,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -6746,7 +6292,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -6761,7 +6306,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -6776,7 +6320,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -6791,7 +6334,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -6806,7 +6348,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -6821,7 +6362,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -6836,7 +6376,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -6851,7 +6390,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -6866,7 +6404,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -6881,7 +6418,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -6895,7 +6431,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -6909,7 +6444,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -6924,7 +6458,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -6939,7 +6472,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -6954,7 +6486,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -6969,7 +6500,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -6984,7 +6514,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -6999,7 +6528,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -7014,7 +6542,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -7029,7 +6556,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -7044,7 +6570,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -7058,7 +6583,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -7072,7 +6596,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -7087,7 +6610,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -7102,7 +6624,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -7116,7 +6637,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -7130,7 +6650,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -7145,7 +6664,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -7160,7 +6678,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -7175,7 +6692,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -7190,7 +6706,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -7204,7 +6719,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -7219,7 +6733,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -7234,7 +6747,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -7249,7 +6761,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -7264,7 +6775,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -7279,7 +6789,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -7294,7 +6803,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -7309,7 +6817,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -7324,7 +6831,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -7339,7 +6845,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -7354,7 +6859,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -7369,7 +6873,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -7384,7 +6887,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -7399,7 +6901,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -7414,7 +6915,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -7429,7 +6929,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -7444,7 +6943,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -7459,7 +6957,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -7474,7 +6971,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -7489,7 +6985,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -7504,7 +6999,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -7519,7 +7013,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -7534,7 +7027,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -7549,7 +7041,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -7564,7 +7055,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -7579,7 +7069,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -7593,7 +7082,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -7608,7 +7096,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -7623,7 +7110,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -7638,7 +7124,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -7653,7 +7138,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -7668,7 +7152,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -7683,7 +7166,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -7698,7 +7180,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -7713,7 +7194,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -7728,7 +7208,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -7743,7 +7222,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -7757,7 +7235,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -7772,7 +7249,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -7787,7 +7263,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -7802,7 +7277,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -7817,7 +7291,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -7832,7 +7305,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -7847,7 +7319,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -7862,7 +7333,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -7877,7 +7347,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -7892,7 +7361,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -7906,7 +7374,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -7921,7 +7388,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -7936,7 +7402,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -7951,7 +7416,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -7966,7 +7430,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -7981,7 +7444,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -7996,7 +7458,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -8011,7 +7472,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -8026,7 +7486,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -8041,7 +7500,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -8056,7 +7514,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -8071,7 +7528,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -8085,7 +7541,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -8100,7 +7555,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -8115,7 +7569,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -8130,7 +7583,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -8145,7 +7597,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -8160,7 +7611,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -8175,7 +7625,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -8190,7 +7639,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [24, 48]
 				frame: [0, 8]
 			}
@@ -8203,7 +7651,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [24, 48]
 				frame: [0, 8]
 			}
@@ -8218,7 +7665,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [16, 24]
 				frame: [0, 15]
 			}
@@ -8231,7 +7677,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [16, 24]
 				frame: [0, 15]
 			}
@@ -8244,7 +7689,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [16, 24]
 				frame: [0, 15]
 			}
@@ -8257,7 +7701,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -8270,7 +7713,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -8284,7 +7726,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [24, 48]
 				frame: [0, 8]
 			}
@@ -8299,7 +7740,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -8313,7 +7753,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [16, 24]
 				frame: [0, 15]
 			}
@@ -8326,7 +7765,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -8339,7 +7777,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -8354,7 +7791,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -8367,7 +7803,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -8380,7 +7815,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [16, 24]
 				frame: [0, 15]
 			}
@@ -8393,7 +7827,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -8407,7 +7840,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -8420,7 +7852,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -8434,7 +7865,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -8447,7 +7877,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -8460,7 +7889,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -8474,7 +7902,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -8487,7 +7914,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 7]
 			}
@@ -8500,7 +7926,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -8513,7 +7938,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -8526,7 +7950,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -8539,7 +7962,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -8552,7 +7974,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 7]
 			}
@@ -8565,7 +7986,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -8580,7 +8000,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -8594,7 +8013,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -8607,7 +8025,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -8622,7 +8039,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -8637,7 +8053,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -8651,7 +8066,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -8665,7 +8079,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -8678,7 +8091,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -8691,7 +8103,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -8705,7 +8116,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -8719,7 +8129,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [24, 48]
 				frame: [0, 8]
 			}
@@ -8734,7 +8143,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [24, 48]
 				frame: [0, 8]
 			}
@@ -8748,7 +8156,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -8761,7 +8168,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -8776,7 +8182,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -8791,7 +8196,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -8806,7 +8210,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -8820,7 +8223,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -8835,7 +8237,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -8848,7 +8249,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -8863,7 +8263,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [24, 48]
 				frame: [0, 8]
 			}
@@ -8878,7 +8277,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -8892,7 +8290,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [16, 24]
 				frame: [0, 15]
 			}
@@ -8905,7 +8302,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -8919,7 +8315,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -8933,7 +8328,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -8948,7 +8342,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -8962,7 +8355,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -8975,7 +8367,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -8988,7 +8379,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -9001,7 +8391,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -9016,7 +8405,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 7]
 			}
@@ -9029,7 +8417,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -9043,7 +8430,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -9056,7 +8442,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -9071,7 +8456,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -9084,7 +8468,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -9099,7 +8482,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -9114,7 +8496,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -9129,7 +8510,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -9144,7 +8524,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -9159,7 +8538,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -9174,7 +8552,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -9189,7 +8566,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -9202,7 +8578,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -9216,7 +8591,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -9229,7 +8603,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -9242,7 +8615,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -9255,7 +8627,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -9268,7 +8639,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 5]
 			}
@@ -9282,7 +8652,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -9297,7 +8666,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [1, 5]
 			}
@@ -9312,7 +8680,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -9325,7 +8692,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -9339,7 +8705,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -9353,7 +8718,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -9366,7 +8730,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 7]
 			}
@@ -9379,7 +8742,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -9392,7 +8754,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -9405,7 +8766,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -9418,7 +8778,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -9431,7 +8790,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -9444,7 +8802,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -9457,7 +8814,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -9471,7 +8827,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [24, 48]
 				frame: [0, 8]
 			}
@@ -9485,7 +8840,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -9500,7 +8854,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -9515,7 +8868,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -9530,7 +8882,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -9543,7 +8894,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -9558,7 +8908,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -9573,7 +8922,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -9586,7 +8934,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -9599,7 +8946,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -9612,7 +8958,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -9626,7 +8971,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -9640,7 +8984,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -9654,7 +8997,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -9668,7 +9010,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -9683,7 +9024,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -9696,7 +9036,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -9710,7 +9049,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -9723,7 +9061,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -9737,7 +9074,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -9752,7 +9088,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -9765,7 +9100,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [24, 48]
 				frame: [0, 8]
 			}
@@ -9779,7 +9113,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -9792,7 +9125,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -9806,7 +9138,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -9821,7 +9152,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -9836,7 +9166,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [24, 48]
 				frame: [0, 8]
 			}
@@ -9849,7 +9178,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -9862,7 +9190,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -9875,7 +9202,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -9889,7 +9215,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [16, 24]
 				frame: [0, 15]
 			}
@@ -9903,7 +9228,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -9918,7 +9242,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -9933,7 +9256,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 7]
 			}
@@ -9946,7 +9268,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [24, 48]
 				frame: [0, 8]
 			}
@@ -9961,7 +9282,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [8, 16]
 				frame: [2, 22]
 			}
@@ -9974,7 +9294,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [16, 16]
 				frame: [2, 22]
 			}
@@ -9987,7 +9306,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [24, 8]
 				frame: [1, 14]
 			}
@@ -10000,7 +9318,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [24, 8]
 				frame: [1, 14]
 			}
@@ -10014,7 +9331,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [8, 16]
 				frame: [2, 22]
 			}
@@ -10029,7 +9345,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [16, 16]
 				frame: [2, 22]
 			}
@@ -10044,7 +9359,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [24, 8]
 				frame: [1, 14]
 			}
@@ -10058,7 +9372,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -10072,7 +9385,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -10087,7 +9399,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -10102,7 +9413,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -10117,7 +9427,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -10132,7 +9441,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -10147,7 +9455,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -10162,7 +9469,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -10177,7 +9483,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -10191,7 +9496,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -10206,7 +9510,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -10221,7 +9524,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -10235,7 +9537,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -10250,7 +9551,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 7]
 			}
@@ -10263,7 +9563,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -10278,7 +9577,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -10293,7 +9591,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -10308,7 +9605,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -10323,7 +9619,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -10338,7 +9633,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -10353,7 +9647,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -10368,7 +9661,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -10383,7 +9675,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -10398,7 +9689,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -10413,7 +9703,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -10428,7 +9717,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -10443,7 +9731,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -10458,7 +9745,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -10473,7 +9759,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -10488,7 +9773,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -10503,7 +9787,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -10518,7 +9801,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -10533,7 +9815,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -10548,7 +9829,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -10563,7 +9843,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -10578,7 +9857,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -10593,7 +9871,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 5]
 			}
@@ -10608,7 +9885,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -10623,7 +9899,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -10638,7 +9913,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -10653,7 +9927,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -10668,7 +9941,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -10683,7 +9955,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -10698,7 +9969,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -10712,7 +9982,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -10727,7 +9996,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -10742,7 +10010,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -10757,7 +10024,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -10772,7 +10038,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -10787,7 +10052,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [16, 16]
 				frame: [2, 22]
 			}
@@ -10800,7 +10064,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [16, 16]
 				frame: [2, 22]
 			}
@@ -10815,7 +10078,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [8, 16]
 				frame: [2, 22]
 			}
@@ -10830,7 +10092,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [8, 16]
 				frame: [2, 22]
 			}
@@ -10845,7 +10106,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [8, 16]
 				frame: [2, 22]
 			}
@@ -10860,7 +10120,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [8, 16]
 				frame: [2, 22]
 			}
@@ -10875,7 +10134,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [8, 16]
 				frame: [2, 22]
 			}
@@ -10890,7 +10148,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -10905,7 +10162,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -10919,7 +10175,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -10934,7 +10189,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [16, 16]
 				frame: [2, 22]
 			}
@@ -10949,7 +10203,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -10964,7 +10217,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -10979,7 +10231,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -10994,7 +10245,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -11008,7 +10258,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -11023,7 +10272,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -11038,7 +10286,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [16, 16]
 				frame: [2, 22]
 			}
@@ -11052,7 +10299,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [16, 16]
 				frame: [2, 22]
 			}
@@ -11067,7 +10313,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -11082,7 +10327,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -11097,7 +10341,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -11112,7 +10355,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -11127,7 +10369,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [3, 4]
 			}
@@ -11142,7 +10383,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [8, 16]
 				frame: [2, 22]
 			}
@@ -11157,7 +10397,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [8, 16]
 				frame: [2, 22]
 			}
@@ -11172,7 +10411,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [24, 8]
 				frame: [1, 14]
 			}
@@ -11187,7 +10425,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [24, 8]
 				frame: [1, 14]
 			}
@@ -11201,7 +10438,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [8, 16]
 				frame: [2, 22]
 			}
@@ -11215,7 +10451,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [8, 16]
 				frame: [2, 22]
 			}
@@ -11228,7 +10463,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [16, 16]
 				frame: [2, 22]
 			}
@@ -11242,7 +10476,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [8, 16]
 				frame: [2, 22]
 			}
@@ -11255,7 +10488,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [8, 16]
 				frame: [2, 22]
 			}
@@ -11268,7 +10500,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -11283,7 +10514,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -11298,7 +10528,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -11313,7 +10542,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -11328,7 +10556,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -11343,7 +10570,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -11358,7 +10584,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 7]
 			}
@@ -11371,7 +10596,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -11385,7 +10609,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 7]
 			}
@@ -11398,7 +10621,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 7]
 			}
@@ -11412,7 +10634,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 6]
 			}
@@ -11426,7 +10647,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 6]
 			}
@@ -11440,7 +10660,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [3, 7]
 			}
@@ -11453,7 +10672,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 7]
 			}
@@ -11466,7 +10684,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -11481,7 +10698,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -11495,7 +10711,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [2, 7]
 			}
@@ -11508,7 +10723,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -11523,7 +10737,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -11538,7 +10751,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -11553,7 +10765,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -11568,7 +10779,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [2, 1]
 			}
@@ -11583,7 +10793,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [5, 4]
 			}
@@ -11598,7 +10807,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [1, 6]
 			}
@@ -11613,7 +10821,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -11628,7 +10835,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -11643,7 +10849,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -11658,7 +10863,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 4]
 			}
@@ -11673,7 +10877,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -11687,7 +10890,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -11701,7 +10903,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -11715,7 +10916,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 4]
 			}
@@ -11730,7 +10930,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 24]
 				frame: [0, 1]
 			}
@@ -11745,7 +10944,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [3, 3]
 			}
@@ -11760,7 +10958,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 1]
 			}
@@ -11775,7 +10972,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [16, 16]
 				frame: [2, 22]
 			}
@@ -11789,7 +10985,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [8, 16]
 				frame: [2, 22]
 			}
@@ -11804,7 +10999,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -11819,7 +11013,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -11834,7 +11027,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [48, 48]
 				frame: [0, 4]
 			}
@@ -11849,7 +11041,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [64, 24]
 				frame: [0, 4]
 			}
@@ -11863,7 +11054,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.00
-				mask: missing
 				size: [24, 24]
 				frame: [4, 4]
 			}
@@ -11878,7 +11068,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [16, 16]
 				frame: [2, 22]
 			}
@@ -11892,7 +11081,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [4, 2]
 			}
@@ -11907,7 +11095,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [4, 2]
 			}
@@ -11922,7 +11109,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [4, 2]
 			}
@@ -11937,7 +11123,6 @@
 			sprite:
 			{
 				texture: worldmap.doodads.01
-				mask: missing
 				size: [48, 24]
 				frame: [4, 2]
 			}
