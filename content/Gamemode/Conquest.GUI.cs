@@ -408,7 +408,7 @@ namespace TC2.Conquest
 
 																								//GUI.TitleCentered($"UNLOCKS IN {days}d {hours:00}:{minutes:00} S.D.", size: 12, font: GUI.Font.Editia, color: GUI.font_color_red_b, pivot: new(1.00f, 0.50f), offset: new(0, 0));
 																								//GUI.TitleCentered($"UNLOCKS IN {days}d {hours:00}:{minutes:00} S.D.", size: 12, font: GUI.Font.Editia, color: GUI.font_color_red_b, pivot: new(1.00f, 0.50f), offset: new(0, 0));
-																								GUI.TitleCentered($"UNLOCKS IN {days}d {hours:00} S.D.", size: 12, font: GUI.Font.Editia, color: GUI.font_color_red_b, pivot: new(1.00f, 0.50f), offset: new(0, 0));
+																								GUI.TitleCentered($"UNLOCKS IN {days}d {hours:00}h S.D.", size: 12, font: GUI.Font.Editia, color: GUI.font_color_red_b, pivot: new(1.00f, 0.50f), offset: new(0, 0));
 																							}
 																							else
 																							{
@@ -428,7 +428,7 @@ namespace TC2.Conquest
 																								//var (days, ticks_rem) = Math.DivRem((int)date_delta.ticks, (int)ImperialDateTime.ticks_per_day);
 																								//var hours = ticks_rem / ImperialDateTime.ticks_per_hour;
 
-																								GUI.Title("This map is currently locked."u8);
+																								GUI.Title("This region is currently locked."u8);
 																								//GUI.LabelShaded(text: "Unlocks in:"u8, value: days, format: "0 'hours'", width: 192);
 																								GUI.TextShaded($"Unlocks in {days}d {hours:00}:{minutes:00} S.D.");
 																								//GUI.TextShaded($"({timespan_irl:%d'.'hh':'mm':'ss} irl)");

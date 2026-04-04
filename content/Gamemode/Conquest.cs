@@ -8,7 +8,6 @@ namespace TC2.Conquest
 		public const bool enable_starter_vehicles = false;
 		public const bool enable_starter_cities = false;
 
-
 		[IGamemode.Data("Conquest", "")]
 		public partial struct Gamemode(): IGamemode
 		{
@@ -19,8 +18,6 @@ namespace TC2.Conquest
 
 				Active = 1 << 0,
 				Paused = 1 << 1,
-
-
 			}
 
 			//public float elapsed;
@@ -32,28 +29,35 @@ namespace TC2.Conquest
 
 			public static FixedArray32<ImperialDateTime> InitCalendar()
 			{
-				var date_start = World.imperial_date_start;
-				var date_base = new ImperialDateTime(date_start.Year, date_start.Month + 1, 0);
-
-				var num_maps_start = 3;
-
-				var dates = new FixedArray32<ImperialDateTime>();
-				var region_current = 0;
-				dates[region_current++] = default; // world/null region
-
-				// starter maps
-				for (var i = 0; i < num_maps_start; region_current++, i++)
+				if (Constants.World.enable_region_unlocking)
 				{
-					dates[region_current] = date_start;
-				}
+					var date_start = World.imperial_date_start;
+					var date_base = new ImperialDateTime(date_start.Year, date_start.Month + 1, 0);
 
-				// unlocking maps
-				for (var i = 0; region_current < dates.Length; i++, region_current++)
+					var num_maps_start = (int)Constants.World.region_unlock_initial;
+
+					var dates = new FixedArray32<ImperialDateTime>();
+					var region_current = 0;
+					dates[region_current++] = default; // world/null region
+
+					// starter maps
+					for (var i = 0; i < num_maps_start; region_current++, i++)
+					{
+						dates[region_current] = date_start;
+					}
+
+					// unlocking maps
+					for (var i = 0; region_current < dates.Length; i++, region_current++)
+					{
+						dates[region_current] = date_base.WithAddDays(i * Constants.World.region_unlock_interval_days);
+					}
+
+					return dates;
+				}
+				else
 				{
-					dates[region_current] = date_base.WithAddWeeks(i);
+					return default;
 				}
-
-				return dates;
 			}
 
 			public static void Configure()
@@ -69,91 +73,91 @@ namespace TC2.Conquest
 			}
 		}
 
-		[Obsolete]
-		public struct DeployInfiltratorRPC: Net.IGRPC<Conquest.Gamemode>
-		{
-			public ICharacter.Handle h_character;
+//		[Obsolete]
+//		public struct DeployInfiltratorRPC: Net.IGRPC<Conquest.Gamemode>
+//		{
+//			public ICharacter.Handle h_character;
 
-#if SERVER
-			public void Invoke(ref NetConnection connection, ref Conquest.Gamemode data)
-			{
-				ref var player = ref connection.GetPlayer();
-				Assert.NotNull(ref player, Assert.Level.Error);
+//#if SERVER
+//			public void Invoke(ref NetConnection connection, ref Conquest.Gamemode data)
+//			{
+//				ref var player = ref connection.GetPlayer();
+//				Assert.NotNull(ref player, Assert.Level.Error);
 
-				ref var region = ref connection.GetRegion();
-				Assert.NotNull(ref region, Assert.Level.Error);
+//				ref var region = ref connection.GetRegion();
+//				Assert.NotNull(ref region, Assert.Level.Error);
 
-				var h_faction = player.h_faction;
-				ref var faction_data = ref h_faction.GetData(out IFaction.Definition s_faction);
-				Assert.NotNull(ref faction_data, Assert.Level.Error);
-				Assert.Check(faction_data.scout_count > 0, Assert.Level.Error);
+//				var h_faction = player.h_faction;
+//				ref var faction_data = ref h_faction.GetData(out IFaction.Definition s_faction);
+//				Assert.NotNull(ref faction_data, Assert.Level.Error);
+//				Assert.Check(faction_data.scout_count > 0, Assert.Level.Error);
 
-				var random = XorRandom.New(true);
+//				var random = XorRandom.New(true);
 
-				this.h_character = Spawner.CreateCharacter(ref region.AsCommon(), ref random, "human.scout", h_faction: h_faction, scope: Asset.Scope.World);
-				if (this.h_character.IsValid())
-				{
-					faction_data.scout_count--;
-					s_faction.Sync();
+//				this.h_character = Spawner.CreateCharacter(ref region.AsCommon(), ref random, "human.scout", h_faction: h_faction, scope: Asset.Scope.World);
+//				if (this.h_character.IsValid())
+//				{
+//					faction_data.scout_count--;
+//					s_faction.Sync();
 
-					Spawner.TryGenerateKits(ref random, this.h_character);
+//					Spawner.TryGenerateKits(ref random, this.h_character);
 
-					//App.WriteLine(this.h_character);
+//					//App.WriteLine(this.h_character);
 
-					Span<Entity> ents_span = stackalloc Entity[16];
-					var ents_span_count = 0;
+//					Span<Entity> ents_span = stackalloc Entity[16];
+//					var ents_span_count = 0;
 
-					foreach (ref var row in region.IterateQuery<Region.GetSpawnsQuery>())
-					{
-						var ok = false;
-						row.Run((ISystem.Info info, Entity entity, in Spawn.Data spawn, in Nameable.Data nameable, in Transform.Data transform, in Faction.Data faction) =>
-						{
-							if (faction.id == 0 && spawn.IsVisibleToFaction(h_faction, faction.id))
-							{
-								//App.WriteLine(entity.GetFullName());
-								ok = true;
-							}
-						});
+//					foreach (ref var row in region.IterateQuery<Region.GetSpawnsQuery>())
+//					{
+//						var ok = false;
+//						row.Run((ISystem.Info info, Entity entity, in Spawn.Data spawn, in Nameable.Data nameable, in Transform.Data transform, in Faction.Data faction) =>
+//						{
+//							if (faction.id == 0 && spawn.IsVisibleToFaction(h_faction, faction.id))
+//							{
+//								//App.WriteLine(entity.GetFullName());
+//								ok = true;
+//							}
+//						});
 
-						if (ok)
-						{
-							ents_span[ents_span_count++] = row.Entity;
-						}
-					}
+//						if (ok)
+//						{
+//							ents_span[ents_span_count++] = row.Entity;
+//						}
+//					}
 
-					ents_span = ents_span.Slice(0, ents_span_count);
-					//App.WriteLine(ents_span.Length);
+//					ents_span = ents_span.Slice(0, ents_span_count);
+//					//App.WriteLine(ents_span.Length);
 
-					var ent_spawn = ents_span.GetRandom(ref random);
-					ref var dormitory = ref ent_spawn.GetComponent<Dormitory.Data>();
-					if (dormitory.IsNotNull())
-					{
-						var span_characters = dormitory.GetCharacterSpan();
-						if (span_characters.TryAdd(in h_character))
-						{
-							App.WriteLine("added spy");
-						}
-						else
-						{
-							App.WriteLine("replaced spy");
-							span_characters[random.NextIntRange(0, span_characters.Length - 1)] = h_character;
-						}
+//					var ent_spawn = ents_span.GetRandom(ref random);
+//					ref var dormitory = ref ent_spawn.GetComponent<Dormitory.Data>();
+//					if (dormitory.IsNotNull())
+//					{
+//						var span_characters = dormitory.GetCharacterSpan();
+//						if (span_characters.TryAdd(in h_character))
+//						{
+//							App.WriteLine("added spy");
+//						}
+//						else
+//						{
+//							App.WriteLine("replaced spy");
+//							span_characters[random.NextIntRange(0, span_characters.Length - 1)] = h_character;
+//						}
 
-						if (dormitory.kit_default.IsValid())
-						{
-							ref var character_data = ref h_character.GetData();
-							if (character_data.IsNotNull() && !character_data.kits.Contains(dormitory.kit_default))
-							{
-								character_data.kits.TryAdd(dormitory.kit_default);
-							}
-						}
+//						if (dormitory.kit_default.IsValid())
+//						{
+//							ref var character_data = ref h_character.GetData();
+//							if (character_data.IsNotNull() && !character_data.kits.Contains(dormitory.kit_default))
+//							{
+//								character_data.kits.TryAdd(dormitory.kit_default);
+//							}
+//						}
 
-						dormitory.Sync(ent_spawn, true);
-					}
-				}
-			}
-#endif
-		}
+//						dormitory.Sync(ent_spawn, true);
+//					}
+//				}
+//			}
+//#endif
+//		}
 
 #if SERVER
 		[ChatCommand.Global("pause", "", admin: true)]
