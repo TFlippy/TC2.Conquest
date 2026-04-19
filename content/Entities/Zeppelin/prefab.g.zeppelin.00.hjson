@@ -247,7 +247,7 @@ personnel:
 
 // 	personnel:
 // 	{
-// 		flags: store_characters
+// 		flags: none
 
 // 		slots:
 // 		[

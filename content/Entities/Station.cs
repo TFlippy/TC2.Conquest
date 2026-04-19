@@ -5,7 +5,7 @@ namespace TC2.Conquest
 {
 	public static partial class Station
 	{
-		[IComponent.Data(Net.SendType.Reliable)]
+		[IComponent.Data(Net.SendType.Reliable, IComponent.Scope.Global | IComponent.Scope.Region)]
 		public partial struct Data(): IComponent
 		{
 			[Flags]

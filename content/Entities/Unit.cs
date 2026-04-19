@@ -363,19 +363,20 @@ namespace TC2.Conquest
 				[Asset.Ignore] public float speed_limit_override;
 				public float acc = 3.00f;
 
-				public float speed_mult_road = 1.00f;
-				public float speed_mult_offroad = 0.30f;
-				public float speed_mult_forest = 0.30f;
-				public float speed_mult_rugged = 0.30f;
-				public float speed_mult_water = 0.30f;
+				//public float speed_mult_road = 1.00f;
+				//public float speed_mult_offroad = 0.30f;
+				//public float speed_mult_forest = 0.30f;
+				//public float speed_mult_rugged = 0.30f;
+				//public float speed_mult_water = 0.30f;
+
+				[Net.Ignore, Save.Ignore] public float t_next_action;
 
 				//[Net.Ignore, Save.Ignore] public float target_dist;
 				[Net.Ignore, Save.Ignore] public Road.Segment next_segment;
 				[Net.Ignore, Save.Ignore] public Road.Segment end_segment;
 				[Net.Ignore, Save.Ignore] public int current_branch_index;
-				[Net.Ignore, Save.Ignore] public FixedArray32<Road.Junction.Branch> branches;
 				[Net.Ignore, Save.Ignore] public int branches_count;
-				[Net.Ignore, Save.Ignore] public float t_next_action;
+				[Net.Ignore, Save.Ignore] public FixedArray32<Road.Junction.Branch> branches;
 				[Net.Ignore, Save.Ignore] public EntRef<Transform.Data> ref_target_transform;
 			}
 
@@ -664,7 +665,7 @@ namespace TC2.Conquest
 					ref var enterable = ref ent_enterable.GetComponent<WorldMap.Enterable.Data>();
 					Assert.IsNotNull(ref enterable);
 
-					Assert.Check(enterable.flags.HasNone(Enterable.Data.Flags.Hide_If_Parented) || !ent_enterable.GetParent(Relation.Type.Child).IsValid());
+					Assert.Check(enterable.flags.HasNone(Enterable.Data.Flags.Hide_If_Parented) || !ent_enterable.HasParent(Relation.Type.Child));
 
 					ent_unit.ReplaceRelation(ent_enterable, Relation.Type.Stored, true);
 
