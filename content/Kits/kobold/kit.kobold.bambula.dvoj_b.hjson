@@ -1,16 +1,15 @@
 ﻿{
-	$version: "0.1.62.0"
+	$version: "0.1.74.0"
 	name: "Bambula Dvoj-B"
 	
 	flags: selectable
 	slot: primary
 	categories: weapon, dangerous, gun, powerful
-	faction: "null"
 	species: kobold
 	
 	character_flags:
 	{
-		require: military, brawler, strong
+		require: brawler, strong
 		include: military, technician, engineer, soldier, brawler, strong, murderer, terrorist
 		exclude: sedentary
 		weight: 2.200
@@ -36,9 +35,15 @@
 				quantity: 20.000
 				flags: none
 			}
-			null
+			{
+				type: resource
+				material: ammo.sg.crap
+				quantity: 40.000
+				flags: none
+			}
 			null
 		]
+		
 		flags: unpack
 	}
 }

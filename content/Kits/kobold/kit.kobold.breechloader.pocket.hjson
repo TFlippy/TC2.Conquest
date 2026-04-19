@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.62.0"
+	$version: "0.1.74.0"
 	name: "Pocket Breechloader"
 	desc:
 		'''
@@ -9,7 +9,6 @@
 	flags: selectable
 	slot: secondary
 	categories: weapon, junk, gun, short_range, weak, inaccurate, small, cheap, civilian, slow
-	faction: "null"
 	species: kobold
 	
 	character_flags:
@@ -36,13 +35,19 @@
 			}
 			{
 				type: resource
-				material: ammo.sg.slug
+				material: ammo.lc.hp
+				quantity: 40.000
+				flags: despawn, no_consume
+			}
+			{
+				type: resource
+				material: ammo.hc.lv
 				quantity: 40.000
 				flags: despawn, no_consume
 			}
 			null
-			null
 		]
+		
 		flags: unpack
 	}
 }

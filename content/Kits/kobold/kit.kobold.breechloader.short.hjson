@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.62.5"
+	$version: "0.1.74.0"
 	name: "Short Breechloader"
 	desc:
 		'''
@@ -9,7 +9,6 @@
 	flags: selectable
 	slot: primary
 	categories: weapon, junk, gun, short_range, inaccurate, cheap, civilian, industrial, slow, unstable
-	faction: "null"
 	species: kobold
 	
 	character_flags:

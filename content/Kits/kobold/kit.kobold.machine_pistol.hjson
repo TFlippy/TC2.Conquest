@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.62.0"
+	$version: "0.1.74.0"
 	name: "Machine Pistol"
 	desc:
 		'''
@@ -9,7 +9,6 @@
 	flags: selectable
 	slot: primary
 	categories: weapon, gun, short_range, small, fancy
-	faction: "null"
 	species: kobold
 	
 	character_flags:
@@ -43,6 +42,7 @@
 			null
 			null
 		]
+		
 		flags: unpack
 	}
 }

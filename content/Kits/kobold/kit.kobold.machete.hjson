@@ -1,11 +1,10 @@
 ﻿{
-	$version: "0.1.62.0"
+	$version: "0.1.74.0"
 	name: "Machete"
 	
 	flags: selectable
 	slot: secondary
 	categories: tools, weapon, melee, short_range
-	faction: "null"
 	species: kobold
 	
 	character_flags:
@@ -34,6 +33,7 @@
 			null
 			null
 		]
+		
 		flags: unpack
 	}
 }

@@ -1,23 +1,23 @@
 ﻿{
+	$version: "0.1.74.0"
 	name: "Bazooka"
-	desc: ""
 	
 	flags: none
 	slot: primary
 	categories: weapon, dangerous, heavy, explosive, gun, short_range, powerful
-	faction: "null"
-	species: "kobold"
+	species: kobold
 	
 	character_flags:
 	{
 		require: insane, terrorist
-		include: construction, armed, technician, miner, insane, strong, terrorist, fanatic, evil
+		include: construction, armed, technician, miner, insane, strong, evil, terrorist, fanatic
 		exclude: slave
 		weight: 1.100
 	}
 	
 	amount_multiplier_min: 1.000
 	amount_multiplier_max: 1.000
+	cost: 0.000
 	
 	shipment:
 	{
@@ -25,19 +25,20 @@
 		[
 			{
 				type: prefab
-				prefab: "bazooka"
+				prefab: bazooka
 				quantity: 1.000
 				flags: pickup, despawn
 			}
 			{
 				type: resource
-				material: "ammo.rocket.lv"
+				material: ammo.rocket.lv
 				quantity: 4.000
 				flags: none
 			}
 			null
 			null
 		]
+		
 		flags: unpack
 	}
 }

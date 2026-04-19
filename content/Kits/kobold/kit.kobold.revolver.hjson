@@ -1,11 +1,10 @@
 ﻿{
-	$version: "0.1.62.0"
+	$version: "0.1.74.0"
 	name: "Revolver"
 	
 	flags: selectable
 	slot: secondary
 	categories: weapon, gun, short_range
-	faction: "null"
 	species: kobold
 	
 	character_flags:
@@ -39,6 +38,7 @@
 			null
 			null
 		]
+		
 		flags: unpack
 	}
 }

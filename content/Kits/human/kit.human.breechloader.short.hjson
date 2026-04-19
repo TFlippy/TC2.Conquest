@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.72.0"
+	$version: "0.1.74.0"
 	name: "Short Breechloader"
 	desc:
 		'''
@@ -15,7 +15,7 @@
 	{
 		require: none
 		include: criminal, artisan, farmer, laborer, civillian, armed, miner, hunter, culinary, soldier, insane, alcoholic, nomad, brawler, outdoor, strong, junkie, evil, murderer, terrorist, clumsy, lower_class, lower_middle_class
-		exclude: unarmed, upper_class, elite_class
+		exclude: unarmed, elite_class
 		weight: 1.350
 	}
 	
