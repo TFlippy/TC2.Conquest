@@ -201,7 +201,7 @@ namespace TC2.Conquest
 						if (location_data.IsNotNull() && data.mask_nearby_flags.Evaluate(location_data.flags))
 						{
 							// TODO: add a check that the location is actually reachable along the route
-							if (data.dock_request_locations.AsSpan().TryAddUnique(h_location_tmp, out var contains) && !contains)
+							if (data.dock_request_locations.AsSpan().TryAddUnique(h_location_tmp)) // && !contains)
 							{
 								sync = true;
 							}

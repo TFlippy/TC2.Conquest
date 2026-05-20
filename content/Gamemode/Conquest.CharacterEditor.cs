@@ -462,33 +462,33 @@ namespace TC2.Conquest
 		public static class Modifiers
 		{
 			public static ICharacterModifier.Function modifier_alcoholic =
-			[ICharacterModifier.Info(Character.Traits.Alcoholic, order: -1)] static (x) =>
+			[ICharacterModifier.Info(Character.Traits.Alcoholic, order: -1)] static (args) =>
 			{
-				x.value.bias_health -= 0.32f; // liver doesn't like booze
-				x.value.bias_loser += 0.21f; // sleeps in a ditch
-				x.value.bias_fancy -= 0.25f; // smells like piss
-				x.value.bias_sanity -= 0.15f; // hangover
-				x.value.mult_wealth *= 0.88f; // spends money on booze
+				args.value.bias_health -= 0.32f; // liver doesn't like booze
+				args.value.bias_loser += 0.21f; // sleeps in a ditch
+				args.value.bias_fancy -= 0.25f; // smells like piss
+				args.value.bias_sanity -= 0.15f; // hangover
+				args.value.mult_wealth *= 0.88f; // spends money on booze
 
-				x.value.visual_age_mult += 0.11f;
+				args.value.visual_age_mult += 0.11f;
 			};
 
 			public static ICharacterModifier.Function modifier_strong =
-			[ICharacterModifier.Info(Character.Traits.Strong, order: 1)] static (x) =>
+			[ICharacterModifier.Info(Character.Traits.Strong, order: 1)] static (args) =>
 			{
-				x.value.experience[Experience.Type.Strength].MulS(1.14f);
-				x.value.experience[Experience.Type.Strength].AddS(3);
-				x.value.experience[Experience.Type.Endurance].AddS(2);
+				args.value.experience[Experience.Type.Strength].MulS(1.14f);
+				args.value.experience[Experience.Type.Strength].AddS(3);
+				args.value.experience[Experience.Type.Endurance].AddS(2);
 			};
 
 			public static ICharacterModifier.Function modifier_brawler =
-			[ICharacterModifier.Info(Character.Traits.Brawler, order: 5)] static (x) =>
+			[ICharacterModifier.Info(Character.Traits.Brawler, order: 5)] static (args) =>
 			{
-				x.value.experience[Experience.Type.Intellect].AddS(-3); // brain damage
-				x.value.experience[Experience.Type.Strength].AddS(3);
-				x.value.experience[Experience.Type.Endurance].AddS(2);
-				x.value.experience[Experience.Type.Endurance].MulS(1.21f);
-				x.value.experience[Experience.Type.Charisma].MulS(0.87f); // beaten up and missing some teeth
+				args.value.experience[Experience.Type.Intellect].AddS(-3); // brain damage
+				args.value.experience[Experience.Type.Strength].AddS(3);
+				args.value.experience[Experience.Type.Endurance].AddS(2);
+				args.value.experience[Experience.Type.Endurance].MulS(1.21f);
+				args.value.experience[Experience.Type.Charisma].MulS(0.87f); // beaten up and missing some teeth
 			};
 
 			//public static ICharacterModifier.Function modifier_test = static x => x.value.age = 4;
