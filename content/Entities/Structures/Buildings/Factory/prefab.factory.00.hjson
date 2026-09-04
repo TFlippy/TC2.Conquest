@@ -1,0 +1,301 @@
+$name: "Factory"
+$desc:
+	'''
+	TODO: Desc
+	'''
+$tags: []
+
+body:
+{
+	type: static
+	
+	@shape.polygon:
+	{
+		material: building_reinforced
+		miss_chance: 0.000
+		flags: none
+		tags: none
+		
+		layer: entity, building, support, workshop, ignore_melee, ignore_bullet
+		mask: world, building
+		exclude: none
+		
+		mass: 5000.000
+		radius: 0.750
+		friction: 0.500
+		elasticity: 0.500
+		
+		cog_offset: [0.000, 0.000]
+		
+		points:
+		[
+			[-3.000, -4.000]
+			[3.000, -4.000]
+			[4.000, 4.000]
+			[-4.000, 4.000]
+		]
+	}
+}
+
+animated.renderer:
+{
+	sprite:
+	{
+		texture: factory.00
+		// mask: factory.00.mask
+	}
+	z: -300.000
+}
+
+interactable:
+{
+	flags: none
+	window_size: [810, 624]
+	window_size_misc: [192, 0]
+	priority: 0.700
+}
+
+health:
+{
+	max: 150000.000
+}
+
+faction.colorable:
+{
+
+}
+
+faction:
+{
+
+}
+
+company:
+{
+
+}
+
+office:
+{
+	flags: enable_invite_company, enable_info, enable_blueprints
+	
+	filter_industry:
+	{
+		include: military, slaves, real_estate, colonization, exploration, security, mercenary, penal
+		exclude: administrative
+	}
+	filter_permits:
+	{
+		require: colonization, governance, coalition
+	}
+	filter_flags:
+	{
+		exclude: solo, regional, district, prefecture, municipal
+	}
+}
+
+claimable:
+{
+	flags: allow_owner_unclaim
+}
+
+transform:
+{
+
+}
+
+building:
+{
+
+}
+
+nameable:
+{
+	tags: tech, industrial, tool, market, factory
+	type: building
+	flags: randomize
+	max_length: 20
+}
+
+address:
+{
+	
+}
+
+entrance.linkable:
+{
+
+}
+
+laboratory:
+{
+	blueprints_capacity: 4
+	filter_tags:
+	{
+		include: weapon, gun, assembling, metalworking, engineering
+	}
+}
+
+shop:
+{
+	tags_filter:
+	{
+		include: workbench, weapon, gun, tool, munitions, machinery, assembling, metalworking, engineering, salvaging, explosive
+		exclude: huge, blacksmithing, social, science, biology, forestry, smelting, fermenting, heating, moulding, overworld
+	}
+	
+	tools: pencil, paper, ruler, hammer, cutters, saw, hand_drill, screwdriver, wrench, spanner, pliers, cleaver, tweezers, magnifying_glass, bucket, paintbrush, axe, shovel, syringe, stapler, file, chisel, towel, spatula, tongs, pick, crowbar, knife, sandpaper, needle, pins, scissors, ladle, calculator
+	infrastructure: dishes, bottle, barrel, table, chair, vise, rack, shaping_mould, pulley, bucket, surface, hard_surface, structure, building, workbench
+	environment: workshop, stationary, dirty, cozy, noisy, durable, sturdy, flammable
+	
+	flags: embed_gui
+	menu_columns: 6
+	recipe_type: workshop
+	
+	offset_spawn: [1.750, 0.500]
+	
+	name: "Recipes"
+}
+
+workshop:
+{
+	orders_capacity: 2
+	h_sound_order_complete: effect.bell.ring.01
+	max_order_mass: 2650.000
+
+	@inventory32:
+	{
+		type: workshop
+		flags: standalone, ignore_mass, public, faction, vertical
+		stack_size_multiplier: 4.000
+		
+		offset: [0.000, 0.000]
+
+		filter:
+		{
+			exclude: gas
+		}
+	}
+}
+
+// personnel:
+// {
+// 	characters_capacity: 5
+// 	flags: none
+// 	assign_radius: 20.000
+
+// 	slots:
+// 	[
+// 		{
+// 			role: engineer
+// 			flags: faction, can_craft, can_manage, can_use_inventory
+// 			tags: management, administrative, civil, industrial, logistics, production, paperwork, sedentary, technical, research
+// 			color: "0xffff8333"
+// 			multiplier: 1.900
+// 		}
+// 		{
+// 			role: technician
+// 			flags: faction, can_craft, can_manage, can_use_inventory
+// 			tags: administrative, civil, industrial, logistics, production, dangerous, manual_labor, technical, maintenance, operation
+// 			color: "0xffff8333"
+// 			multiplier: 1.700
+// 		}
+// 		{
+// 			role: mechanic
+// 			flags: can_craft, can_use_inventory
+// 			tags: civil, industrial, logistics, production, dangerous, manual_labor, technical, maintenance, operation
+// 			color: "0xffffa800"
+// 			multiplier: 1.500
+// 		}
+// 		{
+// 			role: laborer
+// 			flags: can_craft
+// 			tags: civil, industrial, production, dangerous, manual_labor, technical
+// 			color: "0xffffa800"
+// 			multiplier: 1.000
+// 		}
+// 		{
+// 			role: laborer
+// 			flags: can_craft
+// 			tags: civil, industrial, production, dangerous, manual_labor, technical
+// 			color: "0xffffa800"
+// 			multiplier: 1.000
+// 		}
+// 		null
+// 		null
+// 		null
+// 	]
+// }
+
+heat:
+{
+	temperature_medium: 750.000
+	temperature_high: 1000.000
+	temperature_breakdown: 1750.000
+	cool_rate: 13.000
+	heat_capacity_extra: 80.000
+	heat_capacity_mult: 3.000
+	heat_damage_mult: 0.200
+	flags: exclude_body_mass, no_smoke, no_gui
+	offset: [-2.125, 0.250]
+	smoke_offset: [-2.250, -2.375]
+	size: [0.250, 0.250]
+
+	@light:
+	{
+		offset: [-2.125, 0.250]
+		scale: [3.000, 6.000]
+		intensity: 2.500
+		texture: light.box.02
+	}
+		
+	@sound.emitter:
+	{
+		file: "overheat_loop"
+		flags: start_muted
+		volume: 1.000
+		pitch: 1.000
+	}
+}
+
+crafter:
+{
+	flags: none
+	
+	tools: pencil, paper, ruler, hammer, cutters, saw, hand_drill, screwdriver, wrench, spanner, pliers, bucket, paintbrush, file, chisel, towel, tongs, crowbar, knife, sandpaper, needle, pins, scissors
+	infrastructure: dishes, barrel, table, chair, vise, rack, pulley, surface, hard_surface, liquid_container, workbench
+	machinery: lathe, mill, planer
+	environment: workshop, stationary, dirty, noisy, reinforced, durable, sturdy
+	
+	temperature_max: 893.150
+	pressure_max: 0.000
+
+	@inventory8:
+	{
+		type: waste
+		flags: standalone, allow_ducts, ignore_mass, public
+		stack_size_multiplier: 6.000
+		
+		offset: [0.000, 0.000]
+
+		filter:
+		{
+			exclude: gas
+		}
+	}
+}
+
+factory:
+{
+	h_catalogue: test.00
+}
+
+stockpile:
+{
+	request_types: move, load
+	flags: auto_create, show_addresses
+	flags_stockpile: vendor, npc
+
+	capacity_items: 40
+	capacity_shipments: 8
+}
