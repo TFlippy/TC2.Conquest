@@ -1,0 +1,29 @@
+﻿{
+	$region_id: 0
+	$version: "0.1.75.2"
+	name: "Kobolder"
+	name_short: "Kobolder"
+	name_imperial: "Kobolder"
+	
+	flags: none
+	tags: none
+	connotations: none
+	services: none
+	industry: none
+	authority: undefined
+	
+	h_company: kobolder
+	h_faction: kobolder
+	h_catalogue: coalition.kobolder.00
+	h_location_headquarters: popelnitz
+	
+	color_a: "0xffc92100"
+	color_b: "0xffc92100"
+	
+	icon:
+	{
+		texture: logo.kobolder
+		size: [24, 24]
+		frame: [2, 2]
+	}
+}

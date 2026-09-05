@@ -1,0 +1,29 @@
+﻿{
+	$region_id: 0
+	$version: "0.1.75.2"
+	name: "Carohrad"
+	name_short: "Carohrad"
+	name_imperial: "Carohrad"
+	
+	flags: none
+	tags: none
+	connotations: none
+	services: none
+	industry: none
+	authority: imperial
+	
+	h_company: carohrad
+	h_faction: carohrad
+	h_catalogue: coalition.carohrad.00
+	h_location_headquarters: velka.bobnica
+	
+	color_a: "0xff6532b6"
+	color_b: "0xff1d1e27"
+	
+	icon:
+	{
+		texture: logo.carohrad
+		size: [24, 24]
+		frame: [2, 2]
+	}
+}

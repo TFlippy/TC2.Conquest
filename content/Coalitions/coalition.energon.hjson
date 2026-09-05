@@ -1,0 +1,33 @@
+﻿{
+	$version: "0.1.75.2"
+	name: "Energon Industrijal"
+	name_short: "Energon"
+	name_imperial: "Energon Industrijal"
+	
+	desc:
+		'''
+		Large-scale industrial operation on Krumpelstein funded by Energon Industrijal.
+		'''
+	
+	flags: none
+	tags: none
+	connotations: advanced, powerful, machine, big, chemical, mining, construction, industrial, arcane, tech, bureaucracy
+	services: logistics, construction, trading, research, exchange
+	industry: mining, manufacturing, high_tech, power, arcane, construction, logistics, research, security, engineering
+	authority: imperial
+	
+	h_company: energon
+	h_faction: energon
+	h_catalogue: coalition.energon.00
+	h_location_headquarters: nostalec
+	
+	color_a: "0xffc92100"
+	color_b: "0xffc92100"
+	
+	icon:
+	{
+		texture: logo.energon
+		size: [24, 24]
+		frame: [2, 2]
+	}
+}
