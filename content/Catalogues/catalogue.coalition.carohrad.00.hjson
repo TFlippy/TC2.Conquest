@@ -1,5 +1,4 @@
 ﻿{
-	$region_id: 0
 	$version: "0.1.75.2"
 	name: "Carohrad"
 	
@@ -38,6 +37,11 @@
 			type: resource
 			h_material: ammo.lc.lv
 			quantity: 1500.000
+		}
+		{
+			type: resource
+			h_material: ammo.sg.grenade
+			quantity: 200.000
 		}
 		{
 			type: resource
@@ -147,6 +151,56 @@
 		{
 			type: resource
 			h_material: sulfuric_acid
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: formic_acid
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: hydrochloric_acid
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: mushroom.red
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: mushroom.green
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: mushroom.blue
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: himlkarzenus
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: insect
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: twuk
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: mercury
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: red_sugar
 			quantity: 500.000
 		}
 		{

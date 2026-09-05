@@ -1,5 +1,4 @@
 ﻿{
-	$region_id: 0
 	$version: "0.1.75.2"
 	name: "Carohrad"
 	name_short: "Carohrad"
@@ -7,7 +6,7 @@
 	
 	flags: none
 	tags: none
-	connotations: none
+	connotations: interesting, advanced, powerful, fancy, authority, drug, chemical, health, painful, civilian, arcane, bureaucracy, sus, weird, scary
 	services: none
 	industry: none
 	authority: imperial

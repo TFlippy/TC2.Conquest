@@ -1,5 +1,4 @@
 ﻿{
-	$region_id: 0
 	$version: "0.1.75.2"
 	name: "Kobolder"
 	name_short: "Kobolder"
@@ -7,7 +6,7 @@
 	
 	flags: none
 	tags: none
-	connotations: none
+	connotations: tool, danger, junk, heavy, explosive, machine, destructive, big, drug, mining, painful, loud, funny, cheap, industrial, crappy, ugly, smelly, disgusting, crude
 	services: none
 	industry: none
 	authority: undefined

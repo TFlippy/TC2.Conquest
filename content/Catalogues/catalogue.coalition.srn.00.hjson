@@ -1,5 +1,4 @@
 ﻿{
-	$region_id: 0
 	$version: "0.1.75.2"
 	name: "S.R.N."
 	
@@ -11,8 +10,13 @@
 	[
 		{
 			type: resource
+			h_material: ammo.kn
+			quantity: 400.000
+		}
+		{
+			type: resource
 			h_material: ammo.ac.lv
-			quantity: 500.000
+			quantity: 800.000
 		}
 		{
 			type: resource
@@ -22,22 +26,27 @@
 		{
 			type: resource
 			h_material: ammo.hc.hv
-			quantity: 1500.000
+			quantity: 2500.000
 		}
 		{
 			type: resource
 			h_material: ammo.hc.lv
-			quantity: 1500.000
+			quantity: 2500.000
 		}
 		{
 			type: resource
 			h_material: ammo.lc.hv
-			quantity: 1500.000
+			quantity: 2000.000
 		}
 		{
 			type: resource
 			h_material: ammo.lc.lv
-			quantity: 1500.000
+			quantity: 2000.000
+		}
+		{
+			type: resource
+			h_material: ammo.sg.grenade
+			quantity: 500.000
 		}
 		{
 			type: resource
@@ -51,18 +60,18 @@
 		}
 		{
 			type: resource
-			h_material: ammo.arrow
-			quantity: 400.000
+			h_material: ammo.rocket.lv
+			quantity: 150.000
 		}
 		{
 			type: resource
 			h_material: gunpowder
-			quantity: 500.000
+			quantity: 800.000
 		}
 		{
 			type: resource
 			h_material: nitrocellulose
-			quantity: 500.000
+			quantity: 800.000
 		}
 		{
 			type: resource
@@ -72,7 +81,7 @@
 		{
 			type: resource
 			h_material: nitroglycerine
-			quantity: 200.000
+			quantity: 500.000
 		}
 		{
 			type: resource
@@ -106,6 +115,11 @@
 		}
 		{
 			type: resource
+			h_material: steel.frames
+			quantity: 1000.000
+		}
+		{
+			type: resource
 			h_material: brick.concrete
 			quantity: 2500.000
 		}
@@ -117,6 +131,11 @@
 		{
 			type: resource
 			h_material: glass
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: steel
 			quantity: 500.000
 		}
 		{
@@ -156,7 +175,27 @@
 		}
 		{
 			type: resource
+			h_material: mushroom.brown
+			quantity: 1000.000
+		}
+		{
+			type: resource
 			h_material: alcohol
+			quantity: 2000.000
+		}
+		{
+			type: resource
+			h_material: chow
+			quantity: 1000.000
+		}
+		{
+			type: resource
+			h_material: mayo
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: twuk
 			quantity: 500.000
 		}
 		{
@@ -176,11 +215,6 @@
 		}
 		{
 			type: resource
-			h_material: smrad
-			quantity: 1000.000
-		}
-		{
-			type: resource
 			h_material: putty
 			quantity: 1000.000
 		}
@@ -196,8 +230,23 @@
 		}
 		{
 			type: resource
-			h_material: mayo
-			quantity: 200.000
+			h_material: scrap.mixed
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: scrap.machine
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: scrap.compacted
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: scrap.arcane
+			quantity: 500.000
 		}
 	]
 }

@@ -1,5 +1,4 @@
 ﻿{
-	$region_id: 0
 	$version: "0.1.75.2"
 	name: "Kobolder"
 	
@@ -11,8 +10,13 @@
 	[
 		{
 			type: resource
+			h_material: ammo.kn
+			quantity: 400.000
+		}
+		{
+			type: resource
 			h_material: ammo.ac.lv
-			quantity: 500.000
+			quantity: 600.000
 		}
 		{
 			type: resource
@@ -31,7 +35,7 @@
 		}
 		{
 			type: resource
-			h_material: ammo.lc.hv
+			h_material: ammo.lc.hp
 			quantity: 1500.000
 		}
 		{
@@ -51,7 +55,7 @@
 		}
 		{
 			type: resource
-			h_material: ammo.arrow
+			h_material: ammo.sg.crap
 			quantity: 400.000
 		}
 		{
@@ -66,18 +70,8 @@
 		}
 		{
 			type: resource
-			h_material: tnt
-			quantity: 2500.000
-		}
-		{
-			type: resource
 			h_material: nitroglycerine
 			quantity: 200.000
-		}
-		{
-			type: resource
-			h_material: nitrosugar
-			quantity: 500.000
 		}
 		{
 			type: resource
@@ -111,18 +105,28 @@
 		}
 		{
 			type: resource
-			h_material: cement
-			quantity: 2000.000
-		}
-		{
-			type: resource
 			h_material: glass
 			quantity: 500.000
 		}
 		{
 			type: resource
-			h_material: paper
-			quantity: 500.000
+			h_material: cement
+			quantity: 2000.000
+		}
+		{
+			type: resource
+			h_material: rubber
+			quantity: 1000.000
+		}
+		{
+			type: resource
+			h_material: himlkarzenus
+			quantity: 1500.000
+		}
+		{
+			type: resource
+			h_material: chow
+			quantity: 1000.000
 		}
 		{
 			type: resource
@@ -151,12 +155,12 @@
 		}
 		{
 			type: resource
-			h_material: cloth
+			h_material: alcohol
 			quantity: 500.000
 		}
 		{
 			type: resource
-			h_material: alcohol
+			h_material: cloth
 			quantity: 500.000
 		}
 		{
@@ -171,18 +175,28 @@
 		}
 		{
 			type: resource
+			h_material: red_sugar
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: mercury
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: twuk
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: water
+			quantity: 1000.000
+		}
+		{
+			type: resource
 			h_material: phlogiston
-			quantity: 2000.000
-		}
-		{
-			type: resource
-			h_material: smrad
-			quantity: 1000.000
-		}
-		{
-			type: resource
-			h_material: putty
-			quantity: 1000.000
+			quantity: 800.000
 		}
 		{
 			type: resource
@@ -196,8 +210,33 @@
 		}
 		{
 			type: resource
-			h_material: mayo
-			quantity: 200.000
+			h_material: scrap.cloth
+			quantity: 2000.000
+		}
+		{
+			type: resource
+			h_material: scrap.compacted
+			quantity: 2000.000
+		}
+		{
+			type: resource
+			h_material: scrap.metal
+			quantity: 2000.000
+		}
+		{
+			type: resource
+			h_material: scrap.mixed
+			quantity: 2000.000
+		}
+		{
+			type: resource
+			h_material: scrap.machine
+			quantity: 2000.000
+		}
+		{
+			type: resource
+			h_material: scrap.arcane
+			quantity: 1000.000
 		}
 	]
 }

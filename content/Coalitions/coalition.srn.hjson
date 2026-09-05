@@ -1,5 +1,4 @@
 ﻿{
-	$region_id: 0
 	$version: "0.1.75.2"
 	name: "S.R.N."
 	name_short: "S.R.N."
@@ -7,7 +6,7 @@
 	
 	flags: none
 	tags: none
-	connotations: none
+	connotations: weapon, vehicle, danger, illegal, explosive, gun, advanced, powerful, destructive, small, drug, mining, construction, painful, loud, military, industrial, arcane, bureaucracy, fake, sus, bad, scary
 	services: none
 	industry: none
 	authority: undefined

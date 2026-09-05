@@ -10,12 +10,17 @@
 	[
 		{
 			type: resource
-			h_material: ammo.ac.lv
+			h_material: ammo.hw.kinetic
+			quantity: 100.000
+		}
+		{
+			type: resource
+			h_material: ammo.ac.hv
 			quantity: 500.000
 		}
 		{
 			type: resource
-			h_material: ammo.mg.lv
+			h_material: ammo.mg.hv
 			quantity: 2000.000
 		}
 		{
@@ -25,17 +30,12 @@
 		}
 		{
 			type: resource
-			h_material: ammo.hc.lv
-			quantity: 1500.000
-		}
-		{
-			type: resource
 			h_material: ammo.lc.hv
 			quantity: 1500.000
 		}
 		{
 			type: resource
-			h_material: ammo.lc.lv
+			h_material: ammo.lc.hp
 			quantity: 1500.000
 		}
 		{
@@ -50,13 +50,13 @@
 		}
 		{
 			type: resource
-			h_material: ammo.arrow
-			quantity: 400.000
+			h_material: ammo.sg.bird
+			quantity: 800.000
 		}
 		{
 			type: resource
-			h_material: gunpowder
-			quantity: 500.000
+			h_material: ammo.rocket.hv
+			quantity: 100.000
 		}
 		{
 			type: resource
@@ -70,13 +70,13 @@
 		}
 		{
 			type: resource
-			h_material: nitroglycerine
-			quantity: 200.000
+			h_material: nitrosugar
+			quantity: 500.000
 		}
 		{
 			type: resource
-			h_material: nitrosugar
-			quantity: 500.000
+			h_material: nitroglycerine
+			quantity: 200.000
 		}
 		{
 			type: resource
@@ -95,6 +95,11 @@
 		}
 		{
 			type: resource
+			h_material: steel.frames
+			quantity: 500.000
+		}
+		{
+			type: resource
 			h_material: copper.rod
 			quantity: 500.000
 		}
@@ -107,11 +112,6 @@
 			type: resource
 			h_material: brick.concrete
 			quantity: 2500.000
-		}
-		{
-			type: resource
-			h_material: cement
-			quantity: 2000.000
 		}
 		{
 			type: resource
@@ -135,7 +135,7 @@
 		}
 		{
 			type: resource
-			h_material: lubricant
+			h_material: alcohol
 			quantity: 500.000
 		}
 		{
@@ -145,7 +145,47 @@
 		}
 		{
 			type: resource
+			h_material: lubricant
+			quantity: 500.000
+		}
+		{
+			type: resource
 			h_material: sulfuric_acid
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: hydrochloric_acid
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: mushroom.yellow
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: mushroom.green
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: mushroom.blue
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: red_sugar
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: himlkarzenus
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: mercury
 			quantity: 500.000
 		}
 		{
@@ -155,8 +195,8 @@
 		}
 		{
 			type: resource
-			h_material: alcohol
-			quantity: 500.000
+			h_material: mayo
+			quantity: 200.000
 		}
 		{
 			type: resource
@@ -185,8 +225,8 @@
 		}
 		{
 			type: resource
-			h_material: actuator
-			quantity: 250.000
+			h_material: smirgrafit.clay
+			quantity: 500.000
 		}
 		{
 			type: resource
@@ -195,8 +235,28 @@
 		}
 		{
 			type: resource
-			h_material: mayo
-			quantity: 200.000
+			h_material: actuator
+			quantity: 250.000
+		}
+		{
+			type: resource
+			h_material: computer
+			quantity: 10.000
+		}
+		{
+			type: resource
+			h_material: scrap.machine
+			quantity: 1000.000
+		}
+		{
+			type: resource
+			h_material: scrap.arcane
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: scrap.smirgrafit.dusty
+			quantity: 500.000
 		}
 	]
 }
