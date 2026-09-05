@@ -79,18 +79,9 @@ office:
 {
 	flags: enable_invite_company, enable_info, enable_blueprints
 	
-	filter_industry:
-	{
-		include: military, slaves, real_estate, colonization, exploration, security, mercenary, penal
-		exclude: administrative
-	}
 	filter_permits:
 	{
-		require: colonization, governance, coalition
-	}
-	filter_flags:
-	{
-		exclude: solo, regional, district, prefecture, municipal
+		require: coalition
 	}
 }
 
@@ -287,7 +278,9 @@ crafter:
 
 factory:
 {
-	h_catalogue: test.00
+	h_catalogue: coalition.energon.00
+	stock_baseline_ratio: 0.750
+	stock_initial_ratio: 0.400
 }
 
 stockpile:
@@ -296,6 +289,6 @@ stockpile:
 	flags: auto_create, show_addresses
 	flags_stockpile: vendor, npc
 
-	capacity_items: 40
+	capacity_items: 50
 	capacity_shipments: 8
 }

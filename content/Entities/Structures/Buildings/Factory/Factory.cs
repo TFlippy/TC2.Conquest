@@ -16,8 +16,9 @@
 			public required Factory.Data.Flags flags;
 			public ICatalogue.Handle h_catalogue;
 
-			public uint unused_01;
-			public uint unused_02;
+			public float stock_baseline_ratio = 0.80f;
+			public float stock_initial_ratio = 0.40f;
+			//public float stock_fill_ratio_baseline = 0.20f;
 			public uint unused_03;
 		}
 
@@ -58,6 +59,8 @@
 							var span_items_stockpile = stockpile_data.items.AsSpan();
 							var span_items_catalogue = catalogue_data.items.AsSpan();
 
+							span_items_stockpile.Clear();
+
 							var count = Maths.Min(span_items_stockpile.Length, span_items_catalogue.Length);
 							for (var i = 0; i < count; i++)
 							{
@@ -65,10 +68,10 @@
 								ref var item_catalogue = ref span_items_catalogue[i];
 
 								item_stockpile = item_catalogue;
-								item_stockpile.max = Maths.Max(item_catalogue.quantity, item_stockpile.material.GetQuantityFromMass(100.00f).SnapCeil(25));
+								item_stockpile.max = item_catalogue.quantity; // Maths.Max(item_catalogue.quantity, item_stockpile.material.GetQuantityFromMass(100.00f).SnapCeil(25));
 
 								//item_stockpile.quantity = 0.00f;
-								item_stockpile.quantity = (item_stockpile.max * 0.10f).SnapCeil(25);
+								item_stockpile.quantity = Maths.Clamp((item_stockpile.max * data.stock_baseline_ratio).SnapCeil(5), 0.00f, item_stockpile.max);
 							}
 
 							//stockpile_data.items
@@ -109,8 +112,11 @@
 						Assert.IsNotNull(ref selected_item);
 
 						var amount_abs = this.amount.Abs();
+						//var amount_abs_clamped = Maths.Min(selected_item.max);
 
 						var market_price_base = selected_item.material.GetMarketPrice();
+						Assert.Check(market_price_base > 0.00f);
+
 						var market_price = amount_abs * market_price_base;
 
 						Crafting.Context.NewFromCharacter(region: ref rpc.GetRegionCommon(), 
@@ -121,10 +127,13 @@
 
 						if (this.amount < 0.00f)
 						{
+							var amount_abs_clamped = Maths.Min(amount_abs, Maths.Clamp(selected_item.quantity, 0, selected_item.max));
+
 							Span<Crafting.Requirement> reqs =
 							[
 								Crafting.Requirement.Money(market_price_base) with
 								{
+									snapping = 1.00f,
 									amount_min = 0.00f,
 									amount_max = 0.00f,
 									flags = Crafting.Requirement.Flags.Primary | Crafting.Requirement.Flags.Argument | Crafting.Requirement.Flags.Prerequisite
@@ -141,14 +150,18 @@
 								}
 							];
 
-							context.Consume(requirements: reqs, amount_multiplier: amount_abs, evaluation_flags: Crafting.EvaluateFlags.Prerequisite);
-							context.Produce(products: prds, amount_multiplier: amount_abs);
+							Assert.Check(context.Evaluate(requirements: reqs, evaluation_flags: Crafting.EvaluateFlags.Prerequisite, amount_multiplier: amount_abs_clamped));
 
-							selected_item.quantity -= amount_abs;
+							context.Consume(requirements: reqs, amount_multiplier: amount_abs_clamped, evaluation_flags: Crafting.EvaluateFlags.Prerequisite);
+							context.Produce(products: prds, amount_multiplier: amount_abs_clamped);
+
+							selected_item.quantity -= amount_abs_clamped;
 							sync = true;
 						}
 						else
 						{
+							var amount_abs_clamped = Maths.Min(amount_abs, selected_item.max - Maths.Clamp(selected_item.quantity, 0, selected_item.max));
+
 							Span<Crafting.Requirement> reqs =
 							[
 								selected_item.ToRequirement() with
@@ -164,15 +177,20 @@
 							[
 								Crafting.Product.Money(market_price_base) with
 								{
+									snapping = 1.00f,
 									amount_extra = 0.00f,
 									flags = Crafting.Product.Flags.Primary
 								}
 							];
 
-							context.Consume(requirements: reqs, amount_multiplier: amount_abs, evaluation_flags: Crafting.EvaluateFlags.Prerequisite);
-							context.Produce(products: prds, amount_multiplier: amount_abs);
+							App.WriteValue((amount, amount_abs, amount_abs_clamped, market_price_base, amount_abs_clamped * market_price_base));
 
-							selected_item.quantity += amount_abs;
+							Assert.Check(context.Evaluate(requirements: reqs, evaluation_flags: Crafting.EvaluateFlags.Prerequisite, amount_multiplier: amount_abs_clamped));
+
+							context.Consume(requirements: reqs, amount_multiplier: amount_abs_clamped, evaluation_flags: Crafting.EvaluateFlags.Prerequisite);
+							context.Produce(products: prds, amount_multiplier: amount_abs_clamped);
+
+							selected_item.quantity += amount_abs_clamped;
 							sync = true;
 						}
 
@@ -274,7 +292,14 @@
 							{
 								using (var group_top = GUI.Group.New(size: GUI.Rm.SubY(48)))
 								{
+									using (var group_title = GUI.Group.New(size: new(GUI.RmX, 40), padding: new(6)))
+									{
+										GUI.TitleCentered(this.factory.h_catalogue.GetName(), pivot: new(0.00f, 0.50f), font: GUI.Font.Editia, size: 20);
 
+										GUI.FocusableAsset(h_stockpile);
+									}
+
+									GUI.SeparatorThick();
 
 									using (var group_items = GUI.Group.New(size: new(GUI.RmX, 0)))
 									{
@@ -318,22 +343,34 @@
 										Crafting.Context.NewFromCurrentCharacter(this.ent_factory, out var context, search_radius: 8.00f);
 										//group_trade.DrawBackground(GUI.tex_window);
 
+										var amount_multiplier_abs = selected_stockpile_item_amount_cached.Abs();
+										var amount_multiplier_abs_clamped = amount_multiplier_abs;
+
+										var amount_multiplier_max = 0;
 										var base_market_price = 0.00f;
 										if (selected_item.IsNotNull())
 										{
+											amount_multiplier_max = (int)selected_item.quantity;
 											base_market_price = selected_item.material.GetMarketPrice();
 										}
 
+										amount_multiplier_abs_clamped = Maths.Min(amount_multiplier_abs, Maths.Max(1, amount_multiplier_max));
+
 										Span<Crafting.Requirement> reqs_buy =
 										[
-											Crafting.Requirement.Money(selected_stockpile_item_amount_cached * base_market_price).WithFlags(add: Crafting.Requirement.Flags.Primary | Crafting.Requirement.Flags.Argument | Crafting.Requirement.Flags.Prerequisite)
+											Crafting.Requirement.Money(base_market_price)
+											.WithFlags(add: Crafting.Requirement.Flags.Primary | Crafting.Requirement.Flags.Argument | Crafting.Requirement.Flags.Prerequisite)
+											with
+											{
+												snapping = 1.00f,
+											}
 										];
 
 										Span<Crafting.Requirement> reqs_sell =
 										[
 											selected_item.IsNotNull() ? selected_item.ToRequirement() with
 											{
-												amount = selected_stockpile_item_amount_cached,
+												amount = 1.00f,
 												flags =  Crafting.Requirement.Flags.Primary | Crafting.Requirement.Flags.Argument | Crafting.Requirement.Flags.Prerequisite
 											} : default
 										];
@@ -349,7 +386,12 @@
 												{
 													if (selected_item.IsNotNull())
 													{
-														var amount_new = (int)GUI.DrawRequirements(ref context, requirements: reqs_sell, evaluation_flags: Crafting.EvaluateFlags.Prerequisite, selectable: true).selected_value;
+														var amount_new = (int)GUI.DrawRequirements(context: ref context,
+															requirements: reqs_sell,
+															amount_multiplier: amount_multiplier_abs,
+															evaluation_flags: Crafting.EvaluateFlags.Prerequisite,
+															selectable: true).selected_value;
+
 														if (amount_new != 0)
 														{
 															selected_stockpile_item_amount_cached = amount_new;
@@ -375,10 +417,15 @@
 												{
 													if (selected_item.IsNotNull())
 													{
-														var amount_new = (int)GUI.DrawRequirements(ref context, requirements: reqs_buy, evaluation_flags: Crafting.EvaluateFlags.Prerequisite, selectable: true).selected_value;
+														var amount_new = (int)GUI.DrawRequirements(context: ref context,
+															requirements: reqs_buy,
+															amount_multiplier: amount_multiplier_abs,
+															evaluation_flags: Crafting.EvaluateFlags.Prerequisite,
+															selectable: true).selected_value;
+
 														if (amount_new != 0)
 														{
-															selected_stockpile_item_amount_cached = amount_new;
+															selected_stockpile_item_amount_cached = (amount_new / base_market_price).RoundToInt();
 														}
 													}
 												}
@@ -388,7 +435,13 @@
 										GUI.SameLine();
 
 										//if (GUI.ScrollInput(rect: group_amount.GetInnerRect(), ref selected_stockpile_item_amount_cached, step: 1, min: 1, max: 10))
-										if (GUI.DrawCounter("input"u8, value: ref selected_stockpile_item_amount_cached, size: new(80, GUI.RmY), step: 1, min: 1, max: 100, format: Maths.NumberFormat.Int))
+										if (GUI.DrawCounter("input"u8,
+										value: ref selected_stockpile_item_amount_cached,
+										size: new(80, GUI.RmY),
+										step: 1,
+										min: 1,
+										//max: amount_multiplier_max,
+										format: Maths.NumberFormat.Int))
 										{
 
 										}
@@ -396,12 +449,13 @@
 										GUI.SameLine();
 
 										if (GUI.DrawRequirementButton(ref context, requirements: reqs_buy, text: "Buy"u8, size: new(64, GUI.RmY), color: GUI.col_buy,
-										eval_flags: Crafting.EvaluateFlags.Prerequisite, error: selected_item.IsNull()))
+										amount_multiplier: amount_multiplier_abs,
+										eval_flags: Crafting.EvaluateFlags.Prerequisite, error: selected_item.IsNull() || amount_multiplier_max <= 0))
 										{
 											var rpc = new Factory.DEV_TradeRPC
 											{
 												stockpile_slot_index = selected_stockpile_item_slot_cached ?? -1,
-												amount = -selected_stockpile_item_amount_cached.Abs()
+												amount = -amount_multiplier_abs
 											};
 											rpc.Send(this.ent_factory);
 										}
@@ -409,16 +463,18 @@
 										GUI.SameLine();
 
 										if (GUI.DrawRequirementButton(ref context, requirements: reqs_sell, text: "Sell"u8, size: new(64, GUI.RmY), color: GUI.col_sell,
-										eval_flags: Crafting.EvaluateFlags.Prerequisite, error: selected_item.IsNull()))
+										amount_multiplier: amount_multiplier_abs, 
+										eval_flags: Crafting.EvaluateFlags.Prerequisite, error: selected_item.IsNull() || (selected_item.quantity + amount_multiplier_abs) > selected_item.max))
 										{
 											var rpc = new Factory.DEV_TradeRPC
 											{
 												stockpile_slot_index = selected_stockpile_item_slot_cached ?? -1,
-												amount = selected_stockpile_item_amount_cached.Abs()
+												amount = amount_multiplier_abs
 											};
 											rpc.Send(this.ent_factory);
 										}
 									}
+
 								}
 							}
 
