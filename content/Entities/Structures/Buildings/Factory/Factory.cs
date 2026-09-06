@@ -2,6 +2,22 @@
 {
 	public static partial class Factory
 	{
+		public static float GetUnitSellPrice(ref readonly this Factory.Data factory, in Shipment.Item item)
+		{
+			var unit_market_price = item.GetUnitMarketPrice();
+			var t = Maths.InvLerp01(item.max * factory.low_price_threshold, item.max, item.quantity);
+			var t_pow = Maths.Pow(t, factory.low_price_falloff);
+
+			var ret = Maths.Lerp(unit_market_price, unit_market_price * factory.low_price_multiplier, t_pow);
+			return ret;
+		}
+
+		public static float GetUnitBuyPrice(ref readonly this Factory.Data factory, in Shipment.Item item)
+		{
+			var unit_market_price = item.GetUnitMarketPrice();
+			return unit_market_price;
+		}
+
 		[IComponent.Data(Net.SendType.Reliable, IComponent.Scope.Region)]
 		public partial struct Data(): IComponent
 		{
@@ -16,10 +32,17 @@
 			public required Factory.Data.Flags flags;
 			public ICatalogue.Handle h_catalogue;
 
-			public float stock_baseline_ratio = 0.80f;
-			public float stock_initial_ratio = 0.40f;
-			//public float stock_fill_ratio_baseline = 0.20f;
-			public uint unused_03;
+			[Save.NewLine]
+			[Save.Force] public required float stock_baseline_ratio = 0.80f;
+			[Save.Force] public required float stock_initial_ratio = 0.40f;
+
+			[Save.NewLine]
+			[Editor.Slider.Clamped(0.00f, 1.00f, snap: 0.001f)]
+			[Save.Force] public required float low_price_threshold = 0.75f;
+			[Editor.Slider.Clamped(0.00f, 10.00f, snap: 0.001f)]
+			[Save.Force] public required float low_price_multiplier = 0.50f;
+			[Editor.Slider.Clamped(0.00f, 10.00f, snap: 0.001f)]
+			[Save.Force] public required float low_price_falloff = 0.75f;
 		}
 
 		public struct EditRPC: Net.IRPC<Factory.Data>
@@ -114,10 +137,13 @@
 						var amount_abs = this.amount.Abs();
 						//var amount_abs_clamped = Maths.Min(selected_item.max);
 
-						var market_price_base = selected_item.GetUnitMarketPrice();
-						Assert.Check(market_price_base > 0.00f);
+						var unit_market_price = selected_item.GetUnitMarketPrice();
+						Assert.Check(unit_market_price > 0.00f);
 
-						var market_price = amount_abs * market_price_base;
+						var unit_market_price_sell = data.GetUnitSellPrice(in selected_item);
+						var unit_market_price_buy = data.GetUnitBuyPrice(in selected_item);
+
+						//var market_price = amount_abs * market_price_base;
 
 						Crafting.Context.NewFromCharacter(region: ref rpc.GetRegionCommon(), 
 							h_character: rpc.GetSenderCharacterHandle(), 
@@ -125,13 +151,13 @@
 							context: out var context, 
 							search_radius: 12.00f);
 
-						if (this.amount < 0.00f)
+						if (this.amount.IsPositive()) // character buying from shop
 						{
 							var amount_abs_clamped = Maths.Min(amount_abs, Maths.Clamp(selected_item.quantity, 0, selected_item.max));
 
 							Span<Crafting.Requirement> reqs =
 							[
-								Crafting.Requirement.Money(market_price_base) with
+								Crafting.Requirement.Money(unit_market_price_buy) with
 								{
 									snapping = 1.00f,
 									amount_min = 0.00f,
@@ -158,7 +184,7 @@
 							selected_item.quantity -= amount_abs_clamped;
 							sync = true;
 						}
-						else
+						else // character selling to shop
 						{
 							var amount_abs_clamped = Maths.Min(amount_abs, selected_item.max - Maths.Clamp(selected_item.quantity, 0, selected_item.max));
 
@@ -175,7 +201,7 @@
 
 							Span<Crafting.Product> prds =
 							[
-								Crafting.Product.Money(market_price_base) with
+								Crafting.Product.Money(unit_market_price_sell) with
 								{
 									snapping = 1.00f,
 									amount_extra = 0.00f,
@@ -183,7 +209,7 @@
 								}
 							];
 
-							App.WriteValue((amount, amount_abs, amount_abs_clamped, market_price_base, amount_abs_clamped * market_price_base));
+							App.WriteValue((amount, amount_abs, amount_abs_clamped, unit_market_price_sell, amount_abs_clamped * unit_market_price_sell));
 
 							Assert.Check(context.Evaluate(requirements: reqs, evaluation_flags: Crafting.EvaluateFlags.Prerequisite, amount_multiplier: amount_abs_clamped));
 
@@ -280,13 +306,13 @@
 
 						GUI.SameLine();
 
-						var ts = Timestamp.Default;
-						var ts_elapsed = 0.00;
-
 						const float item_cell_width = 56.00f;
 
 						using (var group_right = GUI.Group.New(size: GUI.Rm))
 						{
+							var ts = Timestamp.Now();
+							var ts_elapsed = 0.00;
+
 							var items_span = stockpile_data.items.AsSpan();
 							if (stockpile_data.IsNotNull())
 							{
@@ -306,7 +332,6 @@
 
 									using (var group_items = GUI.Group.New(size: new(GUI.RmX, 0)))
 									{
-
 										var sameline = false;
 
 										for (var i = 0; i < items_span.Length; i++)
@@ -320,7 +345,8 @@
 											using (var hash = GUI.ID<Factory.Data, Shipment.Item>.Push(i))
 											using (var group_item = GUI.Group.New(size: new(item_cell_width, item_cell_width + 12), padding: new(4)))
 											{
-												group_item.DrawBackground(GUI.tex_slot_white, color: GUI.col_frame);
+												//group_item.DrawBackground(GUI.tex_slot_white, color: GUI.col_frame);
+												group_item.DrawBackground(GUI.tex_window_sidebar_c);
 
 												if (item.IsValid())
 												{
@@ -334,8 +360,8 @@
 														selected_stockpile_item_slot_cached.Toggle(i);
 													}
 
-													var base_market_price = item.GetUnitMarketPrice();
-													GUI.TextShadedCenteredRect(base_market_price * amount_multiplier_abs, pivot: new(0.50f, 1.00f), rect: group_item.GetOuterRect(), 
+													var base_market_price = this.factory.GetUnitSellPrice(in item); // item.GetUnitMarketPrice();
+													GUI.TextShadedCenteredRect(base_market_price * amount_multiplier_abs, pivot: new(0.50f, 1.00f), rect: group_item.GetOuterRect(),
 														font: GUI.Font.Monaco, size: 12, box_shadow: true, offset: new(0, -2),
 														format: "0' Đk'", color: GUI.font_color_yellow_b);
 
@@ -343,7 +369,6 @@
 													{
 														using (var tooltip = GUI.Tooltip.New())
 														{
-
 															Span<Crafting.Requirement> reqs_buy = stackalloc[]
 															{
 																Crafting.Requirement.Money(base_market_price)
@@ -504,35 +529,91 @@
 
 										GUI.SameLine();
 
-										if (GUI.DrawRequirementButton(ref context, requirements: reqs_buy, text: "Buy"u8, size: new(64, GUI.RmY), color: GUI.col_buy,
-										amount_multiplier: amount_multiplier_abs,
-										eval_flags: Crafting.EvaluateFlags.Prerequisite, error: selected_item.IsNull() || base_market_price <= 0.00f || amount_multiplier_max <= 0))
 										{
-											var rpc = new Factory.DEV_TradeRPC
+											if (GUI.DrawRequirementButton(ref context, requirements: reqs_buy, text: "Buy"u8, size: new(64, GUI.RmY), color: GUI.col_buy,
+											amount_multiplier: amount_multiplier_abs,
+											eval_flags: Crafting.EvaluateFlags.Prerequisite, error: selected_item.IsNull() || base_market_price <= 0.00f || amount_multiplier_max <= 0))
 											{
-												stockpile_slot_index = selected_stockpile_item_slot_cached ?? -1,
-												amount = -amount_multiplier_abs
-											};
-											rpc.Send(this.ent_factory);
+												var rpc = new Factory.DEV_TradeRPC
+												{
+													stockpile_slot_index = selected_stockpile_item_slot_cached ?? -1,
+													amount = amount_multiplier_abs
+												};
+												rpc.Send(this.ent_factory);
+											}
+
+											if (selected_item.IsNotNull() && GUI.IsItemHovered())
+											{
+												using (var tooltip = GUI.Tooltip.New())
+												{
+													GUI.SeparatorThick();
+													GUI.NewLine(8);
+
+													Span<Crafting.Product> prds =
+													[
+														selected_item.ToProduct() with
+														{
+															amount = 1.00f,
+															amount_extra = 0.00f,
+															flags = Crafting.Product.Flags.Primary
+														}
+													];
+
+													GUI.DrawProducts(context: ref context,
+														products: prds,
+														evaluation_flags: Crafting.EvaluateFlags.Prerequisite,
+														amount_multiplier: amount_multiplier_abs_clamped,
+														selectable: false);
+												}
+											}
 										}
 
 										GUI.SameLine();
 
-										if (GUI.DrawRequirementButton(ref context, requirements: reqs_sell, text: "Sell"u8, size: new(64, GUI.RmY), color: GUI.col_sell,
-										amount_multiplier: amount_multiplier_abs, 
-										eval_flags: Crafting.EvaluateFlags.Prerequisite, error: selected_item.IsNull() || base_market_price <= 0.00f || selected_item.quantity >= selected_item.max))
 										{
-											var rpc = new Factory.DEV_TradeRPC
+											if (GUI.DrawRequirementButton(ref context, requirements: reqs_sell, text: "Sell"u8, size: new(64, GUI.RmY), color: GUI.col_sell,
+											amount_multiplier: amount_multiplier_abs,
+											eval_flags: Crafting.EvaluateFlags.Prerequisite, error: selected_item.IsNull() || base_market_price <= 0.00f || selected_item.quantity >= selected_item.max))
 											{
-												stockpile_slot_index = selected_stockpile_item_slot_cached ?? -1,
-												amount = amount_multiplier_abs
-											};
-											rpc.Send(this.ent_factory);
+												var rpc = new Factory.DEV_TradeRPC
+												{
+													stockpile_slot_index = selected_stockpile_item_slot_cached ?? -1,
+													amount = -amount_multiplier_abs
+												};
+												rpc.Send(this.ent_factory);
+											}
+
+											if (selected_item.IsNotNull() && GUI.IsItemHovered())
+											{
+												using (var tooltip = GUI.Tooltip.New())
+												{
+													GUI.SeparatorThick();
+													GUI.NewLine(8);
+
+													var unit_market_price_sell = this.factory.GetUnitSellPrice(in selected_item);
+													Span<Crafting.Product> prds =
+													[
+														Crafting.Product.Money(unit_market_price_sell) with
+														{
+															snapping = 1.00f,
+															amount_extra = 0.00f,
+															flags = Crafting.Product.Flags.Primary
+														}
+													];
+
+													GUI.DrawProducts(context: ref context,
+														products: prds,
+														evaluation_flags: Crafting.EvaluateFlags.Prerequisite,
+														amount_multiplier: amount_multiplier_abs_clamped,
+														selectable: false);
+												}
+											}
 										}
 									}
 
 								}
 							}
+
 
 							GUI.SeparatorThick();
 
@@ -548,6 +629,11 @@
 								}
 								//GUI.TextShaded("TODO"u8);
 
+								ts_elapsed = ts.GetMilliseconds();
+
+								GUI.SameLine();
+
+								GUI.TextShaded($"{ts_elapsed:0.000} ms");
 							}
 
 							//GUI.TextShaded($"{total_inventories} inventories in {ts_elapsed:0.000} ms");

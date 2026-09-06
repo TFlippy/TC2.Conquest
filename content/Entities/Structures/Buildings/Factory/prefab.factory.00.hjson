@@ -279,8 +279,12 @@ crafter:
 factory:
 {
 	h_catalogue: coalition.energon.00
-	stock_baseline_ratio: 0.750
-	stock_initial_ratio: 0.400
+	
+	stock_baseline_ratio: 0.800
+	
+	low_price_threshold: 0.200
+	low_price_multiplier: 0.290
+	low_price_falloff: 2.500
 }
 
 stockpile:
