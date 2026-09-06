@@ -114,7 +114,7 @@
 						var amount_abs = this.amount.Abs();
 						//var amount_abs_clamped = Maths.Min(selected_item.max);
 
-						var market_price_base = selected_item.material.GetMarketPrice();
+						var market_price_base = selected_item.GetUnitMarketPrice();
 						Assert.Check(market_price_base > 0.00f);
 
 						var market_price = amount_abs * market_price_base;
@@ -123,7 +123,7 @@
 							h_character: rpc.GetSenderCharacterHandle(), 
 							ent_producer: rpc.entity, 
 							context: out var context, 
-							search_radius: 8.00f);
+							search_radius: 12.00f);
 
 						if (this.amount < 0.00f)
 						{
@@ -199,8 +199,6 @@
 							Sound.Play(ref rpc.GetRegionCommon(), sound: Shop.snd_buy, world_position: rpc.record.GetPosition(), dist_multiplier: 0.60f, priority: 0.20f);
 							stockpile_asset.Sync();
 						}
-
-						//Crafting.Context.NewFromConnection(ref rpc.connection, ent_producer: rpc.entity, out var context, search_radius: 8.00f);
 					}
 				}
 
@@ -260,6 +258,8 @@
 						var h_stockpile = this.stockpile.h_stockpile;
 						ref var stockpile_data = ref h_stockpile.GetData();
 
+						Crafting.Context.NewFromCurrentCharacter(this.ent_factory, out var context, search_radius: 12.00f);
+
 						using (var group_left = GUI.Group.New(size: new(298 - 48, GUI.RmY), padding: new(6)))
 						{
 							group_left.DrawBackground(GUI.tex_window);
@@ -290,6 +290,9 @@
 							var items_span = stockpile_data.items.AsSpan();
 							if (stockpile_data.IsNotNull())
 							{
+								var amount_multiplier_abs = selected_stockpile_item_amount_cached.Abs();
+								var amount_multiplier_abs_clamped = amount_multiplier_abs;
+
 								using (var group_top = GUI.Group.New(size: GUI.Rm.SubY(48)))
 								{
 									using (var group_title = GUI.Group.New(size: new(GUI.RmX, 40), padding: new(6)))
@@ -315,17 +318,70 @@
 											if (sameline) GUI.TrySameLine(item_cell_width);
 
 											using (var hash = GUI.ID<Factory.Data, Shipment.Item>.Push(i))
-											using (var group_item = GUI.Group.New(size: new(item_cell_width), padding: new(4)))
+											using (var group_item = GUI.Group.New(size: new(item_cell_width, item_cell_width + 12), padding: new(4)))
 											{
 												group_item.DrawBackground(GUI.tex_slot_white, color: GUI.col_frame);
 
-												//GUI.DrawResourceSmall()
-												GUI.DrawItem(ref item, size: GUI.Rm);
-
-												var is_selected = selected_stockpile_item_slot_cached == i;
-												if (GUI.Selectable3(hash, rect: group_item.GetInnerRect(), selected: is_selected))
+												if (item.IsValid())
 												{
-													selected_stockpile_item_slot_cached.Toggle(i);
+													//GUI.DrawResourceSmall()
+													GUI.DrawItem(ref item, size: new(GUI.RmX));
+													var is_hovered = GUI.IsItemHovered();
+
+													var is_selected = selected_stockpile_item_slot_cached == i;
+													if (GUI.Selectable3(hash, rect: group_item.GetInnerRect(), selected: is_selected))
+													{
+														selected_stockpile_item_slot_cached.Toggle(i);
+													}
+
+													var base_market_price = item.GetUnitMarketPrice();
+													GUI.TextShadedCenteredRect(base_market_price * amount_multiplier_abs, pivot: new(0.50f, 1.00f), rect: group_item.GetOuterRect(), 
+														font: GUI.Font.Monaco, size: 12, box_shadow: true, offset: new(0, -2),
+														format: "0' Đk'", color: GUI.font_color_yellow_b);
+
+													if (is_hovered) //GUI.IsHoveringRect(item_rect) group_item.IsHovered())
+													{
+														using (var tooltip = GUI.Tooltip.New())
+														{
+
+															Span<Crafting.Requirement> reqs_buy = stackalloc[]
+															{
+																Crafting.Requirement.Money(base_market_price)
+																.WithFlags(add: Crafting.Requirement.Flags.Primary | Crafting.Requirement.Flags.Argument | Crafting.Requirement.Flags.Prerequisite)
+																with
+																{
+																	snapping = 1.00f,
+																}
+															};
+
+															Span<Crafting.Requirement> reqs_sell = stackalloc[]
+															{
+																item.ToRequirement() with
+																{
+																	amount = 1.00f,
+																	flags =  Crafting.Requirement.Flags.Primary | Crafting.Requirement.Flags.Argument | Crafting.Requirement.Flags.Prerequisite
+																}
+															};
+
+															//var amount_multiplier_abs = item.quantity.Abs();
+
+															GUI.DrawRequirements(context: ref context,
+																requirements: reqs_buy,
+																amount_multiplier: amount_multiplier_abs,
+																evaluation_flags: Crafting.EvaluateFlags.Prerequisite,
+																selectable: false,
+																highlight: true);
+
+															GUI.SeparatorThick();
+
+															GUI.DrawRequirements(context: ref context,
+																requirements: reqs_sell,
+																amount_multiplier: amount_multiplier_abs,
+																evaluation_flags: Crafting.EvaluateFlags.Prerequisite,
+																selectable: false,
+																highlight: true);
+														}
+													}
 												}
 											}
 
@@ -340,40 +396,40 @@
 									{
 										ref var selected_item = ref items_span.GetRefAtIndexOrNull(selected_stockpile_item_slot_cached);
 
-										Crafting.Context.NewFromCurrentCharacter(this.ent_factory, out var context, search_radius: 8.00f);
+										//Crafting.Context.NewFromCurrentCharacter(this.ent_factory, out var context, search_radius: 12.00f);
 										//group_trade.DrawBackground(GUI.tex_window);
 
-										var amount_multiplier_abs = selected_stockpile_item_amount_cached.Abs();
-										var amount_multiplier_abs_clamped = amount_multiplier_abs;
+										//var amount_multiplier_abs = selected_stockpile_item_amount_cached.Abs();
+										//var amount_multiplier_abs_clamped = amount_multiplier_abs;
 
 										var amount_multiplier_max = 0;
 										var base_market_price = 0.00f;
 										if (selected_item.IsNotNull())
 										{
 											amount_multiplier_max = (int)selected_item.quantity;
-											base_market_price = selected_item.material.GetMarketPrice();
+											base_market_price = selected_item.GetUnitMarketPrice();
 										}
 
 										amount_multiplier_abs_clamped = Maths.Min(amount_multiplier_abs, Maths.Max(1, amount_multiplier_max));
 
-										Span<Crafting.Requirement> reqs_buy =
-										[
+										Span<Crafting.Requirement> reqs_buy = stackalloc[]
+										{
 											Crafting.Requirement.Money(base_market_price)
 											.WithFlags(add: Crafting.Requirement.Flags.Primary | Crafting.Requirement.Flags.Argument | Crafting.Requirement.Flags.Prerequisite)
 											with
 											{
 												snapping = 1.00f,
 											}
-										];
+										};
 
-										Span<Crafting.Requirement> reqs_sell =
-										[
+										Span<Crafting.Requirement> reqs_sell = stackalloc[]
+										{
 											selected_item.IsNotNull() ? selected_item.ToRequirement() with
 											{
 												amount = 1.00f,
 												flags =  Crafting.Requirement.Flags.Primary | Crafting.Requirement.Flags.Argument | Crafting.Requirement.Flags.Prerequisite
 											} : default
-										];
+										};
 
 										using (var group_item_left = GUI.Group.New(size: new(GUI.RmX - 128 - 80, GUI.RmY), padding: new(6)))
 										{
@@ -450,7 +506,7 @@
 
 										if (GUI.DrawRequirementButton(ref context, requirements: reqs_buy, text: "Buy"u8, size: new(64, GUI.RmY), color: GUI.col_buy,
 										amount_multiplier: amount_multiplier_abs,
-										eval_flags: Crafting.EvaluateFlags.Prerequisite, error: selected_item.IsNull() || amount_multiplier_max <= 0))
+										eval_flags: Crafting.EvaluateFlags.Prerequisite, error: selected_item.IsNull() || base_market_price <= 0.00f || amount_multiplier_max <= 0))
 										{
 											var rpc = new Factory.DEV_TradeRPC
 											{
@@ -464,7 +520,7 @@
 
 										if (GUI.DrawRequirementButton(ref context, requirements: reqs_sell, text: "Sell"u8, size: new(64, GUI.RmY), color: GUI.col_sell,
 										amount_multiplier: amount_multiplier_abs, 
-										eval_flags: Crafting.EvaluateFlags.Prerequisite, error: selected_item.IsNull() || (selected_item.quantity + amount_multiplier_abs) > selected_item.max))
+										eval_flags: Crafting.EvaluateFlags.Prerequisite, error: selected_item.IsNull() || base_market_price <= 0.00f || selected_item.quantity >= selected_item.max))
 										{
 											var rpc = new Factory.DEV_TradeRPC
 											{

@@ -66,7 +66,7 @@
 		{
 			type: resource
 			h_material: tnt
-			quantity: 2500.000
+			quantity: 500.000
 		}
 		{
 			type: resource
@@ -81,7 +81,7 @@
 		{
 			type: resource
 			h_material: wood
-			quantity: 2500.000
+			quantity: 250.000
 		}
 		{
 			type: resource
@@ -257,6 +257,11 @@
 			type: resource
 			h_material: scrap.smirgrafit.dusty
 			quantity: 500.000
+		}
+		{
+			type: prefab
+			h_prefab: wrench.00
+			quantity: 10.000
 		}
 	]
 }

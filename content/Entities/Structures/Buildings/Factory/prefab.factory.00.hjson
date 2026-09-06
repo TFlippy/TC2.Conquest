@@ -289,6 +289,6 @@ stockpile:
 	flags: auto_create, show_addresses
 	flags_stockpile: vendor, npc
 
-	capacity_items: 50
-	capacity_shipments: 8
+	capacity_items: 60
+	capacity_shipments: 5
 }

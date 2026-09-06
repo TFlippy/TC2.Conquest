@@ -76,7 +76,7 @@
 		{
 			type: resource
 			h_material: wood
-			quantity: 2500.000
+			quantity: 500.000
 		}
 		{
 			type: resource

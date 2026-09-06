@@ -71,7 +71,7 @@
 		{
 			type: resource
 			h_material: tnt
-			quantity: 2500.000
+			quantity: 500.000
 		}
 		{
 			type: resource
@@ -86,7 +86,7 @@
 		{
 			type: resource
 			h_material: wood
-			quantity: 2500.000
+			quantity: 400.000
 		}
 		{
 			type: resource
