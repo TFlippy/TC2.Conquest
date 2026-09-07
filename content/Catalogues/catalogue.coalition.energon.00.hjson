@@ -1,6 +1,6 @@
 ﻿{
 	$version: "0.1.75.2"
-	name: "Energon Industrijal Coalition"
+	name: "Energon Industrijer Coalition Catalogue"
 	
 	h_company: energon
 	
@@ -211,7 +211,7 @@
 		{
 			type: resource
 			h_material: phlogiston
-			quantity: 2000.000
+			quantity: 1000.000
 		}
 		{
 			type: resource

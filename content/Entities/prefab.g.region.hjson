@@ -57,3 +57,25 @@ worldmap.marker:
 {
 	radius: 0.375
 }
+
+// stockpile:
+// {
+// 	request_types: ""
+// 	flags_stockpile: npc
+// 	flags: auto_create, show_addresses
+
+// 	grid_column_count: 10
+// 	capacity_items: 60
+// 	capacity_shipments: 5
+// }
+
+stockpile:
+{
+	request_types: ""
+	flags_stockpile: region
+	flags: auto_create, show_addresses
+
+	grid_column_count: 10
+	capacity_items: 60
+	capacity_shipments: 10
+}

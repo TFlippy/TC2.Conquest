@@ -110,12 +110,12 @@ nameable:
 
 address:
 {
-	
+	flags: auto_generate, public
 }
 
 entrance.linkable:
 {
-
+	radius: 80.000
 }
 
 laboratory:
@@ -290,9 +290,10 @@ factory:
 stockpile:
 {
 	request_types: move, load
-	flags: auto_create, show_addresses
-	flags_stockpile: vendor, npc
+	flags: hidden, hide_unowned
+	flags_stockpile: vendor, npc, coalition
 
+	grid_column_count: 8
 	capacity_items: 60
 	capacity_shipments: 5
 }

@@ -263,12 +263,10 @@
 			public IFaction.Handle h_faction;
 			public ICompany.Handle h_company;
 
-
 			public static IRecipe.Handle h_selected_recipe_cached;
 			public static Shipment.Item2.Header selected_item_header_cached;
 			public static int? selected_stockpile_item_slot_cached;
 			public static int selected_stockpile_item_amount_cached;
-
 
 			public void Draw()
 			{
@@ -318,6 +316,8 @@
 							{
 								var amount_multiplier_abs = selected_stockpile_item_amount_cached.Abs();
 								var amount_multiplier_abs_clamped = amount_multiplier_abs;
+								
+								//new IStockpile.SlotID(0, Stockpile.SlotType.Item)
 
 								using (var group_top = GUI.Group.New(size: GUI.Rm.SubY(48)))
 								{
@@ -412,7 +412,6 @@
 
 											sameline = true;
 										}
-
 									}
 
 									GUI.SeparatorThick();
@@ -610,7 +609,6 @@
 											}
 										}
 									}
-
 								}
 							}
 

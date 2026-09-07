@@ -48,14 +48,25 @@ nameable:
 	
 // }
 
+// stockpile:
+// {
+// 	request_types: pack, unpack, move
+// 	flags: auto_create, show_addresses
+
+// 	grid_column_count: 6
+// 	capacity_items: 8
+// 	capacity_shipments: 12
+// }
+
 stockpile:
 {
-	request_types: pack, unpack, move
+	request_types: ""
+	flags_stockpile: region
 	flags: auto_create, show_addresses
 
-	grid_column_count: 6
-	capacity_items: 8
-	capacity_shipments: 12
+	grid_column_count: 10
+	capacity_items: 60
+	capacity_shipments: 10
 }
 
 worldmap.enterable:

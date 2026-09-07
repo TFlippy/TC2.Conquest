@@ -1,12 +1,12 @@
 ﻿{
 	$version: "0.1.75.2"
-	name: "Energon Industrijal"
+	name: "Energon Industrijer"
 	name_short: "Energon"
-	name_imperial: "Energon Industrijal"
+	name_imperial: "Energon Industrijer"
 	
 	desc:
 		'''
-		Large-scale industrial operation on Krumpelstein funded by Energon Industrijal.
+		Large-scale industrial operation on Krumpelstein funded by Energon Industrijer.
 		'''
 	
 	flags: none

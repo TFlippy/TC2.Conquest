@@ -1,38 +1,14 @@
 ﻿{
-	$version: "0.1.73.1"
-	name: "The Most Rushed Catalogue"
+	$region_id: 0
+	$version: "0.1.68.2"
+	name: "Future Tech"
 	
 	h_company: postus
 	
-	date_created: "000.00.00 00:00:00"
+	date_created: 0
 	
 	items:
 	[
-		{
-			type: resource
-			h_material: money
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: limelight
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: machine_parts
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: toluene
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: lubricant
-			quantity: 0.000
-		}
 		{
 			type: resource
 			h_material: alcohol
@@ -40,22 +16,32 @@
 		}
 		{
 			type: resource
-			h_material: actuator
+			h_material: chow
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: directors
+			h_material: cmajzl
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: mushroom.blue
+			h_material: eggs
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: nitrosugar
+			h_material: flour
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: grain
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: insect
 			quantity: 0.000
 		}
 		{
@@ -65,42 +51,17 @@
 		}
 		{
 			type: resource
-			h_material: glue
+			h_material: meat
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: nitric_acid
+			h_material: mushroom.brown
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: smrad
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: putty
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: phlogiston
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: smirglum.plate
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: steel.plate
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: computer
+			h_material: mushroom.juice
 			quantity: 0.000
 		}
 		{
@@ -110,12 +71,32 @@
 		}
 		{
 			type: resource
-			h_material: cloth
+			h_material: onion.juice
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: paper
+			h_material: porridge
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: red_sugar
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: salmiac
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: salt
+			quantity: 0.000
+		}
+		{
+			type: resource
+			h_material: sauce
 			quantity: 0.000
 		}
 		{
@@ -130,42 +111,22 @@
 		}
 		{
 			type: resource
-			h_material: glass
+			h_material: tallow
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: copper.plate
+			h_material: vinegar
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: steel.rod
+			h_material: water.clean
 			quantity: 0.000
 		}
 		{
 			type: resource
-			h_material: copper.rod
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: brick.concrete
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: cement
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: sulfur
-			quantity: 0.000
-		}
-		{
-			type: resource
-			h_material: porridge
+			h_material: water.red
 			quantity: 0.000
 		}
 	]
