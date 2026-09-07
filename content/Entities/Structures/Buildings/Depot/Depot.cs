@@ -1,21 +1,21 @@
 ﻿namespace TC2.Base.Components
 {
-	public static partial class Factory
+	public static partial class Depot
 	{
-		public static float GetUnitSellPrice(ref readonly this Factory.Data factory, in Shipment.Item item)
-		{
-			var unit_market_price = item.GetUnitMarketPrice();
-			var t = Maths.InvLerp01(item.max * factory.low_price_threshold, item.max, item.quantity);
-			var t_pow = Maths.Pow(t, factory.low_price_falloff);
-
-			var ret = Maths.Lerp(unit_market_price, unit_market_price * factory.low_price_multiplier, t_pow);
-			return ret;
-		}
-
-		public static float GetUnitBuyPrice(ref readonly this Factory.Data factory, in Shipment.Item item)
+		public static float GetUnitBuyPrice(ref readonly this Depot.Data depot, in Shipment.Item item)
 		{
 			var unit_market_price = item.GetUnitMarketPrice();
 			return unit_market_price;
+		}
+
+		public static float GetUnitSellPrice(ref readonly this Depot.Data depot, in Shipment.Item item)
+		{
+			var unit_market_price = item.GetUnitMarketPrice();
+			var t = Maths.InvLerp01(item.max * depot.low_price_threshold, item.max, item.quantity);
+			var t_pow = Maths.Pow(t, depot.low_price_falloff);
+
+			var ret = Maths.Lerp(unit_market_price, unit_market_price * depot.low_price_multiplier, t_pow);
+			return ret;
 		}
 
 		[IComponent.Data(Net.SendType.Reliable, IComponent.Scope.Region)]
@@ -29,7 +29,7 @@
 
 			}
 
-			public required Factory.Data.Flags flags;
+			public required Depot.Data.Flags flags;
 			public ICatalogue.Handle h_catalogue;
 
 			[Save.NewLine]
@@ -45,11 +45,11 @@
 			[Save.Force] public required float low_price_falloff = 0.75f;
 		}
 
-		public struct EditRPC: Net.IRPC<Factory.Data>
+		public struct EditRPC: Net.IRPC<Depot.Data>
 		{
 
 #if SERVER
-			public void Invoke(Net.IRPC.Context rpc, ref Factory.Data data)
+			public void Invoke(Net.IRPC.Context rpc, ref Depot.Data data)
 			{
 				var sync = false;
 
@@ -61,13 +61,16 @@
 #endif
 		}
 
-		public struct DEV_SetCatalogueRPC: Net.IRPC<Factory.Data>
+		public struct DEV_SetCatalogueRPC: Net.IRPC<Depot.Data>
 		{
 			public ICatalogue.Handle h_catalogue;
 
 #if SERVER
-			public void Invoke(Net.IRPC.Context rpc, ref Factory.Data data)
+			public void Invoke(Net.IRPC.Context rpc, ref Depot.Data data)
 			{
+				Assert.IsDevMode();
+				Assert.IsAdmin(ref rpc.connection);
+
 				var sync = false;
 
 				ref var catalogue_data = ref this.h_catalogue.GetData();
@@ -112,14 +115,14 @@
 #endif
 		}
 
-		public struct DEV_TradeRPC: Net.IRPC<Factory.Data>
+		public struct DEV_TradeRPC: Net.IRPC<Depot.Data>
 		{
 			//public Inventory.Slot inv_slot;
 			public int stockpile_slot_index;
 			public float amount;
 
 #if SERVER
-			public void Invoke(Net.IRPC.Context rpc, ref Factory.Data data)
+			public void Invoke(Net.IRPC.Context rpc, ref Depot.Data data)
 			{
 				var sync = false;
 
@@ -238,24 +241,24 @@
 		}
 
 		[ISystem.Update.B(ISystem.Mode.Single, ISystem.Scope.Region)]
-		public static void OnUpdate(ISystem.Info info, ref Region.Data region, ref XorRandom random, Entity ent_factory,
-		[Source.Owned] ref Factory.Data factory,
+		public static void OnUpdate(ISystem.Info info, ref Region.Data region, ref XorRandom random, Entity ent_depot,
+		[Source.Owned] ref Depot.Data depot,
 		[Source.Owned] ref Body.Data body, [Source.Owned] in Transform.Data transform,
 		[Source.Owned, Optional] in Faction.Data faction, [Source.Owned, Optional] in Company.Data company)
 		{
 
 			//#if SERVER
-			//			ent_factory.TryGetInventory(Inventory.Type.Output, out var h_inventory)
+			//			ent_depot.TryGetInventory(Inventory.Type.Output, out var h_inventory)
 			//#endif
 
 		}
 
 #if CLIENT
-		public struct FactoryGUI: IGUICommand
+		public struct DepotGUI: IGUICommand
 		{
-			public Entity ent_factory;
+			public Entity ent_depot;
 
-			public Factory.Data factory;
+			public Depot.Data depot;
 			public Transform.Data transform;
 			public Stockpile.Data stockpile;
 			public Entrance.Linkable.Data entrance_linkable;
@@ -270,19 +273,19 @@
 
 			public void Draw()
 			{
-				using (var window = GUI.Window.Interaction(identifier: "Factory"u8, entity: this.ent_factory,
+				using (var window = GUI.Window.Interaction(identifier: "Depot"u8, entity: this.ent_depot,
 				tooltip_tab: "You can control the means of production here."))
 				{
 					this.StoreCurrentWindowTypeID(order: -1000);
 					if (window.show)
 					{
-						ref var region_common = ref this.ent_factory.GetRegionCommon();
+						ref var region_common = ref this.ent_depot.GetRegionCommon();
 						var h_character_client = Client.GetCharacterHandle();
 
 						var h_stockpile = this.stockpile.h_stockpile;
 						ref var stockpile_data = ref h_stockpile.GetData();
 
-						Crafting.Context.NewFromCurrentCharacter(this.ent_factory, out var context, search_radius: 12.00f);
+						Crafting.Context.NewFromCurrentCharacter(this.ent_depot, out var context, search_radius: 12.00f);
 
 						using (var group_left = GUI.Group.New(size: new(298 - 48, GUI.RmY), padding: new(6)))
 						{
@@ -323,7 +326,7 @@
 								{
 									using (var group_title = GUI.Group.New(size: new(GUI.RmX, 40), padding: new(6)))
 									{
-										GUI.TitleCentered(this.factory.h_catalogue.GetName(), pivot: new(0.00f, 0.50f), font: GUI.Font.Editia, size: 20);
+										GUI.TitleCentered(this.depot.h_catalogue.GetName(), pivot: new(0.00f, 0.50f), font: GUI.Font.Editia, size: 20);
 
 										GUI.FocusableAsset(h_stockpile);
 									}
@@ -342,7 +345,7 @@
 
 											if (sameline) GUI.TrySameLine(item_cell_width);
 
-											using (var hash = GUI.ID<Factory.Data, Shipment.Item>.Push(i))
+											using (var hash = GUI.ID<Depot.Data, Shipment.Item>.Push(i))
 											using (var group_item = GUI.Group.New(size: new(item_cell_width, item_cell_width + 12), padding: new(4)))
 											{
 												//group_item.DrawBackground(GUI.tex_slot_white, color: GUI.col_frame);
@@ -351,7 +354,7 @@
 												if (item.IsValid())
 												{
 													//GUI.DrawResourceSmall()
-													GUI.DrawItem(ref item, size: new(GUI.RmX));
+													GUI.DrawItem(item: ref item, size: new Vec2f(GUI.RmX).SubY(8));
 													var is_hovered = GUI.IsItemHovered();
 
 													var is_selected = selected_stockpile_item_slot_cached == i;
@@ -360,10 +363,15 @@
 														selected_stockpile_item_slot_cached.Toggle(i);
 													}
 
-													var base_market_price = this.factory.GetUnitSellPrice(in item); // item.GetUnitMarketPrice();
-													GUI.TextShadedCenteredRect(base_market_price * amount_multiplier_abs, pivot: new(0.50f, 1.00f), rect: group_item.GetOuterRect(),
-														font: GUI.Font.Monaco, size: 12, box_shadow: true, offset: new(0, -2),
-														format: "0' Đk'", color: GUI.font_color_yellow_b);
+													var unit_market_price_buy = this.depot.GetUnitBuyPrice(in item); // item.GetUnitMarketPrice();
+													GUI.TextShadedCenteredRect(unit_market_price_buy * amount_multiplier_abs, pivot: new(0.50f, 1.00f), rect: group_item.GetOuterRect(),
+														font: GUI.Font.Monaco, size: 11, box_shadow: true, offset: new(0, -14),
+														format: "0' Đk'", color: GUI.col_buy);
+
+													var unit_market_price_sell = this.depot.GetUnitSellPrice(in item); // item.GetUnitMarketPrice();
+													GUI.TextShadedCenteredRect(unit_market_price_sell * amount_multiplier_abs, pivot: new(0.50f, 1.00f), rect: group_item.GetOuterRect(),
+														font: GUI.Font.Monaco, size: 11, box_shadow: true, offset: new(0, -2),
+														format: "0' Đk'", color: GUI.col_sell);
 
 													if (is_hovered) //GUI.IsHoveringRect(item_rect) group_item.IsHovered())
 													{
@@ -371,7 +379,7 @@
 														{
 															Span<Crafting.Requirement> reqs_buy = stackalloc[]
 															{
-																Crafting.Requirement.Money(base_market_price)
+																Crafting.Requirement.Money(unit_market_price_sell)
 																.WithFlags(add: Crafting.Requirement.Flags.Primary | Crafting.Requirement.Flags.Argument | Crafting.Requirement.Flags.Prerequisite)
 																with
 																{
@@ -420,7 +428,7 @@
 									{
 										ref var selected_item = ref items_span.GetRefAtIndexOrNull(selected_stockpile_item_slot_cached);
 
-										//Crafting.Context.NewFromCurrentCharacter(this.ent_factory, out var context, search_radius: 12.00f);
+										//Crafting.Context.NewFromCurrentCharacter(this.ent_depot, out var context, search_radius: 12.00f);
 										//group_trade.DrawBackground(GUI.tex_window);
 
 										//var amount_multiplier_abs = selected_stockpile_item_amount_cached.Abs();
@@ -460,7 +468,7 @@
 											group_item_left.DrawBackground(GUI.tex_window_popup_l, color: GUI.col_frame);
 											var rm_x = GUI.RmX - GUI.RmY - 16;
 
-											using (GUI.ID<Factory.Data, int>.Push(1))
+											using (GUI.ID<Depot.Data, int>.Push(1))
 											{
 												using (var group_item = GUI.Group.New(size: new(rm_x * 0.50f, GUI.RmY)))
 												{
@@ -489,7 +497,7 @@
 												}
 											}
 
-											using (GUI.ID<Factory.Data, int>.Push(2))
+											using (GUI.ID<Depot.Data, int>.Push(2))
 											{
 												GUI.SameLine(8);
 
@@ -533,12 +541,12 @@
 											amount_multiplier: amount_multiplier_abs,
 											eval_flags: Crafting.EvaluateFlags.Prerequisite, error: selected_item.IsNull() || base_market_price <= 0.00f || amount_multiplier_max <= 0))
 											{
-												var rpc = new Factory.DEV_TradeRPC
+												var rpc = new Depot.DEV_TradeRPC
 												{
 													stockpile_slot_index = selected_stockpile_item_slot_cached ?? -1,
 													amount = amount_multiplier_abs
 												};
-												rpc.Send(this.ent_factory);
+												rpc.Send(this.ent_depot);
 											}
 
 											if (selected_item.IsNotNull() && GUI.IsItemHovered())
@@ -574,12 +582,12 @@
 											amount_multiplier: amount_multiplier_abs,
 											eval_flags: Crafting.EvaluateFlags.Prerequisite, error: selected_item.IsNull() || base_market_price <= 0.00f || selected_item.quantity >= selected_item.max))
 											{
-												var rpc = new Factory.DEV_TradeRPC
+												var rpc = new Depot.DEV_TradeRPC
 												{
 													stockpile_slot_index = selected_stockpile_item_slot_cached ?? -1,
 													amount = -amount_multiplier_abs
 												};
-												rpc.Send(this.ent_factory);
+												rpc.Send(this.ent_depot);
 											}
 
 											if (selected_item.IsNotNull() && GUI.IsItemHovered())
@@ -589,7 +597,7 @@
 													GUI.SeparatorThick();
 													GUI.NewLine(8);
 
-													var unit_market_price_sell = this.factory.GetUnitSellPrice(in selected_item);
+													var unit_market_price_sell = this.depot.GetUnitSellPrice(in selected_item);
 													Span<Crafting.Product> prds =
 													[
 														Crafting.Product.Money(unit_market_price_sell) with
@@ -619,11 +627,11 @@
 							{
 								if (GUI.DrawButton("DEV: Load Catalogue"u8, size: new(168, GUI.RmY), color: GUI.col_button_debug))
 								{
-									var rpc = new Factory.DEV_SetCatalogueRPC
+									var rpc = new Depot.DEV_SetCatalogueRPC
 									{
-										h_catalogue = this.factory.h_catalogue
+										h_catalogue = this.depot.h_catalogue
 									};
-									rpc.Send(this.ent_factory);
+									rpc.Send(this.ent_depot);
 								}
 								//GUI.TextShaded("TODO"u8);
 
@@ -642,8 +650,8 @@
 		}
 
 		[ISystem.GUI(ISystem.Mode.Single, ISystem.Scope.Region)]
-		public static void OnGUI([Source.Owned] in Interactable.Data interactable, Entity ent_factory,
-		[Source.Owned] in Factory.Data factory, [Source.Owned] in Transform.Data transform,
+		public static void OnGUI([Source.Owned] in Interactable.Data interactable, Entity ent_depot,
+		[Source.Owned] in Depot.Data depot, [Source.Owned] in Transform.Data transform,
 		[Source.Owned] in Stockpile.Data stockpile,
 		[Source.Owned] in Entrance.Linkable.Data entrance_linkable,
 		[Source.Owned, Optional] in Faction.Data faction,
@@ -651,11 +659,11 @@
 		{
 			if (interactable.IsActive())
 			{
-				var gui = new FactoryGUI()
+				var gui = new DepotGUI()
 				{
-					ent_factory = ent_factory,
+					ent_depot = ent_depot,
 
-					factory = factory,
+					depot = depot,
 					transform = transform,
 					stockpile = stockpile,
 					entrance_linkable = entrance_linkable,

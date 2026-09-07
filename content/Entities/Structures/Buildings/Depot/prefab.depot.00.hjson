@@ -1,4 +1,4 @@
-$name: "Factory"
+$name: "Depot"
 $desc:
 	'''
 	TODO: Desc
@@ -41,8 +41,8 @@ animated.renderer:
 {
 	sprite:
 	{
-		texture: factory.00
-		// mask: factory.00.mask
+		texture: depot.00
+		// mask: depot.00.mask
 	}
 	z: -300.000
 }
@@ -276,7 +276,7 @@ crafter:
 	}
 }
 
-factory:
+depot:
 {
 	h_catalogue: coalition.energon.00
 	
