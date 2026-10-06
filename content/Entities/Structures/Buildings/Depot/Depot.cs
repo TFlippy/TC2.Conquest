@@ -1,4 +1,7 @@
-﻿namespace TC2.Base.Components
+﻿using TC2.Base;
+using TC2.Base.Components;
+
+namespace TC2.Conquest
 {
 	public static partial class Depot
 	{
@@ -31,6 +34,7 @@
 
 			public required Depot.Data.Flags flags;
 			public ICatalogue.Handle h_catalogue;
+			public ICoalition.Handle h_coalition;
 
 			[Save.NewLine]
 			[Save.Force] public required float stock_baseline_ratio = 0.80f;
@@ -124,6 +128,9 @@
 #if SERVER
 			public void Invoke(Net.IRPC.Context rpc, ref Depot.Data data)
 			{
+				var amount_abs = this.amount.Abs();
+				Assert.Check(amount_abs >= 1);
+
 				var sync = false;
 
 				ref var stockpile = ref rpc.GetComponent<Stockpile.Data>();
@@ -137,7 +144,6 @@
 						ref var selected_item = ref span_items_stockpile.GetRefAtIndexOrNull(this.stockpile_slot_index);
 						Assert.IsNotNull(ref selected_item);
 
-						var amount_abs = this.amount.Abs();
 						//var amount_abs_clamped = Maths.Min(selected_item.max);
 
 						var unit_market_price = selected_item.GetUnitMarketPrice();
@@ -285,13 +291,57 @@
 						var h_stockpile = this.stockpile.h_stockpile;
 						ref var stockpile_data = ref h_stockpile.GetData();
 
+						var h_coalition = this.depot.h_coalition;
+						ref var coalition_data = ref h_coalition.GetData();
+
 						Crafting.Context.NewFromCurrentCharacter(this.ent_depot, out var context, search_radius: 12.00f);
 
 						using (var group_left = GUI.Group.New(size: new(298 - 48, GUI.RmY), padding: new(6)))
 						{
 							group_left.DrawBackground(GUI.tex_window);
 
-							using (var collapsible = GUI.Collapsible2.New("col.production"u8, size: new(GUI.RmX, 32), default_open: true))
+							using (var collapsible = GUI.Collapsible2.New("col.coalition"u8, size: new(GUI.RmX, 32), default_open: false))
+							{
+								GUI.TitleCentered("Coalition"u8, size: 24, pivot: new(0.00f, 0.50f));
+
+								if (collapsible.Inner())
+								{
+									using (GUI.Wrap.Push(GUI.RmX))
+									using (var group_col_inner = GUI.Group.New(size: new(GUI.RmX, 0)))
+									{
+										if (coalition_data.IsNotNull())
+										{
+											GUI.NewLine(4);
+											GUI.Title(coalition_data.GetName(), size: 20);
+											GUI.FocusableAsset(h_coalition);
+											GUI.NewLine(4);
+											GUI.TextShaded(coalition_data.GetDescription(), color: GUI.font_color_desc);
+											GUI.NewLine(4);
+
+											GUI.SeparatorThick();
+										
+											GUI.NewLine(4);
+
+											GUI.Title("- TODO -"u8, size: 20);
+										}
+									}
+								}
+							}
+
+							using (var collapsible = GUI.Collapsible2.New("col.services"u8, size: new(GUI.RmX, 32), default_open: false))
+							{
+								GUI.TitleCentered("Services"u8, size: 24, pivot: new(0.00f, 0.50f));
+
+								if (collapsible.Inner())
+								{
+									using (var group_col_inner = GUI.Group.New(size: new(GUI.RmX, 0)))
+									{
+										GUI.Title("- TODO -"u8, size: 20);
+									}
+								}
+							}
+
+							using (var collapsible = GUI.Collapsible2.New("col.production"u8, size: new(GUI.RmX, 32), default_open: false))
 							{
 								GUI.TitleCentered("Production"u8, size: 24, pivot: new(0.00f, 0.50f));
 
@@ -299,7 +349,7 @@
 								{
 									using (var group_col_inner = GUI.Group.New(size: new(GUI.RmX, 0)))
 									{
-
+										GUI.Title("- TODO -"u8, size: 20);
 									}
 								}
 							}
@@ -319,7 +369,7 @@
 							{
 								var amount_multiplier_abs = selected_stockpile_item_amount_cached.Abs();
 								var amount_multiplier_abs_clamped = amount_multiplier_abs;
-								
+
 								//new IStockpile.SlotID(0, Stockpile.SlotType.Item)
 
 								using (var group_top = GUI.Group.New(size: GUI.Rm.SubY(48)))
@@ -333,9 +383,15 @@
 
 									GUI.SeparatorThick();
 
-									using (var group_items = GUI.Group.New(size: new(GUI.RmX, 0)))
+									//using (var group_items = GUI.Group.New(size: new(GUI.RmX, 0)))
+									using (var group_items = GUI.Scrollbox.New("sb.depot.trade", size: GUI.Rm.SubY(128)))
 									{
 										var sameline = false;
+
+										//if (GUI.GetMouse().GetKeyDown(Mouse.Key.Forward))
+										//{
+										//	selected_stockpile_item_slot_cached++;
+										//}
 
 										for (var i = 0; i < items_span.Length; i++)
 										{
@@ -349,12 +405,13 @@
 											using (var group_item = GUI.Group.New(size: new(item_cell_width, item_cell_width + 12), padding: new(4)))
 											{
 												//group_item.DrawBackground(GUI.tex_slot_white, color: GUI.col_frame);
-												group_item.DrawBackground(GUI.tex_window_sidebar_c);
+												//group_item.DrawBackground(GUI.tex_window_sidebar_c);
+												group_item.DrawBackground(GUI.tex_panel, inner: true);
 
 												if (item.IsValid())
 												{
 													//GUI.DrawResourceSmall()
-													GUI.DrawItem(item: ref item, size: new Vec2f(GUI.RmX).SubY(8));
+													GUI.DrawItem(item: ref item, size: new Vec2f(GUI.RmX).SubY(8), clip: false);
 													var is_hovered = GUI.IsItemHovered();
 
 													var is_selected = selected_stockpile_item_slot_cached == i;
@@ -364,14 +421,39 @@
 													}
 
 													var unit_market_price_buy = this.depot.GetUnitBuyPrice(in item); // item.GetUnitMarketPrice();
-													GUI.TextShadedCenteredRect(unit_market_price_buy * amount_multiplier_abs, pivot: new(0.50f, 1.00f), rect: group_item.GetOuterRect(),
-														font: GUI.Font.Monaco, size: 11, box_shadow: true, offset: new(0, -14),
-														format: "0' Đk'", color: GUI.col_buy);
-
 													var unit_market_price_sell = this.depot.GetUnitSellPrice(in item); // item.GetUnitMarketPrice();
-													GUI.TextShadedCenteredRect(unit_market_price_sell * amount_multiplier_abs, pivot: new(0.50f, 1.00f), rect: group_item.GetOuterRect(),
-														font: GUI.Font.Monaco, size: 11, box_shadow: true, offset: new(0, -2),
-														format: "0' Đk'", color: GUI.col_sell);
+
+													if (false)
+													{
+														if (selected_stockpile_item_amount_cached > 0)
+														{
+															GUI.TextShadedCenteredRect(unit_market_price_buy * amount_multiplier_abs, pivot: new(0.50f, 1.00f), rect: group_item.GetOuterRect(),
+																font: GUI.Font.Monaco, size: 11, box_shadow: true, offset: new(0, -10),
+																format: "0' Đk'", color: GUI.col_buy);
+														}
+														else if (selected_stockpile_item_amount_cached < 0)
+														{
+															GUI.TextShadedCenteredRect(unit_market_price_sell * amount_multiplier_abs, pivot: new(0.50f, 1.00f), rect: group_item.GetOuterRect(),
+																font: GUI.Font.Monaco, size: 11, box_shadow: true, offset: new(0, -10),
+																format: "0' Đk'", color: GUI.col_sell);
+														}
+														else
+														{
+															GUI.TextShadedCenteredRect(unit_market_price_buy, pivot: new(0.50f, 1.00f), rect: group_item.GetOuterRect(),
+																font: GUI.Font.Monaco, size: 11, box_shadow: true, offset: new(0, -10),
+																format: "0' Đk'", color: GUI.font_color_default);
+														}
+													}
+													else
+													{
+														GUI.TextShadedCenteredRect(unit_market_price_buy * amount_multiplier_abs, pivot: new(0.00f, 1.00f), rect: group_item.GetOuterRect(),
+															font: GUI.Font.Monaco, size: 11, box_shadow: true, offset: new(6, -14),
+															format: "0' Đk'", color: GUI.col_buy);
+
+														GUI.TextShadedCenteredRect(unit_market_price_sell * amount_multiplier_abs, pivot: new(0.00f, 1.00f), rect: group_item.GetOuterRect(),
+															font: GUI.Font.Monaco, size: 11, box_shadow: true, offset: new(6, -2),
+															format: "0' Đk'", color: GUI.col_sell);
+													}
 
 													if (is_hovered) //GUI.IsHoveringRect(item_rect) group_item.IsHovered())
 													{
@@ -528,6 +610,7 @@
 										size: new(80, GUI.RmY),
 										step: 1,
 										min: 1,
+										max: 1000,
 										//max: amount_multiplier_max,
 										format: Maths.NumberFormat.Int))
 										{
@@ -539,7 +622,8 @@
 										{
 											if (GUI.DrawRequirementButton(ref context, requirements: reqs_buy, text: "Buy"u8, size: new(64, GUI.RmY), color: GUI.col_buy,
 											amount_multiplier: amount_multiplier_abs,
-											eval_flags: Crafting.EvaluateFlags.Prerequisite, error: selected_item.IsNull() || base_market_price <= 0.00f || amount_multiplier_max <= 0))
+											eval_flags: Crafting.EvaluateFlags.Prerequisite,
+											error: selected_item.IsNull() || amount_multiplier_abs == 0 || base_market_price <= 0.00f || amount_multiplier_max <= 0))
 											{
 												var rpc = new Depot.DEV_TradeRPC
 												{
@@ -580,7 +664,8 @@
 										{
 											if (GUI.DrawRequirementButton(ref context, requirements: reqs_sell, text: "Sell"u8, size: new(64, GUI.RmY), color: GUI.col_sell,
 											amount_multiplier: amount_multiplier_abs,
-											eval_flags: Crafting.EvaluateFlags.Prerequisite, error: selected_item.IsNull() || base_market_price <= 0.00f || selected_item.quantity >= selected_item.max))
+											eval_flags: Crafting.EvaluateFlags.Prerequisite,
+											error: selected_item.IsNull() || amount_multiplier_abs == 0 || base_market_price <= 0.00f || selected_item.quantity >= selected_item.max))
 											{
 												var rpc = new Depot.DEV_TradeRPC
 												{
@@ -625,21 +710,24 @@
 
 							using (var group = GUI.Group.New(size: GUI.Rm))
 							{
-								if (GUI.DrawButton("DEV: Load Catalogue"u8, size: new(168, GUI.RmY), color: GUI.col_button_debug))
+								if (Client.HasDebugAuthority())
 								{
-									var rpc = new Depot.DEV_SetCatalogueRPC
+									if (GUI.DrawButton("DEV: Load Catalogue"u8, size: new(168, GUI.RmY), color: GUI.col_button_debug))
 									{
-										h_catalogue = this.depot.h_catalogue
-									};
-									rpc.Send(this.ent_depot);
+										var rpc = new Depot.DEV_SetCatalogueRPC
+										{
+											h_catalogue = this.depot.h_catalogue
+										};
+										rpc.Send(this.ent_depot);
+									}
+									//GUI.TextShaded("TODO"u8);
+
+									ts_elapsed = ts.GetMilliseconds();
+
+									GUI.SameLine();
+
+									GUI.TextShaded($"{ts_elapsed:0.000} ms");
 								}
-								//GUI.TextShaded("TODO"u8);
-
-								ts_elapsed = ts.GetMilliseconds();
-
-								GUI.SameLine();
-
-								GUI.TextShaded($"{ts_elapsed:0.000} ms");
 							}
 
 							//GUI.TextShaded($"{total_inventories} inventories in {ts_elapsed:0.000} ms");

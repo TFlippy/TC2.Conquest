@@ -50,7 +50,7 @@ animated.renderer:
 interactable:
 {
 	flags: none
-	window_size: [810, 624]
+	window_size: [834, 576]
 	window_size_misc: [192, 0]
 	priority: 0.700
 }

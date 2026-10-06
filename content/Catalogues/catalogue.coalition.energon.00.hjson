@@ -1,6 +1,6 @@
 ﻿{
 	$version: "0.1.75.2"
-	name: "Energon Industrijer Coalition Catalogue"
+	name: "Energon Industrijer Coalition Stock"
 	
 	h_company: energon
 	
@@ -257,11 +257,6 @@
 			type: resource
 			h_material: scrap.smirgrafit.dusty
 			quantity: 500.000
-		}
-		{
-			type: prefab
-			h_prefab: wrench.00
-			quantity: 10.000
 		}
 	]
 }
