@@ -775,8 +775,8 @@ namespace TC2.Conquest
 
 
 							{
-								using (GUI.Wrap.Push(GUI.RmX))
 								using (var group = GUI.Group.New(size: new(GUI.RmX, 80), padding: new(4)))
+								using (GUI.Wrap.Push(GUI.RmX))
 								{
 									//ref var minimap = ref Minimap.MinimapHUD.minimaps[region.GetID()];
 									//if (minimap != null)

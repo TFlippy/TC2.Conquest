@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.75.2"
+	$version: "0.1.75.4"
 	name: "Energon Industrijer"
 	name_short: "Energon"
 	name_imperial: "Energon Industrijer"
@@ -12,17 +12,25 @@
 	flags: none
 	tags: none
 	connotations: heavy, advanced, powerful, machine, authority, destructive, big, chemical, mining, construction, expensive, civilian, military, industrial, arcane, tech, bureaucracy
-	services: logistics, construction, trading, research, exchange
+	services: logistics, construction, trading, research, exchange, mining, manufacturing, power_generation, essence_extraction
 	industry: mining, manufacturing, high_tech, power, arcane, construction, logistics, research, security, engineering
 	authority: imperial
+	
+	ideology:
+	{
+		government: corporate, technocracy, capitalism, expansionism, oligarchy, imperial, bureaucracy, kleptocracy, individualism, scientism, mercantilism
+		principles: wealth, science, technology, competitive, industry, exploitation, knowledge, research, industrialism, regulation, advancement
+		military: mercenary, private, mechanized, organized, proxy, outsourced
+	}
 	
 	h_company: energon
 	h_faction: energon
 	h_catalogue: coalition.energon.00
-	h_location_headquarters: nostalec
+	h_location_headquarters: velka.bobnica
 	
 	color_a: "0xffc92100"
 	color_b: "0xffc92100"
+	color_gui: "0xffff5d00"
 	
 	icon:
 	{

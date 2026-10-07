@@ -66,9 +66,15 @@ namespace TC2.Conquest
 			[Save.NewLine]
 			[Save.Force] public required Color32BGRA color_a;
 			[Save.Force] public required Color32BGRA color_b;
+			[Save.Force] public required Color32BGRA color_gui = Color32BGRA.GUI;
+			//[Save.Force] public required Color32BGRA color_gui = Color32BGRA.GUI;
 
 			[Save.NewLine]
 			[Save.Force] public required Sprite icon;
+
+			[Save.NewLine]
+			[Save.Force] public ISoundMix.Handle h_soundmix_music;
+			[Save.Force] public ISoundMix.Handle h_soundmix_music_cue;
 
 			readonly ReadOnlySpan<char> IName.GetName() => this.name;
 			readonly ReadOnlySpan<char> IName.GetShortName() => this.name_short;

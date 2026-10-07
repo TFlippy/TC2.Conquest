@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.75.2"
+	$version: "0.1.75.4"
 	name: "Carohrad"
 	name_short: "Carohrad"
 	name_imperial: "Carohrad"
@@ -7,17 +7,25 @@
 	flags: none
 	tags: none
 	connotations: interesting, advanced, powerful, fancy, authority, drug, chemical, health, painful, civilian, arcane, bureaucracy, sus, weird, scary
-	services: none
-	industry: none
-	authority: imperial
+	services: training, education, entertainment, espionage, healthcare, insurance, trading, relaxation, indoctrination, manufacturing, essence_extraction
+	industry: agricultural, chemical, arcane, biology, research, education, exploration, pharmaceutical, medical, literature, experimental, alcohol
+	authority: governorate
+	
+	ideology:
+	{
+		government: feudalism, isolationism, cultist, bureaucracy, magocracy, mysticism, segregationism
+		principles: rationalism, hedonism, curiosity, science, competitive, neutrality, exploration, exploitation, knowledge, elitism, philosophy, hoarding, traditional
+		military: mercenary, levies, volunteers, proxy, outsourced
+	}
 	
 	h_company: carohrad
 	h_faction: carohrad
 	h_catalogue: coalition.carohrad.00
-	h_location_headquarters: velka.bobnica
+	h_location_headquarters: lopat
 	
 	color_a: "0xff6532b6"
 	color_b: "0xff1d1e27"
+	color_gui: "0xffb098e6"
 	
 	icon:
 	{

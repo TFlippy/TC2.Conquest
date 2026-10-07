@@ -302,28 +302,62 @@ namespace TC2.Conquest
 
 							using (var collapsible = GUI.Collapsible2.New("col.coalition"u8, size: new(GUI.RmX, 32), default_open: false))
 							{
-								GUI.TitleCentered("Coalition"u8, size: 24, pivot: new(0.00f, 0.50f));
+								GUI.TitleCentered("Coalitions"u8, size: 24, pivot: new(0.00f, 0.50f));
 
 								if (collapsible.Inner())
 								{
-									using (GUI.Wrap.Push(GUI.RmX))
 									using (var group_col_inner = GUI.Group.New(size: new(GUI.RmX, 0)))
 									{
-										if (coalition_data.IsNotNull())
+										var coalitions_span = ICoalition.Database.GetAssetsSpan();
+										for (var i = 0; i < coalitions_span.Length; i++)
 										{
-											GUI.NewLine(4);
-											GUI.Title(coalition_data.GetName(), size: 20);
-											GUI.FocusableAsset(h_coalition);
-											GUI.NewLine(4);
-											GUI.TextShaded(coalition_data.GetDescription(), color: GUI.font_color_desc);
-											GUI.NewLine(4);
+											var d_coalition_tmp = coalitions_span[i];
+											ref var coalition_tmp_data = ref d_coalition_tmp.GetData();
+											if (coalition_tmp_data.IsNotNull())
+											{
+												using (var hash = GUI.ID<Depot.Data, ICoalition.Data>.Push(d_coalition_tmp.GetHandle()))
+												using (var group_row = GUI.Group.New(size: new(GUI.RmX, 40), padding: new(6)))
+												using (GUI.Wrap.Push(GUI.RmX))
+												{
+													group_row.DrawBackground(GUI.tex_slot_white, color: coalition_tmp_data.color_gui);
 
-											GUI.SeparatorThick();
-										
-											GUI.NewLine(4);
+													GUI.TitleCentered(coalition_tmp_data.GetShortName(), font: GUI.Font.Superstar, size: 24, pivot: new(0.00f, 0.50f), offset: new(4, 0));
 
-											GUI.Title("- TODO -"u8, size: 20);
+													var is_selected = false;
+													if (GUI.Selectable3(id: hash, rect: group_row.GetInnerRect(), selected: is_selected))
+													{
+
+													}
+												}
+												if (GUI.IsItemHovered())
+												{
+													using (var tooltip = GUI.Tooltip.New(size: new(224, 0)))
+													using (GUI.Wrap.Push(GUI.RmX))
+													{
+														GUI.TextShaded(coalition_tmp_data.GetDescription());
+													}
+												}
+												GUI.FocusableAsset(d_coalition_tmp);
+												
+												//GUI.DrawHoverTooltip()
+											}
 										}
+
+										//if (coalition_data.IsNotNull())
+										//{
+										//	GUI.NewLine(4);
+										//	GUI.Title(coalition_data.GetName(), size: 20);
+										//	GUI.FocusableAsset(h_coalition);
+										//	GUI.NewLine(4);
+										//	GUI.TextShaded(coalition_data.GetDescription(), color: GUI.font_color_desc);
+										//	GUI.NewLine(4);
+
+										//	GUI.SeparatorThick();
+										
+										//	GUI.NewLine(4);
+
+										//	GUI.Title("- TODO -"u8, size: 20);
+										//}
 									}
 								}
 							}

@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.75.2"
+	$version: "0.1.75.4"
 	name: "S.R.N."
 	name_short: "S.R.N."
 	name_imperial: "S.R.N."
@@ -9,7 +9,14 @@
 	connotations: weapon, vehicle, danger, illegal, explosive, gun, advanced, powerful, destructive, small, drug, mining, construction, painful, loud, military, industrial, arcane, bureaucracy, fake, sus, bad, scary
 	services: none
 	industry: none
-	authority: undefined
+	authority: governorate
+	
+	ideology:
+	{
+		government: militarism, populism, authoritarian, oligarchy, kleptocracy, dictatorship, labourism, separatism, segregationism
+		principles: might, corrupt, criminal, hedonism, technology, sovereignity, industry, exploitation, collectivism, slavery, hoarding, research, destruction, industrialism
+		military: mercenary, militia, private, criminal, levies, mechanized, guerrilla, conscripts, volunteers, proxy, mafia
+	}
 	
 	h_company: srn
 	h_faction: srn
@@ -18,6 +25,7 @@
 	
 	color_a: "0xffc92100"
 	color_b: "0xffc92100"
+	color_gui: "0xffffab74"
 	
 	icon:
 	{
