@@ -131,19 +131,20 @@ shop:
 {
 	tags_filter:
 	{
-		include: workbench, weapon, gun, tool, munitions, machinery, assembling, metalworking, engineering, salvaging, explosive
-		exclude: huge, blacksmithing, social, science, biology, forestry, smelting, fermenting, heating, moulding, overworld
+		include: small, medium, munitions, machinery, delicate, industrial, tailoring, metalworking, engineering, medical, research, social, science, biology
+		exclude: dumb, vehicle
 	}
 	
 	tools: pencil, paper, ruler, hammer, cutters, saw, hand_drill, screwdriver, wrench, spanner, pliers, cleaver, tweezers, magnifying_glass, bucket, paintbrush, axe, shovel, syringe, stapler, file, chisel, towel, spatula, tongs, pick, crowbar, knife, sandpaper, needle, pins, scissors, ladle, calculator
-	infrastructure: dishes, bottle, barrel, table, chair, vise, rack, shaping_mould, pulley, bucket, surface, hard_surface, structure, building, workbench
+	infrastructure: lab_glassware, dishes, bottle, table, chair, vise, bed, stationery, liquid_container, lathe, telephone, radio, stamping_press, press, dies, essence_emitter, structure, office, building
 	environment: workshop, stationary, dirty, cozy, noisy, durable, sturdy, flammable
+	connotations: none
 	
 	flags: embed_gui
 	menu_columns: 6
 	recipe_type: workshop
 	
-	offset_spawn: [1.750, 0.500]
+	offset_spawn: [-0.125, 2.875]
 	
 	name: "Recipes"
 }

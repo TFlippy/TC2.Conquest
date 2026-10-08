@@ -1,4 +1,5 @@
 ﻿{
+	$prefab_region: "zeppelin.00"
 	$version: "0.1.75.4"
 	name: "Energon Industrijer"
 	name_short: "Energon"
