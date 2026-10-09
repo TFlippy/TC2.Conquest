@@ -69,6 +69,7 @@ namespace TC2.Conquest
 
 				// TODO: currently assuming the coalition region entity is a actually a zeppelin
 				var ent_zeppelin = this.h_coalition.GetRegionEntity(region_id);
+				var ent_dock = rpc.entity;
 
 				var pos_target = transform.position;
 				var pos_spawn = pos_target.WithY(-80);
@@ -90,6 +91,7 @@ namespace TC2.Conquest
 
 						zeppelin.pos_move = pos_target.WithY(-zeppelin.unused_00);
 						zeppelin.pos_aim = pos_target;
+						zeppelin.ent_target_dock = ent_dock;
 
 						zeppelin.Sync(ent_zeppelin);
 					}
@@ -330,6 +332,7 @@ namespace TC2.Conquest
 
 			[Region.Local] public static int selected_tab_index_cached;
 			[Region.Local] public static ICoalition.Handle h_selected_coalition_cached;
+			[Region.Local] public static Vector2 edit_picker_airstrike;
 
 			public void Draw()
 			{
@@ -851,6 +854,8 @@ namespace TC2.Conquest
 								{
 									using (var group = GUI.Group.New(size: GUI.Rm))
 									{
+										var ent_zeppelin = h_selected_coalition_cached.GetRegionEntity(region_common.GetID());
+
 										if (GUI.DrawButton("Summon"u8, size: new(80, 40)))
 										{
 											var rpc = new Depot.DEV_SummonZeppelinRPC
@@ -869,7 +874,44 @@ namespace TC2.Conquest
 												ent_dock = this.ent_depot,
 												//pos_target = transform.position
 											};
-											rpc.Send(h_selected_coalition_cached.GetRegionEntity(region_common.GetID()));
+											rpc.Send(ent_zeppelin);
+										}
+
+										GUI.SameLine();
+
+										//if (GUI.Checkbox("Skyhook"u8, size: new(80, 40)))
+										if (GUI.DrawButton("Skyhook"u8, size: new(80, 40)))
+										{
+											var rpc = new Zeppelin.DEV_SendRequestRPC
+											{
+												flags = Zeppelin.Flags.Skyhook_Deployed
+											};
+											rpc.Send(ent_zeppelin);
+										}
+
+										GUI.SameLine();
+
+										//if (GUI.Checkbox("Skyhook"u8, size: new(80, 40)))
+										if (GUI.DrawButton("Reset"u8, size: new(80, 40)))
+										{
+											var rpc = new Zeppelin.DEV_SendRequestRPC
+											{
+												flags = Zeppelin.Flags.None
+											};
+											rpc.Send(ent_zeppelin);
+										}
+
+										GUI.SameLine();
+
+										//if (GUI.Checkbox("Skyhook"u8, size: new(80, 40)))
+										if (GUI.Picker("air_strike"u8, "Air Strike"u8, size: new(40, 40), ref edit_picker_airstrike, new Vector2(-4000), new Vector2(4000), sensitivity: 1.00f, absolute: true))
+										{
+											var rpc = new Zeppelin.DEV_SendRequestRPC
+											{
+												flags = Zeppelin.Flags.Airstrike_Pending,
+												pos_target = edit_picker_airstrike
+											};
+											rpc.Send(ent_zeppelin);
 										}
 									}
 								}
