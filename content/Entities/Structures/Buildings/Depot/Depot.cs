@@ -91,11 +91,18 @@ namespace TC2.Conquest
 		{
 			using (var group = GUI.Group.New(size: GUI.Rm))
 			{
+				ref var region = ref region_common.AsRegion();
+
 				var ent_zeppelin = h_coalition.GetRegionEntity(region_common.GetID());
 				var is_zeppelin_alive = ent_zeppelin.IsAlive();
 
 				ref var zeppelin = ref Zeppelin.Data.Null;
-				if (is_zeppelin_alive) zeppelin = ref ent_zeppelin.GetComponent<Zeppelin.Data>();
+				ref var zeppelin_transform = ref Transform.Data.Null;
+				if (is_zeppelin_alive)
+				{
+					zeppelin = ref ent_zeppelin.GetComponent<Zeppelin.Data>();
+					zeppelin_transform = ref ent_zeppelin.GetTransform();
+				}
 
 				//if (GUI.DrawButton("Summon"u8, size: new(80, 40)))
 				//{
@@ -108,6 +115,14 @@ namespace TC2.Conquest
 
 				//GUI.SameLine();
 
+				using (var group_top = GUI.Group.New(size: new(GUI.RmX, 32)))
+				{
+					group_top.DrawBackground(GUI.tex_window_sidebar);
+					GUI.TitleCentered(ent_zeppelin.GetFullName(), size: 24, pivot: new(0.00f, 0.50f), offset: new(6, 0));
+				}
+
+				GUI.SeparatorThick();
+
 				if (GUI.DrawButton("Dock"u8, size: new(80, 40), error: !is_zeppelin_alive))
 				{
 					var rpc = new Zeppelin.DEV_DockRPC
@@ -118,21 +133,7 @@ namespace TC2.Conquest
 					rpc.Send(ent_zeppelin);
 				}
 
-				GUI.SameLine();
 
-				if (GUI.Picker("edit.move"u8, "Move To..."u8, size: new(64, 40),
-				ref edit_pos_picker, new Vector2(-4000), new Vector2(4000),
-				entity: ent_zeppelin, sensitivity: 1.00f, absolute: true, enabled: is_zeppelin_alive, continuous: false))
-				{
-					var rpc = new Zeppelin.ActionRPC
-					{
-						type = Zeppelin.ActionRPC.Type.Move,
-						pos_target = edit_pos_picker
-					};
-					rpc.Send(ent_zeppelin);
-
-					edit_pos_picker = default;
-				}
 
 				//GUI.NewLine();
 
@@ -161,7 +162,7 @@ namespace TC2.Conquest
 				GUI.SameLine();
 
 				//if (GUI.Checkbox("Skyhook"u8, size: new(80, 40)))
-				if (GUI.DrawButton("Grab"u8, size: new(80, 40), error: !is_zeppelin_alive))
+				if (GUI.DrawButton("Grab"u8, size: new(58, 40), error: !is_zeppelin_alive))
 				{
 					var rpc = new Zeppelin.ActionRPC
 					{
@@ -188,11 +189,63 @@ namespace TC2.Conquest
 					edit_ent_picker = default;
 				}
 
+				GUI.SeparatorThick();
+
+				var bb_zeppelin_move = AABB.Default;
+				var bb_terrain = AABB.Default;
+
+				if (region.IsNotNull())
+				{
+					bb_terrain = region.GetTerrainRect();
+				}
+
+				if (zeppelin.IsNotNull() && zeppelin_transform.IsNotNull())
+				{
+					var zeppelin_base_offset_y = zeppelin.offset_bay.y;
+
+					bb_zeppelin_move = bb_terrain;
+					bb_zeppelin_move.top = -16 - zeppelin_base_offset_y;
+					bb_zeppelin_move.bottom = -zeppelin_base_offset_y;
+
+					//GUI.DrawRect(region_common.WorldToCanvas(bb_zeppelin_move), color: GUI.font_color_blue_b.WithAlpha(64));
+				}
+
+				if (GUI.Picker("edit.move"u8, "Move Zeppelin"u8, size: new(48),
+				ref edit_pos_picker, min: bb_zeppelin_move.a, bb_zeppelin_move.b,
+				entity: ent_zeppelin, sensitivity: 1.00f, absolute: true, enabled: is_zeppelin_alive, continuous: false, color: GUI.font_color_blue_b))
+				{
+					var rpc = new Zeppelin.ActionRPC
+					{
+						type = Zeppelin.ActionRPC.Type.Move,
+						pos_target = edit_pos_picker
+					};
+					rpc.Send(ent_zeppelin);
+
+					edit_pos_picker = default;
+				}
+
 				GUI.SameLine();
 
-				if (GUI.Picker("edit.skyhook.pos"u8, "Skyhook Position"u8, size: new(40, 40),
-				ref edit_pos_picker, new Vector2(-4000), new Vector2(4000),
-				entity: default, sensitivity: 1.00f, absolute: true, enabled: is_zeppelin_alive, continuous: false))
+				var bb_skyhook = AABB.Default;
+				if (zeppelin.IsNotNull() && zeppelin_transform.IsNotNull())
+				{
+					var wpos_crane_a = zeppelin_transform.LocalToWorld(zeppelin.offset_skyhook_crane_a);
+					var wpos_crane_b = zeppelin_transform.LocalToWorld(zeppelin.offset_skyhook_crane_b);
+
+					bb_skyhook = new AABB(wpos_crane_a.AddY(2), wpos_crane_b.AddY(64));
+
+					if (region.IsNotNull())
+					{
+						region.TryGridCast(bb_skyhook.a, (bb_skyhook.b - bb_skyhook.a).GetNormalized(out var bb_diagonal_len), out var wpos_crane_b_hit, max_dist: bb_diagonal_len, allow_inside: true);
+						bb_skyhook.bottom = wpos_crane_b_hit.Y;
+					}
+
+					//GUI.DrawRect(region_common.WorldToCanvas(bb_skyhook), color: GUI.font_color_yellow_b.WithAlpha(64));
+				}
+
+				if (GUI.Picker("edit.skyhook.pos"u8, "Move Skyhook"u8, size: new(48),
+				ref edit_pos_picker, min: bb_skyhook.a, max: bb_skyhook.b,
+				entity: ent_phone, sensitivity: 1.00f, absolute: true, enabled: is_zeppelin_alive, continuous: false, color: GUI.font_color_yellow_b))
 				{
 					var rpc = new Zeppelin.ActionRPC
 					{
@@ -204,9 +257,11 @@ namespace TC2.Conquest
 					edit_pos_picker = default;
 				}
 
-				if (GUI.Picker("edit.airstrike"u8, "Air Strike"u8, size: new(40, 40),
-				ref edit_pos_picker, new Vector2(-4000), new Vector2(4000),
-				entity: default, sensitivity: 1.00f, absolute: true, enabled: is_zeppelin_alive, continuous: false))
+				GUI.SameLine();
+
+				if (GUI.Picker("edit.airstrike"u8, "Air Strike"u8, size: new(48),
+				ref edit_pos_picker, min: bb_terrain.a, max: bb_terrain.b,
+				entity: ent_phone, sensitivity: 1.00f, absolute: true, enabled: is_zeppelin_alive, continuous: false, color: GUI.font_color_red_b))
 				{
 					var rpc = new Zeppelin.ActionRPC
 					{
@@ -232,7 +287,8 @@ namespace TC2.Conquest
 
 						GUI.NewLine(4);
 						GUI.LabelShaded("Target (Skyhook)"u8, zeppelin.ent_target_cargo.GetName(), width: GUI.RmX);
-						GUI.LabelShaded("Position (Skyhook)"u8, zeppelin.pos_skyhook_target, width: GUI.RmX);
+						GUI.LabelShaded("Position (Skyhook)"u8, zeppelin.pos_skyhook, width: GUI.RmX);
+						GUI.LabelShaded("Position (Skyhook Target)"u8, zeppelin.pos_skyhook_target, width: GUI.RmX);
 
 						if (false)
 						{
@@ -262,7 +318,7 @@ namespace TC2.Conquest
 
 			public void Draw()
 			{
-				using (var window = GUI.Window.Interaction("Phone"u8, this.ent_phone))
+				using (var window = GUI.Window.Interaction("Radiophone"u8, this.ent_phone))
 				{
 					this.StoreCurrentWindowTypeID(order: 6);
 					if (window.show)
@@ -292,7 +348,7 @@ namespace TC2.Conquest
 			}
 		}
 #endif
-		}
+	}
 
 	public static partial class Depot
 	{
