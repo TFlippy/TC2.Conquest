@@ -3,6 +3,297 @@ using TC2.Base.Components;
 
 namespace TC2.Conquest
 {
+	public static partial class Phone
+	{
+		[Flags]
+		public enum Flags: uint
+		{
+			None = 0u,
+
+			No_GUI = 1u << 0,
+		}
+
+		[IComponent.Data(Net.SendType.Unreliable, IComponent.Scope.Region | IComponent.Scope.Global)]
+		public partial struct Data(): IComponent
+		{
+			public Phone.Flags flags;
+			public ICoalition.Handle h_coalition;
+			public ushort unused_00;
+
+			[Save.NewLine]
+			public float range_send;
+			public float range_recv;
+
+			[Save.NewLine]
+			public ISoundMix.Handle h_soundmix_transfer;
+
+			[Save.NewLine]
+			public float transfer_speed;
+			[Asset.Ignore] public float transfer_progress;
+
+			[Save.NewLine]
+			[Asset.Ignore] public Entity ent_home;
+			[Asset.Ignore] public Entity ent_zeppelin;
+			[Asset.Ignore] public Entity ent_target;
+			[Asset.Ignore] public Vec2f target_pos_a;
+			[Asset.Ignore] public Vec2f target_pos_b;
+
+
+		}
+
+		public struct ActionRPC: Net.IRPC<Phone.Data>
+		{
+			public enum Type: uint
+			{
+				Undefined = 0,
+
+				Airstrike,
+
+				Skyhook_Deploy,
+				Skyhook_Retract,
+				Skyhook_Grab,
+				Skyhook_Drop,
+
+				Move,
+
+				Link
+			}
+
+			public ActionRPC.Type type;
+			public Entity? ent_target;
+			public Vec2f? pos_target_a;
+			public Vec2f? pos_target_b;
+
+			public float? arg_00;
+
+#if SERVER
+			public void Invoke(Net.IRPC.Context rpc, ref Phone.Data data)
+			{
+
+			}
+#endif
+		}
+
+		[ISystem.Update.B(ISystem.Mode.Single, ISystem.Scope.Region)]
+		public static void OnUpdate(ISystem.Info info, ref Region.Data region, Entity entity,
+		[Source.Owned] ref Phone.Data phone, [Source.Owned] ref Control.Data control,
+		[Source.Owned] ref Transform.Data transform, [Source.Owned] ref Body.Data body,
+		[Source.Owned] in Faction.Data faction)
+		{
+
+		}
+
+#if CLIENT
+		[Region.Local] public static Vector2 edit_pos_picker;
+		[Region.Local] public static Entity edit_ent_picker;
+
+		public static void DrawZeppelinActions(ref Region.Data.Common region_common, ICoalition.Handle h_coalition, Entity ent_phone, Entity ent_dock = default)
+		{
+			using (var group = GUI.Group.New(size: GUI.Rm))
+			{
+				var ent_zeppelin = h_coalition.GetRegionEntity(region_common.GetID());
+				var is_zeppelin_alive = ent_zeppelin.IsAlive();
+
+				ref var zeppelin = ref Zeppelin.Data.Null;
+				if (is_zeppelin_alive) zeppelin = ref ent_zeppelin.GetComponent<Zeppelin.Data>();
+
+				//if (GUI.DrawButton("Summon"u8, size: new(80, 40)))
+				//{
+				//	var rpc = new Depot.DEV_SummonZeppelinRPC
+				//	{
+				//		h_coalition = h_coalition
+				//	};
+				//	rpc.Send(this.ent_depot);
+				//}
+
+				//GUI.SameLine();
+
+				if (GUI.DrawButton("Dock"u8, size: new(80, 40), error: !is_zeppelin_alive))
+				{
+					var rpc = new Zeppelin.DEV_DockRPC
+					{
+						ent_dock = ent_dock,
+						//pos_target = transform.position
+					};
+					rpc.Send(ent_zeppelin);
+				}
+
+				GUI.SameLine();
+
+				if (GUI.Picker("edit.move"u8, "Move To..."u8, size: new(64, 40),
+				ref edit_pos_picker, new Vector2(-4000), new Vector2(4000),
+				entity: ent_zeppelin, sensitivity: 1.00f, absolute: true, enabled: is_zeppelin_alive, continuous: false))
+				{
+					var rpc = new Zeppelin.ActionRPC
+					{
+						type = Zeppelin.ActionRPC.Type.Move,
+						pos_target = edit_pos_picker
+					};
+					rpc.Send(ent_zeppelin);
+
+					edit_pos_picker = default;
+				}
+
+				//GUI.NewLine();
+
+				//if (GUI.Checkbox("Skyhook"u8, size: new(80, 40)))
+				if (GUI.DrawButton("Deploy"u8, size: new(80, 40), error: !is_zeppelin_alive))
+				{
+					var rpc = new Zeppelin.ActionRPC
+					{
+						type = Zeppelin.ActionRPC.Type.Skyhook_Deploy,
+					};
+					rpc.Send(ent_zeppelin);
+				}
+
+				GUI.SameLine();
+
+				//if (GUI.Checkbox("Skyhook"u8, size: new(80, 40)))
+				if (GUI.DrawButton("Retract"u8, size: new(80, 40), error: !is_zeppelin_alive))
+				{
+					var rpc = new Zeppelin.ActionRPC
+					{
+						type = Zeppelin.ActionRPC.Type.Skyhook_Retract,
+					};
+					rpc.Send(ent_zeppelin);
+				}
+
+				GUI.SameLine();
+
+				//if (GUI.Checkbox("Skyhook"u8, size: new(80, 40)))
+				if (GUI.DrawButton("Grab"u8, size: new(80, 40), error: !is_zeppelin_alive))
+				{
+					var rpc = new Zeppelin.ActionRPC
+					{
+						type = Zeppelin.ActionRPC.Type.Skyhook_Grab,
+					};
+					rpc.Send(ent_zeppelin);
+				}
+
+				GUI.SameLine();
+
+				if (GUI.EntityPicker("edit.skyhook.target"u8, "Skyhook Target"u8, size: new(GUI.RmX - 40, 40),
+				region_id: region_common.GetID(), entity: ref edit_ent_picker,
+				layer_require: Physics.Layer.Holdable | Physics.Layer.Dynamic,
+				layer_exclude: Physics.Layer.World | Physics.Layer.Static | Physics.Layer.Fire | Physics.Layer.Liquid | Physics.Layer.Water | Physics.Layer.Ignore_Hover,
+				enabled: is_zeppelin_alive))
+				{
+					var rpc = new Zeppelin.ActionRPC
+					{
+						type = Zeppelin.ActionRPC.Type.Skyhook_Target,
+						ent_target = edit_ent_picker
+					};
+					rpc.Send(ent_zeppelin);
+
+					edit_ent_picker = default;
+				}
+
+				GUI.SameLine();
+
+				if (GUI.Picker("edit.skyhook.pos"u8, "Skyhook Position"u8, size: new(40, 40),
+				ref edit_pos_picker, new Vector2(-4000), new Vector2(4000),
+				entity: default, sensitivity: 1.00f, absolute: true, enabled: is_zeppelin_alive, continuous: false))
+				{
+					var rpc = new Zeppelin.ActionRPC
+					{
+						type = Zeppelin.ActionRPC.Type.Skyhook_Pos,
+						pos_target = edit_pos_picker
+					};
+					rpc.Send(ent_zeppelin);
+
+					edit_pos_picker = default;
+				}
+
+				if (GUI.Picker("edit.airstrike"u8, "Air Strike"u8, size: new(40, 40),
+				ref edit_pos_picker, new Vector2(-4000), new Vector2(4000),
+				entity: default, sensitivity: 1.00f, absolute: true, enabled: is_zeppelin_alive, continuous: false))
+				{
+					var rpc = new Zeppelin.ActionRPC
+					{
+						type = Zeppelin.ActionRPC.Type.Airstrike,
+						pos_target = edit_pos_picker
+					};
+					rpc.Send(ent_zeppelin);
+
+					edit_pos_picker = default;
+				}
+
+				GUI.SeparatorThick();
+
+				using (var group_info = GUI.Group.New(size: GUI.Rm, padding: new(6)))
+				{
+					if (zeppelin.IsNotNull())
+					{
+						GUI.LabelShaded("State"u8, zeppelin.flags.GetEnumName(), width: GUI.RmX);
+						GUI.LabelShaded("Combat"u8, zeppelin.combat_flags.GetEnumName(), width: GUI.RmX);
+
+						GUI.NewLine(4);
+						GUI.LabelShaded("Target Distance"u8, zeppelin.dist_target, format: "0.00' m'", width: GUI.RmX);
+
+						GUI.NewLine(4);
+						GUI.LabelShaded("Target (Skyhook)"u8, zeppelin.ent_target_cargo.GetName(), width: GUI.RmX);
+						GUI.LabelShaded("Position (Skyhook)"u8, zeppelin.pos_skyhook_target, width: GUI.RmX);
+
+						if (false)
+						{
+							var time = App.GetCurrentTime();
+							ref var random = ref region_common.GetRandom();
+
+
+							var rot = (time * 3) + random.NextFloat(0.20f);
+							var pos_noise = random.NextUnitVector2Extra(0.00f, 0.04f); // new Vec2f(Maths.Perlin(time, time * 0.50f, 4), Maths.Perlin(time * 3, time * 0.10f, 4)); // random.NextUnitVector2Extra(0.00f, 0.15f);
+							var color = new Color32BGRA(0xff_f0_10_1f).WithAlpha(random.NextByteRange(48, 80));
+							var cpos_airstrike = region_common.WorldToCanvas(zeppelin.pos_airstrike + pos_noise);
+
+							GUI.DrawSprite2(new Sprite("ui_panel_white.02", 64, 64), rect: AABB.Centered(cpos_airstrike, size: new(4 * region_common.GetWorldToCanvasScale())), layer: GUI.Layer.Background, color: color, rotation: rot);
+						}
+
+						//GUI.Title(zeppelin.)
+					}
+				}
+			}
+		}
+
+		public partial struct PhoneGUI: IGUICommand
+		{
+			public Entity ent_phone;
+			public Phone.Data phone;
+			public Transform.Data transform;
+
+			public void Draw()
+			{
+				using (var window = GUI.Window.Interaction("Phone"u8, this.ent_phone))
+				{
+					this.StoreCurrentWindowTypeID(order: 6);
+					if (window.show)
+					{
+						ref var region_common = ref this.ent_phone.GetRegionCommon();
+						Phone.DrawZeppelinActions(region_common: ref region_common, h_coalition: this.phone.h_coalition, ent_phone: this.ent_phone);
+					}
+				}
+			}
+		}
+
+		[ISystem.GUI(ISystem.Mode.Single, ISystem.Scope.Region)]
+		public static void OnGUI([Source.Owned] in Interactable.Data interactable,
+		Entity ent_phone, [Source.Owned] in Phone.Data phone, [Source.Owned] in Transform.Data transform)
+		{
+			if (phone.flags.HasAny(Flags.No_GUI)) return;
+
+			if (interactable.IsActive())
+			{
+				var gui = new PhoneGUI()
+				{
+					ent_phone = ent_phone,
+					phone = phone,
+					transform = transform,
+				};
+				gui.Submit();
+			}
+		}
+#endif
+		}
+
 	public static partial class Depot
 	{
 		public static float GetUnitBuyPrice(ref readonly this Depot.Data depot, in Shipment.Item item)
@@ -72,7 +363,7 @@ namespace TC2.Conquest
 				var ent_dock = rpc.entity;
 
 				var pos_target = transform.position;
-				var pos_spawn = pos_target.WithY(-80);
+				var pos_spawn = pos_target.WithY(-120);
 
 				this.h_coalition.GetOrSpawn(region_id).ContinueWith(ent_zeppelin =>
 				{
@@ -89,7 +380,8 @@ namespace TC2.Conquest
 							}
 						}
 
-						zeppelin.pos_move = pos_target.WithY(-zeppelin.unused_00);
+						//zeppelin.pos_move = pos_target.WithY(-zeppelin.unused_00);
+						zeppelin.pos_move = pos_target.SubY(zeppelin.offset_bottom.y + 12);
 						zeppelin.pos_aim = pos_target;
 						zeppelin.ent_target_dock = ent_dock;
 
@@ -104,6 +396,7 @@ namespace TC2.Conquest
 
 		public struct EditRPC: Net.IRPC<Depot.Data>
 		{
+			public ICoalition.Handle? h_coalition;
 
 #if SERVER
 			public void Invoke(Net.IRPC.Context rpc, ref Depot.Data data)
@@ -333,6 +626,7 @@ namespace TC2.Conquest
 			[Region.Local] public static int selected_tab_index_cached;
 			[Region.Local] public static ICoalition.Handle h_selected_coalition_cached;
 			[Region.Local] public static Vector2 edit_picker_airstrike;
+			[Region.Local] public static Entity edit_ent_picker;
 
 			public void Draw()
 			{
@@ -349,7 +643,15 @@ namespace TC2.Conquest
 						ref var stockpile_data = ref h_stockpile.GetData();
 
 						var h_coalition = this.depot.h_coalition;
+
+						// temporary debug stuff
+						if (!h_coalition) h_coalition = h_selected_coalition_cached;
+
 						ref var coalition_data = ref h_coalition.GetData();
+
+						var h_catalogue = ICatalogue.Handle.None;
+						if (coalition_data.IsNotNull()) h_catalogue = coalition_data.h_catalogue;
+						ref var catalogue_data = ref h_catalogue.GetData();
 
 						Crafting.Context.NewFromCurrentCharacter(this.ent_depot, out var context, search_radius: 12.00f);
 
@@ -396,7 +698,7 @@ namespace TC2.Conquest
 													}
 												}
 												GUI.FocusableAsset(d_coalition_tmp);
-												
+
 												//GUI.DrawHoverTooltip()
 											}
 										}
@@ -411,7 +713,7 @@ namespace TC2.Conquest
 										//	GUI.NewLine(4);
 
 										//	GUI.SeparatorThick();
-										
+
 										//	GUI.NewLine(4);
 
 										//	GUI.Title("- TODO -"u8, size: 20);
@@ -456,8 +758,6 @@ namespace TC2.Conquest
 							var ts = Timestamp.Now();
 							var ts_elapsed = 0.00;
 
-
-
 							using (var group_tabs = GUI.Group.New(size: new(GUI.RmX, 40)))
 							{
 								GUI.DrawTab3(text: "Overview"u8, size: new(0, GUI.RmY),
@@ -465,7 +765,7 @@ namespace TC2.Conquest
 
 								GUI.SameLine();
 
-								GUI.DrawTab3(text: "Market"u8, size: new(0, GUI.RmY), 
+								GUI.DrawTab3(text: "Market"u8, size: new(0, GUI.RmY),
 									index: 1, selected_index: ref selected_tab_index_cached, inner: true);
 
 								GUI.SameLine();
@@ -479,7 +779,33 @@ namespace TC2.Conquest
 							{
 								case 0:
 								{
+									if (coalition_data.IsNotNull())
+									{
+										using (var group_top = GUI.Group.New(size: new(GUI.RmX, 48)))
+										{
+											using (var group_title = GUI.Group.New(size: GUI.Rm.SubX(168), padding: new(6)))
+											{
+												group_title.DrawBackground(GUI.tex_window);
 
+												GUI.TitleCentered(coalition_data.GetName(), pivot: new(0.00f, 0.50f), offset: new(8, 0), font: GUI.Font.Editia, size: 24);
+												GUI.FocusableAsset(h_coalition);
+											}
+
+											GUI.SameLine();
+
+											if (GUI.DrawButton("Join Coalition"u8, size: GUI.Rm, font_size: 20, error: false, color: GUI.col_button_ok))
+											{
+
+											}
+										}
+
+										GUI.SeparatorThick();
+
+										using (var group_bottom = GUI.Group.New(size: GUI.Rm))
+										{
+
+										}
+									}
 								}
 								break;
 
@@ -497,8 +823,7 @@ namespace TC2.Conquest
 										{
 											using (var group_title = GUI.Group.New(size: new(GUI.RmX, 40), padding: new(6)))
 											{
-												GUI.TitleCentered(this.depot.h_catalogue.GetName(), pivot: new(0.00f, 0.50f), font: GUI.Font.Editia, size: 20);
-
+												GUI.TitleCentered(h_catalogue.GetName(), pivot: new(0.00f, 0.50f), font: GUI.Font.Editia, size: 20);
 												GUI.FocusableAsset(h_stockpile);
 											}
 
@@ -582,22 +907,22 @@ namespace TC2.Conquest
 																{
 																	Span<Crafting.Requirement> reqs_buy = stackalloc[]
 																	{
-																Crafting.Requirement.Money(unit_market_price_sell)
-																.WithFlags(add: Crafting.Requirement.Flags.Primary | Crafting.Requirement.Flags.Argument | Crafting.Requirement.Flags.Prerequisite)
-																with
-																{
-																	snapping = 1.00f,
-																}
-															};
+																		Crafting.Requirement.Money(unit_market_price_sell)
+																		.WithFlags(add: Crafting.Requirement.Flags.Primary | Crafting.Requirement.Flags.Argument | Crafting.Requirement.Flags.Prerequisite)
+																		with
+																		{
+																			snapping = 1.00f,
+																		}
+																	};
 
 																	Span<Crafting.Requirement> reqs_sell = stackalloc[]
 																	{
-																item.ToRequirement() with
-																{
-																	amount = 1.00f,
-																	flags =  Crafting.Requirement.Flags.Primary | Crafting.Requirement.Flags.Argument | Crafting.Requirement.Flags.Prerequisite
-																}
-															};
+																		item.ToRequirement() with
+																		{
+																			amount = 1.00f,
+																			flags =  Crafting.Requirement.Flags.Primary | Crafting.Requirement.Flags.Argument | Crafting.Requirement.Flags.Prerequisite
+																		}
+																	};
 
 																	//var amount_multiplier_abs = item.quantity.Abs();
 
@@ -649,22 +974,22 @@ namespace TC2.Conquest
 
 												Span<Crafting.Requirement> reqs_buy = stackalloc[]
 												{
-											Crafting.Requirement.Money(base_market_price)
-											.WithFlags(add: Crafting.Requirement.Flags.Primary | Crafting.Requirement.Flags.Argument | Crafting.Requirement.Flags.Prerequisite)
-											with
-											{
-												snapping = 1.00f,
-											}
-										};
+													Crafting.Requirement.Money(base_market_price)
+													.WithFlags(add: Crafting.Requirement.Flags.Primary | Crafting.Requirement.Flags.Argument | Crafting.Requirement.Flags.Prerequisite)
+													with
+													{
+														snapping = 1.00f,
+													}
+												};
 
 												Span<Crafting.Requirement> reqs_sell = stackalloc[]
 												{
-											selected_item.IsNotNull() ? selected_item.ToRequirement() with
-											{
-												amount = 1.00f,
-												flags =  Crafting.Requirement.Flags.Primary | Crafting.Requirement.Flags.Argument | Crafting.Requirement.Flags.Prerequisite
-											} : default
-										};
+													selected_item.IsNotNull() ? selected_item.ToRequirement() with
+													{
+														amount = 1.00f,
+														flags =  Crafting.Requirement.Flags.Primary | Crafting.Requirement.Flags.Argument | Crafting.Requirement.Flags.Prerequisite
+													} : default
+												};
 
 												using (var group_item_left = GUI.Group.New(size: new(GUI.RmX - 128 - 80, GUI.RmY), padding: new(6)))
 												{
@@ -764,11 +1089,11 @@ namespace TC2.Conquest
 															Span<Crafting.Product> prds =
 															[
 																selected_item.ToProduct() with
-														{
-															amount = 1.00f,
-															amount_extra = 0.00f,
-															flags = Crafting.Product.Flags.Primary
-														}
+																{
+																	amount = 1.00f,
+																	amount_extra = 0.00f,
+																	flags = Crafting.Product.Flags.Primary
+																}
 															];
 
 															GUI.DrawProducts(context: ref context,
@@ -807,11 +1132,11 @@ namespace TC2.Conquest
 															Span<Crafting.Product> prds =
 															[
 																Crafting.Product.Money(unit_market_price_sell) with
-														{
-															snapping = 1.00f,
-															amount_extra = 0.00f,
-															flags = Crafting.Product.Flags.Primary
-														}
+																{
+																	snapping = 1.00f,
+																	amount_extra = 0.00f,
+																	flags = Crafting.Product.Flags.Primary
+																}
 															];
 
 															GUI.DrawProducts(context: ref context,
@@ -834,7 +1159,7 @@ namespace TC2.Conquest
 											{
 												var rpc = new Depot.DEV_SetCatalogueRPC
 												{
-													h_catalogue = this.depot.h_catalogue
+													h_catalogue = h_catalogue
 												};
 												rpc.Send(this.ent_depot);
 											}
@@ -852,67 +1177,22 @@ namespace TC2.Conquest
 
 								case 2:
 								{
-									using (var group = GUI.Group.New(size: GUI.Rm))
+									if (GUI.DrawButton("Summon Zeppelin"u8, size: new(168, 40), error: !h_coalition, color: GUI.font_color_orange, font_size: 20))
 									{
-										var ent_zeppelin = h_selected_coalition_cached.GetRegionEntity(region_common.GetID());
-
-										if (GUI.DrawButton("Summon"u8, size: new(80, 40)))
+										var rpc = new Depot.DEV_SummonZeppelinRPC
 										{
-											var rpc = new Depot.DEV_SummonZeppelinRPC
-											{
-												h_coalition = h_selected_coalition_cached
-											};
-											rpc.Send(this.ent_depot);
-										}
+											h_coalition = h_coalition
+										};
+										rpc.Send(this.ent_depot);
+									}
 
-										GUI.SameLine();
+									GUI.SeparatorThick();
 
-										if (GUI.DrawButton("Dock"u8, size: new(80, 40)))
-										{
-											var rpc = new Zeppelin.DEV_DockRPC
-											{
-												ent_dock = this.ent_depot,
-												//pos_target = transform.position
-											};
-											rpc.Send(ent_zeppelin);
-										}
+									using (var group_zeppelin = GUI.Group.New(size: GUI.Rm, padding: new(4)))
+									{
+										group_zeppelin.DrawBackground(GUI.tex_window);
 
-										GUI.SameLine();
-
-										//if (GUI.Checkbox("Skyhook"u8, size: new(80, 40)))
-										if (GUI.DrawButton("Skyhook"u8, size: new(80, 40)))
-										{
-											var rpc = new Zeppelin.DEV_SendRequestRPC
-											{
-												flags = Zeppelin.Flags.Skyhook_Deployed
-											};
-											rpc.Send(ent_zeppelin);
-										}
-
-										GUI.SameLine();
-
-										//if (GUI.Checkbox("Skyhook"u8, size: new(80, 40)))
-										if (GUI.DrawButton("Reset"u8, size: new(80, 40)))
-										{
-											var rpc = new Zeppelin.DEV_SendRequestRPC
-											{
-												flags = Zeppelin.Flags.None
-											};
-											rpc.Send(ent_zeppelin);
-										}
-
-										GUI.SameLine();
-
-										//if (GUI.Checkbox("Skyhook"u8, size: new(80, 40)))
-										if (GUI.Picker("air_strike"u8, "Air Strike"u8, size: new(40, 40), ref edit_picker_airstrike, new Vector2(-4000), new Vector2(4000), sensitivity: 1.00f, absolute: true))
-										{
-											var rpc = new Zeppelin.DEV_SendRequestRPC
-											{
-												flags = Zeppelin.Flags.Airstrike_Pending,
-												pos_target = edit_picker_airstrike
-											};
-											rpc.Send(ent_zeppelin);
-										}
+										Phone.DrawZeppelinActions(region_common: ref region_common, h_coalition: h_coalition, ent_phone: this.ent_depot, ent_dock: this.ent_depot);
 									}
 								}
 								break;

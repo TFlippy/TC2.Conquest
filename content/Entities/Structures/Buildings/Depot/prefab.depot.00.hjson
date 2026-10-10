@@ -178,13 +178,13 @@ workshop:
 	h_sound_order_complete: effect.bell.ring.01
 	max_order_mass: 2650.000
 
-	@inventory32:
+	@inventory16:
 	{
 		type: workshop
-		flags: standalone, ignore_mass, public, faction, vertical
-		stack_size_multiplier: 4.000
+		flags: standalone, allow_ducts, ignore_mass, public, faction
+		stack_size_multiplier: 10.000
 		
-		offset: [0.000, 0.000]
+		offset: [0.000, 1.375]
 
 		filter:
 		{
@@ -240,6 +240,43 @@ workshop:
 // 		null
 // 		null
 // 	]
+// }
+
+lamp:
+{
+	flicker: 0.000
+	blink_frequency: 1.000
+	blink_amplitude: 0.500
+	
+	@light:
+	{
+		color: [1.000, 0.400, 0.000, 2.000]
+		offset: [-2.125, -3.625]
+		scale: [64.000, 64.000]
+		texture: light.circle.00
+	}
+}
+
+// sound.emitter:
+// {
+// 	file: essence.machine.loop.00
+// 	volume: 1.200
+// 	pitch: 0.360
+// 	offset: [-0.375, -2.750]
+// 	size: 3.000
+// 	size_max_modifier: 0.550
+// 	doppler: 1.500
+// }
+
+// sound.emitter:
+// {
+// 	file: refinery.loop.03
+// 	volume: 1.000
+// 	pitch: 0.5015
+// 	size: 3.000
+// 	size_max_modifier: 0.750
+// 	spread: 80.000
+// 	priority: 0.300
 // }
 
 heat:
@@ -302,8 +339,6 @@ crafter:
 
 depot:
 {
-	h_catalogue: coalition.energon.00
-	
 	stock_baseline_ratio: 0.800
 	
 	low_price_threshold: 0.200
@@ -320,4 +355,9 @@ stockpile:
 	grid_column_count: 8
 	capacity_items: 60
 	capacity_shipments: 5
+}
+
+phone:
+{
+	flags: no_gui
 }
