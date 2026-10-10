@@ -1,5 +1,4 @@
 ﻿{
-	$region_id: 0
 	$version: "0.1.75.4"
 	name: "Farmus"
 	name_short: "Farmus"
@@ -14,12 +13,15 @@
 	
 	ideology:
 	{
-		government: populism, feudalism, expansionism, agrarian, labourism, individualism, mercantilism
+		government: populism, feudalism, liberalism, expansionism, agrarian, labourism, individualism, communitarianism, mercantilism
 		principles: competitive, sovereignity, neutrality, safety, traditional
+		society: civil
 		military: militia, levies, civilian, volunteers
 	}
 	
 	h_company: farmus
+	h_faction: farmus
+	h_catalogue: coalition.farmus.00
 	h_location_headquarters: brymtel
 	
 	color_a: "0xff7eae00"
