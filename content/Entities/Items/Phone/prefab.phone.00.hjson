@@ -68,7 +68,7 @@ transform:
 
 interactable:
 {
-	flags: none
+	flags: interact_on_pickup
 	window_size: [384, 344]
 	window_size_misc: [48, 0]
 }
@@ -91,4 +91,9 @@ company:
 faction:
 {
 
+}
+
+packable:
+{
+	
 }

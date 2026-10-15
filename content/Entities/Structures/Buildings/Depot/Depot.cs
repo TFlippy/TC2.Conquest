@@ -69,7 +69,85 @@ namespace TC2.Conquest
 #if SERVER
 			public void Invoke(Net.IRPC.Context rpc, ref Phone.Data data)
 			{
+				ref var region_common = ref rpc.GetRegionCommon();
 
+				var sync = false;
+				//sync |= data.flags.TrySetFlagMasked(this.flags, mask: Flags.Skyhook_Deployed | Flags.Airstrike_Pending);
+
+				switch (this.type)
+				{
+					case Type.Airstrike:
+					{
+						//sync |= data.flags.TryAddFlag(Flags.Airstrike_Pending);
+						//if (data.pos_airstrike.TrySet(this.pos_target).RelayTo(ref sync))
+						//{
+						//	data.t_airstrike_start = region_common.GetWorldTime() + 3.00f;
+						//	data.t_airstrike_end = data.t_airstrike_start + 0.50f;
+						//}
+					}
+					break;
+
+					case Type.Skyhook_Deploy:
+					{
+						//data.ent_target_cargo = default;
+						//data.pos_skyhook_target = default;
+						//data.flags.AddFlag(Flags.Skyhook_Deployed);
+						//sync = true;
+					}
+					break;
+
+					case Type.Skyhook_Retract:
+					{
+						//data.ent_target_cargo = default;
+						//data.pos_skyhook_target = default;
+						//data.flags.RemoveFlag(Flags.Skyhook_Deployed);
+						//sync = true;
+					}
+					break;
+
+					case Type.Skyhook_Grab:
+					{
+						//sync |= data.flags.TryAddFlag(Flags.Skyhook_Toggle);
+					}
+					break;
+
+					//case Type.Skyhook_Pos:
+					//{
+					//	data.flags.AddFlag(Flags.Skyhook_Deployed);
+					//	sync |= data.pos_skyhook_target.TrySet(this.pos_target);
+					//	sync = true;
+					//}
+					//break;
+
+					//case Type.Move:
+					//{
+					//	if (data.pos_move.TrySet(this.pos_target))
+					//	{
+					//		data.flags.RemoveFlag(Flags.Docked | Flags.Landing);
+					//		data.ent_target_dock = default;
+					//		data.ent_target_cargo = default;
+					//		sync = true;
+					//	}
+					//}
+					//break;
+
+					case Type.Link:
+					{
+						//if (this.ent_target.TryGetValue(out var ent_target_v))
+						//{
+						//	if (ent_target_v.IsSameRegion(rpc.entity) && ent_target_v.IsAlive())
+						//	{
+						//		ref var zeppelin = ref ent_target_v.GetComponent<Zeppelin.Data>();
+						//	}
+						//}
+					}
+					break;
+				}
+
+				if (sync)
+				{
+					rpc.Sync(ref data);
+				}
 			}
 #endif
 		}
@@ -118,12 +196,12 @@ namespace TC2.Conquest
 				using (var group_top = GUI.Group.New(size: new(GUI.RmX, 32)))
 				{
 					group_top.DrawBackground(GUI.tex_window_sidebar);
-					GUI.TitleCentered(ent_zeppelin.GetFullName(), size: 24, pivot: new(0.00f, 0.50f), offset: new(6, 0));
+					GUI.TitleCentered(ent_zeppelin.GetName(), size: 24, pivot: new(0.00f, 0.50f), offset: new(6, 0));
 				}
 
 				GUI.SeparatorThick();
 
-				if (GUI.DrawButton("Dock"u8, size: new(80, 40), error: !is_zeppelin_alive))
+				if (GUI.DrawButton("Dock"u8, size: new(80, 40), error: !is_zeppelin_alive || !ent_dock.IsAlive()))
 				{
 					var rpc = new Zeppelin.DEV_DockRPC
 					{
@@ -133,7 +211,16 @@ namespace TC2.Conquest
 					rpc.Send(ent_zeppelin);
 				}
 
+				GUI.SameLine();
 
+				if (GUI.DrawButton("Toggle Control"u8, size: new(140, 40), error: !is_zeppelin_alive))
+				{
+					var rpc = new Zeppelin.ActionRPC
+					{
+						type = Zeppelin.ActionRPC.Type.Control,
+					};
+					rpc.Send(ent_zeppelin);
+				}
 
 				//GUI.NewLine();
 
@@ -232,7 +319,7 @@ namespace TC2.Conquest
 					var wpos_crane_a = zeppelin_transform.LocalToWorld(zeppelin.offset_skyhook_crane_a);
 					var wpos_crane_b = zeppelin_transform.LocalToWorld(zeppelin.offset_skyhook_crane_b);
 
-					bb_skyhook = new AABB(wpos_crane_a.AddY(2), wpos_crane_b.AddY(64));
+					bb_skyhook = new AABB(wpos_crane_a.AddY(2), wpos_crane_b.AddY(80));
 
 					if (region.IsNotNull())
 					{
@@ -296,12 +383,25 @@ namespace TC2.Conquest
 							ref var random = ref region_common.GetRandom();
 
 
-							var rot = (time * 3) + random.NextFloat(0.20f);
-							var pos_noise = random.NextUnitVector2Extra(0.00f, 0.04f); // new Vec2f(Maths.Perlin(time, time * 0.50f, 4), Maths.Perlin(time * 3, time * 0.10f, 4)); // random.NextUnitVector2Extra(0.00f, 0.15f);
-							var color = new Color32BGRA(0xff_f0_10_1f).WithAlpha(random.NextByteRange(48, 80));
+							var rot = (time * 3);
+							var pos_noise = random.NextUnitVector2Extra(0.01f, 0.04f); // new Vec2f(Maths.Perlin(time, time * 0.50f, 4), Maths.Perlin(time * 3, time * 0.10f, 4)); // random.NextUnitVector2Extra(0.00f, 0.15f);
+							var color = new Color32BGRA(0xff_f0_10_1f);
 							var cpos_airstrike = region_common.WorldToCanvas(zeppelin.pos_airstrike + pos_noise);
 
-							GUI.DrawSprite2(new Sprite("ui_panel_white.02", 64, 64), rect: AABB.Centered(cpos_airstrike, size: new(4 * region_common.GetWorldToCanvasScale())), layer: GUI.Layer.Background, color: color, rotation: rot);
+							GUI.DrawSprite2(sprite: new Sprite("ui.hologram.atlas.00", 24, 24),
+								rect: AABB.Centered(cpos_airstrike + random.NextUnitVector2Extra(0.51f, 4.04f),
+								size: new Vec2f(4 * region_common.GetWorldToCanvasScale()) * random.NextVector2Range(0.99f, 1.11f)),
+								layer: GUI.Layer.Background, color: color.WithAlpha(random.NextByteRange(2, 150)), rotation: rot + random.NextFloat(0.08f));
+
+							GUI.DrawSprite2(sprite: new Sprite("ui.hologram.atlas.00", 24, 24),
+								rect: AABB.Centered(cpos_airstrike + random.NextUnitVector2Extra(0.01f, 2.25f),
+								size: new Vec2f(4 * region_common.GetWorldToCanvasScale()) * random.NextVector2Range(0.99f, 1.21f)),
+								layer: GUI.Layer.Background, color: color.WithAlpha(random.NextByteRange(8, 75)), rotation: rot + random.NextFloat(0.08f));
+
+							GUI.DrawSprite2(sprite: new Sprite("ui.hologram.atlas.00", 24, 24),
+								rect: AABB.Centered(cpos_airstrike + random.NextUnitVector2Extra(0.01f, 1.25f),
+								size: new Vec2f(4 * region_common.GetWorldToCanvasScale()) * random.NextVector2Range(0.99f, 1.21f)),
+								layer: GUI.Layer.Background, color: color.WithAlpha(random.NextByteRange(24, 20)), rotation: rot + random.NextFloat(0.48f));
 						}
 
 						//GUI.Title(zeppelin.)
@@ -352,6 +452,60 @@ namespace TC2.Conquest
 
 	public static partial class Depot
 	{
+		public ref struct FetchDepots()
+		{
+			[Flags]
+			public enum Flags: byte
+			{
+				None = 0,
+			}
+
+			public enum SearchType: byte
+			{
+				Nearest = 0,
+
+				Left,
+				Right
+			}
+
+			public IFaction.Handle h_faction;
+			public ICoalition.Handle h_coalition;
+
+			public required float max_distance;
+			public required Vec2f world_position;
+			//public required uint max_count = (uint)Constants.Characters.character_count_max;
+
+			public required SpanList<Entity> results;
+
+			//public IFaction.Handle h_faction;
+
+
+			//public FetchNearestSpawnArgs.SearchType search_type;
+			//public FetchNearestSpawnArgs.Flags flags;
+
+			//public SpawnInfo spawn_info;
+
+			[ISystem.Manual(ISystem.Mode.Single, ISystem.Scope.Region | ISystem.Scope.Global)]
+			public static void System(ISystem.Info.Common info, [ISystem.Parameter] ref FetchDepots args,
+			[Source.Owned] in Depot.Data depot, Entity ent_depot,
+			[Source.Owned] in Transform.Data transform,
+			[Source.Owned, Optional] in Faction.Data faction)
+			{
+				if (args.IsNotNull())
+				{
+					if (faction.id.IsAccessible(args.h_faction) && transform.position.IsInDistance(args.world_position, args.max_distance))
+					{
+						if (!args.results.TryAdd(ent_depot)) info.SetInterrupted(ent_depot);
+					}
+				}
+				else
+				{
+					//info.SetInterrupted(entity);
+				}
+			}
+		}
+
+
 		public static float GetUnitBuyPrice(ref readonly this Depot.Data depot, in Shipment.Item item)
 		{
 			var unit_market_price = item.GetUnitMarketPrice();
@@ -380,7 +534,7 @@ namespace TC2.Conquest
 			}
 
 			public required Depot.Data.Flags flags;
-			public ICatalogue.Handle h_catalogue;
+			[Obsolete] public ICatalogue.Handle h_catalogue;
 			public ICoalition.Handle h_coalition;
 
 			[Save.NewLine]
@@ -458,6 +612,11 @@ namespace TC2.Conquest
 			public void Invoke(Net.IRPC.Context rpc, ref Depot.Data data)
 			{
 				var sync = false;
+
+				if (this.h_coalition.HasValue && !data.h_coalition)
+				{
+					sync |= data.h_coalition.TrySet(this.h_coalition);
+				}
 
 				if (sync)
 				{
@@ -698,7 +857,7 @@ namespace TC2.Conquest
 						var h_stockpile = this.stockpile.h_stockpile;
 						ref var stockpile_data = ref h_stockpile.GetData();
 
-						var h_coalition = this.depot.h_coalition;
+						var h_coalition = ICoalition.Handle.None; // this.depot.h_coalition;
 
 						// temporary debug stuff
 						if (!h_coalition) h_coalition = h_selected_coalition_cached;
@@ -732,10 +891,11 @@ namespace TC2.Conquest
 											{
 												using (var hash = GUI.ID<Depot.Data, ICoalition.Data>.Push(d_coalition_tmp.GetHandle()))
 												using (var group_row = GUI.Group.New(size: new(GUI.RmX, 40), padding: new(6)))
+												//using (GUI.Disabled.Push())
 												using (GUI.Wrap.Push(GUI.RmX))
 												{
 													//group_row.DrawBackground(GUI.tex_slot_white, color: coalition_tmp_data.color_gui);
-													group_row.DrawBackground(GUI.tex_window_popup_embed, color: coalition_tmp_data.color_gui.WithColorMult(0.75f));
+													group_row.DrawBackground(this.depot.h_coalition == d_coalition_tmp ? GUI.tex_slot_filled_white : GUI.tex_window_popup_embed, color: coalition_tmp_data.color_gui.WithColorMult(0.75f));
 
 													GUI.TitleCentered(coalition_tmp_data.GetShortName(), font: GUI.Font.Superstar, size: 24, pivot: new(0.00f, 0.50f), offset: new(4, 0));
 
@@ -814,24 +974,34 @@ namespace TC2.Conquest
 							var ts = Timestamp.Now();
 							var ts_elapsed = 0.00;
 
+							var selected_tab_index = selected_tab_index_cached;
+							if (!this.depot.h_coalition || this.depot.h_coalition != h_selected_coalition_cached) selected_tab_index = 0;
+
 							using (var group_tabs = GUI.Group.New(size: new(GUI.RmX, 40)))
 							{
 								GUI.DrawTab3(text: "Overview"u8, size: new(0, GUI.RmY),
-									index: 0, selected_index: ref selected_tab_index_cached, inner: true);
+									index: 0, selected_index: ref selected_tab_index, inner: true,
+									enabled: h_coalition);
 
 								GUI.SameLine();
 
 								GUI.DrawTab3(text: "Market"u8, size: new(0, GUI.RmY),
-									index: 1, selected_index: ref selected_tab_index_cached, inner: true);
+									index: 1, selected_index: ref selected_tab_index, inner: true,
+									enabled: this.depot.h_coalition && h_selected_coalition_cached == this.depot.h_coalition);
 
 								GUI.SameLine();
 
 								GUI.DrawTab3(text: "Zeppelin"u8, size: new(0, GUI.RmY),
-									index: 2, selected_index: ref selected_tab_index_cached, inner: true);
+									index: 2, selected_index: ref selected_tab_index, inner: true,
+									enabled: this.depot.h_coalition && h_selected_coalition_cached == this.depot.h_coalition);
 							}
 
+							if (this.depot.h_coalition && h_selected_coalition_cached == this.depot.h_coalition) selected_tab_index_cached = selected_tab_index;
+
+							//if (h_selected_coalition_cached != this.depot.h_coalition) selected_tab_index = 0;
+
 							GUI.SeparatorThick();
-							switch (selected_tab_index_cached)
+							switch (selected_tab_index)
 							{
 								case 0:
 								{
@@ -849,9 +1019,13 @@ namespace TC2.Conquest
 
 											GUI.SameLine();
 
-											if (GUI.DrawButton("Join Coalition"u8, size: GUI.Rm, font_size: 20, error: false, color: GUI.col_button_ok))
+											if (GUI.DrawButton("Join Coalition"u8, size: GUI.Rm, font_size: 20, error: this.depot.h_coalition, color: this.depot.h_coalition ? GUI.col_button : GUI.col_button_ok))
 											{
-
+												var rpc = new Depot.EditRPC
+												{
+													h_coalition = h_selected_coalition_cached
+												};
+												rpc.Send(this.ent_depot);
 											}
 										}
 
@@ -867,9 +1041,10 @@ namespace TC2.Conquest
 
 								case 1:
 								{
-									var items_span = stockpile_data.items.AsSpan();
 									if (stockpile_data.IsNotNull())
 									{
+										var items_span = stockpile_data.items.AsSpan();
+
 										var amount_multiplier_abs = selected_stockpile_item_amount_cached.Abs();
 										var amount_multiplier_abs_clamped = amount_multiplier_abs;
 
@@ -886,7 +1061,7 @@ namespace TC2.Conquest
 											GUI.SeparatorThick();
 
 											//using (var group_items = GUI.Group.New(size: new(GUI.RmX, 0)))
-											using (var group_items = GUI.Scrollbox.New("sb.depot.trade", size: GUI.Rm.SubY(128)))
+											using (var group_items = GUI.Scrollbox.New("sb.depot.trade"u8, size: GUI.Rm.SubY(128)))
 											{
 												var sameline = false;
 

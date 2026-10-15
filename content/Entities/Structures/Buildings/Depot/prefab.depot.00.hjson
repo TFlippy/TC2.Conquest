@@ -125,7 +125,7 @@ building:
 
 nameable:
 {
-	tags: tech, industrial, tool, market, factory
+	tags: tech, industrial, tool, market
 	type: building
 	flags: randomize
 	max_length: 20
@@ -178,7 +178,7 @@ workshop:
 	h_sound_order_complete: effect.bell.ring.01
 	max_order_mass: 2650.000
 
-	@inventory16:
+	@inventory8:
 	{
 		type: workshop
 		flags: standalone, allow_ducts, ignore_mass, public, faction
@@ -191,6 +191,66 @@ workshop:
 			exclude: gas
 		}
 	}
+}
+
+storage:
+{
+	@loot.container:
+	{
+		rarity_min: 2.000
+		rarity_mid: 4.000
+		rarity_max: 10.000
+		rarity_falloff: 0.500
+		
+		weight_multiplier: 1.000
+		amount_multiplier: 1.000
+		
+		flags: no_duplicates, shuffle_inventory
+		merge_flags: skip_prefabs, bias_weight, bias_amount
+		
+		rolls: 10
+		rolls_extra: 2
+		
+		tables:
+		[
+			supplies.colonization.00
+			chemicals.00
+			munitions.personal.00
+			null
+		]
+	}
+
+	@inventory16:
+	{
+		type: storage
+		flags: standalone, public
+		stack_size_multiplier: 6.000
+		
+		offset: [-0.875, 0.625]
+	}
+}
+
+shipment:
+{
+	items:
+	[
+		{
+			type: prefab
+			prefab: wrench.00
+			quantity: 4.000
+			flags: none
+		}
+		{
+			type: prefab
+			prefab: phone.00
+			quantity: 4.000
+			flags: none
+		}
+	]
+
+	type: supplies
+	flags: keep_items, allow_withdraw, allow_deposit, use_misc, public
+	layout: square
 }
 
 // personnel:
@@ -322,19 +382,19 @@ crafter:
 	temperature_max: 893.150
 	pressure_max: 0.000
 
-	@inventory8:
-	{
-		type: waste
-		flags: standalone, allow_ducts, ignore_mass, public
-		stack_size_multiplier: 6.000
+	// @inventory8:
+	// {
+	// 	type: waste
+	// 	flags: standalone, allow_ducts, ignore_mass, public
+	// 	stack_size_multiplier: 6.000
 		
-		offset: [0.000, 0.000]
+	// 	offset: [0.000, 0.000]
 
-		filter:
-		{
-			exclude: gas
-		}
-	}
+	// 	filter:
+	// 	{
+	// 		exclude: gas
+	// 	}
+	// }
 }
 
 depot:
@@ -360,4 +420,14 @@ stockpile:
 phone:
 {
 	flags: no_gui
+}
+
+minimap.marker:
+{
+	sprite:
+	{
+		texture: ui_icons_minimap
+		size: [16, 16]
+		frame: [0, 3]
+	}
 }

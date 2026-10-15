@@ -1,4 +1,6 @@
 ﻿{
+	$prefab: "g.coalition.00"
+	$prefab_region: "zeppelin.00"
 	$version: "0.1.75.4"
 	name: "S.R.N."
 	name_short: "S.R.N."
@@ -14,7 +16,7 @@
 	ideology:
 	{
 		government: militarism, populism, authoritarian, oligarchy, kleptocracy, dictatorship, labourism, separatism, segregationism
-		principles: might, corrupt, criminal, hedonism, technology, sovereignity, industry, exploitation, collectivism, slavery, hoarding, research, destruction, industrialism
+		principles: might, corrupt, criminal, hedonism, technology, sovereignity, industry, exploitation, collectivism, slavery, hoarding, research, destruction, industrialism, domination
 		military: mercenary, militia, private, criminal, levies, mechanized, guerrilla, conscripts, volunteers, proxy, mafia
 	}
 	

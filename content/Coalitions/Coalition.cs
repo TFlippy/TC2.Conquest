@@ -95,11 +95,39 @@ namespace TC2.Conquest
 			}
 
 			public ICoalition.Handle h_coalition;
+			//public IBankAccount.Handle h_bank;
+			public IBankAccount.Handle h_bank;
+			public ushort unused_00;
 			public Coalition.Data.Flags flags;
 
-			public uint unused_00;
+			//public uint unused_00;
 			public uint unused_01;
 			public uint unused_02;
+		}
+
+		[ISystem.Event<ICoalition.RefreshEvent>(ISystem.Mode.Single, ISystem.Scope.Global)]
+		public static void OnRefreshEvent(ISystem.Info.Common info, ref Region.Data.Common region_common, Entity ent_coalition, 
+		[Source.Owned] ref ICoalition.RefreshEvent ev,
+		[Source.Owned] ref Coalition.Data coalition, 
+		[Source.Owned, Keg.Engine.Game.Optional(nullable: true)] ref Faction.Data faction,
+		[Source.Owned, Keg.Engine.Game.Optional(nullable: true)] ref Company.Data company)
+		{
+			App.WriteValue((ent_coalition, coalition.h_coalition, ev.h_asset), color: App.Color.Cyan);
+
+			coalition.h_coalition = ev.h_asset;
+			ref var coalition_data = ref ev.data;
+			if (coalition_data.IsNotNull())
+			{
+				if (faction.IsNotNull())
+				{
+					faction.id = coalition_data.h_faction;
+				}
+
+				if (company.IsNotNull())
+				{
+					company.h_company = coalition_data.h_company;
+				}
+			}
 		}
 
 		//[ISystem.Update.A(ISystem.Mode.Single, ISystem.Scope.Region | ISystem.Scope.Global)]
@@ -107,7 +135,7 @@ namespace TC2.Conquest
 		//[Source.Owned] ref Coalition.Data coalition)
 		//{
 
-		//}
+			//}
 
 #if CLIENT
 		public partial struct CoalitionGUI: IGUICommand

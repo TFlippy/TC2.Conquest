@@ -1,4 +1,6 @@
 ﻿{
+	$prefab: "g.coalition.00"
+	$prefab_region: "zeppelin.00"
 	$version: "0.1.75.4"
 	name: "Farmus"
 	name_short: "Farmus"
