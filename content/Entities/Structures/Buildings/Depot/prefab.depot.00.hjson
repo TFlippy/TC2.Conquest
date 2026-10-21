@@ -213,9 +213,9 @@ storage:
 		
 		tables:
 		[
-			supplies.colonization.00
-			chemicals.00
-			munitions.personal.00
+			depot.00
+			null
+			null
 			null
 		]
 	}
