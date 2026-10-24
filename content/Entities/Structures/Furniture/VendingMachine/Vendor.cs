@@ -178,9 +178,11 @@ namespace TC2.Conquest
 						var has_enough_money = credit >= total_cost;
 						Assert.Check(has_enough_money);
 
-						App.WriteValue((inventory_money.resource, credit, final_cost, has_enough_money));
+						var final_amount = final_cost / inventory_money.resource.material.GetMarketPrice();
+						App.WriteValue((inventory_money.resource, credit, final_cost, final_amount, has_enough_money));
 
-						Assert.Check(inventory_money.Remove(resource_money.material, final_cost));
+						//Assert.Check(inventory_money.Remove(resource_money.material, final_cost));
+						Assert.Check(inventory_money.Remove(resource_money.material, final_amount));
 
 						Crafting.Context.NewFromSelf(ref region_common, rpc.entity, out var context, search_radius: 6.00f);
 						context.Produce(span_products, spawn_flags: Resource.SpawnFlags.No_Discard | Resource.SpawnFlags.Allow_Encumbered | Resource.SpawnFlags.Show_Notification | Resource.SpawnFlags.Merge | Resource.SpawnFlags.Pickup);

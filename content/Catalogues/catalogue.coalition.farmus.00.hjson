@@ -1,6 +1,5 @@
 ﻿{
-	$region_id: 0
-	$version: "0.1.75.4"
+	$version: "0.1.76.0"
 	name: "Farmus"
 	
 	h_company: farmus
@@ -17,17 +16,17 @@
 		{
 			type: resource
 			h_material: ammo.mg.lv
-			quantity: 2000.000
+			quantity: 1000.000
 		}
 		{
 			type: resource
 			h_material: ammo.hc.lv
-			quantity: 1500.000
+			quantity: 1200.000
 		}
 		{
 			type: resource
 			h_material: ammo.lc.hp
-			quantity: 1500.000
+			quantity: 1000.000
 		}
 		{
 			type: resource
@@ -141,8 +140,8 @@
 		}
 		{
 			type: resource
-			h_material: peat
-			quantity: 1000.000
+			h_material: resin
+			quantity: 750.000
 		}
 		{
 			type: resource

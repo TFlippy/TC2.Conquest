@@ -662,7 +662,7 @@ namespace TC2.Conquest
 								item_stockpile.max = item_catalogue.quantity; // Maths.Max(item_catalogue.quantity, item_stockpile.material.GetQuantityFromMass(100.00f).SnapCeil(25));
 
 								//item_stockpile.quantity = 0.00f;
-								item_stockpile.quantity = Maths.Clamp((item_stockpile.max * data.stock_baseline_ratio).SnapCeil(5), 0.00f, item_stockpile.max);
+								item_stockpile.quantity = Maths.Clamp((item_stockpile.max * data.stock_initial_ratio).SnapCeil(5), 0.00f, item_stockpile.max);
 							}
 
 							//stockpile_data.items
@@ -779,7 +779,7 @@ namespace TC2.Conquest
 								}
 							];
 
-							App.WriteValue((amount, amount_abs, amount_abs_clamped, unit_market_price_sell, amount_abs_clamped * unit_market_price_sell));
+							//App.WriteValue((amount, amount_abs, amount_abs_clamped, unit_market_price_sell, amount_abs_clamped * unit_market_price_sell));
 
 							Assert.Check(context.Evaluate(requirements: reqs, evaluation_flags: Crafting.EvaluateFlags.Prerequisite, amount_multiplier: amount_abs_clamped));
 
@@ -842,6 +842,8 @@ namespace TC2.Conquest
 			[Region.Local] public static ICoalition.Handle h_selected_coalition_cached;
 			[Region.Local] public static Vector2 edit_picker_airstrike;
 			[Region.Local] public static Entity edit_ent_picker;
+
+			[Region.Local] public static string edit_market_search_str = string.Empty;
 
 			public void Draw()
 			{
@@ -934,6 +936,19 @@ namespace TC2.Conquest
 
 										//	GUI.Title("- TODO -"u8, size: 20);
 										//}
+									}
+								}
+							}
+
+							using (var collapsible = GUI.Collapsible2.New("col.warrants"u8, size: new(GUI.RmX, 32), default_open: false))
+							{
+								GUI.TitleCentered("Warrants"u8, size: 24, pivot: new(0.00f, 0.50f));
+
+								if (collapsible.Inner())
+								{
+									using (var group_col_inner = GUI.Group.New(size: new(GUI.RmX, 0)))
+									{
+										GUI.Title("- TODO -"u8, size: 20);
 									}
 								}
 							}
@@ -1062,6 +1077,13 @@ namespace TC2.Conquest
 
 											GUI.SeparatorThick();
 
+											if (GUI.TextInput("search.market"u8, "search (Ctrl+F)"u8, text: ref edit_market_search_str, size: new(GUI.RmX, 32)))
+											{
+
+											}
+											GUI.FocusOnCtrlF();
+
+											GUI.SeparatorThick();
 
 											//using (var group_items = GUI.Group.New(size: new(GUI.RmX, 0)))
 											using (var group_items = GUI.Scrollbox.New("sb.depot.trade"u8, size: row_layout ? GUI.Rm : GUI.Rm.SubY(128)))
@@ -1072,6 +1094,7 @@ namespace TC2.Conquest
 												//{
 												//	selected_stockpile_item_slot_cached++;
 												//}
+												var is_searching = edit_market_search_str.IsNotNullOrWhiteSpace();
 
 												for (var i = 0; i < items_span.Length; i++)
 												{
@@ -1080,6 +1103,15 @@ namespace TC2.Conquest
 													//if (item.GetHeader().id == 0) continue;
 													if (row_layout)
 													{
+														if (!item.IsValid()) continue;
+
+														var item_name = item.GetName();
+														if (is_searching)
+														{
+															//GUI.Text(edit_market_search_str);
+															if (!item_name.Contains(edit_market_search_str, StringComparison.OrdinalIgnoreCase)) continue;
+														}
+
 														using (var hash = GUI.ID<Depot.Data, Shipment.Item>.Push(i))
 														using (var group_row = GUI.Group.New(size: new(GUI.RmX, 40), padding: new(0)))
 														{
@@ -1089,7 +1121,7 @@ namespace TC2.Conquest
 																//group_item.DrawBackground(GUI.tex_window_sidebar_c);
 																//group_item.DrawBackground(GUI.tex_panel, inner: true);
 
-																if (item.IsValid())
+																//if (item.IsValid())
 																{
 																	//GUI.DrawResourceSmall()
 																	//GUI.DrawItem(item: ref item, size: new Vec2f(80, GUI.RmY).SubY(4), clip: false);
@@ -1134,7 +1166,8 @@ namespace TC2.Conquest
 																	{
 																		group_row_info.DrawBackground(GUI.tex_panel, inner: true);
 
-																		GUI.TitleCentered(item.GetName(), pivot: new(0.00f, 0.00f), offset: new(4, 2));
+																		GUI.TitleCentered(item_name, pivot: new(0.00f, 0.00f), offset: new(4, 2));
+																		GUI.TextShadedCentered(item.AsItem2().WithQuantity(amount_multiplier_abs_clamped).GetMass(), format: "0.00' kg'", pivot: new(0.00f, 1.00f), offset: new(4, -2), color: GUI.font_color_desc);
 
 																		//{
 																		//	var str_supply = Utf8String.Empty;
@@ -1185,11 +1218,11 @@ namespace TC2.Conquest
 																		}
 																		else
 																		{
-																			GUI.TextShadedCenteredRect(unit_market_price_buy * amount_multiplier_abs, pivot: new(1.00f, 0.50f), rect: group_row_info.GetInnerRect(),
+																			GUI.TextShadedCenteredRect((unit_market_price_buy * amount_multiplier_abs).Ceil(), pivot: new(1.00f, 0.50f), rect: group_row_info.GetInnerRect(),
 																				font: GUI.Font.Superstar, size: 16, box_shadow: false, offset: new(-6, -7), shadow: new(2, 2),
 																				format: "0' Đk'", color: GUI.col_buy);
 
-																			GUI.TextShadedCenteredRect(unit_market_price_sell * amount_multiplier_abs, pivot: new(1.00f, 0.50f), rect: group_row_info.GetInnerRect(),
+																			GUI.TextShadedCenteredRect((unit_market_price_sell * amount_multiplier_abs).Ceil(), pivot: new(1.00f, 0.50f), rect: group_row_info.GetInnerRect(),
 																				font: GUI.Font.Superstar, size: 16, box_shadow: false, offset: new(-6, 7), shadow: new(2, 2),
 																				format: "0' Đk'", color: GUI.col_sell);
 																		}

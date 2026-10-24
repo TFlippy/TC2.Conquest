@@ -399,7 +399,8 @@ crafter:
 
 depot:
 {
-	stock_baseline_ratio: 0.800
+	stock_baseline_ratio: 0.400
+	stock_initial_ratio: 0.170
 	
 	low_price_threshold: 0.200
 	low_price_multiplier: 0.290

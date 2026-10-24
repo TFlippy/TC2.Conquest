@@ -1429,6 +1429,19 @@ namespace TC2.Base.Components
 
 														using (var group = GUI.Group.New(size: GUI.Rm))
 														{
+															//if (GUI.DrawButton("Move to..."u8, size: new Vector2(80, GUI.RmY),
+															//enabled: false && h_character && characters_dormitory.Contains(h_character), color: GUI.col_button_yellow))
+															//{
+															//	var rpc = new Dormitory.DEV_HireRPC()
+															//	{
+															//		h_character = h_character
+															//	};
+															//	rpc.Send(this.ent_checkpoint);
+															//}
+															//GUI.DrawHoverTooltip("Recruit this character."u8);
+
+															//GUI.SameLine();
+
 															if (GUI.DrawButton("Recruit"u8, size: new Vector2(80, GUI.RmY), 
 															enabled: false && h_character && characters_dormitory.Contains(h_character), color: GUI.col_button_yellow))
 															{
