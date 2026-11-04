@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.75.2"
+	$version: "0.1.76.0"
 	name: "Carohrad"
 	
 	h_company: carohrad
@@ -190,8 +190,13 @@
 		}
 		{
 			type: resource
-			h_material: twuk
+			h_material: tallow
 			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: twuk
+			quantity: 400.000
 		}
 		{
 			type: resource

@@ -72,10 +72,10 @@ worldmap.marker:
 stockpile:
 {
 	request_types: ""
-	flags_stockpile: region
-	flags: auto_create, show_addresses
+	flags_stockpile: region, market
+	flags: hidden, auto_create, show_addresses
 
-	grid_column_count: 10
-	capacity_items: 60
-	capacity_shipments: 10
+	grid_column_count: 8
+	capacity_items: 64
+	capacity_shipments: 8
 }

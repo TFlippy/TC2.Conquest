@@ -399,6 +399,8 @@ crafter:
 
 depot:
 {
+	// flags: use_entrance_stockpile
+
 	stock_baseline_ratio: 0.400
 	stock_initial_ratio: 0.170
 	
@@ -409,7 +411,7 @@ depot:
 
 stockpile:
 {
-	request_types: move, load
+	request_types: ""
 	flags: hidden, hide_unowned
 	flags_stockpile: vendor, npc, coalition
 
