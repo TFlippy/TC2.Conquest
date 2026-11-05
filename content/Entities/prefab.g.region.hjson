@@ -32,6 +32,11 @@ company:
     
 }
 
+economy:
+{
+	
+}
+
 // worldmap.enterable:
 // {
 //     type: location

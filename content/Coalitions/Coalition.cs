@@ -21,16 +21,27 @@ namespace TC2.Conquest
 
 		}
 
+		[FixedAddressValueType] public static FixedArray256<IFaction.Handle> coalition_to_faction;
+		[FixedAddressValueType] public static FixedArray256<ICoalition.Handle> faction_to_coalition;
+
+		[FixedAddressValueType] public static FixedArray256<ICompany.Handle> coalition_to_company;
+		[FixedAddressValueType] public static FixedArray256<ICoalition.Handle> company_to_coalition;
 
 		static void IAsset2<ICoalition, ICoalition.Data>.OnRefresh(ICoalition.Definition definition)
 		{
 			ref var data = ref definition.GetData();
 
 			var identifier = definition.identifier;
+
 			var h_coalition = definition.GetHandle();
-			var index = (nuint)h_coalition.id;
+			var h_faction = data.h_faction;
+			var h_company = data.h_company;
 
+			ICoalition.coalition_to_faction[(byte)h_coalition] = h_faction;
+			ICoalition.faction_to_coalition[(byte)h_faction] = h_coalition;
 
+			ICoalition.coalition_to_company[(byte)h_coalition] = h_company;
+			ICoalition.company_to_coalition[(byte)h_company] = h_coalition;
 		}
 
 		public struct Data(): IName, IDescription, IIcon
@@ -105,6 +116,9 @@ namespace TC2.Conquest
 			public uint unused_02;
 		}
 
+		public static ICoalition.Handle GetCoalitionHandle(this IFaction.Handle h_faction) => ICoalition.faction_to_coalition[(byte)h_faction.id];
+		public static ICoalition.Handle GetCoalitionHandle(this ICompany.Handle h_company) => ICoalition.company_to_coalition[(byte)h_company.id];
+
 		[ISystem.Event<ICoalition.RefreshEvent>(ISystem.Mode.Single, ISystem.Scope.Global)]
 		public static void OnRefreshEvent(ISystem.Info.Common info, ref Region.Data.Common region_common, Entity ent_coalition, 
 		[Source.Owned] ref ICoalition.RefreshEvent ev,
@@ -130,12 +144,12 @@ namespace TC2.Conquest
 			}
 		}
 
-		//[ISystem.Update.A(ISystem.Mode.Single, ISystem.Scope.Region | ISystem.Scope.Global)]
-		//public static void OnUpdate(ISystem.Info.Common info, ref Region.Data.Common region, Entity entity,
-		//[Source.Owned] ref Coalition.Data coalition)
-		//{
+		[ISystem.Update.A(ISystem.Mode.Single, ISystem.Scope.Global)]
+		public static void OnUpdate(ISystem.Info.Common info, ref Region.Data.Common region, Entity ent_coalition,
+		[Source.Owned] ref Coalition.Data coalition)
+		{
 
-			//}
+		}
 
 #if CLIENT
 		public partial struct CoalitionGUI: IGUICommand

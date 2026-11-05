@@ -13,7 +13,9 @@ namespace TC2.Conquest
 			{
 				None = 0u,
 
-				Locked = 1u << 0
+				Locked = 1u << 0,
+
+				[Asset.Ignore] Market_Initialized = 1u << 8,
 			}
 
 			[Flags]
@@ -28,6 +30,9 @@ namespace TC2.Conquest
 			[Asset.Ignore] public byte region_id;
 			[Asset.Ignore, Save.Ignore] public byte player_count;
 			public Site.Data.Status status;
+
+			//[Save.NewLine]
+			//public IStockpile.Handle h_stockpile;
 
 			//[Save.NewLine]
 			//public ImperialDateTime date_unlock = new(729025920000);
