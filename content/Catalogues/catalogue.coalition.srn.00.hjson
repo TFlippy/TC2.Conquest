@@ -1,5 +1,5 @@
 ﻿{
-	$version: "0.1.75.2"
+	$version: "0.1.76.0"
 	name: "S.R.N."
 	
 	h_company: srn
@@ -10,232 +10,7 @@
 	[
 		{
 			type: resource
-			h_material: ammo.kn
-			quantity: 400.000
-		}
-		{
-			type: resource
-			h_material: ammo.ac.lv
-			quantity: 800.000
-		}
-		{
-			type: resource
-			h_material: ammo.mg.lv
-			quantity: 2000.000
-		}
-		{
-			type: resource
-			h_material: ammo.hc.hv
-			quantity: 2500.000
-		}
-		{
-			type: resource
-			h_material: ammo.hc.lv
-			quantity: 2500.000
-		}
-		{
-			type: resource
-			h_material: ammo.lc.hv
-			quantity: 2000.000
-		}
-		{
-			type: resource
-			h_material: ammo.lc.lv
-			quantity: 2000.000
-		}
-		{
-			type: resource
-			h_material: ammo.sg.grenade
-			quantity: 500.000
-		}
-		{
-			type: resource
-			h_material: ammo.sg.slug
-			quantity: 800.000
-		}
-		{
-			type: resource
-			h_material: ammo.sg.buck
-			quantity: 800.000
-		}
-		{
-			type: resource
-			h_material: ammo.rocket.lv
-			quantity: 150.000
-		}
-		{
-			type: resource
-			h_material: gunpowder
-			quantity: 800.000
-		}
-		{
-			type: resource
-			h_material: nitrocellulose
-			quantity: 800.000
-		}
-		{
-			type: resource
-			h_material: tnt
-			quantity: 2500.000
-		}
-		{
-			type: resource
-			h_material: nitroglycerine
-			quantity: 500.000
-		}
-		{
-			type: resource
-			h_material: nitrosugar
-			quantity: 500.000
-		}
-		{
-			type: resource
-			h_material: wood
-			quantity: 500.000
-		}
-		{
-			type: resource
-			h_material: steel.rod
-			quantity: 500.000
-		}
-		{
-			type: resource
-			h_material: steel.plate
-			quantity: 500.000
-		}
-		{
-			type: resource
-			h_material: copper.rod
-			quantity: 500.000
-		}
-		{
-			type: resource
-			h_material: copper.plate
-			quantity: 500.000
-		}
-		{
-			type: resource
-			h_material: steel.frames
-			quantity: 1000.000
-		}
-		{
-			type: resource
-			h_material: brick.concrete
-			quantity: 2500.000
-		}
-		{
-			type: resource
-			h_material: cement
-			quantity: 2000.000
-		}
-		{
-			type: resource
-			h_material: glass
-			quantity: 500.000
-		}
-		{
-			type: resource
-			h_material: steel
-			quantity: 500.000
-		}
-		{
-			type: resource
-			h_material: paper
-			quantity: 500.000
-		}
-		{
-			type: resource
-			h_material: glue
-			quantity: 1000.000
-		}
-		{
-			type: resource
-			h_material: oil
-			quantity: 500.000
-		}
-		{
-			type: resource
-			h_material: lubricant
-			quantity: 500.000
-		}
-		{
-			type: resource
-			h_material: nitric_acid
-			quantity: 500.000
-		}
-		{
-			type: resource
-			h_material: sulfuric_acid
-			quantity: 500.000
-		}
-		{
-			type: resource
-			h_material: cloth
-			quantity: 500.000
-		}
-		{
-			type: resource
-			h_material: mushroom.brown
-			quantity: 1000.000
-		}
-		{
-			type: resource
-			h_material: alcohol
-			quantity: 2000.000
-		}
-		{
-			type: resource
-			h_material: chow
-			quantity: 1000.000
-		}
-		{
-			type: resource
-			h_material: mayo
-			quantity: 500.000
-		}
-		{
-			type: resource
-			h_material: twuk
-			quantity: 500.000
-		}
-		{
-			type: resource
-			h_material: machine_parts
-			quantity: 1000.000
-		}
-		{
-			type: resource
-			h_material: limelight
-			quantity: 250.000
-		}
-		{
-			type: resource
-			h_material: phlogiston
-			quantity: 2000.000
-		}
-		{
-			type: resource
-			h_material: putty
-			quantity: 1000.000
-		}
-		{
-			type: resource
-			h_material: actuator
-			quantity: 250.000
-		}
-		{
-			type: resource
-			h_material: directors
-			quantity: 500.000
-		}
-		{
-			type: resource
-			h_material: scrap.mixed
-			quantity: 500.000
-		}
-		{
-			type: resource
-			h_material: scrap.machine
+			h_material: scrap.arcane
 			quantity: 500.000
 		}
 		{
@@ -245,8 +20,233 @@
 		}
 		{
 			type: resource
-			h_material: scrap.arcane
+			h_material: scrap.machine
 			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: scrap.mixed
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: directors
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: actuator
+			quantity: 250.000
+		}
+		{
+			type: resource
+			h_material: putty
+			quantity: 1000.000
+		}
+		{
+			type: resource
+			h_material: phlogiston
+			quantity: 2000.000
+		}
+		{
+			type: resource
+			h_material: limelight
+			quantity: 250.000
+		}
+		{
+			type: resource
+			h_material: machine_parts
+			quantity: 1000.000
+		}
+		{
+			type: resource
+			h_material: twuk
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: mayo
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: chow
+			quantity: 1000.000
+		}
+		{
+			type: resource
+			h_material: alcohol
+			quantity: 2000.000
+		}
+		{
+			type: resource
+			h_material: mushroom.brown
+			quantity: 1000.000
+		}
+		{
+			type: resource
+			h_material: cloth
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: sulfuric_acid
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: nitric_acid
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: lubricant
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: oil
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: glue
+			quantity: 1000.000
+		}
+		{
+			type: resource
+			h_material: paper
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: steel
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: glass
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: cement
+			quantity: 2000.000
+		}
+		{
+			type: resource
+			h_material: brick.concrete
+			quantity: 2500.000
+		}
+		{
+			type: resource
+			h_material: steel.frames
+			quantity: 1000.000
+		}
+		{
+			type: resource
+			h_material: copper.plate
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: copper.rod
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: steel.plate
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: steel.rod
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: wood
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: nitrosugar
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: nitroglycerine
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: tnt
+			quantity: 2500.000
+		}
+		{
+			type: resource
+			h_material: nitrocellulose
+			quantity: 800.000
+		}
+		{
+			type: resource
+			h_material: gunpowder
+			quantity: 800.000
+		}
+		{
+			type: resource
+			h_material: ammo.rocket.lv
+			quantity: 150.000
+		}
+		{
+			type: resource
+			h_material: ammo.sg.buck
+			quantity: 800.000
+		}
+		{
+			type: resource
+			h_material: ammo.sg.slug
+			quantity: 800.000
+		}
+		{
+			type: resource
+			h_material: ammo.sg.grenade
+			quantity: 500.000
+		}
+		{
+			type: resource
+			h_material: ammo.lc.lv
+			quantity: 2000.000
+		}
+		{
+			type: resource
+			h_material: ammo.lc.hv
+			quantity: 2000.000
+		}
+		{
+			type: resource
+			h_material: ammo.hc.lv
+			quantity: 2500.000
+		}
+		{
+			type: resource
+			h_material: ammo.hc.hv
+			quantity: 2500.000
+		}
+		{
+			type: resource
+			h_material: ammo.mg.lv
+			quantity: 2000.000
+		}
+		{
+			type: resource
+			h_material: ammo.ac.lv
+			quantity: 800.000
+		}
+		{
+			type: resource
+			h_material: ammo.kn
+			quantity: 400.000
 		}
 	]
 }

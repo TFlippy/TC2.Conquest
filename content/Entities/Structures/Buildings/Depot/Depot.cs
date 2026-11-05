@@ -453,7 +453,7 @@ namespace TC2.Conquest
 	// TODO: make market stuff separate from the Depot
 	public static partial class Depot
 	{
-		public ref struct FetchDepots()
+		public ref struct FetchDepots
 		{
 			[Flags]
 			public enum Flags: byte
@@ -522,6 +522,7 @@ namespace TC2.Conquest
 			return ret;
 		}
 
+		[WIP]
 		public struct StockAvailability
 		{
 			public float score;
@@ -538,6 +539,7 @@ namespace TC2.Conquest
 			public float unused_02;
 		}
 
+		[WIP]
 		public static StockAvailability CalculateStockAvailability(ref readonly this Depot.Data depot, ref IMaterial.Data material, ref ILocation.Data location)
 		{
 			var ret = new StockAvailability();
@@ -675,10 +677,10 @@ namespace TC2.Conquest
 		}
 
 		[Shitcode, WIP]
-		public struct DEV_SetCatalogueRPC: Net.IRPC<Depot.Data>
+		public struct DEV_SetCoalitionRPC: Net.IRPC<Depot.Data>
 		{
 			public IStockpile.Handle h_stockpile;
-			public ICatalogue.Handle h_catalogue;
+			public ICoalition.Handle h_coalition;
 
 #if SERVER
 			[Shitcode] // TODO: clean this up
@@ -689,8 +691,8 @@ namespace TC2.Conquest
 
 				var sync = false;
 
-				ref var catalogue_data = ref this.h_catalogue.GetData();
-				if (catalogue_data.IsNotNull())
+				ref var coalition_data = ref this.h_coalition.GetData();
+				if (coalition_data.IsNotNull())
 				{
 					var random = XorRandom.New(true);
 					//var h_stockpile = IStockpile.Handle.None;
@@ -711,7 +713,7 @@ namespace TC2.Conquest
 
 					data.InitMarketStockpile(ref random, 
 						h_stockpile: this.h_stockpile, 
-						h_catalogue: this.h_catalogue);
+						h_coalition: this.h_coalition);
 
 					//ref var stockpile_data = ref h_stockpile.GetData(out var stockpile_asset);
 					//if (stockpile_data.IsNotNull())
@@ -813,13 +815,36 @@ namespace TC2.Conquest
 		}
 
 #if SERVER
+		[ChatCommand.Region("setcoalition", "", creative: true, admin: true)]
+		public static void SetCoalitionCommand(ref ChatCommand.Context context, ILocation.Handle h_location, ICoalition.Handle h_coalition)
+		{
+			ref var location_data = ref h_location.GetData();
+			Assert.IsNotNull(ref location_data);
+
+			ref var coalition_data = ref h_coalition.GetData();
+			Assert.IsNotNull(ref coalition_data);
+
+
+
+		}
+#endif
+
+#if SERVER
 		[Shitcode, WIP]
-		public static void InitMarketStockpile(ref this Depot.Data depot, ref XorRandom random, IStockpile.Handle h_stockpile, ICatalogue.Handle h_catalogue)
+		public static void InitMarketStockpile(ref this Depot.Data depot, ref XorRandom random, IStockpile.Handle h_stockpile, ICoalition.Handle h_coalition)
 		{
 			ref var stockpile_data = ref h_stockpile.GetData(out var stockpile_asset);
-			ref var catalogue_data = ref h_catalogue.GetData();
+			if (stockpile_data.IsNull()) return;
+			
+			ref var coalition_data = ref h_coalition.GetData();
+			if (coalition_data.IsNull()) return;
 
-			if (stockpile_data.IsNotNull() && catalogue_data.IsNotNull())
+			var h_catalogue = coalition_data.h_catalogue;
+
+			ref var catalogue_data = ref h_catalogue.GetData();
+			if (catalogue_data.IsNull()) return;
+
+			//if (stockpile_data.IsNotNull() && catalogue_data.IsNotNull())
 			{
 				var h_location = stockpile_data.h_location;
 
@@ -886,6 +911,11 @@ namespace TC2.Conquest
 						}
 					}
 
+					if (location_data.IsNotNull())
+					{
+						amount_max_mult *= location_data.statistics.economy;
+					}
+
 					//if (location_data.IsNotNull())
 					//{
 					//	ref var statistics = ref location_data.statistics;
@@ -906,6 +936,7 @@ namespace TC2.Conquest
 					//item_stockpile.quantity = Maths.Clamp((amount_max * initial_ratio).SnapCeil(5), 0.00f, amount_max);
 					item_stockpile.quantity = amount_initial;
 					item_stockpile.max = amount_max; // Maths.Max(item_catalogue.quantity, item_stockpile.material.GetQuantityFromMass(100.00f).SnapCeil(25));
+					item_stockpile.flags = Shipment.Item.Flags.Trade;
 				}
 
 				//stockpile_data.items
@@ -930,17 +961,17 @@ namespace TC2.Conquest
 				Assert.Check(amount_abs >= 1);
 
 				var sync = false;
-				var h_stockpile = IStockpile.Handle.None;
+				var h_stockpile = this.h_stockpile; // IStockpile.Handle.None;
 
-				ref var stockpile = ref rpc.GetComponent<Stockpile.Data>();
-				if (stockpile.IsNotNull())
-				{
-					h_stockpile = stockpile.h_stockpile;
-				}
-				else
-				{
+				//ref var stockpile = ref rpc.GetComponent<Stockpile.Data>();
+				//if (stockpile.IsNotNull())
+				//{
+				//	h_stockpile = stockpile.h_stockpile;
+				//}
+				//else
+				//{
 
-				}
+				//}
 
 				ref var stockpile_data = ref h_stockpile.GetData(out var stockpile_asset);
 				if (stockpile_data.IsNotNull())
@@ -964,7 +995,7 @@ namespace TC2.Conquest
 						h_character: rpc.GetSenderCharacterHandle(),
 						ent_producer: rpc.entity,
 						context: out var context,
-						search_radius: 12.00f);
+						search_radius: 8.00f);
 
 					if (this.amount.IsPositive()) // character buying from shop
 					{
@@ -1144,6 +1175,8 @@ namespace TC2.Conquest
 			[Region.Local] public static Entity edit_ent_picker;
 			[Region.Local] public static Entity ent_selected_depot_cached;
 
+			public static bool edit_use_grid_layout = true;
+
 			public static string edit_market_search_str = string.Empty;
 
 			public void Draw()
@@ -1161,7 +1194,7 @@ namespace TC2.Conquest
 
 						var h_stockpile = IStockpile.Handle.None; // this.stockpile.h_stockpile;
 						if (!h_stockpile) h_stockpile = h_selected_stockpile_cached;
-						if (!h_stockpile) h_stockpile = this.depot.h_stockpile;
+						//if (!h_stockpile) h_stockpile = this.depot.h_stockpile;
 
 						//if (h_selected_entrance_cached)
 						//{
@@ -1177,12 +1210,12 @@ namespace TC2.Conquest
 
 						ref var coalition_data = ref h_coalition.GetData();
 
-						var h_catalogue = ICatalogue.Handle.None;
-						if (coalition_data.IsNotNull()) h_catalogue = coalition_data.h_catalogue;
-						ref var catalogue_data = ref h_catalogue.GetData();
+						//var h_catalogue = ICatalogue.Handle.None;
+						//if (coalition_data.IsNotNull()) h_catalogue = coalition_data.h_catalogue;
+						//ref var catalogue_data = ref h_catalogue.GetData();
 
 						Crafting.Context.NewFromCurrentCharacter(ent_producer: this.ent_depot, 
-							context: out var context, search_radius: 12.00f);
+							context: out var context, search_radius: 8.00f);
 
 						//using (var group_left = GUI.Group.New(size: new(298 - 48, GUI.RmY), padding: new(6)))
 						using (var scroll_left = GUI.Scrollbox.New(identifier: "scroll.depot.left"u8, size: new(298 - 48, GUI.RmY), padding: new(0)))
@@ -1215,7 +1248,7 @@ namespace TC2.Conquest
 													GUI.TitleCentered(coalition_tmp_data.GetShortName(), font: GUI.Font.Superstar, size: 24, pivot: new(0.00f, 0.50f), offset: new(4, 0));
 
 													var is_selected = h_selected_coalition_cached == d_coalition_tmp;
-													if (GUI.Selectable3(id: hash, rect: group_row.GetInnerRect(), selected: is_selected))
+													if (GUI.Selectable3(id: hash, rect: group_row.GetOuterRect(), selected: is_selected))
 													{
 														h_selected_coalition_cached.Toggle(d_coalition_tmp);
 													}
@@ -1272,12 +1305,16 @@ namespace TC2.Conquest
 												using (GUI.Wrap.Push(GUI.RmX))
 												{
 													//group_row.DrawBackground(GUI.tex_slot_white, color: coalition_tmp_data.color_gui);
-													group_row.DrawBackground(GUI.tex_window_popup_embed, color: GUI.col_default);
+													//group_row.DrawBackground(GUI.tex_window_popup_embed, color: GUI.col_default);
+
+													ref var company_data = ref d_stockpile.data.h_company.GetData();
+													var is_selected = h_selected_stockpile_cached == d_stockpile || h_stockpile == d_stockpile;
+
+													group_row.DrawBackground(GUI.tex_window_popup_embed, color: company_data.IsNotNull() ? company_data.color_brand.WithColorMult(0.75f) : Color32BGRA.Neutral);
 
 													GUI.TitleCentered(d_stockpile.GetShortName(), font: GUI.Font.Superstar, size: 24, pivot: new(0.00f, 0.50f), offset: new(4, 0));
 
-													var is_selected = h_selected_stockpile_cached == d_stockpile;
-													if (GUI.Selectable3(id: hash, rect: group_row.GetInnerRect(), selected: is_selected))
+													if (GUI.Selectable3(id: hash, rect: group_row.GetOuterRect(), selected: is_selected))
 													{
 														h_selected_stockpile_cached.Toggle(d_stockpile);
 													}
@@ -1430,7 +1467,8 @@ namespace TC2.Conquest
 							var ts_elapsed = 0.00;
 
 							var selected_tab_index = selected_tab_index_cached;
-							if (!this.depot.h_coalition || this.depot.h_coalition != h_selected_coalition_cached) selected_tab_index = 0;
+							//if (!this.depot.h_coalition || this.depot.h_coalition != h_selected_coalition_cached) selected_tab_index = 0;
+							//if (!h_selected_coalition_cached) selected_tab_index = 0;
 
 							using (var group_tabs = GUI.Group.New(size: new(GUI.RmX, 40)))
 							{
@@ -1442,7 +1480,7 @@ namespace TC2.Conquest
 
 								GUI.DrawTab3(text: "Market"u8, size: new(0, GUI.RmY),
 									index: 1, selected_index: ref selected_tab_index, inner: true,
-									enabled: this.depot.h_coalition && h_selected_coalition_cached == this.depot.h_coalition);
+									enabled: true); // this.depot.h_coalition && h_selected_coalition_cached == this.depot.h_coalition);
 
 								GUI.SameLine();
 
@@ -1451,7 +1489,8 @@ namespace TC2.Conquest
 									enabled: this.depot.h_coalition && h_selected_coalition_cached == this.depot.h_coalition);
 							}
 
-							if (this.depot.h_coalition && h_selected_coalition_cached == this.depot.h_coalition) selected_tab_index_cached = selected_tab_index;
+							//if (this.depot.h_coalition && h_selected_coalition_cached == this.depot.h_coalition) selected_tab_index_cached = selected_tab_index;
+							selected_tab_index_cached = selected_tab_index;
 
 							//if (h_selected_coalition_cached != this.depot.h_coalition) selected_tab_index = 0;
 
@@ -1505,23 +1544,35 @@ namespace TC2.Conquest
 
 										//new IStockpile.SlotID(0, Stockpile.SlotType.Item)
 
-										const bool row_layout = true;
+										//const bool row_layout = false; // true;
+										var row_layout = !edit_use_grid_layout;
 
 										using (var group_top = GUI.Group.New(size: GUI.Rm.SubY(48)))
 										{
 											using (var group_title = GUI.Group.New(size: new(GUI.RmX, 40), padding: new(6)))
 											{
-												GUI.TitleCentered($"{h_stockpile.GetShortName()} - {h_catalogue.GetShortName()}", pivot: new(0.00f, 0.50f), font: GUI.Font.Editia, size: 20);
+												GUI.TitleCentered($"{h_stockpile.GetShortName()} - {stockpile_data.h_company.GetShortName()}", pivot: new(0.00f, 0.50f), font: GUI.Font.Editia, size: 20);
 												GUI.FocusableAsset(h_stockpile);
 											}
 
 											GUI.SeparatorThick();
 
-											if (GUI.TextInput("search.market"u8, "search (Ctrl+F)"u8, text: ref edit_market_search_str, size: new(GUI.RmX, 32)))
+											using (var group_search = GUI.Group.New(size: new(GUI.RmX, 32)))
 											{
+												if (GUI.TextInput("search.market"u8, "search (Ctrl+F)"u8, text: ref edit_market_search_str, size: GUI.Rm.SubX(GUI.RmY * 1)))
+												{
 
+												}
+												GUI.FocusOnCtrlF();
+
+												GUI.SameLine();
+
+												if (GUI.Checkbox("Grid Layout"u8, ref edit_use_grid_layout, size: new(GUI.RmY), show_text: false, show_tooltip: true))
+												{
+
+												}
 											}
-											GUI.FocusOnCtrlF();
+
 
 											GUI.SeparatorThick();
 
@@ -1549,7 +1600,7 @@ namespace TC2.Conquest
 														if (is_searching)
 														{
 															//GUI.Text(edit_market_search_str);
-															if (!item_name.Contains(edit_market_search_str, StringComparison.OrdinalIgnoreCase)) continue;
+															if (!item_name.Contains(edit_market_search_str, StringComparison.OrdinalIgnoreCase) && !item.GetIdentifier().Contains(edit_market_search_str, StringComparison.OrdinalIgnoreCase)) continue;
 														}
 
 														using (var hash = GUI.ID<Depot.Data, Shipment.Item>.Push(i))
@@ -1627,7 +1678,7 @@ namespace TC2.Conquest
 																		//}
 
 																		var is_selected = selected_stockpile_item_slot_cached == i;
-																		if (GUI.Selectable3(hash, rect: group_row.GetInnerRect(), selected: is_selected))
+																		if (GUI.Selectable3(hash, rect: group_row.GetOuterRect(), selected: is_selected))
 																		{
 																			selected_stockpile_item_slot_cached.Toggle(i);
 																		}
@@ -1752,6 +1803,7 @@ namespace TC2.Conquest
 																			{
 																				var rpc = new Depot.DEV_TradeRPC
 																				{
+																					h_stockpile = h_stockpile,
 																					stockpile_slot_index = i,
 																					amount = amount_multiplier_abs
 																				};
@@ -1767,6 +1819,7 @@ namespace TC2.Conquest
 																			{
 																				var rpc = new Depot.DEV_TradeRPC
 																				{
+																					h_stockpile = h_stockpile,
 																					stockpile_slot_index = i,
 																					amount = -amount_multiplier_abs
 																				};
@@ -1781,6 +1834,15 @@ namespace TC2.Conquest
 													}
 													else
 													{
+														if (!item.IsValid()) continue;
+
+														var item_name = item.GetName();
+														if (is_searching)
+														{
+															//GUI.Text(edit_market_search_str);
+															if (!item_name.Contains(edit_market_search_str, StringComparison.OrdinalIgnoreCase) && !item.GetIdentifier().Contains(edit_market_search_str, StringComparison.OrdinalIgnoreCase)) continue;
+														}
+
 														if (sameline) GUI.TrySameLine(item_cell_width);
 
 														using (var hash = GUI.ID<Depot.Data, Shipment.Item>.Push(i))
@@ -1790,14 +1852,14 @@ namespace TC2.Conquest
 															//group_item.DrawBackground(GUI.tex_window_sidebar_c);
 															group_item.DrawBackground(GUI.tex_panel, inner: true);
 
-															if (item.IsValid())
+															//if (item.IsValid())
 															{
 																//GUI.DrawResourceSmall()
 																GUI.DrawItem(item: ref item, size: new Vec2f(GUI.RmX).SubY(8), clip: false);
 																var is_hovered = GUI.IsItemHovered();
 
 																var is_selected = selected_stockpile_item_slot_cached == i;
-																if (GUI.Selectable3(hash, rect: group_item.GetInnerRect(), selected: is_selected))
+																if (GUI.Selectable3(hash, rect: group_item.GetOuterRect(), selected: is_selected))
 																{
 																	selected_stockpile_item_slot_cached.Toggle(i);
 																}
@@ -1913,22 +1975,22 @@ namespace TC2.Conquest
 
 													Span<Crafting.Requirement> reqs_buy = stackalloc[]
 													{
-													Crafting.Requirement.Money(base_market_price)
-													.WithFlags(add: Crafting.Requirement.Flags.Primary | Crafting.Requirement.Flags.Argument | Crafting.Requirement.Flags.Prerequisite)
-													with
-													{
-														snapping = 1.00f,
-													}
-												};
+														Crafting.Requirement.Money(base_market_price)
+														.WithFlags(add: Crafting.Requirement.Flags.Primary | Crafting.Requirement.Flags.Argument | Crafting.Requirement.Flags.Prerequisite)
+														with
+														{
+															snapping = 1.00f,
+														}
+													};
 
 													Span<Crafting.Requirement> reqs_sell = stackalloc[]
 													{
-													selected_item.IsNotNull() ? selected_item.ToRequirement() with
-													{
-														amount = 1.00f,
-														flags =  Crafting.Requirement.Flags.Primary | Crafting.Requirement.Flags.Argument | Crafting.Requirement.Flags.Prerequisite
-													} : default
-												};
+														selected_item.IsNotNull() ? selected_item.ToRequirement() with
+														{
+															amount = 1.00f,
+															flags =  Crafting.Requirement.Flags.Primary | Crafting.Requirement.Flags.Argument | Crafting.Requirement.Flags.Prerequisite
+														} : default
+													};
 
 													using (var group_item_left = GUI.Group.New(size: new(GUI.RmX - 128 - 80, GUI.RmY), padding: new(6)))
 													{
@@ -2012,6 +2074,7 @@ namespace TC2.Conquest
 														{
 															var rpc = new Depot.DEV_TradeRPC
 															{
+																h_stockpile = h_stockpile,
 																stockpile_slot_index = selected_stockpile_item_slot_cached ?? -1,
 																amount = selected_amount_multiplier_abs
 															};
@@ -2028,11 +2091,11 @@ namespace TC2.Conquest
 																Span<Crafting.Product> prds =
 																[
 																	selected_item.ToProduct() with
-																{
-																	amount = 1.00f,
-																	amount_extra = 0.00f,
-																	flags = Crafting.Product.Flags.Primary
-																}
+																	{
+																		amount = 1.00f,
+																		amount_extra = 0.00f,
+																		flags = Crafting.Product.Flags.Primary
+																	}
 																];
 
 																GUI.DrawProducts(context: ref context,
@@ -2054,6 +2117,7 @@ namespace TC2.Conquest
 														{
 															var rpc = new Depot.DEV_TradeRPC
 															{
+																h_stockpile = h_stockpile,
 																stockpile_slot_index = selected_stockpile_item_slot_cached ?? -1,
 																amount = -selected_amount_multiplier_abs
 															};
@@ -2071,11 +2135,11 @@ namespace TC2.Conquest
 																Span<Crafting.Product> prds =
 																[
 																	Crafting.Product.Money(unit_market_price_sell) with
-																{
-																	snapping = 1.00f,
-																	amount_extra = 0.00f,
-																	flags = Crafting.Product.Flags.Primary
-																}
+																	{
+																		snapping = 1.00f,
+																		amount_extra = 0.00f,
+																		flags = Crafting.Product.Flags.Primary
+																	}
 																];
 
 																GUI.DrawProducts(context: ref context,
@@ -2095,22 +2159,26 @@ namespace TC2.Conquest
 									{
 										if (Client.HasDebugAuthority())
 										{
-											if (GUI.DrawButton("DEV: Load Catalogue"u8, size: new(168, GUI.RmY), color: GUI.col_button_debug))
-											{
-												var rpc = new Depot.DEV_SetCatalogueRPC
-												{
-													h_stockpile = h_stockpile,
-													h_catalogue = h_catalogue
-												};
-												rpc.Send(this.ent_depot);
-											}
-											GUI.FocusableAsset(h_catalogue);
-
-											//GUI.TextShaded("TODO"u8);
-
 											ts_elapsed = ts.GetMilliseconds();
 
-											GUI.SameLine();
+											if (h_stockpile)
+											{
+												if (GUI.DrawButton($"DEV: Set Coalition ({h_selected_coalition_cached})", size: new(224, GUI.RmY), color: GUI.col_button_debug))
+												{
+													var rpc = new Depot.DEV_SetCoalitionRPC
+													{
+														h_stockpile = h_stockpile,
+														h_coalition = h_selected_coalition_cached
+													};
+													rpc.Send(this.ent_depot);
+												}
+												GUI.FocusableAsset(h_selected_coalition_cached);
+
+												//GUI.TextShaded("TODO"u8);
+
+
+												GUI.SameLine();
+											}
 
 											GUI.TextShaded($"{ts_elapsed:0.000} ms");
 										}
