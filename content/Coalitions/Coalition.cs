@@ -126,7 +126,7 @@ namespace TC2.Conquest
 		[Source.Owned, Keg.Engine.Game.Optional(nullable: true)] ref Faction.Data faction,
 		[Source.Owned, Keg.Engine.Game.Optional(nullable: true)] ref Company.Data company)
 		{
-			App.WriteValue((ent_coalition, coalition.h_coalition, ev.h_asset), color: App.Color.Cyan);
+			//App.WriteValue((ent_coalition, coalition.h_coalition, ev.h_asset), color: App.Color.Cyan);
 
 			coalition.h_coalition = ev.h_asset;
 			ref var coalition_data = ref ev.data;

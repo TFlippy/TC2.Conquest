@@ -965,13 +965,13 @@ namespace TC2.Conquest
 			//if (stockpile_data.IsNotNull() && catalogue_data.IsNotNull())
 			{
 				var h_location = stockpile_data.h_location;
-
+				ref var stats = ref ILocation.Statistics.Null;
 				//h_location = stockpile_
 
 				ref var location_data = ref h_location.GetData();
-				if (location_data.IsNotNull())
+				if (Assert.IsNotNull(ref location_data, Assert.Level.Warn))
 				{
-
+					stats = ref location_data.statistics;
 				}
 
 				var h_company = catalogue_data.h_company;
@@ -981,6 +981,7 @@ namespace TC2.Conquest
 					stockpile_data.h_company = h_company;
 					//stockpile_data.h_faction = company_data.h_.h_company;
 				}
+
 
 				var span_items_stockpile = stockpile_data.items.AsSpan();
 				var span_items_catalogue = catalogue_data.items.AsSpan();
@@ -998,10 +999,11 @@ namespace TC2.Conquest
 
 					//item_stockpile.quantity = 0.00f;
 
-					var amount_max = item_catalogue.quantity * stock_capacity_mult;
-					var amount_initial = amount_max;
+					//var amount_max = item_catalogue.quantity * stock_capacity_mult;
+					//var amount_initial = amount_max;
 
-					var amount_max_mult = 1.00f;
+					var amount_baseline_mult = 1.00f;
+					var amount_capacity_mult = 1.00f;
 					var amount_initial_mult = stock_initial_ratio;
 
 					ref var material_data = ref item_catalogue.h_material.GetData();
@@ -1029,9 +1031,24 @@ namespace TC2.Conquest
 						}
 					}
 
-					if (location_data.IsNotNull())
+					// TODO: move this outside the loop since it's constant
+					if (stats.IsNotNull())
 					{
-						//amount_max_mult *= location_data.statistics.economy;
+						amount_capacity_mult *= Maths.Avg(stats.economy, stats.exploitability);
+						amount_capacity_mult.LerpFMARef(1.00f, stats.economy * stats.industrialization * stats.colonization * stats.urbanization);
+						amount_capacity_mult.LerpFMARef(1.00f, stats.wealth * stats.urbanization * stats.economy);
+
+						amount_baseline_mult *= Maths.Avg(Maths.Max(stats.colonization, stats.industrialization), Maths.Max(Maths.Avg(stats.profitability, stats.wealth), stats.economy));
+						amount_baseline_mult.LerpFMARef(1.00f, Maths.Avg(stats.industrialization, stats.urbanization) * stats.economy);
+
+						amount_initial_mult.LerpFMARef(stats.industrialization, stats.colonization);
+						amount_initial_mult.LerpFMARef(1.00f, Maths.Avg(stats.economy, stats.industrialization));
+
+						if (stats.market_capacity_mult > 0.00f) amount_capacity_mult *= stats.market_capacity_mult;
+						if (stats.market_baseline_mult > 0.00f) amount_baseline_mult *= stats.market_baseline_mult;
+						if (stats.market_initial_mult > 0.00f) amount_initial_mult *= stats.market_initial_mult;
+
+						//amount_capacity_mult *= Maths.Lerp(Maths.Max(stats.economy, stats.exploitability), stats.;
 					}
 
 					//if (location_data.IsNotNull())
@@ -1041,19 +1058,25 @@ namespace TC2.Conquest
 
 					//}
 
-					amount_max *= amount_max_mult;
-					amount_max = amount_max.SnapCeil(5);
+					var amount_capacity = item_catalogue.quantity * stock_capacity_mult;
+					amount_capacity *= amount_capacity_mult;
+					amount_capacity = amount_capacity.SnapCeil(5);
+					amount_capacity.ClampMinRef(0.00f);
 
-					amount_max.ClampMinRef(0.00f);
+					var amount_baseline = amount_capacity;
+					amount_baseline *= amount_baseline_mult;
+					amount_baseline = amount_baseline.SnapCeil(5);
+					amount_baseline.ClampRef(0.00f, amount_capacity);
 
+					var amount_initial = amount_baseline;
 					amount_initial *= amount_initial_mult;
 					amount_initial *= random.NextFloatExtra(0.65f, 0.50f);
 					amount_initial = amount_initial.Snap(1);
-					amount_initial.ClampRef(0.00f, amount_max);
+					amount_initial.ClampRef(0.00f, amount_baseline);
 
 					//item_stockpile.quantity = Maths.Clamp((amount_max * initial_ratio).SnapCeil(5), 0.00f, amount_max);
 					item_stockpile.quantity = amount_initial;
-					item_stockpile.max = amount_max; // Maths.Max(item_catalogue.quantity, item_stockpile.material.GetQuantityFromMass(100.00f).SnapCeil(25));
+					item_stockpile.max = amount_capacity; // Maths.Max(item_catalogue.quantity, item_stockpile.material.GetQuantityFromMass(100.00f).SnapCeil(25));
 					item_stockpile.flags = Shipment.Item.Flags.Trade;
 				}
 
@@ -1263,7 +1286,7 @@ namespace TC2.Conquest
 #if SERVER
 				//if (site.flags.TrySetFlag(Site.Data.Flags.Market_Initialized))
 				{
-					Depot.InitMarketStockpile_B(ref random, h_stockpile: h_stockpile, h_coalition: h_coalition, stock_initial_ratio: 0.70f, stock_capacity_mult: 1.00f);
+					Depot.InitMarketStockpile_B(ref random, h_stockpile: h_stockpile, h_coalition: h_coalition, stock_initial_ratio: 0.17f, stock_capacity_mult: 1.00f);
 					site.Sync(ent_location);
 				}
 #endif
@@ -1433,6 +1456,9 @@ namespace TC2.Conquest
 						//if (coalition_data.IsNotNull()) h_catalogue = coalition_data.h_catalogue;
 						//ref var catalogue_data = ref h_catalogue.GetData();
 
+						//var total_market_cost = 0.00;
+						//var total_market_cost_max = 0.00;
+
 						Crafting.Context.NewFromCurrentCharacter(ent_producer: this.ent_depot,
 							context: out var context, search_radius: 8.00f);
 
@@ -1535,7 +1561,8 @@ namespace TC2.Conquest
 
 													if (GUI.Selectable3(id: hash, rect: group_row.GetOuterRect(), selected: is_selected))
 													{
-														h_selected_stockpile_cached.Toggle(d_stockpile);
+														//h_selected_stockpile_cached.Toggle(d_stockpile);
+														h_selected_stockpile_cached = d_stockpile;
 													}
 												}
 												if (GUI.IsItemHovered())
@@ -1546,7 +1573,8 @@ namespace TC2.Conquest
 													//	//GUI.TextShaded(entrance_data.GetDescription());
 													//}
 												}
-												GUI.FocusableAsset(d_stockpile);
+												//GUI.FocusableAsset(d_stockpile);
+												GUI.FocusableAsset(d_stockpile.data.h_location);
 											}
 										}
 
@@ -1758,9 +1786,39 @@ namespace TC2.Conquest
 										depot: in this.depot,
 										h_stockpile: h_stockpile);
 
+									var (total_cost, total_cost_max) = GetTotalStockpileCost(h_stockpile);
+
+									GUI.TextShaded($"{total_cost:N0}/{total_cost_max:N0} Đk");
+
+									static (double total_cost, double total_cost_max) GetTotalStockpileCost(IStockpile.Handle h_stockpile)
+									{
+										var total_cost = 0.00;
+										var total_cost_max = 0.00;
+
+										ref var stockpile_data = ref h_stockpile.GetData();
+										if (stockpile_data.IsNotNull())
+										{
+											var span_items = stockpile_data.items.AsSpan();
+											for (var i = 0; i < span_items.Length; i++)
+											{
+												ref var item = ref span_items[i];
+												if (!item.header) continue;
+
+												if (item.flags.HasAny(Shipment.Item.Flags.Trade))
+												{
+													var unit_price = item.GetUnitMarketPrice();
+													total_cost += item.quantity * unit_price;
+													total_cost_max += item.max * unit_price;
+												}
+											}
+										}
+
+										return (total_cost, total_cost_max);
+									}
+
 									using (var group = GUI.Group.New(size: GUI.Rm))
 									{
-										if (Client.HasDebugAuthority())
+										if (false && Client.HasDebugAuthority())
 										{
 											ts_elapsed = ts.GetMilliseconds();
 
@@ -1825,10 +1883,26 @@ namespace TC2.Conquest
 					ref var stockpile_data = ref h_stockpile.GetData();
 					if (stockpile_data.IsNotNull())
 					{
+						var h_faction = stockpile_data.h_faction;
+						var h_company = stockpile_data.h_company;
+						var h_location = stockpile_data.h_location;
+						var h_location_player = context.region.GetLocationHandle();
+						var h_coalition = h_company.GetCoalitionHandle();
+
+						ref var company_data = ref h_company.GetData();
+						ref var location_data = ref h_location.GetData();
+						ref var coalition_data = ref h_coalition.GetData();
+
 						var items_span = stockpile_data.items.AsSpan();
 
 						var selected_amount_multiplier_abs = selected_stockpile_item_amount_cached.Abs();
 						var selected_amount_multiplier_abs_clamped = selected_amount_multiplier_abs;
+
+						var pos_worldmap_player = h_location_player.GetPosition();
+						var pos_worldmap_market = h_location.GetPosition();
+
+		
+						//ref var 
 
 						//new IStockpile.SlotID(0, Stockpile.SlotType.Item)
 
@@ -1837,10 +1911,29 @@ namespace TC2.Conquest
 
 						using (var group_top = GUI.Group.New(size: GUI.Rm.SubY(48)))
 						{
-							using (var group_title = GUI.Group.New(size: new(GUI.RmX, 40), padding: new(6)))
+							using (var group_title = GUI.Group.New(size: new(GUI.RmX, 48)))
 							{
-								GUI.TitleCentered($"{h_stockpile.GetShortName()} - {stockpile_data.h_company.GetShortName()}", pivot: new(0.00f, 0.50f), font: GUI.Font.Editia, size: 20);
-								GUI.FocusableAsset(h_stockpile);
+								Market.MarketGUI.DrawCompanyLogo(h_company, logo_size: ICompany.LogoSize.Billboard_3x3);
+								GUI.FocusableAsset(h_company);
+
+								GUI.SameLine();
+
+								using (var group_title_text = GUI.Group.New2(size: GUI.Rm, padding: new(10, 6, 6, 6)))
+								{
+									group_title_text.DrawBackground(GUI.tex_window_sidebar_b);
+									
+									GUI.TitleCentered($"{h_stockpile.GetShortName()} - {stockpile_data.h_company.GetShortName()}".ToUpperOrdinal(), pivot: new(0.00f, 0.00f), font: GUI.Font.Editia, size: 20);
+									GUI.FocusableAsset(h_stockpile);
+
+									if (location_data.IsNotNull())
+									{
+										GUI.TextShadedCentered(location_data.industry_primary.WithCount(4).GetEnumName(), pivot: new(0.00f, 1.00f), color: GUI.font_color_desc);
+									}
+
+									var dist_km = Vec2f.Distance(pos_worldmap_player, pos_worldmap_market) * WorldMap.km_per_unit;
+									GUI.TitleCentered(dist_km, format: "0.00' km'", pivot: new(1.00f, 0.00f), size: 16);
+									//GUI.TitleCentered(dist_km, format: "0.00' km'", pivot: new(1.00f, 1.00f), size: 16);
+								}
 							}
 
 							GUI.SeparatorThick();
@@ -1855,7 +1948,7 @@ namespace TC2.Conquest
 
 								GUI.SameLine();
 
-								if (GUI.Checkbox("Grid Layout"u8, ref edit_use_grid_layout, size: new(GUI.RmY), show_text: false, show_tooltip: true))
+								if (GUI.Checkbox("Toggle Grid Layout"u8, ref edit_use_grid_layout, size: new(GUI.RmY), show_text: false, show_tooltip: true))
 								{
 
 								}
@@ -1993,6 +2086,16 @@ namespace TC2.Conquest
 														}
 														else
 														{
+															var price_ratio = Maths.Normalize01(unit_market_price_sell, unit_market_price_buy);
+															if (price_ratio < 0.95f)
+															{
+																var rect_text = GUI.TextShadedCenteredRect(-(1.00f - price_ratio), pivot: new(1.00f, 0.50f), rect: group_row_info.GetInnerRect(),
+																	font: GUI.Font.Monaco, size: 12, box_shadow: false, offset: new(-80, 0), shadow: new(2, 2),
+																	format: "P0", color: Color32BGRA.RedGreen(price_ratio.Pow3()).WithAlpha(180));
+
+																GUI.DrawHoverTooltip("Profit is reduced due to high supply."u8, rect: rect_text);
+															}
+
 															GUI.TextShadedCenteredRect((unit_market_price_buy * amount_multiplier_abs).Ceil(), pivot: new(1.00f, 0.50f), rect: group_row_info.GetInnerRect(),
 																font: GUI.Font.Superstar, size: 16, box_shadow: false, offset: new(-6, -7), shadow: new(2, 2),
 																format: "0' Đk'", color: GUI.col_buy);
